@@ -1,0 +1,202 @@
+##########################
+Pygame2 release management
+##########################
+
+The following sections will deal with a quick guide about what to take care
+of before issueing a new release.
+
+General
+=======
+Releases are split into three phases usually, *alpha*, *rc* and *final*.
+
+Alpha phase
+-----------
+The *alpha* phase usually takes place as soon as a *final* release was made and
+can feature as many releases as necessary. *alpha* releases should be made
+whenever large changes were made, which change the behaviour, API interfaces or
+add completely new stuff.
+
+*alpha* release versions are tagged with a *-alphaXXX* suffix, where *XXX* is
+the *XXXth* release within that alpha phase. There is no limit to the amount of
+releases to be made.
+
+Release Candidate phase
+-----------------------
+The *rc* phase (short for Release Candidate) enters a beta testing cycle, where
+no new features should be added, but only bug fixes be committed. It is also
+the right time for proof-reading the documentation, running the unit tests on
+all platforms again and again and to recheck all examples.
+
+*rc* release versions are tagged with a *-rcXX* suffix, where *XXX* is
+the *XXXth* release within that *rc* phase. There should not be more than 3
+*rc* releases by default and they should be released on a weekly basis, allowing
+adopters to have a minimum of one week and maximum of 3 weeks before the final
+release is made.
+
+Final phase
+-----------
+This is not directly a phase on its own, but simply the day of the final release
+for the specific version. The *final* release usually should be the same as the
+last *rc* release, but only differ by the version number and release date.
+
+Preparations
+============
+Before a new release takes place, the following steps have to be made:
+
+* Increase version number (see :ref:`postprocessing`) in ::
+  
+    setup.py
+    doc/conf.py
+    lib/__init__.py
+    
+* Update NEWS.txt with the changes since the last version (only for final
+  releases - alpha and rc should contain the information, but not be tagged
+  explicitly). See :ref:`editingnews` for more information.
+
+* Update README.txt and doc/BuildXXX.txt to point to the latest required
+  dependency versions.
+
+* Make sure, all tests for all supported Python versions work on all
+  platforms. ::
+
+    make clean
+    make purge_installs
+    make installall
+    make testall
+    make testall2
+
+.. _editingnews:
+    
+Editing News
+============
+The NEWS.txt file contains information about the changes between two
+*final* releases. If possible, it should be always up to date with the
+latest SVN changes.
+
+For adding a new release entry, the following layout is used: ::
+
+  VERSION
+  =======
+  Released on DATE.
+  
+  [Change list]
+
+  Test releases:
+  
+  [Release list with revisions]
+
+Each important change that has any impact on the API (be it bug fixes,
+behaviour changes or whatever else), should be described here. If it was
+a user-submitted fix or change, credits are given to the user. If it was
+a fix for some user-submitted bug report, a short pointer to the report
+location should be given. If it was a fix for some bug tracker entry, the
+tracker id should be added. ::
+
+  2.99.4
+  ======
+  Released on 2034-12-20.
+  
+  * Added foo.morefoo class.
+  * Bug: Fixed foo.bar () misbehaviour for string arguments (via mailing list).
+  * Added foo.barbaz () method for whatever (thanks to Emily Doe).
+  * Bug #1234: Fixed foo.foobar() return value.
+
+  Test releases:
+  
+  * alpha 1 (rev. 73213)
+  * alpha 2 (rev. 73237)
+  * rc 1 (rev. 73244)
+
+Releasing
+=========
+Once anything's tested, updated written down, the required packages have to be
+built. First of all, the source packages are required as the binary packages
+will be built using them. ::
+
+  make release
+
+.. note::
+
+  Set the *EXPERIMENTAL* variable to *0* within the Makefile before
+  starting the release build.
+
+This also will create a set of bundled docs to be distributed.
+
+Once all packages are built (see below) the revision control tree can be tagged
+with the new version, the packages be published and an announcement sent to the
+mailing list.
+
+Win32 installers
+----------------
+For Win32 platforms, binary builds (MSI packages) for the Python versions
+*2.4*, *2.5*, *2.6* and *3.1* have to be made, based on one of the source
+packages, which were just created. ::
+
+  # For Python 2.4
+  c:\PythonXX\python.exe setup.py build bdist_wininst
+  
+  # For Python > 2.4
+  c:\PythonXX\python.exe setup.py build bdist_msi
+
+Once all installers are available, make sure they work and ship anything
+required by running the unit tests: ::
+
+  # Under Msys:
+  make testall
+  
+  # Win32 CMD prompt (do that for all versions):
+  c:\PythonXX\python.exe -c "import pygame2.test; pygame2.test.run ()"
+
+Mac OS X installers
+-------------------
+
+.. todo::
+  
+  Instructions for Mac OS X platforms*
+
+.. _postprocessing:
+
+Postprocessing
+==============
+Right after a release has been made and the tree was tagged correctly, the
+version numbers should be increased (and revised just before the next release).
+
+The release number is split into three parts, a *MAJOR*, *MINOR* and *BUGFIX*
+part.
+
+* *BUGFIX* should be increased by one, whenever bug fixes have been made
+  between two releases.
+
+* *MINOR* should be increased, whenever changes or additions to the API were
+  made (which do **not** break backwards compatibility). This also will cause
+  *BUGFIX* to be set back to 0.
+
+* *MAJOR* should be increased, whenever outstanding additions or changes to the
+  API were made, which legitimate it.
+
+Why is that *MINOR*/*BUGFIX* diversion important? Pygame2 is basically some
+sort of library. As such, people can write software with it while not
+necessarily including the library code (Pygame2 itself). So what happens, if a
+user has some version installed, where certain API interfaces changed and behave
+differently from the version, the developer worked with? The program is most
+likely to fail and the user will blame either the developer or the library.
+
+With a consistent versioning scheme, developers can test against versions
+explicitly to guarantee the functionality with those. Users can receive an
+explicit notice, if their installed version might be incompatible and react
+upon that accordingly.
+
+How does that look like in practice? ::
+
+  Event/Action                     Version number
+  -----------------------------------------------
+  Initial release                      2.0.0
+  Some fixes done                      2.0.1
+  More fixes done                      2.0.2
+  Some additions                       2.1.0
+  Some fixes (again)                   2.1.1
+  More fixes                           2.1.2
+  More fixes                           2.1.3
+  Some additions                       2.2.0
+  Important major changes              3.0.0
+  ...                                   ...

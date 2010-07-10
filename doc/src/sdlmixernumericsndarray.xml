@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE module SYSTEM "api.dtd">
+
+<module name="pygame2.sdlmixer.numericsndarray">
+  <short>SDL_mixer chunk arrays using Numeric</short>
+  <desc>
+    .. note::
+    
+      The module is subject to change in future version and thus is
+      marked as deprecated.
+  </desc>
+
+  <func name="make_array">
+    <call></call>
+    <desc></desc>
+  </func>
+  <func name="make_sound">
+    <call></call>
+    <desc></desc>
+  </func>
+  <func name="samples">
+    <call></call>
+    <desc></desc>
+  </func>
+</module>
+

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE module SYSTEM "api.dtd">
+
+<module name="pygame2.sdl.image">
+  <short>SDL image I/O wrapper module</short>
+  <desc>SDL image I/O wrapper module</desc>
+
+  <func name="load_bmp">
+    <call>load_bmp (file) -> Surface</call>
+    <desc>
+      Loads a BMP file and creates a :class:`pygame2.sdl.video.Surface` from it.
+    
+      Loads a BMP file and creates a :class:`pygame2.sdl.video.Surface` from it.
+      The *file* argument can be either a file object or the filename.
+
+      .. note::
+      
+        The file object *must* support binary read and write
+        access. This is especially important for Python 3.x users.
+
+    </desc>
+  </func>
+  <func name="save_bmp">
+    <call>save_bmp (surface, file) -> None</call>
+    <desc>Saves a surface to a bitmap file.
+
+      Saves a :class:`pygame2.sdl.video.Surface` to the specified file, where
+      *file* can be a filename or file object.
+
+      .. note::
+      
+        The file object *must* support binary read and write
+        access. This is especially important for Python 3.x users.
+    </desc>
+  </func>
+</module>
+

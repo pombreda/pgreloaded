@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE module SYSTEM "api.dtd">
+
+<module name="pygame2.sdlimage.base">
+  <show>0</show>
+  <alias>pygame2.sdlimage</alias>
+  <short>basic SDL_image wrapper module</short>
+  <desc>
+    Basic SDL_image wrapper module
+  </desc>
+
+  <func name="init">
+    <call>init (flags) -> int</call>
+    <desc>
+      Initializes the library bindings of the underlying SDL_image library.
+
+      Initializes the library bindings of the underlying SDL_image
+      library. This loads the dynamic libraries for PNG, JPG and TIF
+      images and avoid multiple library loading/unloading calls.
+
+      *NOTE:* The call is optional.
+    </desc>
+  </func>
+  <func name="get_error">
+    <call>get_error () -> str</call>
+    <desc>
+      Gets the last SDL error message occured.
+
+      SDL_image maintains an internal error message. This message will usually
+      be given to you when a :exc:`pygame2.Error` is raised.
+
+      You will rarely need to call this function.
+    </desc>
+  </func>
+  <func name="load">
+    <call>load (file[, type]) -> Surface</call>
+    <desc>
+      Loads an image file and creates a :class:`pygame2.sdl.video.Surface` from
+      it.
+    
+      Loads an image file and creates a :class:`pygame2.sdl.video.Surface` from
+      it. The *file* argument can be a file object or filename. *type* is an
+      optional argument indicating the image type as string.
+
+      .. note::
+      
+        The file object *must* support binary read and write
+        access. This is especially important for Python 3.x users.
+
+    </desc>
+  </func>
+  <func name="quit">
+    <call>quit () -> None</call>
+    <desc>
+      Deinitializes the library bindings of the underlying SDL_image library.
+
+      Deinitializes the library bindings of the underlying SDL_image
+      library. This releases the loaded dynamic libraries for PNG, JPG
+      and TIF images.
+    </desc>
+  </func>
+  <func name="read_xpm_from_array">
+    <call>read_xpm_from_array (buffer) -> Surface</call>
+    <desc>Creates a :class:`pygame2.sdl.video.Surface` from a XPM buffer.
+    
+      Creates a :class:`pygame2.sdl.video.Surface` from a XPM
+      buffer. The *buffer* can be any type that can be used as character
+      buffer.
+    </desc>
+  </func>
+</module>
+
