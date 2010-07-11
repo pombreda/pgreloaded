@@ -12,6 +12,8 @@ def update_sys_libdeps (deps):
     deps["user32"].nocheck = True
     deps["gdi32"] = Dependency ([], 'gdi32')
     deps["gdi32"].nocheck = True
+    deps["openal"].library_id = "OpenAL32"
+    deps["openal"].library_name = "OpenAL32"
     deps["openal"].libs = [ "OpenAL32" ]
 
 def add_sys_libdeps (module):
@@ -51,8 +53,9 @@ def _get_libraries (name, directories):
 def get_install_libs (cfg):
     # Gets the libraries to install for the target platform.
     _libdirs = [ "", "VisualC\\SDL\\Release", "VisualC\\Release", "Release",
-                 "lib"]
-    _searchdirs = [ "prebuilt", "..", "..\\..", sys.prefix ]
+                 "lib", "libs", "libs\\Win32"]
+    _searchdirs = [ "prebuilt", "..", "..\\..", sys.prefix,
+                    os.getenv ('ProgramFiles', '') ]
 
     libraries = {}
     values = {}
@@ -72,6 +75,7 @@ def get_install_libs (cfg):
         libraries.update (_hunt_libs ("SDL_ttf", dirs))
     if cfg.build['SDL_GFX']:
         libraries.update (_hunt_libs ("SDL_gfx", dirs))
+        libraries.update (_hunt_libs ("msvcr90", dirs))
     if cfg.build['PNG']:
         libraries.update (_hunt_libs ("png", dirs))
     if cfg.build['JPEG']:
@@ -82,15 +86,42 @@ def get_install_libs (cfg):
         libraries.update (_hunt_libs ("portmidi", dirs))
     if cfg.build['OPENAL']:
         libraries.update (_hunt_libs ("openal", dirs))
+        libraries.update (_hunt_libs ("msvcr100", dirs))
 
     return libraries.keys ()
 
 class Dependency (config_generic.Dependency):
-    _searchdirs = [ "prebuilt", "..", "..\\..", sys.prefix ]
+    _searchdirs = [ "prebuilt", "..", "..\\..", sys.prefix,
+                    os.getenv ('ProgramFiles', '') + "\\OpenAL 1.1 SDK", ]
     _incdirs = [ "", "include" ]
     _libdirs = [ "", "VisualC\\SDL\\Release", "VisualC\\Release", "Release",
-                 "lib"]
+                 "lib", "libs", "libs\\Win32"]
     _libprefix = ""
+
+    def _configure_guess(self):
+        """
+        Configuration callback which automatically looks for
+        the required headers and libraries in some default
+        system folders.
+        """
+        dirs = []
+        for h in self.header_files:
+            directory = self._find_incdir (h)
+            if directory is None:
+                return False
+            dirs.append (directory)
+        
+        libdir, libname = self._find_libdir (self.library_name)
+        if libdir is None:
+            return False
+
+        self.incdirs.extend(dirs)
+        self.libdirs.append(libdir)
+        if libname != self.library_name:
+            self.library_name = libname
+            self.libs.remove (self.library_id)
+            self.libs.append (libname)
+        return True
 
     def configure (self, cfg):
         super(Dependency, self).configure (cfg)

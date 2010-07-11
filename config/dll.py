@@ -18,7 +18,7 @@ libraries = [
                                                  'vorbisfile', 'smpeg']),
     ('SDL_image', r'(lib){0,1}SDL_image\.dll$', ['SDL', 'jpeg', 'png', 'tiff']),
     ('SDL_ttf', r'(lib){0,1}SDL_ttf\.dll$', ['SDL', 'z', 'freetype']),
-    ('SDL_gfx', r'(lib){0,1}SDL_gfx\.dll$', ['SDL']),
+    ('SDL_gfx', r'(lib){0,1}SDL_gfx\.dll$', ['SDL', 'msvcr90']),
     ('freetype', r'(lib){0,1}freetype(-6){0,1}\.dll$', []),
     ('vorbisenc', r'(lib){0,1}vorbisenc(-3){0,1}\.dll$', ['vorbis']),
     ('vorbisfile', r'(lib){0,1}vorbisfile(-3){0,1}\.dll$', ['vorbis']),
@@ -30,7 +30,9 @@ libraries = [
     ('png', r'(lib){0,1}png(1[23]){0,1}(-0){0,1}\.dll$', ['z']),
     ('z', r'zlib1\.dll$', []),
     ('portmidi', r'portmidi\.dll$', []),
-    ('openal', r'OpenAL32\.dll$', []),
+    ('openal', r'OpenAL32\.dll$', ['msvcr100']),
+    ('msvcr100', r'msvcr100\.dll$', []),
+    ('msvcr90', r'msvcr90\.dll$', []),
 ]
 
 # regexs: Maps name to DLL file name regex.

@@ -42,4 +42,3 @@ class StreamOutput (object):
             self.stream.write ("%s\r" % data)
         self.curoffset = len (data)
         self.stream.flush ()
-

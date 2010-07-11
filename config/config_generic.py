@@ -105,11 +105,13 @@ class Dependency (object):
             for g in self._libdirs:
                 p = os.path.join (d, g)
                 gl = glob.glob(os.path.join(p, name) + '*')
-
+                if len (gl) == 0:
+                    gl = glob.glob(os.path.join(p, 'lib' + name) + '*')
                 for f in gl:
-                    if os.path.isfile(f): return p
+                    if os.path.isfile(f):
+                        return p, os.path.splitext (os.path.split (f)[-1])[0]
 
-        return None
+        return None, None
 
     def _find_incdir(self, name):
         """
@@ -138,7 +140,7 @@ class Dependency (object):
                 return False
             dirs.append (directory)
         
-        libdir = self._find_libdir (self.library_name)
+        libdir, libname = self._find_libdir (self.library_name)
         if libdir is None:
             return False
 

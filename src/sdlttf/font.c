@@ -31,6 +31,7 @@ static void _font_dealloc (PySDLFont_TTF *self);
 
 static PyObject* _font_glyphmetrics (PyObject *self, PyObject* args);
 static PyObject* _font_getsize (PyObject *self, PyObject* args);
+static PyObject* _font_glyphisprovided (PyObject *self, PyObject* args);
 static PyObject* _font_render (PyObject *self, PyObject* args, PyObject *kwds);
 
 static PyObject* _font_getstyle (PyObject *self, void *closure);
@@ -43,6 +44,12 @@ static PyObject* _font_getfaces (PyObject *self, void *closure);
 static PyObject* _font_getisfixedwidth (PyObject *self, void *closure);
 static PyObject* _font_getfamilyname (PyObject *self, void *closure);
 static PyObject* _font_getstylename (PyObject *self, void *closure);
+static PyObject* _font_gethinting (PyObject *self, void *closure);
+static int _font_sethinting (PyObject *self, PyObject *value, void *closure);
+static PyObject* _font_getkerning (PyObject *self, void *closure);
+static int _font_setkerning (PyObject *self, PyObject *value, void *closure);
+static PyObject* _font_getoutline (PyObject *self, void *closure);
+static int _font_setoutline (PyObject *self, PyObject *value, void *closure);
 
 /**
  */
@@ -51,6 +58,8 @@ static PyMethodDef _font_methods[] = {
       DOC_BASE_FONT_GET_GLYPH_METRICS },
     { "get_size", (PyCFunction) _font_getsize, METH_O,
       DOC_BASE_FONT_GET_SIZE },
+    { "glyph_is_provided", (PyCFunction) _font_glyphisprovided, METH_O,
+      DOC_BASE_FONT_GLYPH_IS_PROVIDED },
     { "render", (PyCFunction)_font_render, METH_VARARGS | METH_KEYWORDS,
       DOC_BASE_FONT_RENDER },
     { NULL, NULL, 0, NULL }
@@ -60,6 +69,12 @@ static PyMethodDef _font_methods[] = {
  */
 static PyGetSetDef _font_getsets[] = {
     { "style", _font_getstyle, _font_setstyle, DOC_BASE_FONT_STYLE, NULL },
+    { "hinting", _font_gethinting, _font_sethinting, DOC_BASE_FONT_HINTING,
+      NULL },
+    { "kerning", _font_getkerning, _font_setkerning, DOC_BASE_FONT_KERNING,
+      NULL },
+    { "outline", _font_getoutline, _font_setoutline, DOC_BASE_FONT_OUTLINE,
+      NULL },
     { "height", _font_getheight, NULL, DOC_BASE_FONT_HEIGHT, NULL },
     { "ascent", _font_getascent, NULL, DOC_BASE_FONT_ASCENT, NULL },
     { "descent", _font_getdescent, NULL, DOC_BASE_FONT_DESCENT, NULL },
@@ -220,6 +235,111 @@ _font_setstyle (PyObject *self, PyObject *value, void *closure)
 }
 
 static PyObject*
+_font_gethinting (PyObject *self, void *closure)
+{
+#if (SDL_TTF_MAJOR_VERSION >= 2) && (SDL_TTF_MINOR_VERSION >= 0) && (SDL_TTF_PATCHLEVEL >= 10)
+    ASSERT_TTF_INIT (NULL);
+    return PyInt_FromLong (TTF_GetFontHinting (((PySDLFont_TTF*)self)->font));
+#else
+    PyErr_SetString(PyExc_NotImplementedError,
+        "hinting attribute not supported by the used SDL_ttf version");
+    return NULL;
+#endif
+}
+
+static int
+_font_sethinting (PyObject *self, PyObject *value, void *closure)
+{
+#if (SDL_TTF_MAJOR_VERSION >= 2) && (SDL_TTF_MINOR_VERSION >= 0) && (SDL_TTF_PATCHLEVEL >= 10)
+    int hinting;
+    ASSERT_TTF_INIT (-1);
+
+    if (!IntFromObj (value, &hinting))
+        return -1;
+    if (value < TTF_HINTING_NORMAL || value > TTF_HINTING_NONE)
+    {
+        PyErr_SetString(PyExc_ValueError, "invalid hinting value");
+        return -1;
+    }
+
+    TTF_SetFontHinting (((PySDLFont_TTF*)self)->font, hinting);
+    return 0;
+#else
+    PyErr_SetString(PyExc_NotImplementedError,
+        "hinting attribute not supported by the used SDL_ttf version");
+    return -1;
+#endif
+}
+
+static PyObject*
+_font_getkerning (PyObject *self, void *closure)
+{
+#if (SDL_TTF_MAJOR_VERSION >= 2) && (SDL_TTF_MINOR_VERSION >= 0) && (SDL_TTF_PATCHLEVEL >= 10)
+    ASSERT_TTF_INIT (NULL);
+    return PyBool_FromLong (TTF_GetFontKerning (((PySDLFont_TTF*)self)->font));
+#else
+    PyErr_SetString(PyExc_NotImplementedError,
+        "kerning attribute not supported by the used SDL_ttf version");
+    return NULL;
+#endif
+}
+
+static int
+_font_setkerning (PyObject *self, PyObject *value, void *closure)
+{
+#if (SDL_TTF_MAJOR_VERSION >= 2) && (SDL_TTF_MINOR_VERSION >= 0) && (SDL_TTF_PATCHLEVEL >= 10)
+    int val = PyObject_IsTrue (value);
+    ASSERT_TTF_INIT (-1);
+
+    if (val == -1)
+        return -1;
+    TTF_SetFontKerning (((PySDLFont_TTF*)self)->font, val);
+    return 0;
+#else
+    PyErr_SetString(PyExc_NotImplementedError,
+        "kerning attribute not supported by the used SDL_ttf version");
+    return -1;
+#endif
+}
+
+static PyObject*
+_font_getoutline (PyObject *self, void *closure)
+{
+#if (SDL_TTF_MAJOR_VERSION >= 2) && (SDL_TTF_MINOR_VERSION >= 0) && (SDL_TTF_PATCHLEVEL >= 10)
+    ASSERT_TTF_INIT (NULL);
+    return PyInt_FromLong (TTF_GetFontOutline (((PySDLFont_TTF*)self)->font));
+#else
+    PyErr_SetString(PyExc_NotImplementedError,
+        "outline attribute not supported by the used SDL_ttf version");
+    return NULL;
+#endif
+}
+
+static int
+_font_setoutline (PyObject *self, PyObject *value, void *closure)
+{
+#if (SDL_TTF_MAJOR_VERSION >= 2) && (SDL_TTF_MINOR_VERSION >= 0) && (SDL_TTF_PATCHLEVEL >= 10)
+    int outline;
+    ASSERT_TTF_INIT (-1);
+
+    if (!IntFromObj (value, &outline))
+        return -1;
+    if (value < 0)
+    {
+        PyErr_SetString(PyExc_ValueError, "outline must not be negative");
+        return -1;
+    }
+
+    TTF_SetFontOutline (((PySDLFont_TTF*)self)->font, outline);
+    return 0;
+#else
+    PyErr_SetString(PyExc_NotImplementedError,
+        "outline attribute not supported by the used SDL_ttf version");
+    return -1;
+#endif
+}
+
+static PyObject*
 _font_getheight (PyObject *self, void *closure)
 {
     ASSERT_TTF_INIT (NULL);
@@ -281,7 +401,7 @@ _font_glyphmetrics (PyObject *self, PyObject* args)
 {
     PySDLFont_TTF *font = (PySDLFont_TTF*) self;
     int minx, miny, maxx, maxy, advance, isunicode = 0, i;
-    PyObject *list;
+    PyObject *list, *val;
     Py_ssize_t length;
     void *buf = NULL;
 
@@ -330,8 +450,14 @@ _font_glyphmetrics (PyObject *self, PyObject* args)
             }
             else
             {
-                PyList_SetItem (list, i, Py_BuildValue
-                    ("(iiiii)", minx, maxx, miny, maxy, advance));
+                val = Py_BuildValue ("(iiiii)", minx, maxx, miny, maxy,
+                    advance);
+                if (!val)
+                {
+                    Py_DECREF (list);
+                    return NULL;
+                }
+                PyList_SetItem (list, i, val);
             }
         }
     }
@@ -351,12 +477,95 @@ _font_glyphmetrics (PyObject *self, PyObject* args)
             }
             else
             {
-                PyList_SetItem (list, i, Py_BuildValue
-                    ("(iiiii)", minx, maxx, miny, maxy, advance));
+                val = Py_BuildValue ("(iiiii)", minx, maxx, miny, maxy,
+                    advance);
+                if (!val)
+                {
+                    Py_DECREF (list);
+                    return NULL;
+                }
+                PyList_SetItem (list, i, val);
             }
         }
     }
     return list;
+}
+
+static PyObject*
+_font_glyphisprovided (PyObject *self, PyObject* args)
+{
+#if (SDL_TTF_MAJOR_VERSION >= 2) && (SDL_TTF_MINOR_VERSION >= 0) && (SDL_TTF_PATCHLEVEL >= 10)
+    PySDLFont_TTF *font = (PySDLFont_TTF*) self;
+    int isunicode = 0;
+    int provided = 0;
+    PyObject *val;
+
+    ASSERT_TTF_INIT (NULL);
+
+    if (PyUnicode_Check (args))
+    {
+        buf = PyUnicode_AsUnicode (args);
+        isunicode = 1;
+    }
+    else if (Bytes_Check (args))
+        buf = Bytes_AS_STRING (args);
+    else
+    {
+        PyErr_SetString (PyExc_TypeError,
+            "argument must be a string or unicode");
+    }
+
+    if (!buf)
+        return NULL;
+
+    if (isunicode)
+        length = PyUnicode_GetSize (args);
+    else
+        length = Bytes_Size (args);
+    if (length == 0)
+        Py_RETURN_NONE;
+
+    list = PyList_New (length);
+    if (!list)
+        return NULL;
+
+    if (isunicode)
+    {
+        for (i = 0; i < length; i++)
+        {
+            provided = TTF_GlyphIsProvided (font->font,
+                (Uint16) ((Py_UNICODE*) buf)[i]);
+            val = PyBool_FromLong (provided);
+            if (val)
+                PyList_SetItem (list, i, val);
+            else
+            {
+                Py_DECREF (list);
+                return NULL;
+            }
+        }
+    }
+    else
+    {
+        for (i = 0; i < length; i++)
+        {
+            provided = TTF_GlyphIsProvided (font->font,
+                (Uint16) ((char*) buf)[i]);
+            val = PyBool_FromLong (provided);
+            if (val)
+                PyList_SetItem (list, i, val);
+            else
+            {
+                Py_DECREF (list);
+                return NULL;
+            }
+        }
+    }
+    return list;
+#else
+    PyErr_SetString(PyExc_NotImplementedError,
+        "method not supported by the used SDL_ttf version");
+#endif
 }
 
 static PyObject*
@@ -369,8 +578,11 @@ _font_getsize (PyObject *self, PyObject* args)
 
     if (PyUnicode_Check (args))
     {
+        char *string;
         PyObject* strob = PyUnicode_AsEncodedString (args, "utf-8", "replace");
-        char *string = Bytes_AS_STRING (strob);
+        if (!strob)
+            return NULL;
+        string = Bytes_AS_STRING (strob);
         if (TTF_SizeUTF8 (font->font, string, &w, &h) == -1)
         {
             PyErr_SetString (PyExc_PyGameError, TTF_GetError ());
@@ -465,8 +677,11 @@ _font_render (PyObject *self, PyObject* args, PyObject *kwds)
     }
     else if (PyUnicode_Check (text))
     {
+        char *string;
         PyObject* strob = PyUnicode_AsEncodedString (text, "utf-8", "replace");
-        char *string = Bytes_AS_STRING (strob);
+        if (!strob)
+            return NULL;
+        string = Bytes_AS_STRING (strob);
 
         switch (render)
         {

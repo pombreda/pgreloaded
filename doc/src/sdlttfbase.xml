@@ -57,14 +57,34 @@
         Gets the size of a text for this Font.
       </desc>
     </method>
+    <method name="glyph_is_provided">
+      <call>glyph_is_provided (text) -> [bool, bool, bool, ...]</call>
+      <desc>Checks, whether the font supports all glyphs of a text.
+
+      Checks, whether the font supports rendering of all glyphs of the
+      passed text.
+      </desc>
+    </method>
     <attr name="height">
       <desc>Gets the height of the Font.</desc>
+    </attr>
+    <attr name="hinting">
+      <desc>
+        Gets or sets the hinting of the Font. This can be any valid HINTING_*
+        constant.
+      </desc>
     </attr>
     <attr name="is_fixed_width">
       <desc>Gets whether the chosen font face is a fixed width one.</desc>
     </attr>
+    <attr name="kerning">
+      <desc>Gets or sets the kerning of the Font.</desc>
+    </attr>
     <attr name="line_skip">
       <desc>Gets the line skip of the Font.</desc>
+    </attr>
+    <attr name="outline">
+      <desc>Gets or sets the current outline size of the Font in pixels.</desc>
     </attr>
     <method name="render">
       <call>render (text, fgcolor[, bgcolor, renderflag]) -> Surface</call>
