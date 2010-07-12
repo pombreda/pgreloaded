@@ -33,6 +33,13 @@
 #define PRAGMA(x)
 #endif
 
+/* VC 7.1 */
+#if defined(IS_WIN32) && defined(WIN32)
+#ifndef SIZE_MAX
+#define SIZE_MAX INT_MAX
+#endif
+#endif
+
 #ifndef MIN
 #define MIN(x,y) (((x) < (y)) ? (x) : (y))
 #endif
