@@ -498,7 +498,10 @@ _font_glyphisprovided (PyObject *self, PyObject* args)
     PySDLFont_TTF *font = (PySDLFont_TTF*) self;
     int isunicode = 0;
     int provided = 0;
-    PyObject *val;
+    int i;
+    PyObject *val, *list;
+    void *buf = NULL;
+    Py_ssize_t length;
 
     ASSERT_TTF_INIT (NULL);
 
