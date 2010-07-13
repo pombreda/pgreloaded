@@ -568,6 +568,7 @@ _font_glyphisprovided (PyObject *self, PyObject* args)
 #else
     PyErr_SetString(PyExc_NotImplementedError,
         "method not supported by the used SDL_ttf version");
+    return NULL;
 #endif
 }
 
