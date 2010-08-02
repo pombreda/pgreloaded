@@ -27,6 +27,28 @@
 #define SURFACE_EQUALS(x,y)                                             \
     (((PyPixelArray *)x)->surface == ((PyPixelArray *)y)->surface)
 
+#define GET_PIXEL_ROWINDEX(pxl,surface,bpp,_index,row)                  \
+    switch ((bpp))                                                      \
+    {                                                                   \
+    case 1:                                                             \
+        (pxl) = (Uint32)*((Uint8 *) (surface)->pixels + row + _index);  \
+        break;                                                          \
+    case 2:                                                             \
+        (pxl) = (Uint32)*((Uint16 *) ((surface)->pixels + row) + _index); \
+        break;                                                          \
+    case 3:                                                             \
+    {                                                                   \
+        Uint8 *px = ((Uint8 *) ((surface)->pixels + row) + _index * 3); \
+        (pxl) = GET_PIXEL24(px);                                        \
+        break;                                                          \
+    }                                                                   \
+    default: /* 4 bpp */                                                \
+        (pxl) = *((Uint32 *) ((surface)->pixels + row) + _index);       \
+        break;                                                          \
+    }
+
+
+
 static PyPixelArray* _pixelarray_new_internal (PyTypeObject *type,
     PyObject *surface, Uint32 xstart, Uint32 ystart, Uint32 xlen, Uint32 ylen,
     Sint32 xstep, Sint32 ystep, Uint32 padding, PyObject *parent);
@@ -665,7 +687,7 @@ _pixelarray_item (PyPixelArray *array, Py_ssize_t _index)
             return NULL;
         }
         
-        GET_PIXEL_AT (pixel, surface, bpp, array->xstart,
+        GET_PIXEL_ROWINDEX (pixel, surface, bpp, array->xstart,
             _index * array->padding * array->ystep);
         return PyInt_FromLong ((long)pixel);
     }
@@ -678,7 +700,8 @@ _pixelarray_item (PyPixelArray *array, Py_ssize_t _index)
             PyErr_SetString (PyExc_IndexError, "array index out of range");
             return NULL;
         }
-        GET_PIXEL_AT(pixel, surface, bpp, array->xstart + _index * array->xstep,
+        GET_PIXEL_ROWINDEX (pixel, surface, bpp,
+            array->xstart + _index * array->xstep,
             array->ystart * array->padding * array->ystep);
         return PyInt_FromLong ((long)pixel);
     }
@@ -1813,7 +1836,7 @@ _pixelarray_subscript (PyPixelArray *array, PyObject *op)
         if (ABS (xstop - xstart) == 1 && ABS (ystop - ystart) == 1)
         {
             Uint32 pixel;
-            GET_PIXEL_AT (pixel, surface, surface->format->BytesPerPixel,
+            GET_PIXEL_ROWINDEX (pixel, surface, surface->format->BytesPerPixel,
                 array->xstart + xstart, ystart * array->padding * array->ystep);
             return PyInt_FromLong ((long)pixel);
         }
