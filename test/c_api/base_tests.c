@@ -31,12 +31,15 @@ test_helpers (void)
         ERROR ("Mismatch in DoubleFromObj result");
     Py_DECREF (val);
     
-    val = PyLong_FromLong (-10);
-    if (!IntFromObj(val, &i))
-        ERROR ("Mismatch in IntFromObj");
-    if (i != -10)
-        ERROR ("Mismatch in IntFromObj result");
-    Py_DECREF (val);
+    for (j = 50; j > -50; j -= 5)
+    {
+        val = PyInt_FromLong (j);
+        if (!IntFromObj(val, &i))
+            ERROR ("Mismatch in IntFromObj");
+        if (i != j)
+            ERROR ("Mismatch in IntFromObj result");
+        Py_DECREF (val);
+    }
 
     val = PyLong_FromLong (-10);
     if (!LongFromObj(val, &v))

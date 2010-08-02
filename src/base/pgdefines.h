@@ -113,13 +113,13 @@
  */
 #define INT_ADD_UINT_LIMIT(x,y,z)                                       \
     if ((x) >= 0)                                                       \
-        z = MIN ((x) + (y), INT_MAX);                                   \
+        (z) = MIN ((x) + (y), INT_MAX);                                 \
     else                                                                \
     {                                                                   \
         if ((y) <= INT_MAX || (y) < ((unsigned int)(INT_MAX + (x))))    \
-            z = (x) + (int)(y);                                         \
+            (z) = (x) + (int)(y);                                       \
         else                                                            \
-            z = INT_MAX;                                                \
+            (z) = INT_MAX;                                              \
     }
 #define INT16_ADD_UINT16_LIMIT INT_ADD_UINT_LIMIT
 
@@ -132,16 +132,16 @@
     if ((x) < 0)                                        \
     {                                                   \
         if ((y) > ((unsigned int)(INT_MAX + (x))))      \
-            z = INT_MIN;                                \
+            (z) = INT_MIN;                              \
         else                                            \
-            z = (x) - (y);                              \
+            (z) = (x) - (y);                            \
     }                                                   \
     else                                                \
     {                                                   \
         if ((y) > ((pguint16)(INT_MAX - (x))))          \
-            z = INT_MIN;                                \
+            (z) = INT_MIN;                              \
         else                                            \
-            z = (x) - (y);                              \
+            (z) = (x) - (y);                            \
     }
 
 #define INT16_SUB_UINT16_LIMIT INT_SUB_UINT_LIMIT

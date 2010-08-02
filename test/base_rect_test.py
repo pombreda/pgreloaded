@@ -2,6 +2,14 @@ import unittest
 from pygame2.base import Rect
 
 class RectTest (unittest.TestCase):
+    def test_center_overflow__issue1 (self):
+        rect = Rect (50,50,10,10)
+        px = rect.centerx
+        for i in xrange (30):
+            rect.centerx -= 10
+            px -= 10
+            self.assertEqual (px, rect.centerx)
+
     def testConstructionXYWidthHeight( self ):
         r = Rect(1,2,3,4)
         self.assertEqual( 1, r.left )

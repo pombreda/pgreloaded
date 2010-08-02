@@ -380,7 +380,7 @@ static PyObject*
 _rect_getbottom (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return PyLong_FromUnsignedLong ((unsigned long) (r->y + r->h));
+    return PyLong_FromLong ((long) (r->y + r->h));
 }
 
 static int
@@ -397,7 +397,7 @@ static PyObject*
 _rect_getright (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return PyLong_FromUnsignedLong ((unsigned long) (r->x + r->w));
+    return PyLong_FromLong ((long) (r->x + r->w));
 }
 
 static int
@@ -414,7 +414,7 @@ static PyObject*
 _rect_getcenterx (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return PyLong_FromUnsignedLong ((unsigned long) (r->x + (r->w >> 1)));
+    return PyLong_FromLong ((long) (r->x + ((long)(r->w >> 1))));
 }
 
 static int
@@ -433,7 +433,7 @@ static PyObject*
 _rect_getcentery (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return PyLong_FromUnsignedLong ((unsigned long) (r->y + (r->h >> 1)));
+    return PyLong_FromLong ((long) (r->y + ((long)(r->h >> 1))));
 }
 
 static int
@@ -452,7 +452,8 @@ static PyObject*
 _rect_getcenter (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return Py_BuildValue ("(ii)", r->x + (r->w >> 1), r->y + (r->h >> 1));
+    return Py_BuildValue ("(ii)", r->x + ((int)(r->w >> 1)),
+        r->y + ((int)(r->h >> 1)));
 }
 
 static int
@@ -491,7 +492,7 @@ static PyObject*
 _rect_getmidtop (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return Py_BuildValue ("(ii)", r->x + (r->w >> 1), r->y);
+    return Py_BuildValue ("(ii)", r->x + ((int)(r->w >> 1)), r->y);
 }
 
 static int
@@ -510,7 +511,7 @@ static PyObject*
 _rect_getmidleft (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return Py_BuildValue ("(ii)", r->x, r->y +  (r->h >> 1));
+    return Py_BuildValue ("(ii)", r->x, r->y + ((int)(r->h >> 1)));
 }
 
 static int
@@ -529,7 +530,7 @@ static PyObject*
 _rect_getmidbottom (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return Py_BuildValue ("(ii)", r->x + (r->w >> 1), r->y + r->h);
+    return Py_BuildValue ("(ii)", r->x + ((int)(r->w >> 1)), r->y + r->h);
 }
 
 static int
@@ -548,7 +549,7 @@ static PyObject*
 _rect_getmidright (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return Py_BuildValue ("(ii)", r->x + r->w, r->y + (r->h >> 1));
+    return Py_BuildValue ("(ii)", r->x + r->w, r->y + ((int)(r->h >> 1)));
 }
 
 static int
