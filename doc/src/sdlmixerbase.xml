@@ -74,8 +74,9 @@
       <call>play (sound[, loops, ticks]) -> None</call>
       <desc>Starts the playback of an audio :class:`Chunk`.
       
-        The audio chunk will be played for *loops* + 1 times (or one time only, 
-        if *loops* is omitted).
+        The audio chunk will be played for *loops* + 1 times (or one
+        time only, if *loops* is omitted). If *loops* is set to -1, the
+        sound will be played in an endless loop.
         
         *ticks* is the optional maximum time in milliseconds to stop playing
         after.

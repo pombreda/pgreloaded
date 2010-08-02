@@ -251,7 +251,7 @@ _channel_getfading (PyObject *self, void *closure)
 static PyObject*
 _channel_play (PyObject *self, PyObject *args, PyObject *kwds)
 {
-    int loops = -1, ticks = -1, retval;
+    int loops = 0, ticks = -1, retval;
     PyObject *obj;
     PyChannel *chan = (PyChannel*) self;
     PyChunk *chunk;
