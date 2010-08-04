@@ -380,7 +380,9 @@ static PyObject*
 _rect_getbottom (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return PyLong_FromLong ((long) (r->y + r->h));
+    int bottom;
+    INT16_ADD_UINT16_LIMIT(r->y, r->h, bottom);
+    return PyLong_FromLong ((long) bottom);
 }
 
 static int
@@ -397,7 +399,9 @@ static PyObject*
 _rect_getright (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return PyLong_FromLong ((long) (r->x + r->w));
+    int right;
+    INT16_ADD_UINT16_LIMIT(r->x, r->w, right);
+    return PyLong_FromLong ((long) right);
 }
 
 static int
@@ -414,7 +418,9 @@ static PyObject*
 _rect_getcenterx (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return PyLong_FromLong ((long) (r->x + ((long)(r->w >> 1))));
+    int centerx;
+    INT16_ADD_UINT16_LIMIT(r->x, (r->w >> 1), centerx);
+    return PyLong_FromLong ((long) centerx);
 }
 
 static int
@@ -433,7 +439,9 @@ static PyObject*
 _rect_getcentery (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return PyLong_FromLong ((long) (r->y + ((long)(r->h >> 1))));
+    int centery;
+    INT16_ADD_UINT16_LIMIT(r->y, (r->h >> 1), centery);
+    return PyLong_FromLong ((long) centery);
 }
 
 static int
@@ -452,8 +460,11 @@ static PyObject*
 _rect_getcenter (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return Py_BuildValue ("(ii)", r->x + ((int)(r->w >> 1)),
-        r->y + ((int)(r->h >> 1)));
+    int centerx, centery;
+    INT16_ADD_UINT16_LIMIT(r->x, (r->w >> 1), centerx);
+    INT16_ADD_UINT16_LIMIT(r->y, (r->h >> 1), centery);
+
+    return Py_BuildValue ("(ii)", centerx, centery);
 }
 
 static int
@@ -492,7 +503,9 @@ static PyObject*
 _rect_getmidtop (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return Py_BuildValue ("(ii)", r->x + ((int)(r->w >> 1)), r->y);
+    int midx;
+    INT16_ADD_UINT16_LIMIT(r->x, (r->w >> 1), midx);
+    return Py_BuildValue ("(ii)", midx, r->y);
 }
 
 static int
@@ -511,7 +524,9 @@ static PyObject*
 _rect_getmidleft (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return Py_BuildValue ("(ii)", r->x, r->y + ((int)(r->h >> 1)));
+    int midy;
+    INT16_ADD_UINT16_LIMIT(r->y, (r->h >> 1), midy);
+    return Py_BuildValue ("(ii)", r->x, midy);
 }
 
 static int
@@ -530,7 +545,10 @@ static PyObject*
 _rect_getmidbottom (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return Py_BuildValue ("(ii)", r->x + ((int)(r->w >> 1)), r->y + r->h);
+    int midx, midy;
+    INT16_ADD_UINT16_LIMIT(r->x, (r->w >> 1), midx);
+    INT16_ADD_UINT16_LIMIT(r->y, r->h, midy);
+    return Py_BuildValue ("(ii)", midx, midy);
 }
 
 static int
@@ -549,7 +567,10 @@ static PyObject*
 _rect_getmidright (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return Py_BuildValue ("(ii)", r->x + r->w, r->y + ((int)(r->h >> 1)));
+    int midx, midy;
+    INT16_ADD_UINT16_LIMIT(r->x, r->w, midx);
+    INT16_ADD_UINT16_LIMIT(r->y, (r->h >> 1), midy);
+    return Py_BuildValue ("(ii)", midx, midy);
 }
 
 static int
@@ -586,7 +607,9 @@ static PyObject*
 _rect_gettopright (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return Py_BuildValue ("(ii)", r->x + r->w, r->y);
+    int topx;
+    INT16_ADD_UINT16_LIMIT(r->x, r->w, topx);
+    return Py_BuildValue ("(ii)", topx, r->y);
 }
 
 static int
@@ -605,7 +628,9 @@ static PyObject*
 _rect_getbottomleft (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return Py_BuildValue ("(ii)", r->x, r->y + r->h);
+    int bottomy;
+    INT16_ADD_UINT16_LIMIT(r->y, r->h, bottomy);
+    return Py_BuildValue ("(ii)", r->x, bottomy);
 }
 
 static int
@@ -624,7 +649,10 @@ static PyObject*
 _rect_getbottomright (PyObject *self, void *closure)
 {
     PyRect *r = (PyRect*) self;
-    return Py_BuildValue ("(ii)", r->x + r->w, r->y + r->h);
+    int bottomx, bottomy;
+    INT16_ADD_UINT16_LIMIT(r->x, r->w, bottomx);
+    INT16_ADD_UINT16_LIMIT(r->y, r->h, bottomy);
+    return Py_BuildValue ("(ii)", bottomx, bottomy);
 }
 
 static int
