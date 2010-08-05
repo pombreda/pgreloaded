@@ -57,6 +57,7 @@
     <desc>Sets the volume for the music.
     
       Sets the volume for the music and returns the previous set volume.
+      The volume can be a numeric integer in the range [0, 128].
     </desc>
   </func>
 </module>

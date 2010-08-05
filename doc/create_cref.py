@@ -13,27 +13,32 @@ def prepare_text (text, stripbefore=False):
     text = text.replace ("\"", "\\\"")
     lines = text.split ("\n")
     
-        
     for l in lines:
-        l = l.strip ().replace ("::", "")
         if l.startswith ("|"):
             # Preserve spacings.
             l = l.replace (":const:", "       ")
             l = l.replace (":class:", "       ")
+            l = l.replace (":data:", "      ")
             l = l.replace (":meth:", "      ")
+            l = l.replace (":func:", "      ")
             l = l.replace (":attr:", "      ")
             l = l.replace (":ref:", "     ")
             l = l.replace (":exc:", "     ")
+            l = l.replace (":mod:", "     ")
             l = l.replace ("`", " ")
         else:
             l = l.replace (":const:", "")
             l = l.replace (":class:", "")
+            l = l.replace (":data:", "")
             l = l.replace (":meth:", "")
+            l = l.replace (":func:", "")
             l = l.replace (":attr:", "")
             l = l.replace (":ref:", "")
             l = l.replace (":exc:", "")
+            l = l.replace (":mod:", "")
             l = l.replace ("`", "")
         l = l.replace (".. note::", "NOTE:")
+        l = l.strip ().replace ("::", "")
 
         tmptext += l + "\\n"
     tmptext = tmptext.strip ("\\n")

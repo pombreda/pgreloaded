@@ -90,7 +90,9 @@
       <desc>Resumes the playback of a paused sound chunk.</desc>
     </method>
     <attr name="volume">
-      <desc>Gets or sets the channel volume.</desc>
+      <desc>Gets or sets the channel volume. The volume can be a numeric
+      integer in the range [0, 128].
+      </desc>
     </attr>
   </class>
 
@@ -110,7 +112,9 @@
       <desc>Gets the length of the audio data.</desc>
     </attr>
     <attr name="volume">
-      <desc>Gets or sets the default volume for the audio data.</desc>
+      <desc>Gets or sets the default volume for the audio data. The
+      volume can be a numeric integer in the range [0, 128].
+      </desc>
     </attr>
   </class>
 

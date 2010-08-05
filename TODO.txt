@@ -54,6 +54,7 @@ Things to ADD:
 * SDL_mixer: channel groups.
 * SDL_mixer: Mix_SetMusicCMD.
 * SDL_mixer: finishing hooks.
+* SDL_mixer: music decoder functions
 
 Things to WRAP:
 ===============
