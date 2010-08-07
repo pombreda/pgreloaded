@@ -207,7 +207,7 @@ class MaskTest (unittest.TestCase):
         m.clear()
         self.assertEqual(m.count, 0)
 
-    def test_pygame2_mask_Mask_erase(self):
+    def todo_test_pygame2_mask_Mask_erase(self):
 
         # __doc__ (as of 2008-11-03) for pygame2.mask.Mask.erase:
 
