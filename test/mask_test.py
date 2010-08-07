@@ -207,7 +207,7 @@ class MaskTest (unittest.TestCase):
         m.clear()
         self.assertEqual(m.count, 0)
 
-    def todo_test_pygame2_mask_Mask_erase(self):
+    def test_pygame2_mask_Mask_erase(self):
 
         # __doc__ (as of 2008-11-03) for pygame2.mask.Mask.erase:
 
@@ -218,8 +218,36 @@ class MaskTest (unittest.TestCase):
         # This performs a bitwise NAND operation upon the calling Mask.
         # The passed mask's start offfset for the erase operation will
         # be the x and y offset passed to the method.
+        
+        m1 = Mask (10, 10)
+        m1.fill ()
+        m2 = Mask (10, 10)
+        m2.fill ()
+ 
+        m1.erase (m2, 0, 0)
+        self.assertEqual (m1.count, 0)
 
-        self.fail() 
+        m1.fill ()
+        m1.erase (m2, 1, 1)
+        self.assertEqual (m1.count, 19)
+
+        m1.fill ()
+        m1.erase (m2, 2, 0)
+        self.assertEqual (m1.count, 20)
+
+        m1.fill ()
+        m1.erase (m2, 0, 10)
+        self.assertEqual (m1.count, 100)
+        m1.fill ()
+        m1.erase (m2, 10, 0)
+        self.assertEqual (m1.count, 100)
+
+        m1.fill ()
+        m1.erase (m2, -1, 0)
+        self.assertEqual (m1.count, 10)
+        m1.fill ()
+        m1.erase (m2, 0, -1)
+        self.assertEqual (m1.count, 10)
 
     def test_pygame2_mask_Mask_fill(self):
 

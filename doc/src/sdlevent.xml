@@ -77,8 +77,9 @@
       |                          |   window.                                 |
       |                          | | `pos`: The x/y coordinate as tuple      |
       |                          | | `button`: The pressed button (will be   |
-      |                          |   either BUTTON_LEFT, BUTTON_MIDDLE or    |
-      |                          |   BUTTON_RIGHT                            |
+      |                          |   either BUTTON_LEFT, BUTTON_MIDDLE,      |
+      |                          |   BUTTON_RIGHT, BUTTON_WHEELDOWN,         |
+      |                          |   BUTTON_WHEELUP, BUTTON_X1 or BUTTON_X2) |
       +--------------------------+-------------------------------------------+
       | :const:`MOUSEBUTTONUP`   | | `state`: will always be RELEASED        |
       |                          | | `x`: The current x-coordinate on the    |
@@ -87,8 +88,9 @@
       |                          |   window.                                 |
       |                          | | `pos`: The x/y coordinate as tuple      |
       |                          | | `button`: The pressed button (will be   |
-      |                          |   either BUTTON_LEFT, BUTTON_MIDDLE or    |
-      |                          |   BUTTON_RIGHT                            |
+      |                          |   either BUTTON_LEFT, BUTTON_MIDDLE,      |
+      |                          |   BUTTON_RIGHT, BUTTON_WHEELDOWN,         |
+      |                          |   BUTTON_WHEELUP, BUTTON_X1 or BUTTON_X2) |
       +--------------------------+-------------------------------------------+
       | :const:`JOYAXISMOTION`   | | `which`: The device index of the        |
       |                          |   joystick                                |

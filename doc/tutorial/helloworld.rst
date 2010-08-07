@@ -131,7 +131,19 @@ running - will keep the window shown on the screen [#f1]_. ::
 
   video.quit ()
 
-TBD
+We use a traditional endless loop for dealing with the events. On each
+loop iteration, we poll all events that queued up using
+:meth:`pygame2.sdl.event.get`. Now each single event is processed,
+depending on its type.
+
+In this simple example, we simply check, whether the user requested the
+application to quit (:data:`pygame2.sdl.constants.QUIT`) or whether he
+pressed the escape key on the keyboard. In either of those cases, we
+interrupt the loop by setting the loop exit criteria.
+
+The last step now is to release the hold video memory by the underlying
+SDL library, by simply calling the :meth:`pygame2.sdl.video.quit`
+function.
 
 .. rubric:: Footnotes
 
