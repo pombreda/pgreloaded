@@ -16,3 +16,5 @@ Test releases:
 * alpha2 (SVN rev. 2430)
 * alpha3 (SVN rev. 2707)
 * alpha4 (SVN rev. 2775)
+* alpha5 (Mercurial rev. 670fec6c405b)
+

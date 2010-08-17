@@ -16,18 +16,17 @@ def run ():
         cd = cdrom.CD (index)
         print ("CD system name: %s" % cd.name)
         status = "Empty"
-        if status == sdlconst.CD_ERROR:
+        if cd.status == sdlconst.CD_ERROR:
             status = "Error"
-        elif status == sdlconst.CD_PAUSED:
+        elif cd.status == sdlconst.CD_PAUSED:
             status = "Paused"
-        elif status == sdlconst.CD_PLAYING:
+        elif cd.status == sdlconst.CD_PLAYING:
             status = "Playing"
-        elif status == sdlconst.CD_STOPPED:
+        elif cd.status == sdlconst.CD_STOPPED:
             status = "Stopped"
-
         print ("CD status:      %s" % status)
         print ("CD tracks:      %d" % cd.num_tracks)
-        if cd.status == sdlconst.CD_TRAYEMPTY:
+        if cd.status in (sdlconst.CD_TRAYEMPTY, sdlconst.CD_ERROR):
             continue
         print ("Getting track information for CD %s..." % cd.name)
         for track in cd.tracks:

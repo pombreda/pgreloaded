@@ -11,6 +11,7 @@ SUBDIRS = \
 	$(top_srcdir)/examples/sdl \
 	$(top_srcdir)/examples/sdlext \
 	$(top_srcdir)/examples/sdlgfx \
+	$(top_srcdir)/examples/sdlmixer \
 	$(top_srcdir)/doc \
 	$(top_srcdir)/doc/capi \
 	$(top_srcdir)/doc/src \
@@ -115,11 +116,13 @@ buildall: clean
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.4 setup.py build -c $(COMPILER); \
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.5 setup.py build -c $(COMPILER); \
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.6 setup.py build -c $(COMPILER); \
+		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.7 setup.py build -c $(COMPILER); \
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python3.1 setup.py build -c $(COMPILER); \
 	else \
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.4 setup.py build; \
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.5 setup.py build; \
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.6 setup.py build; \
+		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.7 setup.py build; \
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python3.1 setup.py build; \
 	fi
 
@@ -130,6 +133,7 @@ installall:
 	@WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.4 setup.py install
 	@WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.5 setup.py install
 	@WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.6 setup.py install
+	@WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.7 setup.py install
 	@WITH_EXPERIMENTAL=$(EXPERIMENTAL) python3.1 setup.py install
 
 testall:
@@ -139,6 +143,8 @@ testall:
 	@rm -rf test/*.pyc
 	@python2.6 test/util/runtests.py
 	@rm -rf test/*.pyc
+	@python2.7 test/util/runtests.py
+	@rm -rf test/*.pyc
 	@python3.1 test/util/runtests.py
 	@rm -rf test/*.pyc
 
@@ -146,14 +152,18 @@ testall2:
 	@python2.4 -c "import pygame2.test; pygame2.test.run ()"
 	@python2.5 -c "import pygame2.test; pygame2.test.run ()"
 	@python2.6 -c "import pygame2.test; pygame2.test.run ()"
+	@python2.7 -c "import pygame2.test; pygame2.test.run ()"
 	@python3.1 -c "import pygame2.test; pygame2.test.run ()"
 
 purge_installs:
 	rm -rf /usr/local/include/python2.4/pygame2*
 	rm -rf /usr/local/include/python2.5/pygame2*
 	rm -rf /usr/local/include/python2.6/pygame2*
+	rm -rf /usr/local/include/python2.7/pygame2*
 	rm -rf /usr/local/include/python3.1/pygame2*
 	rm -rf /usr/local/lib/python2.4/site-packages/pygame2*
 	rm -rf /usr/local/lib/python2.5/site-packages/pygame2*
 	rm -rf /usr/local/lib/python2.6/site-packages/pygame2*
+	rm -rf /usr/local/lib/python2.7/site-packages/pygame2*
 	rm -rf /usr/local/lib/python3.1/site-packages/pygame2*
+
