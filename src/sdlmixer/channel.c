@@ -132,7 +132,12 @@ PyTypeObject PyChannel_Type =
 static void
 _channel_dealloc (PyChannel *self)
 {
-    Mix_HaltChannel (self->channel);
+    /* If the mixer was already deinitialized, do not call any Mix_XXX
+     * functions. */
+    if (Mix_QuerySpec (NULL, NULL, NULL) != 0)
+    {
+        Mix_HaltChannel (self->channel);
+    }
 
     if (self->playchunk)
     {
@@ -180,7 +185,9 @@ _channel_init (PyObject *self, PyObject *args, PyObject *kwds)
             PyErr_SetString (PyExc_PyGameError, "channel allocation mismatch");
             return -1;
         }
+        channel = check;
     }
+    ((PyChannel*)self)->channel = channel;
     return 0;
 }
 
@@ -203,7 +210,7 @@ static PyObject*
 _channel_getvolume (PyObject *self, void *closure)
 {
     ASSERT_MIXER_OPEN(NULL);
-    return PyInt_FromLong (Mix_Volume (((PyChannel*)self)->channel, -1));
+    return PyInt_FromLong (Mix_Volume (PyChannel_AsChannel (self), -1));
 }
 
 static int
@@ -221,7 +228,7 @@ _channel_setvolume (PyObject *self, PyObject *value, void *closure)
         PyErr_SetString (PyExc_ValueError, "volume must be in the range 0-128");
         return -1;
     }
-    Mix_Volume (((PyChannel*)self)->channel, volume);
+    Mix_Volume (PyChannel_AsChannel (self), volume);
     return 0;
 }
 
@@ -229,14 +236,14 @@ static PyObject*
 _channel_getplaying (PyObject *self, void *closure)
 {
     ASSERT_MIXER_OPEN(NULL);
-    return PyBool_FromLong (Mix_Playing (((PyChannel*)self)->channel));
+    return PyBool_FromLong (Mix_Playing (PyChannel_AsChannel (self)));
 }
 
 static PyObject*
 _channel_getpaused (PyObject *self, void *closure)
 {
     ASSERT_MIXER_OPEN(NULL);
-    return PyBool_FromLong (Mix_Paused (((PyChannel*)self)->channel));
+    return PyBool_FromLong (Mix_Paused (PyChannel_AsChannel (self)));
 }
 
 static PyObject*

@@ -102,11 +102,16 @@ PyTypeObject PyChunk_Type =
 static void
 _chunk_dealloc (PyChunk *self)
 {
-    if (self->chunk)
+    /* If the mixer was already deinitialized, do not call any Mix_XXX
+     * functions. */
+    if (Mix_QuerySpec (NULL, NULL, NULL) != 0)
     {
-        if (self->playchannel != -1)
-            Mix_HaltChannel (self->playchannel);
-        Mix_FreeChunk (self->chunk);
+        if (self->chunk)
+        {
+            if (self->playchannel != -1)
+                Mix_HaltChannel (self->playchannel);
+            Mix_FreeChunk (self->chunk);
+        }
     }
     ((PyObject*)self)->ob_type->tp_free ((PyObject *) self);
 }

@@ -83,7 +83,13 @@
       </desc>
     </method>
     <attr name="playing">
-      <desc>Gets, whether the Channel is currently playing audio.</desc>
+      <desc>
+      Gets, whether the Channel is currently playing audio.
+      
+      .. note::
+      
+        This will be also be True, if the Channel is paused.
+      </desc>
     </attr>
     <method name="resume">
       <call>resume () -> None</call>
