@@ -34,6 +34,7 @@ static PyObject* _mixer_geterror (PyObject *self);
 static PyObject* _mixer_openaudio (PyObject *self, PyObject *args);
 static PyObject* _mixer_closeaudio (PyObject *self);
 static PyObject* _mixer_queryspec (PyObject *self);
+static PyObject* _mixer_getdecoders (PyObject *self);
 
 static PyMethodDef _mixer_methods[] = {
     { "init", _mixer_init, METH_VARARGS, DOC_BASE_INIT },
@@ -51,6 +52,8 @@ static PyMethodDef _mixer_methods[] = {
       DOC_BASE_CLOSE_AUDIO },
     { "query_spec", (PyCFunction) _mixer_queryspec, METH_NOARGS,
       DOC_BASE_QUERY_SPEC },
+    { "get_decoders", (PyCFunction)_mixer_getdecoders, METH_NOARGS,
+      DOC_BASE_GET_DECODERS },
     { NULL, NULL, 0, NULL },
 };
 
@@ -164,6 +167,41 @@ _mixer_queryspec (PyObject *self)
         return NULL;
     }
     return Py_BuildValue ("(iiii)", times, freq, format, chans);
+}
+static PyObject*
+_mixer_getdecoders (PyObject *self)
+{
+    int i, count = 0;
+    PyObject *list;
+
+    ASSERT_MIXER_OPEN (NULL);
+
+    list = PyList_New (0);
+    if (!list)
+        return NULL;
+
+    count = Mix_GetNumChunkDecoders ();
+    if (count <= 0)
+        return list;
+
+    for (i = 0; i < count; i++)
+    {
+        const char *name = Mix_GetChunkDecoder (i);
+        PyObject *item = Text_FromUTF8 (name);
+        if (!item)
+        {
+            Py_DECREF (list);
+            return NULL;
+        }
+        if (PyList_Append (list, item) == -1)
+        {
+            Py_DECREF (item);
+            Py_DECREF (list);
+            return NULL;
+        }
+        Py_DECREF (item);
+    }
+    return list;
 }
 
 #ifdef IS_PYTHON_3

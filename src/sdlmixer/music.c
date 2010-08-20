@@ -144,9 +144,16 @@ _music_init (PyObject *self, PyObject *args, PyObject *kwds)
     music = Mix_LoadMUS_RW (rw);
     Py_END_ALLOW_THREADS;
 
+    /*
+     * TODO:
+     * SDL_Mixer will close the RWops automatically for music data.
+     * Make sure, we do not have any memory leaks!
+     */
+    /*
     if (!autoclose)
         PyRWops_Close (rw, autoclose);
-    
+    */
+
     if (!music)
     {
         PyErr_SetString (PyExc_PyGameError, Mix_GetError ());
@@ -169,12 +176,14 @@ _music_gettype (PyObject *self, void *closure)
 static PyObject*
 _music_play (PyObject *self, PyObject *args)
 {
-    int loops = -1, ret;
+    int loops = 0, ret;
 
     ASSERT_MIXER_OPEN(NULL);
 
     if (!PyArg_ParseTuple (args, "|i:play", &loops))
         return NULL;
+    
+    loops = MAX (loops, -1);
 
     Py_BEGIN_ALLOW_THREADS;
     ret = Mix_PlayMusic (((PyMusic*)self)->music, loops);
@@ -191,7 +200,7 @@ _music_play (PyObject *self, PyObject *args)
 static PyObject*
 _music_fadein (PyObject *self, PyObject *args, PyObject *kwds)
 {
-    int loops = -1, ms, retval;
+    int loops = 0, ms, retval;
     double pos = 0;
 
     static char *kwlist[] = { "ms", "loops", "pos", NULL };

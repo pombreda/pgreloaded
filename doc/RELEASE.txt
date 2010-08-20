@@ -7,7 +7,7 @@ of before issueing a new release.
 
 General
 =======
-Releases are split into three phases usually, *alpha*, *rc* and *final*.
+Releases are split into three phases usually, *alpha*, *beta* and *final*.
 
 Alpha phase
 -----------
@@ -20,24 +20,25 @@ add completely new stuff.
 the *XXXth* release within that alpha phase. There is no limit to the amount of
 releases to be made.
 
-Release Candidate phase
------------------------
-The *rc* phase (short for Release Candidate) enters a beta testing cycle, where
-no new features should be added, but only bug fixes be committed. It is also
-the right time for proof-reading the documentation, running the unit tests on
-all platforms again and again and to recheck all examples.
+Release Candidate / Beta phase
+------------------------------
+The *beta* phase enters a beta testing cycle, where no new features
+should be added, but only bug fixes be committed. It is also the right
+time for proof-reading the documentation, running the unit tests on all
+platforms again and again and to recheck all examples.
 
-*rc* release versions are tagged with a *-rcXX* suffix, where *XXX* is
-the *XXXth* release within that *rc* phase. There should not be more than 3
-*rc* releases by default and they should be released on a weekly basis, allowing
-adopters to have a minimum of one week and maximum of 3 weeks before the final
-release is made.
+*beta* release versions are tagged with a *-betaXX* suffix, where *XXX*
+is the *XXXth* release within that *beta* phase. There should not be
+more than 3-5 *beta* releases by default and they should be released on a
+weekly basis, allowing adopters to have a minimum of one week and
+maximum of 5 weeks before the final release is made.
 
 Final phase
 -----------
-This is not directly a phase on its own, but simply the day of the final release
-for the specific version. The *final* release usually should be the same as the
-last *rc* release, but only differ by the version number and release date.
+This is not directly a phase on its own, but simply the day of the final
+release for the specific version. The *final* release usually should be
+the same as the last *beta* release, but only differ by the version
+number and release date.
 
 Preparations
 ============
@@ -50,7 +51,7 @@ Before a new release takes place, the following steps have to be made:
     lib/__init__.py
     
 * Update NEWS.txt with the changes since the last version (only for final
-  releases - alpha and rc should contain the information, but not be tagged
+  releases - alpha and beta should contain the information, but not be tagged
   explicitly). See :ref:`editingnews` for more information.
 
 * Update README.txt and doc/BuildXXX.txt to point to the latest required
@@ -105,7 +106,7 @@ tracker id should be added. ::
   
   * alpha 1 (rev. 73213)
   * alpha 2 (rev. 73237)
-  * rc 1 (rev. 73244)
+  * beta 1 (rev. 73244)
 
 Releasing
 =========

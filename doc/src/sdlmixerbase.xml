@@ -150,6 +150,7 @@
       
         Starts the playback of the Music. The music will be played once, if
         *loops* is omitted, otherwise it will be played *loops* + 1 times.
+        If *loops* is set to -1, the music will be played in an endless loop.
       </desc>
     </method>
     <attr name="type">
@@ -179,6 +180,16 @@
       which features may not be available through Pygame, if it is used
       as precompiled package using a different version of the SDL_mixer
       library.
+    </desc>
+  </func>
+  <func name="get_decoders">
+    <call>get_decoders () -> [str, str, ...]</call>
+    <desc>
+      Gets a list of sound decoders that are provided by the underlying SDL_mixer library.
+
+      Gets a list of sound decoders that are provided by the underlying
+      SDL_mixer library. For music decoders, use the
+      :func:`pygame2.sdlmixer.music.get_decoders` function.
     </desc>
   </func>
   <func name="get_error">

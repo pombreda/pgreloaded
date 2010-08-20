@@ -34,6 +34,7 @@ static PyObject* _music_playing (PyObject *self);
 static PyObject* _music_paused (PyObject *self);
 static PyObject* _music_fading (PyObject *self);
 static PyObject* _music_setposition (PyObject *self, PyObject *args);
+static PyObject* _music_getdecoders (PyObject *self);
 
 static PyMethodDef _music_methods[] = {
     { "set_volume", _music_setvolume, METH_O, DOC_MUSIC_SET_VOLUME },
@@ -48,13 +49,15 @@ static PyMethodDef _music_methods[] = {
     { "paused", (PyCFunction) _music_paused, METH_NOARGS, DOC_MUSIC_PAUSED },
     { "fading", (PyCFunction) _music_fading, METH_NOARGS, DOC_MUSIC_FADING },
     { "set_position", _music_setposition, METH_O, DOC_MUSIC_SET_POSITION },
+    { "get_decoders", (PyCFunction)_music_getdecoders, METH_NOARGS,
+      DOC_MUSIC_GET_DECODERS },
     { NULL, NULL, 0, NULL },
 };
 
 static PyObject*
 _music_setvolume (PyObject *self, PyObject *args)
 {
-    int volume;
+    int volume, result;
     
     ASSERT_MIXER_OPEN (NULL);
     
@@ -65,23 +68,36 @@ _music_setvolume (PyObject *self, PyObject *args)
         PyErr_SetString (PyExc_ValueError, "volume must be in the range 0-128");
         return NULL;
     }
-    return PyInt_FromLong (Mix_VolumeMusic (volume));
+
+    Py_BEGIN_ALLOW_THREADS;
+    result = Mix_VolumeMusic (volume);
+    Py_END_ALLOW_THREADS
+    return PyInt_FromLong ((long)result);
 }
 
 static PyObject*
 _music_getvolume (PyObject *self)
 {
+    int volume;
     ASSERT_MIXER_OPEN (NULL);
-    return PyInt_FromLong (Mix_VolumeMusic (-1));
+
+    Py_BEGIN_ALLOW_THREADS;
+    volume = Mix_VolumeMusic (-1);
+    Py_END_ALLOW_THREADS;
+
+    return PyInt_FromLong ((long)volume);
 }
 
 static PyObject*
 _music_pause (PyObject *self)
 {
     ASSERT_MIXER_OPEN (NULL);
-
+    
+    Py_BEGIN_ALLOW_THREADS;
     if (Mix_PlayingMusic ())
         Mix_PauseMusic ();
+    Py_END_ALLOW_THREADS;
+
     Py_RETURN_NONE;
 }
 
@@ -90,7 +106,10 @@ _music_resume (PyObject *self)
 {
     ASSERT_MIXER_OPEN (NULL);
 
+    Py_BEGIN_ALLOW_THREADS;
     Mix_ResumeMusic ();
+    Py_END_ALLOW_THREADS;
+
     Py_RETURN_NONE;
 }
 
@@ -99,7 +118,10 @@ _music_halt (PyObject *self)
 {
     ASSERT_MIXER_OPEN (NULL);
 
+    Py_BEGIN_ALLOW_THREADS;
     Mix_HaltMusic ();
+    Py_END_ALLOW_THREADS;
+
     Py_RETURN_NONE;
 }
 
@@ -108,14 +130,17 @@ _music_rewind (PyObject *self)
 {
     ASSERT_MIXER_OPEN (NULL);
 
+    Py_BEGIN_ALLOW_THREADS;
     Mix_RewindMusic ();
+    Py_END_ALLOW_THREADS;
+
     Py_RETURN_NONE;
 }
 
 static PyObject*
 _music_fadeout (PyObject *self, PyObject *args)
 {
-    int ms;
+    int ms, fadeout;
 
     ASSERT_MIXER_OPEN (NULL);
 
@@ -128,7 +153,11 @@ _music_fadeout (PyObject *self, PyObject *args)
         return NULL;
     }
 
-    if (!Mix_FadeOutMusic (ms))
+    Py_BEGIN_ALLOW_THREADS;
+    fadeout = Mix_FadeOutMusic (ms);
+    Py_END_ALLOW_THREADS;
+
+    if (!fadeout)
     {
         PyErr_SetString (PyExc_PyGameError, Mix_GetError ());
         return NULL;
@@ -139,29 +168,48 @@ _music_fadeout (PyObject *self, PyObject *args)
 static PyObject*
 _music_playing (PyObject *self)
 {
+    int playing;
     ASSERT_MIXER_OPEN (NULL);
-    return PyBool_FromLong (Mix_PlayingMusic ());
+
+    Py_BEGIN_ALLOW_THREADS;
+    playing = Mix_PlayingMusic ();
+    Py_END_ALLOW_THREADS;
+
+    return PyBool_FromLong ((long)playing);
 }
 
 static PyObject*
 _music_paused (PyObject *self)
 {
+    int paused;
     ASSERT_MIXER_OPEN (NULL);
-    return PyBool_FromLong (Mix_PausedMusic ());
+
+    Py_BEGIN_ALLOW_THREADS;
+    paused = Mix_PausedMusic ();
+    Py_END_ALLOW_THREADS;
+
+    return PyBool_FromLong ((long)paused);
 }
 
 static PyObject*
 _music_fading (PyObject *self)
 {
+    Mix_Fading fading;
     ASSERT_MIXER_OPEN (NULL);
-    return PyLong_FromUnsignedLong (Mix_FadingMusic ());
+
+    Py_BEGIN_ALLOW_THREADS;
+    fading = Mix_FadingMusic ();
+    Py_END_ALLOW_THREADS;
+
+    return PyLong_FromUnsignedLong ((unsigned long)fading);
 }
 
 static PyObject*
 _music_setposition (PyObject *self, PyObject *args)
 {
     double pos;
-    
+    int result;
+
     ASSERT_MIXER_OPEN (NULL);
     
     if (!DoubleFromObj (args, &pos))
@@ -172,13 +220,53 @@ _music_setposition (PyObject *self, PyObject *args)
         return NULL;
     }
 
-    if (Mix_SetMusicPosition (pos) == -1)
+    Py_BEGIN_ALLOW_THREADS;
+    result = Mix_SetMusicPosition (pos);
+    Py_END_ALLOW_THREADS;
+
+    if (result == -1)
     {
         PyErr_SetString (PyExc_PyGameError, Mix_GetError ());
         return NULL;
     }
 
     Py_RETURN_NONE;
+}
+
+static PyObject*
+_music_getdecoders (PyObject *self)
+{
+    int i, count = 0;
+    PyObject *list;
+
+    ASSERT_MIXER_OPEN (NULL);
+
+    list = PyList_New (0);
+    if (!list)
+        return NULL;
+
+    count = Mix_GetNumMusicDecoders ();
+    if (count <= 0)
+        return list;
+
+    for (i = 0; i < count; i++)
+    {
+        const char *name = Mix_GetMusicDecoder (i);
+        PyObject *item = Text_FromUTF8 (name);
+        if (!item)
+        {
+            Py_DECREF (list);
+            return NULL;
+        }
+        if (PyList_Append (list, item) == -1)
+        {
+            Py_DECREF (item);
+            Py_DECREF (list);
+            return NULL;
+        }
+        Py_DECREF (item);
+    }
+    return list;
 }
 
 #ifdef IS_PYTHON_3
