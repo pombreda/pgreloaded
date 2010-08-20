@@ -70,6 +70,15 @@ Currently the following examples exists:
 |                                    | class.                                 |
 +------------------------------------+----------------------------------------+
 | pygame2.examples.sdlgfx.primitives | Demonstrates the features of the       |
-|                                    | :class:`pygame2.sdlgfx.primitives`     |
+|                                    | :mod:`pygame2.sdlgfx.primitives`       |
+|                                    | module.                                |
++------------------------------------+----------------------------------------+
+| pygame2.examples.sdlmixer.sound    | Demonstrates the features of the       |
+|                                    | :class:`pygame2.sdlmixer.Chunk` and    |
+|                                    | :class:`pygame2.sdlmixer.Channel`      |
+|                                    | classes.                               |
++------------------------------------+----------------------------------------+
+| pygame2.examples.sdlmixer.music    | Demonstrates the features of the       |
+|                                    | :mod:`pygame2.sdlmixer.music`          |
 |                                    | module.                                |
 +------------------------------------+----------------------------------------+
