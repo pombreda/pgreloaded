@@ -5,6 +5,12 @@
   <alias>pygame2.openal</alias>
   <short>basic OpenAL wrapper module</short>
   <desc>
+    .. note::
+
+       The :mod:`pygame2.openal` module is currently marked experimental
+       and thus not distributed within the regular releases. To use it,
+       please build pygame2 yourself with the WITH_EXPERIMENTAL knob.
+
     .. todo::
     
        detailled description of the OpenAL model, including contexts, devices,

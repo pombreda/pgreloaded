@@ -21,7 +21,7 @@ def get_dependencies (cfg, compiler):
     dep = CompilerDependency
     deps = []
     if compiler == 'unix' or compiler == 'cygwin' or \
-       compiler == 'mingw32' or compiler == 'mingw32-console':
+            compiler == 'mingw32' or compiler == 'mingw32-console':
         # TODO: check compiler version!
         if cfg.build['OPENMP']:
             deps.append (dep ('openmp', ['-fopenmp'], ['-fopenmp']))

@@ -14,7 +14,7 @@ os.environ['PATH'] += ";%s;%s" % (path,  os.path.join (path, "dll"))
 
 DLLPATH = os.path.join (path, "dll")
 
-__version__ = "2.0.0-alpha5"
-version_info = (2, 0, 0, "alpha5")
+__version__ = "2.0.0-beta1"
+version_info = (2, 0, 0, "beta1")
 
 from pygame2.base import *

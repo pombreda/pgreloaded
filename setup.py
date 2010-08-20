@@ -9,7 +9,7 @@ from distutils.command.install_data import install_data
 import modules, cfg
 from config import helpers, msys, config_modules
 
-VERSION = "2.0.0-alpha5"
+VERSION = "2.0.0-beta1"
 DEBUG = True
 
 # Minimum requirements.
@@ -111,7 +111,7 @@ if __name__ == "__main__":
         VERSION = VERSION.replace("-rc", "r")
 
     if DEBUG and buildsystem in ("msys", "unix", "darwin") and \
-       compiler in ("unix", "cygwin", "mingw32", "mingw32-console"):
+            compiler in ("unix", "cygwin", "mingw32", "mingw32-console"):
         os.environ["CFLAGS"] += " -W -Wall -Wimplicit-int " + \
                         "-Wimplicit-function-declaration " + \
                         "-Wimplicit -Wreturn-type -Wunused " + \
