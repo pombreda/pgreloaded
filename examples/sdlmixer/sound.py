@@ -18,10 +18,28 @@ except ImportError:
     print ("No pygame2.sdlmixer support")
     sys.exit ()
 
+try:
+    import pygame2.freetype as freetype
+except ImportError:
+    print ("No pygame2.freetype support")
+    sys.exit ()
+
 black = pygame2.Color (0, 0, 0)
 white = pygame2.Color (255, 255, 255)
 
+def get_help (font):
+    texts = [
+        "[SPACE] - Start/Pause playback",
+        "[+/-] - Increase/Decrease volume",
+        ]
+
+    surfaces = []
+    for text in texts:
+        surfaces.append (font.render (text, white, ptsize=20))
+    return surfaces
+
 def run ():
+    freetype.init ()
     video.init ()
     sdlmixer.init ()
     sdlmixer.open_audio (sdlmixerconst.DEFAULT_FREQUENCY,
@@ -33,11 +51,18 @@ def run ():
     sound = sdlmixer.Chunk (pygame2.examples.RESOURCES.get ("house_lo.wav"))
     channel_sound = sdlmixer.Channel (1)
 
+    font = freetype.Font (pygame2.examples.RESOURCES.get ("sans.ttf"))
+    surfaces = get_help (font)
+
     screen = video.set_mode (640, 480)
     wm.set_caption ("SDL_mixer sound example")
 
     screenrect = pygame2.Rect (640, 480)
     screen.fill (black)
+    yoff = 100
+    for (sf, w, h) in surfaces:
+        screen.blit (sf, (100, yoff))
+        yoff += h + 10
     screen.flip ()
 
     okay = True
@@ -70,9 +95,9 @@ def run ():
                     channel_sound.volume = max (channel_sound.volume - 1, 0)
                     print ("Volume is now: %d" % channel_sound.volume)
 
-        screen.fill (black)
         screen.flip ()
-    
+
+    freetype.quit ()
     video.quit ()
     sdlmixer.close_audio ()
     sdlmixer.quit ()

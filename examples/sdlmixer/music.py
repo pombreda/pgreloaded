@@ -18,10 +18,28 @@ except ImportError:
     print ("No pygame2.sdlmixer support")
     sys.exit ()
 
+try:
+    import pygame2.freetype as freetype
+except ImportError:
+    print ("No pygame2.freetype support")
+    sys.exit ()
+
 black = pygame2.Color (0, 0, 0)
 white = pygame2.Color (255, 255, 255)
 
+def get_help (font):
+    texts = [
+        "[SPACE] - Start/Pause playback",
+        "[+/-] - Increase/Decrease volume",
+        ]
+
+    surfaces = []
+    for text in texts:
+        surfaces.append (font.render (text, white, ptsize=20))
+    return surfaces
+
 def run ():
+    freetype.init ()
     video.init ()
     sdlmixer.init ()
     sdlmixer.open_audio (sdlmixerconst.DEFAULT_FREQUENCY,
@@ -50,12 +68,19 @@ def run ():
         print ("Music has MP3/MAD format")
     elif music.type == sdlmixerconst.MUS_FLAC:
         print ("Music has FLAC format")
+
+    font = freetype.Font (pygame2.examples.RESOURCES.get ("sans.ttf"))
+    surfaces = get_help (font)
     
     screen = video.set_mode (640, 480)
-    wm.set_caption ("SDL_mixer sound example")
+    wm.set_caption ("SDL_mixer music example")
 
     screenrect = pygame2.Rect (640, 480)
     screen.fill (black)
+    yoff = 100
+    for (sf, w, h) in surfaces:
+        screen.blit (sf, (100, yoff))
+        yoff += h + 10
     screen.flip ()
 
     okay = True
@@ -80,17 +105,19 @@ def run ():
                     okay = False
                 elif ev.key in (sdlconst.K_PLUS, sdlconst.K_KP_PLUS):
                     # increase volume
-                    sdlmixermusic.set_volume (min (channel_sound.volume + 1,
-                                                   sdlmixerconst.MAX_VOLUME))
+                    sdlmixermusic.set_volume \
+                        (min (sdlmixermusic.get_volume () + 1,
+                              sdlmixerconst.MAX_VOLUME))
                     print ("Volume is now: %d" % sdlmixermusic.get_volume ())
                 elif ev.key in (sdlconst.K_MINUS, sdlconst.K_KP_MINUS):
                     # decrease volume
-                    sdlmixermusic.set_volume (max (channel_sound.volume - 1, 0))
+                    sdlmixermusic.set_volume \
+                        (max (sdlmixermusic.get_volume () - 1, 0))
                     print ("Volume is now: %d" % sdlmixermusic.get_volume ())
 
-        screen.fill (black)
         screen.flip ()
-    
+
+    freetype.quit ()
     video.quit ()
     sdlmixer.close_audio ()
     sdlmixer.quit ()
