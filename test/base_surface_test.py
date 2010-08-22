@@ -111,5 +111,27 @@ class SurfaceTest (unittest.TestCase):
         text = "<Generic Surface>"
         self.assertEqual (repr (sf), text)
 
+    def todo_test_pygame2_base_Surface_get_at(self):
+
+        # __doc__ (as of 2010-08-22) for pygame2.base.Surface.get_at:
+
+        # get_at (x, y) -> Color
+        # get_at (point) -> Color
+        # 
+        # Gets the Surface pixel value at the specified point.
+
+        self.fail()
+
+    def todo_test_pygame2_base_Surface_set_at(self):
+
+        # __doc__ (as of 2010-08-22) for pygame2.base.Surface.set_at:
+
+        # set_at (x, y, color) -> None
+        # set_at (point, color) -> None
+        # 
+        # Sets the Surface pixel value at the specified point.
+
+        self.fail()
+
 if __name__ == "__main__":
     unittest.main ()

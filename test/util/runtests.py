@@ -38,8 +38,10 @@ def exclude_tag (option, opt, value, parser, *args, **kwargs):
 def list_tags (option, opt, value, parser, *args, **kwargs):
     alltags = []
     testsuites = []
-    testdir, testfiles = gettestfiles ()
-    testloader = unittest.defaultTestLoader
+
+    testdir, testfiles = gettestfiles \
+        (os.path.join (os.path.dirname (__file__), ".."), None)
+    testloader = testrunner.TagTestLoader ([])
 
     for test in testfiles:
         try:
@@ -51,7 +53,8 @@ def list_tags (option, opt, value, parser, *args, **kwargs):
             except:
                 printerror()
         except:
-            pass
+            printerror ()
+
     for suite in testsuites:
         for test in suite:
             if hasattr (test, "__tags__"):

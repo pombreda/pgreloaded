@@ -2,15 +2,11 @@ import os, sys, datetime, textwrap, glob
 from inspect import *
 from optparse import OptionParser
 import relative_indentation
+import unittest
 
 for relpath in ('../../','../'):
     sys.path.insert(0, os.path.abspath(os.path.normpath(os.path.join \
         (os.path.dirname(__file__), relpath))))
-
-try:
-    import pygame2.test.pgunittest as unittest
-except:
-    import test.pgunittest as unittest
 
 if sys.version_info < (2, 5, 0):
     ismemberdescriptor = isdatadescriptor
