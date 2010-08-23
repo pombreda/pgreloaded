@@ -136,7 +136,8 @@ _channel_dealloc (PyChannel *self)
      * functions. */
     if (Mix_QuerySpec (NULL, NULL, NULL) != 0)
     {
-        Mix_HaltChannel (self->channel);
+	if (Mix_AllocateChannels (-1) > self->channel)
+            Mix_HaltChannel (self->channel);
     }
 
     if (self->playchunk)
