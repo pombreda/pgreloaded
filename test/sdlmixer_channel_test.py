@@ -10,7 +10,7 @@ class SDLMixerChannelTest (unittest.TestCase):
 
     def setUp (self):
         sdlmixer.init ()
-	sdlmixer.open_audio (mixconst.DEFAULT_FREQUENCY,
+        sdlmixer.open_audio (mixconst.DEFAULT_FREQUENCY,
                              mixconst.DEFAULT_FORMAT,
                              mixconst.DEFAULT_CHANNELS, 1024)
     def tearDown (self):
