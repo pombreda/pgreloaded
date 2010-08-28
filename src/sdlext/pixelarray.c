@@ -31,19 +31,19 @@
     switch ((bpp))                                                      \
     {                                                                   \
     case 1:                                                             \
-        (pxl) = (Uint32)*((Uint8 *) (surface)->pixels + row + _index);  \
+        (pxl) = (Uint32)*((Uint8 *) ((Uint8*)(surface)->pixels) + row + _index);  \
         break;                                                          \
     case 2:                                                             \
-        (pxl) = (Uint32)*((Uint16 *) ((surface)->pixels + row) + _index); \
+        (pxl) = (Uint32)*((Uint16 *) (((Uint8*)(surface)->pixels) + row) + _index); \
         break;                                                          \
     case 3:                                                             \
     {                                                                   \
-        Uint8 *px = ((Uint8 *) ((surface)->pixels + row) + _index * 3); \
+        Uint8 *px = ((Uint8 *) (((Uint8*)(surface)->pixels) + row) + _index * 3); \
         (pxl) = GET_PIXEL24(px);                                        \
         break;                                                          \
     }                                                                   \
     default: /* 4 bpp */                                                \
-        (pxl) = *((Uint32 *) ((surface)->pixels + row) + _index);       \
+        (pxl) = *((Uint32 *) (((Uint8*)(surface)->pixels) + row) + _index);       \
         break;                                                          \
     }
 
