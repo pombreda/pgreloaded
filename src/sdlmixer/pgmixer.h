@@ -125,10 +125,18 @@ static void **PyGameSDLMixer_C_API;
 #define PYGAME_SDLMIXER_SLOTS                                    \
     (PYGAME_SDLMIXERMUSIC_FIRSTSLOT + PYGAME_SDLMIXERMUSIC_NUMSLOTS)
 #define PYGAME_SDLMIXER_ENTRY "_PYGAME_SDLMIXER_CAPI"
+#define PYGAME_CSDLMIXER_ENTRY "pygame2.sdlmixer.base._PYGAME_SDLMIXER_CAPI"
 
 static int
 import_pygame2_sdlmixer_base (void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.sdlmixer.base");
+    if (_module == NULL)
+        return -1;
+    PyGameSDLMixer_C_API = (void**) PyCapsule_Import(PYGAME_CSDLMIXER_ENTRY, 0);
+    return (PyGameSDLMixer_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule ("pygame2.sdlmixer.base");
     if (_module != NULL)
     {
@@ -143,6 +151,7 @@ import_pygame2_sdlmixer_base (void)
         return 0;
     }
     return -1;
+#endif
 }
 
 #ifdef __cplusplus

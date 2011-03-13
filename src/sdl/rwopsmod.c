@@ -219,7 +219,7 @@ _pyobj_read_threaded (SDL_RWops *ops, void* ptr, int size, int num)
     if (!wrapper->read)
         return -1;
     
-    PyEval_AcquireLock ();
+    PyEval_AcquireThread (wrapper->thread);
     oldstate = PyThreadState_Swap (wrapper->thread);
         
     result = PyObject_CallFunction (wrapper->read, "i", size * num);
@@ -246,7 +246,7 @@ _pyobj_read_threaded (SDL_RWops *ops, void* ptr, int size, int num)
 
 end:
     PyThreadState_Swap (oldstate);
-    PyEval_ReleaseLock ();
+    PyEval_ReleaseThread (wrapper->thread);
     return retval;
 }
 
@@ -261,7 +261,7 @@ _pyobj_seek_threaded (SDL_RWops *ops, int offset, int whence)
     if (!wrapper->seek || !wrapper->tell)
         return -1;
 
-    PyEval_AcquireLock ();
+    PyEval_AcquireThread (wrapper->thread);
     oldstate = PyThreadState_Swap (wrapper->thread);
 
     if (!(offset == 0 && whence == SEEK_CUR)) /*being called only for 'tell'*/
@@ -288,7 +288,7 @@ _pyobj_seek_threaded (SDL_RWops *ops, int offset, int whence)
 
 end:
     PyThreadState_Swap (oldstate);
-    PyEval_ReleaseLock ();
+    PyEval_ReleaseThread (wrapper->thread);
     return retval;
 }
 
@@ -303,7 +303,7 @@ _pyobj_write_threaded (SDL_RWops *ops, const void* ptr, int size, int num)
     if (!wrapper->write)
         return -1;
 
-    PyEval_AcquireLock ();
+    PyEval_AcquireThread (wrapper->thread);
     oldstate = PyThreadState_Swap (wrapper->thread);
 
 #ifdef IS_PYTHON_3
@@ -322,7 +322,7 @@ _pyobj_write_threaded (SDL_RWops *ops, const void* ptr, int size, int num)
     
 end:
     PyThreadState_Swap (oldstate);
-    PyEval_ReleaseLock ();
+    PyEval_ReleaseThread (wrapper->thread);
     return retval;
 }
 
@@ -333,8 +333,9 @@ _pyobj_close_threaded (SDL_RWops *ops)
     PyObject *result;
     int retval = 0;
     PyThreadState* oldstate;
+    PyThreadState* wrap;
 
-    PyEval_AcquireLock ();
+    PyEval_AcquireThread (wrapper->thread);
     oldstate = PyThreadState_Swap (wrapper->thread);
 
     if (wrapper->close)
@@ -355,11 +356,12 @@ _pyobj_close_threaded (SDL_RWops *ops)
     Py_XDECREF (wrapper->close);
     
     PyThreadState_Swap (oldstate);
-    PyThreadState_Clear (wrapper->thread);
-    PyThreadState_Delete (wrapper->thread);
+
+    wrap = wrapper->thread;
     PyMem_Del (wrapper);
-    
-    PyEval_ReleaseLock ();
+    PyThreadState_Clear (wrap);
+    PyEval_ReleaseThread (wrap);
+    PyThreadState_Delete (wrap);
     
     SDL_FreeRW (ops);
     return retval;
@@ -631,6 +633,16 @@ PyRWops_NewRW_Threaded (PyObject *obj, int *canautoclose)
 #endif
 }
 
+#ifdef IS_PYTHON_3
+static struct PyModuleDef _module = {
+    PyModuleDef_HEAD_INIT,
+    "rwops",
+    "",
+    -1,
+    NULL,
+    NULL, NULL, NULL, NULL
+};
+#endif
 
 #ifdef IS_PYTHON_3
 PyMODINIT_FUNC PyInit_rwops (void)
@@ -643,14 +655,6 @@ PyMODINIT_FUNC initrwops (void)
     static void *c_api[PYGAME_SDLRWOPS_SLOTS];
 
 #ifdef IS_PYTHON_3
-    static struct PyModuleDef _module = {
-        PyModuleDef_HEAD_INIT,
-        "rwops",
-        "",
-        -1,
-        NULL,
-        NULL, NULL, NULL, NULL
-    };
     mod = PyModule_Create (&_module);
 #else
     mod = Py_InitModule3 ("rwops", NULL, "");
@@ -664,7 +668,11 @@ PyMODINIT_FUNC initrwops (void)
     c_api[PYGAME_SDLRWOPS_FIRSTSLOT+3] = (void *)PyRWops_NewRO_Threaded;
     c_api[PYGAME_SDLRWOPS_FIRSTSLOT+4] = (void *)PyRWops_NewRW_Threaded;
 
+#if PY_VERSION_HEX >= 0x03010000
+    c_api_obj = PyCapsule_New((void *)c_api, PYGAME_CSDLRWOPS_ENTRY, NULL);
+#else
     c_api_obj = PyCObject_FromVoidPtr ((void *) c_api, NULL);
+#endif
     if (c_api_obj)
     {
         if (PyModule_AddObject (mod, PYGAME_SDLRWOPS_ENTRY, c_api_obj) == -1)

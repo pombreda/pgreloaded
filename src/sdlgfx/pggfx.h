@@ -59,10 +59,18 @@ static void **PyGameSDLGFX_C_API;
 #define PYGAME_SDLGFX_SLOTS                                    \
     (PYGAME_SDLGFXFPS_FIRSTSLOT + PYGAME_SDLGFXFPS_NUMSLOTS)
 #define PYGAME_SDLGFX_ENTRY "_PYGAME_SDLGFX_CAPI"
+#define PYGAME_CSDLGFX_ENTRY "pygame2.sdlgfx.base._PYGAME_SDLGFX_CAPI"
 
 static int
 import_pygame2_sdlgfx_base (void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.sdlgfx.base");
+    if (_module == NULL)
+        return -1;
+    PyGameSDLGFX_C_API = (void**) PyCapsule_Import(PYGAME_CSDLGFX_ENTRY, 0);
+    return (PyGameSDLGFX_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule ("pygame2.sdlgfx.base");
     if (_module != NULL)
     {
@@ -77,6 +85,7 @@ import_pygame2_sdlgfx_base (void)
         return 0;
     }
     return -1;
+#endif
 }
 
 #ifdef __cplusplus

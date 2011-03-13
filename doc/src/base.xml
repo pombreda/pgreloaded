@@ -177,6 +177,21 @@
       A class for storing rectangular coordinates.
 
       A FRect is used to store and manipulate rectangular coordinates.
+      The following constructors are supported:
+    
+      * FRect (x, y, w, h)
+      * FRect (w, h)
+      * FRect ((x, y), (w, h))
+      * FRect (rect)
+
+      <example>
+        from pygame2 import FRect
+        
+        r1 = FRect (10.777, 10.27578, 100, 50)
+        r2 = FRect (100.99, 50.838)
+        r3 = FRect (r1.topleft, r2.size)
+        r4 = FRect (r1)
+      </example>
     </desc>
     <attr name="bottom">
       <desc>Gets or sets the bottom edge position of the FRect.</desc>
@@ -511,6 +526,21 @@
     <desc>A class for storing rectangular coordinates.
 
       A Rect is used to store and manipulate rectangular coordinates.
+      The following constructors are supported:
+    
+      * Rect (x, y, w, h)
+      * Rect (w, h)
+      * Rect ((x, y), (w, h))
+      * Rect (rect)
+
+      <example>
+        from pygame2 import Rect
+        
+        r1 = Rect (10, 10, 100, 50)
+        r2 = Rect (100, 50)
+        r3 = Rect (r1.topleft, r2.size)
+        r4 = Rect (r1)
+      </example>
     </desc>
     <attr name="bottom">
       <desc>Gets or sets the bottom edge position of the Rect.</desc>

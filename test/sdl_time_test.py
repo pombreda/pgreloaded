@@ -47,7 +47,7 @@ class SDLTimeTest (unittest.TestCase):
         # This is important - if we run the assertion test before quitting,
         # the time module won't be quitted and the timers will still exist,
         # causing thread issues in other tests.
-        self.assert_ (len (setargs) > 5)
+        self.assertTrue (len (setargs) > 5)
 
     def test_pygame2_sdl_time_delay(self):
 
@@ -68,7 +68,7 @@ class SDLTimeTest (unittest.TestCase):
             sdltime.delay (20)
             last = time.time ()
             delaytime = (last - prev) * 1000
-            self.assert_ (10 < delaytime < 50)
+            self.assertTrue (10 < delaytime < 50)
 
     def test_pygame2_sdl_time_get_ticks(self):
 
@@ -87,7 +87,7 @@ class SDLTimeTest (unittest.TestCase):
         self.assertRaises (pygame2.Error, sdltime.get_ticks)
         sdltime.init ()
         sdltime.delay (20)
-        self.assert_ (sdltime.get_ticks () > 0)
+        self.assertTrue (sdltime.get_ticks () > 0)
         sdltime.quit ()
         
     def test_pygame2_sdl_time_init(self):
@@ -137,7 +137,7 @@ class SDLTimeTest (unittest.TestCase):
         
         flag1 = []
         tobj = sdltime.add_timer (10, _timercb, (flag1,))
-        self.assert_ (tobj != None)
+        self.assertTrue (tobj != None)
         t1 = t2 = sdltime.get_ticks ()
         while (t2 - t1 < 50):
             sdltime.delay (1)
@@ -149,7 +149,7 @@ class SDLTimeTest (unittest.TestCase):
         tobj = sdltime.add_timer (100, _timercb, (flag2,))
         sdltime.remove_timer (tobj)
         self.assertRaises (ValueError, sdltime.remove_timer, tobj)
-        self.assert_ (tobj != None)
+        self.assertTrue (tobj != None)
         t1 = t2 = sdltime.get_ticks ()
         while (t2 - t1 < 50):
             sdltime.delay (1)

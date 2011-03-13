@@ -173,10 +173,18 @@ static void **PyGameOpenAL_C_API;
 #define PYGAME_OPENAL_SLOTS \
     (PYGAME_OPENALLISTENER_FIRSTSLOT + PYGAME_OPENALLISTENER_NUMSLOTS)
 #define PYGAME_OPENAL_ENTRY "_PYGAME_OPENAL_CAPI"
+#define PYGAME_COPENAL_ENTRY "pygame2.openal._PYGAME_OPENAL_CAPI"
 
 static int
 import_pygame2_openal (void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.openal");
+    if (_module == NULL)
+        return -1;
+    PyGameOpenAL_C_API = (void**) PyCapsule_Import (PYGAME_COPENAL_ENTRY, 0);
+    return (PyGameOpenAL_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule ("pygame2.openal");
     if (_module != NULL)
     {
@@ -191,6 +199,7 @@ import_pygame2_openal (void)
         return 0;
     }
     return -1;
+#endif
 }
 
 #ifdef __cplusplus

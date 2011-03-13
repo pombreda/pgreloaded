@@ -77,7 +77,11 @@ _sdl_glgetprocaddress (PyObject *self, PyObject *args)
         PyErr_SetString (PyExc_PyGameError, SDL_GetError ());
         return NULL;
     }
+#if PY_VERSION_HEX >= 0x03010000
+    retval = PyCapsule_New (ptr, proc, NULL);
+#else
     retval = PyCObject_FromVoidPtr (ptr, NULL);
+#endif
     return retval;
 }
 

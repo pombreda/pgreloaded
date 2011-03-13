@@ -31,7 +31,7 @@ class SDLGfxTest (unittest.TestCase):
             manager.delay ()
             last = time.time ()
             delaytime = (last - prev) * 1000
-            self.assert_ (85 < delaytime < 115)
+            self.assertTrue (85 < delaytime < 115)
 
     def test_pygame2_sdlgfx_base_FPSmanager_framerate(self):
 
@@ -59,7 +59,7 @@ class SDLGfxTest (unittest.TestCase):
         self.assertEqual (len (base.get_compiled_version ()), 3)
         self.assertEqual (base.get_compiled_version ()[0], 2)
         self.assertEqual (base.get_compiled_version ()[1], 0)
-        self.assert_ (base.get_compiled_version ()[2] >= 18)
+        self.assertTrue (base.get_compiled_version ()[2] >= 18)
 
 if __name__ == "__main__":
     unittest.main ()

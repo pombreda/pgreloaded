@@ -206,7 +206,11 @@ PyMODINIT_FUNC initcdrom (void)
     cdrom_export_capi (c_api);
     cdtrack_export_capi (c_api);
 
+#if PY_VERSION_HEX >= 0x03010000
+    c_api_obj = PyCapsule_New((void *)c_api, PYGAME_CSDLCDROM_ENTRY, NULL);
+#else
     c_api_obj = PyCObject_FromVoidPtr ((void *) c_api, NULL);
+#endif
     if (c_api_obj)
     {
         if (PyModule_AddObject (mod, PYGAME_SDLCDROM_ENTRY, c_api_obj) == -1)

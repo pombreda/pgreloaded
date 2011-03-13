@@ -22,7 +22,7 @@ class SDLTest (unittest.TestCase):
         self.assertEqual (len (base.get_compiled_version ()), 3)
         self.assertEqual (base.get_compiled_version ()[0], 1)
         self.assertEqual (base.get_compiled_version ()[1], 2)
-        self.assert_ (base.get_compiled_version ()[2] >= 10)
+        self.assertTrue (base.get_compiled_version ()[2] >= 10)
 
     def test_pygame2_sdl_base_get_error(self):
 
@@ -35,7 +35,7 @@ class SDLTest (unittest.TestCase):
         # SDL maintains an internal error message. This message will
         # usually be given to you when a :exc:pygame2.base.Error is
         # raised. You will rarely need to call this function.
-        self.assert_ (type (base.get_error ()), str)
+        self.assertTrue (type (base.get_error ()), str)
 
     def test_pygame2_sdl_base_get_version(self):
 
@@ -100,7 +100,7 @@ class SDLTest (unittest.TestCase):
         # After calling this function, you should not invoke any SDL
         # related class, method or function as they are likely to fail
         # or might give unpredictable results.
-        self.assert_ (base.quit () == None)
+        self.assertTrue (base.quit () == None)
 
     def test_pygame2_sdl_base_quit_subsystem(self):
 
@@ -113,8 +113,8 @@ class SDLTest (unittest.TestCase):
         # After calling this function, you should not invoke any class, method
         # or function related to the specified subsystems as they are likely
         # to fail or might give unpredictable results.
-        self.assert_ (base.quit_subsystem (constants.INIT_AUDIO) == None)
-        self.assert_ (base.quit_subsystem (constants.INIT_CDROM) == None)
+        self.assertTrue (base.quit_subsystem (constants.INIT_AUDIO) == None)
+        self.assertTrue (base.quit_subsystem (constants.INIT_CDROM) == None)
     
     def test_pygame2_sdl_base_was_init(self):
 

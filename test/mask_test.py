@@ -278,7 +278,7 @@ class MaskTest (unittest.TestCase):
         pair = (0, 1)
         for x in range (100):
             for y in range (100):
-                self.assert_ (m.get_at (x, y) in pair)
+                self.assertTrue (m.get_at (x, y) in pair)
         
         self.assertRaises (IndexError, m.get_at, -1, 0)
         self.assertRaises (IndexError, m.get_at, -7, 3)

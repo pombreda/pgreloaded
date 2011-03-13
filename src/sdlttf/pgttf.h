@@ -72,10 +72,18 @@ static void **PyGameSDLTTF_C_API;
 #define PYGAME_SDLTTF_SLOTS                                    \
     (PYGAME_SDLTTFFONT_FIRSTSLOT + PYGAME_SDLTTFFONT_NUMSLOTS)
 #define PYGAME_SDLTTF_ENTRY "_PYGAME_SDLTTF_CAPI"
+#define PYGAME_CSDLTTF_ENTRY "pygame2.sdlttf.base._PYGAME_SDLTTF_CAPI"
 
 static int
 import_pygame2_sdlttf_base (void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.sdlttf.base");
+    if (_module == NULL)
+        return -1;
+    PyGameSDLTTF_C_API = (void**) PyCapsule_Import(PYGAME_CSDLTTF_ENTRY, 0);
+    return (PyGameSDLTTF_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule ("pygame2.sdlttf.base");
     if (_module != NULL)
     {
@@ -90,6 +98,7 @@ import_pygame2_sdlttf_base (void)
         return 0;
     }
     return -1;
+#endif
 }
 
 #ifdef __cplusplus

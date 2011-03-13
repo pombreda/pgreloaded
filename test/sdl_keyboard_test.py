@@ -30,9 +30,9 @@ class SDLKeyboardTest (unittest.TestCase):
         # repeating completely.
         # 
         # Setting delay to 0 will disable repeating completely.
-        self.assert_ (keyboard.enable_repeat (0, 0) == None)
-        self.assert_ (keyboard.enable_repeat (1, 1) == None)
-        self.assert_ (keyboard.enable_repeat (900, 1000) == None)
+        self.assertTrue (keyboard.enable_repeat (0, 0) == None)
+        self.assertTrue (keyboard.enable_repeat (1, 1) == None)
+        self.assertTrue (keyboard.enable_repeat (900, 1000) == None)
         self.assertRaises (ValueError, keyboard.enable_repeat, -1, -1)
         self.assertRaises (ValueError, keyboard.enable_repeat,  1, -1)
         self.assertRaises (ValueError, keyboard.enable_repeat, -1,  1)
@@ -127,11 +127,11 @@ class SDLKeyboardTest (unittest.TestCase):
         # the dictionary are the key constants, the boolean values of
         # the dictionary indicate, whether a certain key is pressed or
         # not.
-        self.assert_ (type (keyboard.get_state ()) == dict)
-        self.assert_ (constants.K_a in keyboard.get_state ().keys ())
-        self.assert_ (constants.K_b in keyboard.get_state ().keys ())
-        self.assert_ (constants.K_q in keyboard.get_state ().keys ())
-        self.assert_ (constants.K_KP4 in keyboard.get_state ().keys ())
+        self.assertTrue (type (keyboard.get_state ()) == dict)
+        self.assertTrue (constants.K_a in keyboard.get_state ().keys ())
+        self.assertTrue (constants.K_b in keyboard.get_state ().keys ())
+        self.assertTrue (constants.K_q in keyboard.get_state ().keys ())
+        self.assertTrue (constants.K_KP4 in keyboard.get_state ().keys ())
 
     def test_pygame2_sdl_keyboard_set_mod_state(self):
 

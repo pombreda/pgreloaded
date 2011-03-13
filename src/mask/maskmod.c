@@ -251,7 +251,7 @@ _bitmask_threshold (bitmask_t *m, SDL_Surface *surf, SDL_Surface *surf2,
 {
     int x, y, rshift, gshift, bshift, rshift2, gshift2, bshift2, bpp1, bpp2;
     int rloss, gloss, bloss, rloss2, gloss2, bloss2;
-    Uint8 *pixels, *pixels2;
+    Uint8 *pixels = NULL, *pixels2 = NULL;
     SDL_PixelFormat *format, *format2;
     Uint32 the_color, the_color2, rmask, gmask, bmask, rmask2, gmask2, bmask2;
     Uint8 *pix;
@@ -409,7 +409,11 @@ PyMODINIT_FUNC initmask (void)
     ADD_OBJ_OR_FAIL (mod, "Mask", PyMask_Type, fail);
     
     mask_export_capi (c_api);
+#if PY_VERSION_HEX >= 0x03010000
+    c_api_obj = PyCapsule_New((void *)c_api, PYGAME_CMASK_ENTRY, NULL);
+#else
     c_api_obj = PyCObject_FromVoidPtr ((void *) c_api, NULL);
+#endif
     if (c_api_obj)
     {
         if (PyModule_AddObject (mod, PYGAME_MASK_ENTRY, c_api_obj) == -1)
@@ -421,7 +425,6 @@ PyMODINIT_FUNC initmask (void)
 
     if (import_pygame2_base () < 0)
         goto fail;
-
 #ifdef HAVE_PYGAME_SDL_VIDEO
     if (import_pygame2_sdl_base () < 0)
         goto fail;

@@ -82,6 +82,7 @@ install:
 clean:
 	@echo "Cleaning up in $(top_srcdir)/ ..."
 	@rm -f *.cache *.core *~ MANIFEST *.pyc *.orig
+	@rm -rf __pycache__
 	@rm -rf src/doc
 	@rm -rf build dist
 
@@ -92,6 +93,7 @@ clean:
 			cd $$dir; \
 			echo "Cleaning up in $$dir..."; \
 			rm -f *~ *.cache *.core *.pyc *.orig; \
+			rm -rf __pycache__; \
 		fi \
 	done
 
@@ -118,12 +120,14 @@ buildall: clean
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.6 setup.py build -c $(COMPILER); \
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.7 setup.py build -c $(COMPILER); \
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python3.1 setup.py build -c $(COMPILER); \
+		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python3.2 setup.py build -c $(COMPILER); \
 	else \
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.4 setup.py build; \
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.5 setup.py build; \
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.6 setup.py build; \
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.7 setup.py build; \
 		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python3.1 setup.py build; \
+		WITH_EXPERIMENTAL=$(EXPERIMENTAL) python3.2 setup.py build; \
 	fi
 
 buildallclang: COMPILER = clang
@@ -135,6 +139,7 @@ installall:
 	@WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.6 setup.py install
 	@WITH_EXPERIMENTAL=$(EXPERIMENTAL) python2.7 setup.py install
 	@WITH_EXPERIMENTAL=$(EXPERIMENTAL) python3.1 setup.py install
+	@WITH_EXPERIMENTAL=$(EXPERIMENTAL) python3.2 setup.py install
 
 testall:
 	@python2.4 test/util/runtests.py
@@ -147,6 +152,8 @@ testall:
 	@rm -rf test/*.pyc
 	@python3.1 test/util/runtests.py
 	@rm -rf test/*.pyc
+	@python3.2 test/util/runtests.py
+	@rm -rf test/*.pyc
 
 testall2:
 	@python2.4 -c "import pygame2.test; pygame2.test.run ()"
@@ -154,6 +161,7 @@ testall2:
 	@python2.6 -c "import pygame2.test; pygame2.test.run ()"
 	@python2.7 -c "import pygame2.test; pygame2.test.run ()"
 	@python3.1 -c "import pygame2.test; pygame2.test.run ()"
+	@python3.2 -c "import pygame2.test; pygame2.test.run ()"
 
 purge_installs:
 	rm -rf /usr/local/include/python2.4/pygame2*
@@ -161,9 +169,11 @@ purge_installs:
 	rm -rf /usr/local/include/python2.6/pygame2*
 	rm -rf /usr/local/include/python2.7/pygame2*
 	rm -rf /usr/local/include/python3.1/pygame2*
+	rm -rf /usr/local/include/python3.2mu/pygame2*
 	rm -rf /usr/local/lib/python2.4/site-packages/pygame2*
 	rm -rf /usr/local/lib/python2.5/site-packages/pygame2*
 	rm -rf /usr/local/lib/python2.6/site-packages/pygame2*
 	rm -rf /usr/local/lib/python2.7/site-packages/pygame2*
 	rm -rf /usr/local/lib/python3.1/site-packages/pygame2*
+	rm -rf /usr/local/lib/python3.2/site-packages/pygame2*
 

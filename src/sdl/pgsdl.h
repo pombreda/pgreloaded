@@ -65,10 +65,18 @@ static void **PyGameSDLBase_C_API;
 #define PYGAME_SDLBASE_SLOTS                                    \
     (PYGAME_SDLBASE_FIRSTSLOT + PYGAME_SDLBASE_NUMSLOTS)
 #define PYGAME_SDLBASE_ENTRY "_PYGAME_SDLBASE_CAPI"
+#define PYGAME_CSDLBASE_ENTRY "pygame2.sdl.base._PYGAME_SDLBASE_CAPI"
 
 static int
 import_pygame2_sdl_base (void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.sdl.base");
+    if (_module == NULL)
+        return -1;
+    PyGameSDLBase_C_API = (void**) PyCapsule_Import(PYGAME_CSDLBASE_ENTRY, 0);
+    return (PyGameSDLBase_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule ("pygame2.sdl.base");
     if (_module != NULL)
     {
@@ -83,6 +91,7 @@ import_pygame2_sdl_base (void)
         return 0;
     }
     return -1;
+#endif
 }
 
 /* Video system */
@@ -220,10 +229,18 @@ static void **PyGameSDLVideo_C_API;
 #define PYGAME_SDLVIDEO_SLOTS                                   \
     (PYGAME_SDLOVERLAY_FIRSTSLOT + PYGAME_SDLOVERLAY_NUMSLOTS)
 #define PYGAME_SDLVIDEO_ENTRY "_PYGAME_SDLVIDEO_CAPI"
+#define PYGAME_CSDLVIDEO_ENTRY "pygame2.sdl.video._PYGAME_SDLVIDEO_CAPI"
 
 static int
 import_pygame2_sdl_video (void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.sdl.video");
+    if (_module == NULL)
+        return -1;
+    PyGameSDLVideo_C_API = (void**) PyCapsule_Import(PYGAME_CSDLVIDEO_ENTRY, 0);
+    return (PyGameSDLVideo_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule ("pygame2.sdl.video");
     if (_module != NULL)
     {
@@ -238,6 +255,7 @@ import_pygame2_sdl_video (void)
         return 0;
     }
     return -1;
+#endif
 }
 
 /* Mouse input */
@@ -269,10 +287,18 @@ static void **PyGameSDLMouse_C_API;
 #define PYGAME_SDLMOUSE_SLOTS                                   \
     (PYGAME_SDLCURSOR_FIRSTSLOT + PYGAME_SDLCURSOR_NUMSLOTS)
 #define PYGAME_SDLMOUSE_ENTRY "_PYGAME_SDLMOUSE_CAPI"
+#define PYGAME_CSDLMOUSE_ENTRY "pygame2.sdl.mouse._PYGAME_SDLMOUSE_CAPI"
 
 static int
 import_pygame2_sdl_mouse (void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.sdl.mouse");
+    if (_module == NULL)
+        return -1;
+    PyGameSDLMouse_C_API = (void**) PyCapsule_Import(PYGAME_CSDLMOUSE_ENTRY, 0);
+    return (PyGameSDLMouse_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule ("pygame2.sdl.mouse");
     if (_module != NULL)
     {
@@ -287,6 +313,7 @@ import_pygame2_sdl_mouse (void)
         return 0;
     }
     return -1;
+#endif
 }
 
 /* Event */
@@ -332,10 +359,18 @@ static void **PyGameSDLEvent_C_API;
 #define PYGAME_SDLEVENT_SLOTS                                   \
     (PYGAME_SDLEVENT_FIRSTSLOT + PYGAME_SDLEVENT_NUMSLOTS)
 #define PYGAME_SDLEVENT_ENTRY "_PYGAME_SDLEVENT_CAPI"
+#define PYGAME_CSDLEVENT_ENTRY "pygame2.sdl.event._PYGAME_SDLEVENT_CAPI"
 
 static int
 import_pygame2_sdl_event (void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.sdl.event");
+    if (_module == NULL)
+        return -1;
+    PyGameSDLEvent_C_API = (void**) PyCapsule_Import(PYGAME_CSDLEVENT_ENTRY, 0);
+    return (PyGameSDLEvent_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule ("pygame2.sdl.event");
     if (_module != NULL)
     {
@@ -350,6 +385,7 @@ import_pygame2_sdl_event (void)
         return 0;
     }
     return -1;
+#endif
 }
 
 /* Joystick */
@@ -400,10 +436,19 @@ static void **PyGameSDLJoystick_C_API;
 #define PYGAME_SDLJOYSTICK_SLOTS                                        \
     (PYGAME_SDLJOYSTICK_FIRSTSLOT + PYGAME_SDLJOYSTICK_NUMSLOTS)
 #define PYGAME_SDLJOYSTICK_ENTRY "_PYGAME_SDLJOYSTICK_CAPI"
+#define PYGAME_CSDLJOYSTICK_ENTRY "pygame2.sdl.joystick._PYGAME_SDLJOYSTICK_CAPI"
     
 static int
 import_pygame2_sdl_joystick (void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.sdl.joystick");
+    if (_module == NULL)
+        return -1;
+    PyGameSDLJoystick_C_API =
+        (void**) PyCapsule_Import (PYGAME_CSDLJOYSTICK_ENTRY, 0);
+    return (PyGameSDLJoystick_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule ("pygame2.sdl.joystick");
     if (_module != NULL)
     {
@@ -418,6 +463,7 @@ import_pygame2_sdl_joystick (void)
         return 0;
     }
     return -1;
+#endif
 }
 
 /* Timer */
@@ -495,10 +541,18 @@ static void **PyGameSDLCD_C_API;
 #define PYGAME_SDLCDROM_SLOTS \
     (PYGAME_SDLCDTRACK_FIRSTSLOT + PYGAME_SDLCDTRACK_NUMSLOTS)
 #define PYGAME_SDLCDROM_ENTRY "_PYGAME_SDLCDROM_CAPI"
+#define PYGAME_CSDLCDROM_ENTRY "pygame2.sdl.cdrom._PYGAME_SDLCDROM_CAPI"
     
 static int
 import_pygame2_sdl_cdrom (void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.sdl.cdrom");
+    if (_module == NULL)
+        return -1;
+    PyGameSDLCD_C_API = (void**) PyCapsule_Import(PYGAME_CSDLCDROM_ENTRY, 0);
+    return (PyGameSDLCD_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule ("pygame2.sdl.cdrom");
     if (_module != NULL)
     {
@@ -513,6 +567,7 @@ import_pygame2_sdl_cdrom (void)
         return 0;
     }
     return -1;
+#endif
 }
 
 /* RWops */
@@ -543,10 +598,18 @@ static void **PyGameSDLRWops_C_API;
 #define PYGAME_SDLRWOPS_SLOTS \
     (PYGAME_SDLRWOPS_FIRSTSLOT + PYGAME_SDLRWOPS_NUMSLOTS)
 #define PYGAME_SDLRWOPS_ENTRY "_PYGAME_SDLRWOPS_CAPI"
+#define PYGAME_CSDLRWOPS_ENTRY "pygame2.sdl.rwops._PYGAME_SDLRWOPS_CAPI"
     
 static int
 import_pygame2_sdl_rwops (void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.sdl.rwops");
+    if (_module == NULL)
+        return -1;
+    PyGameSDLRWops_C_API = (void**) PyCapsule_Import(PYGAME_CSDLRWOPS_ENTRY, 0);
+    return (PyGameSDLRWops_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule ("pygame2.sdl.rwops");
     if (_module != NULL)
     {
@@ -561,6 +624,7 @@ import_pygame2_sdl_rwops (void)
         return 0;
     }
     return -1;
+#endif
 }
 
 #ifdef __cplusplus

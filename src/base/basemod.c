@@ -593,7 +593,11 @@ PyMODINIT_FUNC initbase (void)
     surface_export_capi (c_api);
     font_export_capi (c_api);
 
+#if PY_VERSION_HEX >= 0x03010000
+    c_api_obj = PyCapsule_New((void *)c_api, PYGAME_CMOD_ENTRY, NULL);
+#else
     c_api_obj = PyCObject_FromVoidPtr ((void *) c_api, NULL);
+#endif
     if (c_api_obj)
     {
         if (PyModule_AddObject (mod, PYGAME_BASE_ENTRY, c_api_obj) == -1)
@@ -602,6 +606,7 @@ PyMODINIT_FUNC initbase (void)
             goto failed;
         }
     }
+
     MODINIT_RETURN(mod);
 
 failed:

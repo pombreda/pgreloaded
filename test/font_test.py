@@ -51,8 +51,8 @@ class FontTest (unittest.TestCase):
         self.assertEqual (retval, None)
 
         retval = font.find_fonts ("sans")
-        self.assert_ (len (retval) != 0)
-        self.assert_ (type (retval), list)
+        self.assertTrue (len (retval) != 0)
+        self.assertTrue (type (retval), list)
 
     def test_pygame2_font_get_families(self):
 
@@ -64,7 +64,7 @@ class FontTest (unittest.TestCase):
         if sys.version in ('win32', 'darwin'):
             pass
         else:
-            self.assert_ (len (font.get_families ()) != 0)
+            self.assertTrue (len (font.get_families ()) != 0)
             self.assertEqual (type (font.get_families ()), list)
     
 if __name__ == '__main__':

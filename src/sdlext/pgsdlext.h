@@ -67,10 +67,18 @@ static void **PyGameSDLExt_C_API;
 #define PYGAME_SDLEXT_SLOTS \
     (PYGAME_SDLEXTPIXELARRAY_FIRSTSLOT + PYGAME_SDLEXTPIXELARRAY_NUMSLOTS)
 #define PYGAME_SDLEXT_ENTRY "_PYGAME_SDLEXT_CAPI"
+#define PYGAME_CSDLEXT_ENTRY "pygame2.sdlext.base._PYGAME_SDLEXT_CAPI"
     
 static int
 import_pygame2_sdlext_base (void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.sdlext.base");
+    if (_module == NULL)
+        return -1;
+    PyGameSDLExt_C_API = (void**) PyCapsule_Import(PYGAME_CSDLEXT_ENTRY, 0);
+    return (PyGameSDLExt_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule ("pygame2.sdlext.base");
     if (_module != NULL)
     {
@@ -85,6 +93,7 @@ import_pygame2_sdlext_base (void)
         return 0;
     }
     return -1;
+#endif
 }
 
 #ifdef __cplusplus

@@ -105,10 +105,18 @@ static void **PyGameMath_C_API;
 #define PYGAME_MATH_SLOTS \
     (PYGAME_MATHVECTOR3_FIRSTSLOT + PYGAME_MATHVECTOR3_NUMSLOTS)
 #define PYGAME_MATH_ENTRY "_PYGAME_MATH_CAPI"
+#define PYGAME_CMATH_ENTRY "pygame2.math._PYGAME_MATH_CAPI"
 
 static int
 import_pygame2_math (void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.math");
+    if (_module == NULL)
+        return -1;
+    PyGameMath_C_API = (void**) PyCapsule_Import (PYGAME_CMATH_ENTRY, 0);
+    return (PyGameMath_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule ("pygame2.math");
     if (_module != NULL)
     {
@@ -123,6 +131,7 @@ import_pygame2_math (void)
         return 0;
     }
     return -1;
+#endif
 }
 
 #ifdef __cplusplus

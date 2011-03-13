@@ -544,7 +544,11 @@ PyMODINIT_FUNC initbase (void)
     c_api[PYGAME_SDLBASE_FIRSTSLOT+8] = (void *)IsValidRect;
     c_api[PYGAME_SDLBASE_FIRSTSLOT+9] = (void *)SDLRectFromRect;
    
+#if PY_VERSION_HEX >= 0x03010000
+    c_api_obj = PyCapsule_New((void *)c_api, PYGAME_CSDLBASE_ENTRY, NULL);
+#else
     c_api_obj = PyCObject_FromVoidPtr ((void *) c_api, NULL);
+#endif
     if (c_api_obj)
     {
         if (PyModule_AddObject (mod, PYGAME_SDLBASE_ENTRY, c_api_obj) == -1)

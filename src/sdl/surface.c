@@ -70,7 +70,11 @@ static PyObject* _surface_setat (PyObject *self, PyObject *args);
 static PyObject* _surface_scroll (PyObject *self, PyObject *args,
     PyObject *kwds);
 
+#if PY_VERSION_HEX >= 0x03010000
+static void _release_c_lock (PyObject *ptr);
+#else
 static void _release_c_lock (void *ptr);
+#endif
 
 /**
  */
@@ -1101,6 +1105,19 @@ _surface_scroll (PyObject *self, PyObject *args, PyObject *kwds)
 }
 
 /* C API */
+#if PY_VERSION_HEX >= 0x03010000
+static void
+_release_c_lock (PyObject *ptr)
+{
+    SDLSurfaceLock* c_lock =
+        (SDLSurfaceLock*) PyCapsule_GetPointer (ptr, "lock");
+
+    SDL_UnlockSurface (((PySDLSurface*)c_lock->surface)->surface);
+    Py_XDECREF (c_lock->surface);
+    Py_XDECREF (c_lock->lockobj);
+    PyMem_Free (c_lock);
+}
+#else
 static void
 _release_c_lock (void *ptr)
 {
@@ -1111,6 +1128,7 @@ _release_c_lock (void *ptr)
     Py_XDECREF (c_lock->lockobj);
     PyMem_Free (c_lock);
 }
+#endif
 
 PyObject*
 PySDLSurface_New (int w, int h)
@@ -1308,7 +1326,11 @@ PySDLSurface_AcquireLockObj (PyObject *surface, PyObject *lock)
         return NULL;
     }
 
+#if PY_VERSION_HEX >= 0x03010000
+    cobj = PyCapsule_New (c_lock, "lock", _release_c_lock);
+#else
     cobj = PyCObject_FromVoidPtr (c_lock, _release_c_lock);
+#endif
     if (!cobj)
     {
         SDL_UnlockSurface (((PySDLSurface*)surface)->surface);

@@ -379,22 +379,22 @@ class RectTest (unittest.TestCase):
         # inside the rectangle.
         r = Rect( 1, 2, 3, 4 )
         
-        self.failUnless( r.collidepoint( r.left, r.top ),
+        self.assertTrue( r.collidepoint( r.left, r.top ),
                          "r does not collide with point (left,top)" )
-        self.failIf( r.collidepoint( r.left-1, r.top ),
+        self.assertFalse( r.collidepoint( r.left-1, r.top ),
                      "r collides with point (left-1,top)"  )
-        self.failIf( r.collidepoint( r.left, r.top-1 ),
+        self.assertFalse( r.collidepoint( r.left, r.top-1 ),
                      "r collides with point (left,top-1)"  )
-        self.failIf( r.collidepoint( r.left-1,r.top-1 ),
+        self.assertFalse( r.collidepoint( r.left-1,r.top-1 ),
                      "r collides with point (left-1,top-1)"  )
         
-        self.failUnless( r.collidepoint( r.right-1, r.bottom-1 ),
+        self.assertTrue( r.collidepoint( r.right-1, r.bottom-1 ),
                          "r does not collide with point (right-1,bottom-1)")
-        self.failIf( r.collidepoint( r.right, r.bottom ),
+        self.assertFalse( r.collidepoint( r.right, r.bottom ),
                      "r collides with point (right,bottom)" )
-        self.failIf( r.collidepoint( r.right-1, r.bottom ),
+        self.assertFalse( r.collidepoint( r.right-1, r.bottom ),
                      "r collides with point (right-1,bottom)" )
-        self.failIf( r.collidepoint( r.right, r.bottom-1 ),
+        self.assertFalse( r.collidepoint( r.right, r.bottom-1 ),
                      "r collides with point (right,bottom-1)" )
 
     def test_pygame2_base_Rect_colliderect(self):
@@ -408,25 +408,25 @@ class RectTest (unittest.TestCase):
         # Returns true if any portion of either rectangle overlap (except the
         # top+bottom or left+right edges).
         r1 = Rect(1,2,3,4)
-        self.failUnless( r1.colliderect( Rect(0,0,2,3) ),
+        self.assertTrue( r1.colliderect( Rect(0,0,2,3) ),
                          "r1 does not collide with Rect(0,0,2,3)" )
-        self.failIf( r1.colliderect( Rect(0,0,1,2) ),
+        self.assertFalse( r1.colliderect( Rect(0,0,1,2) ),
                      "r1 collides with Rect(0,0,1,2)" )
-        self.failIf( r1.colliderect( Rect(r1.right,r1.bottom,2,2) ),
+        self.assertFalse( r1.colliderect( Rect(r1.right,r1.bottom,2,2) ),
                      "r1 collides with Rect(r1.right,r1.bottom,2,2)" )
-        self.failUnless( r1.colliderect( Rect(r1.left+1,r1.top+1,
+        self.assertTrue( r1.colliderect( Rect(r1.left+1,r1.top+1,
                                               r1.width-2,r1.height-2) ),
                          "r1 does not collide with Rect(r1.left+1,r1.top+1,"+
                          "r1.width-2,r1.height-2)" )
-        self.failUnless( r1.colliderect( Rect(r1.left-1,r1.top-1,
+        self.assertTrue( r1.colliderect( Rect(r1.left-1,r1.top-1,
                                               r1.width+2,r1.height+2) ),
                          "r1 does not collide with Rect(r1.left-1,r1.top-1,"+
                          "r1.width+2,r1.height+2)" )
-        self.failUnless( r1.colliderect( Rect(r1) ),
+        self.assertTrue( r1.colliderect( Rect(r1) ),
                          "r1 does not collide with an identical rect" )
-        self.failIf( r1.colliderect( Rect(r1.right,r1.bottom,0,0) ),
+        self.assertFalse( r1.colliderect( Rect(r1.right,r1.bottom,0,0) ),
                      "r1 collides with Rect(r1.right,r1.bottom,0,0)" )
-        self.failIf( r1.colliderect( Rect(r1.right,r1.bottom,1,1) ),
+        self.assertFalse( r1.colliderect( Rect(r1.right,r1.bottom,1,1) ),
                      "r1 collides with Rect(r1.right,r1.bottom,1,1)" )
 
     def test_pygame2_base_Rect_contains(self):
@@ -441,17 +441,17 @@ class RectTest (unittest.TestCase):
         # the Rect.
         r = Rect( 1, 2, 3, 4 )
         
-        self.failUnless( r.contains( Rect( 2, 3, 1, 1 ) ),
+        self.assertTrue( r.contains( Rect( 2, 3, 1, 1 ) ),
                          "r does not contain Rect(2,3,1,1)" )
-        self.failUnless( r.contains( Rect(r) ),
+        self.assertTrue( r.contains( Rect(r) ),
                          "r does not contain the same rect as itself" )
-        self.failUnless( r.contains( Rect(2,3,0,0) ),
+        self.assertTrue( r.contains( Rect(2,3,0,0) ),
                          "r does not contain an empty rect within its bounds" )
-        self.failIf( r.contains( Rect(0,0,1,2) ),
+        self.assertFalse( r.contains( Rect(0,0,1,2) ),
                      "r contains Rect(0,0,1,2)" )
-        self.failIf( r.contains( Rect(4,6,1,1) ),
+        self.assertFalse( r.contains( Rect(4,6,1,1) ),
                      "r contains Rect(4,6,1,1)" )
-        self.failIf( r.contains( Rect(4,6,0,0) ),
+        self.assertFalse( r.contains( Rect(4,6,0,0) ),
                      "r contains Rect(4,6,0,0)" )
     
     def test_pygame2_base_Rect_copy(self):
@@ -466,21 +466,21 @@ class RectTest (unittest.TestCase):
         # caller.
         r = Rect( 1, 2, 3, 4 )
         cp = r.copy ()
-        self.failUnless (r == cp, "r (1, 2, 3, 4) is not equal to its copy")
+        self.assertTrue (r == cp, "r (1, 2, 3, 4) is not equal to its copy")
 
         r = Rect( -10, 50, 10, 40 )
         cp = r.copy ()
-        self.failUnless (r == cp,
+        self.assertTrue (r == cp,
                          "r (-10, 50, 10, 40) is not equal to its copy")
         
         r = Rect( 2, -5, 10, 40 )
         cp = r.copy ()
-        self.failUnless (r == cp,
+        self.assertTrue (r == cp,
                          "r (2, -5, 10, 40) is not equal to its copy")
         
         r = Rect( -2, -5, 10, 40 )
         cp = r.copy ()
-        self.failUnless (r == cp,
+        self.assertTrue (r == cp,
                          "r (-2, -5, 10, 40) is not equal to its copy")
         
     def test_pygame2_base_Rect_fit(self):

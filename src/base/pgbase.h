@@ -298,10 +298,18 @@ static void **PyGameBase_C_API;
 #define PYGAME_BASE_SLOTS \
     (PYGAME_FONT_FIRSTSLOT + PYGAME_FONT_NUMSLOTS)
 #define PYGAME_BASE_ENTRY "_PYGAME_BASE_CAPI"
+#define PYGAME_CMOD_ENTRY "pygame2.base._PYGAME_BASE_CAPI"
 
 static int
 import_pygame2_base (void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.base");
+    if (_module == NULL)
+        return -1;
+    PyGameBase_C_API = (void**) PyCapsule_Import (PYGAME_CMOD_ENTRY, 0);
+    return (PyGameBase_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule ("pygame2.base");
     if (_module != NULL)
     {
@@ -316,6 +324,7 @@ import_pygame2_base (void)
         return 0;
     }
     return -1;
+#endif
 }
 
 #ifdef __cplusplus

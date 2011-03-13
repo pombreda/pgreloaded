@@ -53,7 +53,7 @@ class SDLImageTest (unittest.TestCase):
             buf = stringio.BytesIO ()
         else:
             buf = stringio.StringIO ()
-        self.assert_ (image.save_bmp (sf, buf) == None)
+        self.assertTrue (image.save_bmp (sf, buf) == None)
         self.assertEqual (os.stat (os.path.join (imgdir, "test.bmp")).st_size,
                           len (buf.getvalue ()))
 

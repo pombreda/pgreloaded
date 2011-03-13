@@ -12,6 +12,12 @@ try:
 except:
     import support, testrunner
 
+RANDSIZE = 0
+try:
+    RANDSIZE = sys.maxsize
+except:
+    RANDSIZE = sys.maxint
+
 LINEDELIM = "-" * 70
 HEAVYDELIM = "=" * 70
 
@@ -173,7 +179,7 @@ def run ():
     randomizer = None
     if options.random:
         if options.seed is None:
-            options.seed = random.randint (0, sys.maxint)
+            options.seed = random.randint (0, RANDSIZE)
         randomizer = random.Random (options.seed)
     loader = testrunner.TagTestLoader (EXCLUDETAGS, randomizer)
 

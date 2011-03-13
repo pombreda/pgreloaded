@@ -189,7 +189,11 @@ PyMODINIT_FUNC initmouse (void)
     
     cursor_export_capi (c_api);
 
+#if PY_VERSION_HEX >= 0x03010000
+    c_api_obj = PyCapsule_New((void *)c_api, PYGAME_CSDLMOUSE_ENTRY, NULL);
+#else
     c_api_obj = PyCObject_FromVoidPtr ((void *) c_api, NULL);
+#endif
     if (c_api_obj)
     {
         if (PyModule_AddObject (mod, PYGAME_SDLMOUSE_ENTRY, c_api_obj) == -1)
@@ -199,7 +203,7 @@ PyMODINIT_FUNC initmouse (void)
         }
     }
 
-    cursors = PyImport_ImportModule ("cursors");
+    cursors = PyImport_ImportModule ("pygame2.sdl.cursors");
     if (cursors)
     {
         if (PyModule_AddObject (mod, "cursors", cursors) == -1)

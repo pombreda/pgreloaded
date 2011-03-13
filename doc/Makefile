@@ -41,6 +41,7 @@ docclean:
 
 clean: docclean
 	@rm -rf html
+	@rm -rf __pycache__
 
 html: rst
 	mkdir -p sphinx/build/html sphinx/build/doctrees

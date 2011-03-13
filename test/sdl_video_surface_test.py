@@ -28,7 +28,7 @@ class SDLVideoSurfaceTest (unittest.TestCase):
         failmsg = "%s != %s at (%d, %d)"
         for x in range (w):
             for y in range (h):
-                self.failUnlessEqual (getat1 (x, y), getat2 (x, y),
+                self.assertEqual (getat1 (x, y), getat2 (x, y),
                     failmsg % (getat1 (x, y), getat2 (x, y), x, y))
 
     def _cmpcolor (self, sf, color, area=None):
@@ -43,7 +43,7 @@ class SDLVideoSurfaceTest (unittest.TestCase):
         failmsg = "%s != %s at (%d, %d)"
         for x in range (sx, sx + w):
             for y in range (sy, sy + h):
-                self.failUnlessEqual (getat (x, y), c,
+                self.assertEqual (getat (x, y), c,
                     failmsg % (getat (x, y), c, x, y))
 
     def setUp (self):
@@ -234,7 +234,7 @@ class SDLVideoSurfaceTest (unittest.TestCase):
         modes =  [32, 24, 16, 8]
         for bpp in modes:
             sf = video.Surface (10, 10, bpp)
-            self.assert_ (sf.flip () == None)
+            self.assertTrue (sf.flip () == None)
 
     def test_pygame2_sdl_video_Surface_format(self):
 
@@ -275,7 +275,7 @@ class SDLVideoSurfaceTest (unittest.TestCase):
                     sf.set_alpha (alpha)
                     for t in range (4):
                         sf.set_alpha (sf.get_alpha ())
-                    self.assert_ (sf.get_alpha () == alpha)
+                    self.assertTrue (sf.get_alpha () == alpha)
                 
                 # Colorkey based surfaces.
                 sf = video.Surface (10, 10, bpp, flags=constants.SRCCOLORKEY)
@@ -361,11 +361,11 @@ class SDLVideoSurfaceTest (unittest.TestCase):
         palette2 = surface.get_palette ()
         r, g, b, a  = palette2[0]
 
-        self.failUnlessEqual (len (palette2), len (palette))
+        self.assertEqual (len (palette2), len (palette))
         for c2, c in zip (palette2, palette):
-            self.failUnlessEqual (c2, c)
+            self.assertEqual (c2, c)
         for c in palette2:
-            self.failUnless (isinstance (c, Color))
+            self.assertTrue (isinstance (c, Color))
 
     def test_pygame2_sdl_video_Surface_h(self):
 
@@ -407,8 +407,8 @@ class SDLVideoSurfaceTest (unittest.TestCase):
         modes = [32, 24, 16, 8]
         for bpp in modes:
             sf = video.Surface (10, 10, bpp)
-            self.assert_ (sf.lock () == None)
-            self.assert_ (sf.unlock () == None)
+            self.assertTrue (sf.lock () == None)
+            self.assertTrue (sf.unlock () == None)
 
     def test_pygame2_sdl_video_Surface_locked(self):
 
@@ -442,13 +442,13 @@ class SDLVideoSurfaceTest (unittest.TestCase):
 
         # Get the length of a surface scanline in bytes.
         sf = video.Surface (10, 10, 32)
-        self.assert_ (sf.pitch >= 40) # 10 * 4 bpp
+        self.assertTrue (sf.pitch >= 40) # 10 * 4 bpp
         sf = video.Surface (10, 10, 24)
-        self.assert_ (sf.pitch >= 30) # 10 * 3 bpp
+        self.assertTrue (sf.pitch >= 30) # 10 * 3 bpp
         sf = video.Surface (10, 10, 16)
-        self.assert_ (sf.pitch >= 20) # 10 * 2 bpp
+        self.assertTrue (sf.pitch >= 20) # 10 * 2 bpp
         sf = video.Surface (10, 10, 8)
-        self.assert_ (sf.pitch >= 10) # 10 * 1 bpp
+        self.assertTrue (sf.pitch >= 10) # 10 * 1 bpp
 
     def test_pygame2_sdl_video_Surface_pixels(self):
 
@@ -459,11 +459,11 @@ class SDLVideoSurfaceTest (unittest.TestCase):
         for bpp in modes:
             sf = video.Surface (10, 10, bpp)
             self.assertFalse (sf.locked)
-            self.assert_ (type (sf.pixels) == pygame2.BufferProxy)
+            self.assertTrue (type (sf.pixels) == pygame2.BufferProxy)
             self.assertFalse (sf.locked)
             buf = sf.pixels
             self.assertTrue (sf.locked)
-            self.assert_ (buf.length >= 10 * sf.format.bytes_per_pixel)
+            self.assertTrue (buf.length >= 10 * sf.format.bytes_per_pixel)
             del buf
             self.assertFalse (sf.locked)
 
@@ -626,25 +626,25 @@ class SDLVideoSurfaceTest (unittest.TestCase):
         surface.set_palette (palette)
         pxfmt = surface.format
         for i in range(256):
-            self.failUnlessEqual (pxfmt.map_rgba (palette[i]), i,
-                                  "palette color %i" % (i,))
+            self.assertEqual (pxfmt.map_rgba (palette[i]), i,
+                              "palette color %i" % (i,))
             c = palette[i]
             surface.fill (c)
-            self.failUnlessEqual (surface.get_at (0, 0), c,
-                                  "palette color %i" % (i,))
+            self.assertEqual (surface.get_at (0, 0), c,
+                              "palette color %i" % (i,))
         
             for i in range (10):
                 palette[i] = Color (255 - i, 0, 0)
             surface.set_palette (palette[0:10])
             for i in range (256):
-                self.failUnlessEqual (pxfmt.map_rgba (palette[i]), i,
-                                      "palette color %i" % (i,))
+                self.assertEqual (pxfmt.map_rgba (palette[i]), i,
+                                  "palette color %i" % (i,))
                 c = palette[i]
                 surface.fill (c)
-                self.failUnlessEqual (surface.get_at(0, 0), c,
+                self.assertEqual (surface.get_at(0, 0), c,
                                       "palette color %i" % (i,))
-            self.failUnlessRaises (ValueError, surface.set_palette,
-                                   (1, 2, 3, 254))
+            self.assertRaises (ValueError, surface.set_palette,
+                               (1, 2, 3, 254))
 
     def test_pygame2_sdl_video_Surface_size(self):
 
@@ -671,8 +671,8 @@ class SDLVideoSurfaceTest (unittest.TestCase):
         modes = [32, 24, 16, 8]
         for bpp in modes:
             sf = video.Surface (10, 10, bpp)
-            self.assert_ (sf.lock () == None)
-            self.assert_ (sf.unlock () == None)
+            self.assertTrue (sf.lock () == None)
+            self.assertTrue (sf.unlock () == None)
 
     def todo_test_pygame2_sdl_video_Surface_update(self):
 
@@ -756,12 +756,12 @@ class SDLVideoSurfaceTest (unittest.TestCase):
             w, h = surf.size
             for x in range(w):
                 for y in range(h):
-                    self.failUnlessEqual(surf.get_at((x, y)),
-                                         comp.get_at((x, y)),
-                                         "%s != %s, bpp:, %i, x: %i, y: %i" %
-                                         (surf.get_at((x, y)),
-                                          comp.get_at((x, y)),
-                                          bitsize, dx, dy))
+                    self.assertEqual(surf.get_at((x, y)),
+                                     comp.get_at((x, y)),
+                                     "%s != %s, bpp:, %i, x: %i, y: %i" %
+                                     (surf.get_at((x, y)),
+                                      comp.get_at((x, y)),
+                                      bitsize, dx, dy))
         # Confirm clip rect containment
         surf = video.Surface((20, 13), 32)
         surf.fill(Color(255, 0, 0))
@@ -775,21 +775,20 @@ class SDLVideoSurfaceTest (unittest.TestCase):
         w, h = surf.size
         for x in range(w):
             for y in range(h):
-                self.failUnlessEqual(surf.get_at((x, y)),
-                                     comp.get_at((x, y)))
+                self.assertEqual(surf.get_at((x, y)), comp.get_at((x, y)))
         # Confirm keyword arguments and per-pixel alpha
         spot_color = Color(0, 255, 0, 128)
         surf = video.Surface((4, 4), 32, constants.SRCALPHA)
         surf.fill(Color(255, 0, 0, 255))
         surf.set_at((1, 1), spot_color)
         surf.scroll(dx=1)
-        self.failUnlessEqual(surf.get_at((2, 1)), spot_color)
+        self.assertEqual(surf.get_at((2, 1)), spot_color)
         surf.scroll(dy=1)
-        self.failUnlessEqual(surf.get_at((2, 2)), spot_color)
+        self.assertEqual(surf.get_at((2, 2)), spot_color)
         surf.scroll(dy=1, dx=1)
-        self.failUnlessEqual(surf.get_at((3, 3)), spot_color)
+        self.assertEqual(surf.get_at((3, 3)), spot_color)
         surf.scroll(dx=-3, dy=-3)
-        self.failUnlessEqual(surf.get_at((0, 0)), spot_color)
+        self.assertEqual(surf.get_at((0, 0)), spot_color)
         
         sf = video.Surface (20, 20)
         sf.fill (Color (255, 0, 0), Rect (10, 10, 20, 20))

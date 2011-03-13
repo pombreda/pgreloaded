@@ -58,7 +58,11 @@ PyMODINIT_FUNC initbase (void)
     /* Export C API */
     pixelarray_export_capi (c_api);
    
+#if PY_VERSION_HEX >= 0x03010000
+    c_api_obj = PyCapsule_New((void *)c_api, PYGAME_CSDLEXT_ENTRY, NULL);
+#else
     c_api_obj = PyCObject_FromVoidPtr ((void *) c_api, NULL);
+#endif
     if (c_api_obj)
     {
         if (PyModule_AddObject (mod, PYGAME_SDLEXT_ENTRY, c_api_obj) == -1)

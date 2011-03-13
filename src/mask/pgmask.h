@@ -53,10 +53,18 @@ static void **PyGameMask_C_API;
 #define PYGAME_MASK_SLOTS                                   \
     (PYGAME_MASK_FIRSTSLOT + PYGAME_MASK_NUMSLOTS)
 #define PYGAME_MASK_ENTRY "_PYGAME_MASK_CAPI"
+#define PYGAME_CMASK_ENTRY "pygame2.mask._PYGAME_MASK_CAPI"
 
 static int
 import_pygame2_mask (void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.mask");
+    if (_module == NULL)
+        return -1;
+    PyGameMask_C_API = (void**) PyCapsule_Import (PYGAME_CMASK_ENTRY, 0);
+    return (PyGameMask_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule ("pygame2.mask");
     if (_module != NULL)
     {
@@ -71,6 +79,7 @@ import_pygame2_mask (void)
         return 0;
     }
     return -1;
+#endif
 }
 
 #endif /* _PYGAME_MASK_H_ */

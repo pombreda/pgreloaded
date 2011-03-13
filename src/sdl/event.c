@@ -244,12 +244,21 @@ _create_dict_from_event (SDL_Event *event, int release)
             /* It comes from some SDL stuff, it goes to pygame. */
             if (!_set_item (dict, "code", PyInt_FromLong (event->user.code)))
                 goto failed;
+#if PY_VERSION_HEX >= 0x03010000
+            if (!_set_item (dict, "data1",
+                    PyCapsule_New (event->user.data1, "data1", NULL)))
+                goto failed;
+            if (!_set_item (dict, "data2",
+                    PyCapsule_New (event->user.data2, "data2", NULL)))
+                goto failed;
+#else
             if (!_set_item (dict, "data1",
                     PyCObject_FromVoidPtr (event->user.data1, NULL)))
                 goto failed;
             if (!_set_item (dict, "data2",
                     PyCObject_FromVoidPtr (event->user.data2, NULL)))
                 goto failed;
+#endif
         }
         return dict;
     }

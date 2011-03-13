@@ -44,9 +44,9 @@ class ColorTest (unittest.TestCase):
     def test_invalid_html_hex_codes (self):
         # This was a problem with the way 2 digit hex numbers were
         # calculated. The test_hex_digits test is related to the fix.
-        self.failUnlessRaises(ValueError, lambda: Color('# f000000'))
-        self.failUnlessRaises(ValueError, lambda: Color('#f 000000'))
-        self.failUnlessRaises(ValueError, lambda: Color('#-f000000'))
+        self.assertRaises(ValueError, lambda: Color('# f000000'))
+        self.assertRaises(ValueError, lambda: Color('#f 000000'))
+        self.assertRaises(ValueError, lambda: Color('#-f000000'))
 
     def test_hex_digits (self):
         # This is an implementation specific test.
@@ -85,65 +85,65 @@ class ColorTest (unittest.TestCase):
         self.assertEqual(Color('#0F000000').r, 0x0F)
 
     def test_comparison(self):
-        self.failUnless(Color(255, 0, 0, 0) == Color(255, 0, 0, 0))
-        self.failUnless(Color(0, 255, 0, 0) == Color(0, 255, 0, 0))
-        self.failUnless(Color(0, 0, 255, 0) == Color(0, 0, 255, 0))
-        self.failUnless(Color(0, 0, 0, 255) == Color(0, 0, 0, 255))
+        self.assertTrue(Color(255, 0, 0, 0) == Color(255, 0, 0, 0))
+        self.assertTrue(Color(0, 255, 0, 0) == Color(0, 255, 0, 0))
+        self.assertTrue(Color(0, 0, 255, 0) == Color(0, 0, 255, 0))
+        self.assertTrue(Color(0, 0, 0, 255) == Color(0, 0, 0, 255))
         
-        self.failIf(Color(0, 0, 0, 0) == Color(255, 0, 0, 0))
-        self.failIf(Color(0, 0, 0, 0) == Color(0, 255, 0, 0))
-        self.failIf(Color(0, 0, 0, 0) == Color(0, 0, 255, 0))
-        self.failIf(Color(0, 0, 0, 0) == Color(0, 0, 0, 255))
+        self.assertFalse(Color(0, 0, 0, 0) == Color(255, 0, 0, 0))
+        self.assertFalse(Color(0, 0, 0, 0) == Color(0, 255, 0, 0))
+        self.assertFalse(Color(0, 0, 0, 0) == Color(0, 0, 255, 0))
+        self.assertFalse(Color(0, 0, 0, 0) == Color(0, 0, 0, 255))
         
-        self.failUnless(Color(0, 0, 0, 0) != Color(255, 0, 0, 0))
-        self.failUnless(Color(0, 0, 0, 0) != Color(0, 255, 0, 0))
-        self.failUnless(Color(0, 0, 0, 0) != Color(0, 0, 255, 0))
-        self.failUnless(Color(0, 0, 0, 0) != Color(0, 0, 0, 255))
+        self.assertTrue(Color(0, 0, 0, 0) != Color(255, 0, 0, 0))
+        self.assertTrue(Color(0, 0, 0, 0) != Color(0, 255, 0, 0))
+        self.assertTrue(Color(0, 0, 0, 0) != Color(0, 0, 255, 0))
+        self.assertTrue(Color(0, 0, 0, 0) != Color(0, 0, 0, 255))
         
-        self.failIf(Color(255, 0, 0, 0) != Color(255, 0, 0, 0))
-        self.failIf(Color(0, 255, 0, 0) != Color(0, 255, 0, 0))
-        self.failIf(Color(0, 0, 255, 0) != Color(0, 0, 255, 0))
-        self.failIf(Color(0, 0, 0, 255) != Color(0, 0, 0, 255))
+        self.assertFalse(Color(255, 0, 0, 0) != Color(255, 0, 0, 0))
+        self.assertFalse(Color(0, 255, 0, 0) != Color(0, 255, 0, 0))
+        self.assertFalse(Color(0, 0, 255, 0) != Color(0, 0, 255, 0))
+        self.assertFalse(Color(0, 0, 0, 255) != Color(0, 0, 0, 255))
 
-        self.failUnless(tuple(Color(255, 0, 0, 0)) == (255, 0, 0, 0))
-        self.failUnless(tuple(Color(0, 255, 0, 0)) == (0, 255, 0, 0))
-        self.failUnless(tuple(Color(0, 0, 255, 0)) == (0, 0, 255, 0))
-        self.failUnless(tuple(Color(0, 0, 0, 255)) == (0, 0, 0, 255))
+        self.assertTrue(tuple(Color(255, 0, 0, 0)) == (255, 0, 0, 0))
+        self.assertTrue(tuple(Color(0, 255, 0, 0)) == (0, 255, 0, 0))
+        self.assertTrue(tuple(Color(0, 0, 255, 0)) == (0, 0, 255, 0))
+        self.assertTrue(tuple(Color(0, 0, 0, 255)) == (0, 0, 0, 255))
         
-        self.failIf(tuple(Color(0, 0, 0, 0)) == (255, 0, 0, 0))
-        self.failIf(tuple(Color(0, 0, 0, 0)) == (0, 255, 0, 0))
-        self.failIf(tuple(Color(0, 0, 0, 0)) == (0, 0, 255, 0))
-        self.failIf(tuple(Color(0, 0, 0, 0)) == (0, 0, 0, 255))
+        self.assertFalse(tuple(Color(0, 0, 0, 0)) == (255, 0, 0, 0))
+        self.assertFalse(tuple(Color(0, 0, 0, 0)) == (0, 255, 0, 0))
+        self.assertFalse(tuple(Color(0, 0, 0, 0)) == (0, 0, 255, 0))
+        self.assertFalse(tuple(Color(0, 0, 0, 0)) == (0, 0, 0, 255))
         
-        self.failUnless(tuple(Color(0, 0, 0, 0)) != (255, 0, 0, 0))
-        self.failUnless(tuple(Color(0, 0, 0, 0)) != (0, 255, 0, 0))
-        self.failUnless(tuple(Color(0, 0, 0, 0)) != (0, 0, 255, 0))
-        self.failUnless(tuple(Color(0, 0, 0, 0)) != (0, 0, 0, 255))
+        self.assertTrue(tuple(Color(0, 0, 0, 0)) != (255, 0, 0, 0))
+        self.assertTrue(tuple(Color(0, 0, 0, 0)) != (0, 255, 0, 0))
+        self.assertTrue(tuple(Color(0, 0, 0, 0)) != (0, 0, 255, 0))
+        self.assertTrue(tuple(Color(0, 0, 0, 0)) != (0, 0, 0, 255))
         
-        self.failIf(tuple(Color(255, 0, 0, 0)) != (255, 0, 0, 0))
-        self.failIf(tuple(Color(0, 255, 0, 0))!= (0, 255, 0, 0))
-        self.failIf(tuple(Color(0, 0, 255, 0)) != (0, 0, 255, 0))
-        self.failIf(tuple(Color(0, 0, 0, 255)) != (0, 0, 0, 255))
+        self.assertFalse(tuple(Color(255, 0, 0, 0)) != (255, 0, 0, 0))
+        self.assertFalse(tuple(Color(0, 255, 0, 0))!= (0, 255, 0, 0))
+        self.assertFalse(tuple(Color(0, 0, 255, 0)) != (0, 0, 255, 0))
+        self.assertFalse(tuple(Color(0, 0, 0, 255)) != (0, 0, 0, 255))
 
-        self.failUnless(int(Color(255, 0, 0, 0)) == 0x00ff0000)
-        self.failUnless(int(Color(0, 255, 0, 0)) == 0x0000ff00)
-        self.failUnless(int(Color(0, 0, 255, 0)) == 0x000000ff)
-        self.failUnless(int(Color(0, 0, 0, 255)) == 0xff000000)
+        self.assertTrue(int(Color(255, 0, 0, 0)) == 0x00ff0000)
+        self.assertTrue(int(Color(0, 255, 0, 0)) == 0x0000ff00)
+        self.assertTrue(int(Color(0, 0, 255, 0)) == 0x000000ff)
+        self.assertTrue(int(Color(0, 0, 0, 255)) == 0xff000000)
         
-        self.failIf(int(Color(0, 0, 0, 0)) == 0xff000000)
-        self.failIf(int(Color(0, 0, 0, 0)) == 0x00ff0000)
-        self.failIf(int(Color(0, 0, 0, 0)) == 0x0000ff00)
-        self.failIf(int(Color(0, 0, 0, 0)) == 0x000000ff)
+        self.assertFalse(int(Color(0, 0, 0, 0)) == 0xff000000)
+        self.assertFalse(int(Color(0, 0, 0, 0)) == 0x00ff0000)
+        self.assertFalse(int(Color(0, 0, 0, 0)) == 0x0000ff00)
+        self.assertFalse(int(Color(0, 0, 0, 0)) == 0x000000ff)
         
-        self.failUnless(int(Color(0, 0, 0, 0)) != 0xff000000)
-        self.failUnless(int(Color(0, 0, 0, 0)) != 0x00ff0000)
-        self.failUnless(int(Color(0, 0, 0, 0)) != 0x0000ff00)
-        self.failUnless(int(Color(0, 0, 0, 0)) != 0x000000ff)
+        self.assertTrue(int(Color(0, 0, 0, 0)) != 0xff000000)
+        self.assertTrue(int(Color(0, 0, 0, 0)) != 0x00ff0000)
+        self.assertTrue(int(Color(0, 0, 0, 0)) != 0x0000ff00)
+        self.assertTrue(int(Color(0, 0, 0, 0)) != 0x000000ff)
         
-        self.failIf(int(Color(255, 0, 0, 0)) != 0x00ff0000)
-        self.failIf(int(Color(0, 255, 0, 0)) != 0x0000ff00)
-        self.failIf(int(Color(0, 0, 255, 0)) != 0x000000ff)
-        self.failIf(int(Color(0, 0, 0, 255)) != 0xff000000)
+        self.assertFalse(int(Color(255, 0, 0, 0)) != 0x00ff0000)
+        self.assertFalse(int(Color(0, 255, 0, 0)) != 0x0000ff00)
+        self.assertFalse(int(Color(0, 0, 255, 0)) != 0x000000ff)
+        self.assertFalse(int(Color(0, 0, 0, 255)) != 0xff000000)
 
     def test_color (self):
         c = Color (10, 20, 30, 40)
@@ -452,10 +452,10 @@ class ColorTest (unittest.TestCase):
 
         t = c.normalize ()
 
-        self.assertAlmostEquals (t[0], 0.800000, places=5)
-        self.assertAlmostEquals (t[1], 0.149016, places=5)
-        self.assertAlmostEquals (t[2], 0.760784, places=5)
-        self.assertAlmostEquals (t[3], 0.215686, places=5)
+        self.assertAlmostEqual (t[0], 0.800000, places=5)
+        self.assertAlmostEqual (t[1], 0.149016, places=5)
+        self.assertAlmostEqual (t[2], 0.760784, places=5)
+        self.assertAlmostEqual (t[3], 0.215686, places=5)
 
     def test_len (self):
         c = Color (204, 38, 194, 55)
@@ -495,32 +495,32 @@ class ColorTest (unittest.TestCase):
     def test_hsla__all_elements_within_limits (self):
         for c in rgba_combos_Color_generator():
             h, s, l, a = c.hsla
-            self.assert_(0 <= h <= 360)
-            self.assert_(0 <= s <= 100)
-            self.assert_(0 <= l <= 100)
-            self.assert_(0 <= a <= 100)
+            self.assertTrue (0 <= h <= 360)
+            self.assertTrue(0 <= s <= 100)
+            self.assertTrue(0 <= l <= 100)
+            self.assertTrue(0 <= a <= 100)
 
     def test_hsva__all_elements_within_limits (self):
         for c in rgba_combos_Color_generator():
             h, s, v, a = c.hsva
-            self.assert_(0 <= h <= 360)
-            self.assert_(0 <= s <= 100)
-            self.assert_(0 <= v <= 100)
-            self.assert_(0 <= a <= 100)
+            self.assertTrue(0 <= h <= 360)
+            self.assertTrue(0 <= s <= 100)
+            self.assertTrue(0 <= v <= 100)
+            self.assertTrue(0 <= a <= 100)
 
     def test_cmy__all_elements_within_limits (self):
         for c in rgba_combos_Color_generator():
             c, m, y = c.cmy
-            self.assert_(0 <= c <= 1)
-            self.assert_(0 <= m <= 1)
-            self.assert_(0 <= y <= 1)
+            self.assertTrue(0 <= c <= 1)
+            self.assertTrue(0 <= m <= 1)
+            self.assertTrue(0 <= y <= 1)
 
     def test_i1i2i3__all_elements_within_limits (self):        
         for c in rgba_combos_Color_generator():
             i1, i2, i3 = c.i1i2i3
-            self.assert_(  0   <= i1 <= 1)
-            self.assert_( -0.5 <= i2 <= 0.5)
-            self.assert_( -0.5 <= i3 <= 0.5)
+            self.assertTrue(  0   <= i1 <= 1)
+            self.assertTrue( -0.5 <= i2 <= 0.5)
+            self.assertTrue( -0.5 <= i3 <= 0.5)
 
 ####################### COLORSPACE PROPERTY SANITY TESTS #######################
 
@@ -540,7 +540,7 @@ class ColorTest (unittest.TestCase):
             except ValueError:
                 fails += 1
 
-        self.assert_(x > 0, "x is combination counter, 0 means no tests!")
+        self.assertTrue(x > 0, "x is combination counter, 0 means no tests!")
         self.assertEqual((fails, x), (0, x))
 
     def test_hsla__sanity_testing_converted_should_not_raise (self):
@@ -565,12 +565,12 @@ class ColorTest (unittest.TestCase):
                 setattr(other, prop, getattr(c, prop))
                 #eg other.hsla = c.hsla
                 
-                self.assert_(abs(other.r - c.r) <= 1)
-                self.assert_(abs(other.b - c.b) <= 1)
-                self.assert_(abs(other.g - c.g) <= 1)
+                self.assertTrue(abs(other.r - c.r) <= 1)
+                self.assertTrue(abs(other.b - c.b) <= 1)
+                self.assertTrue(abs(other.g - c.g) <= 1)
                 # CMY and I1I2I3 do not care about the alpha
                 if not prop in ("cmy", "i1i2i3"):
-                    self.assert_(abs(other.a - c.a) <= 1)
+                    self.assertTrue(abs(other.a - c.a) <= 1)
                 
             except ValueError:
                 pass        # other tests will notify, this tests equation
@@ -601,10 +601,10 @@ class ColorTest (unittest.TestCase):
             corrected = Color(*[gamma_correct(x, gamma) for x in tuple(c)])
             lib_corrected = c.correct_gamma(gamma)
 
-            self.assert_(corrected.r == lib_corrected.r)
-            self.assert_(corrected.g == lib_corrected.g)
-            self.assert_(corrected.b == lib_corrected.b)
-            self.assert_(corrected.a == lib_corrected.a)
+            self.assertTrue(corrected.r == lib_corrected.r)
+            self.assertTrue(corrected.g == lib_corrected.g)
+            self.assertTrue(corrected.b == lib_corrected.b)
+            self.assertTrue(corrected.a == lib_corrected.a)
 
         # TODO: test against statically defined verified _correct_ values
         # assert corrected.r == 125 etc.
@@ -800,15 +800,15 @@ class ColorTest (unittest.TestCase):
         c = Color (128, 128, 128, 128)
         t = c.normalize ()
         for v in t:
-            self.assertAlmostEquals (v, 0.5, places=2)
+            self.assertAlmostEqual (v, 0.5, places=2)
 
         c = Color (128, 255, 0, 52)
         t = c.normalize ()
-        self.assertAlmostEquals (t[0], 0.5, places=2)
+        self.assertAlmostEqual (t[0], 0.5, places=2)
         self.assertEqual (t[1], 1.0)
         self.assertEqual (t[2], 0.0)
         # 52 / 255 ~= .20
-        self.assertAlmostEquals (t[3], 0.2, places=2)
+        self.assertAlmostEqual (t[3], 0.2, places=2)
 
     def test_pygame2_base_Color_r(self):
 

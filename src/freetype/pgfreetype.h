@@ -125,10 +125,18 @@ typedef struct
     (PYGAME_FREETYPE_FONT_FIRSTSLOT + PYGAME_FREETYPE_FONT_NUMSLOTS)
 
 #define PYGAME_FREETYPE_ENTRY "_PYGAME_FREETYPE_CAPI"
+#define PYGAME_CFREETYPE_ENTRY "pygame2.freetype.base._PYGAME_FREETYPE_CAPI"
 
 static int
 import_pygame2_freetype_base(void)
 {
+#if PY_VERSION_HEX >= 0x03010000
+    PyObject *_module = PyImport_ImportModule ("pygame2.freetype.base");
+    if (_module == NULL)
+        return -1;
+    PyGameFreeType_C_API = (void**) PyCapsule_Import(PYGAME_CFREETYPE_ENTRY, 0);
+    return (PyGameFreeType_C_API != NULL) ? 0 : -1;
+#else
     PyObject *_module = PyImport_ImportModule("pygame2.freetype.base");
     if (_module != NULL)
     {
@@ -143,8 +151,8 @@ import_pygame2_freetype_base(void)
         Py_DECREF(_capi);
         return 0;
     }
-
     return -1;
+#endif
 }
 
 #ifdef __cplusplus

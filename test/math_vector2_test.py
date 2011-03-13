@@ -118,51 +118,51 @@ class MathVector2Test (unittest.TestCase):
 
     def testAdd(self):
         v3 = self.v1 + self.v2
-        self.assert_(isinstance(v3, type(self.v1)))
+        self.assertTrue(isinstance(v3, type(self.v1)))
         self.assertEqual(v3.x, self.v1.x + self.v2.x)
         self.assertEqual(v3.y, self.v1.y + self.v2.y)
         v3 = self.v1 + self.t2
-        self.assert_(isinstance(v3, type(self.v1)))
+        self.assertTrue(isinstance(v3, type(self.v1)))
         self.assertEqual(v3.x, self.v1.x + self.t2[0])
         self.assertEqual(v3.y, self.v1.y + self.t2[1])
         v3 = self.v1 + self.l2
-        self.assert_(isinstance(v3, type(self.v1)))
+        self.assertTrue(isinstance(v3, type(self.v1)))
         self.assertEqual(v3.x, self.v1.x + self.l2[0])
         self.assertEqual(v3.y, self.v1.y + self.l2[1])
         v3 = self.t1 + self.v2
-        self.assert_(isinstance(v3, type(self.v1)))
+        self.assertTrue(isinstance(v3, type(self.v1)))
         self.assertEqual(v3.x, self.t1[0] + self.v2.x)
         self.assertEqual(v3.y, self.t1[1] + self.v2.y)
         v3 = self.l1 + self.v2
-        self.assert_(isinstance(v3, type(self.v1)))
+        self.assertTrue(isinstance(v3, type(self.v1)))
         self.assertEqual(v3.x, self.l1[0] + self.v2.x)
         self.assertEqual(v3.y, self.l1[1] + self.v2.y)
 
     def testSub(self):
         v3 = self.v1 - self.v2
-        self.assert_(isinstance(v3, type(self.v1)))
+        self.assertTrue(isinstance(v3, type(self.v1)))
         self.assertEqual(v3.x, self.v1.x - self.v2.x)
         self.assertEqual(v3.y, self.v1.y - self.v2.y)
         v3 = self.v1 - self.t2
-        self.assert_(isinstance(v3, type(self.v1)))
+        self.assertTrue(isinstance(v3, type(self.v1)))
         self.assertEqual(v3.x, self.v1.x - self.t2[0])
         self.assertEqual(v3.y, self.v1.y - self.t2[1])
         v3 = self.v1 - self.l2
-        self.assert_(isinstance(v3, type(self.v1)))
+        self.assertTrue(isinstance(v3, type(self.v1)))
         self.assertEqual(v3.x, self.v1.x - self.l2[0])
         self.assertEqual(v3.y, self.v1.y - self.l2[1])
         v3 = self.t1 - self.v2
-        self.assert_(isinstance(v3, type(self.v1)))
+        self.assertTrue(isinstance(v3, type(self.v1)))
         self.assertEqual(v3.x, self.t1[0] - self.v2.x)
         self.assertEqual(v3.y, self.t1[1] - self.v2.y)
         v3 = self.l1 - self.v2
-        self.assert_(isinstance(v3, type(self.v1)))
+        self.assertTrue(isinstance(v3, type(self.v1)))
         self.assertEqual(v3.x, self.l1[0] - self.v2.x)
         self.assertEqual(v3.y, self.l1[1] - self.v2.y)
 
     def testScalarMultiplication(self):
         v = self.s1 * self.v1
-        self.assert_(isinstance(v, type(self.v1)))
+        self.assertTrue(isinstance(v, type(self.v1)))
         self.assertEqual(v.x, self.s1 * self.v1.x)
         self.assertEqual(v.y, self.s1 * self.v1.y)
         v = self.v1 * self.s2
@@ -171,29 +171,29 @@ class MathVector2Test (unittest.TestCase):
 
     def testScalarDivision(self):
         v = self.v1 / self.s1
-        self.assert_(isinstance(v, type(self.v1)))
+        self.assertTrue(isinstance(v, type(self.v1)))
         self.assertAlmostEqual(v.x, self.v1.x / self.s1)
         self.assertAlmostEqual(v.y, self.v1.y / self.s1)
 
         v = self.v1 // self.s2
-        self.assert_(isinstance(v, type(self.v1)))
+        self.assertTrue(isinstance(v, type(self.v1)))
         self.assertEqual(v.x, self.v1.x // self.s2)
         self.assertEqual(v.y, self.v1.y // self.s2)
 
     def testBool(self):
         self.assertEqual(bool(self.zeroVec), False)
         self.assertEqual(bool(self.v1), True)
-        self.assert_(not self.zeroVec)
-        self.assert_(self.v1)
+        self.assertTrue(not self.zeroVec)
+        self.assertTrue(self.v1)
 
     def testUnary(self):
         v = +self.v1
-        self.assert_(isinstance(v, type(self.v1)))
+        self.assertTrue(isinstance(v, type(self.v1)))
         self.assertEqual(v.x, self.v1.x)
         self.assertEqual(v.y, self.v1.y)
         self.assertNotEqual(id(v), id(self.v1))
         v = -self.v1
-        self.assert_(isinstance(v, type(self.v1)))
+        self.assertTrue(isinstance(v, type(self.v1)))
         self.assertEqual(v.x, -self.v1.x)
         self.assertEqual(v.y, -self.v1.y)
         self.assertNotEqual(id(v), id(self.v1))

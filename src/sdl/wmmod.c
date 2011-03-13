@@ -162,15 +162,27 @@ _sdl_wmgetinfo (PyObject *self)
     PyDict_SetItemString (dict, "window", tmp);
     Py_DECREF (tmp);
 
+#if PY_VERSION_HEX >= 0x03010000
+    tmp = PyCapsule_New (info.info.x11.display, "display", NULL);
+#else
     tmp = PyCObject_FromVoidPtr (info.info.x11.display, NULL);
+#endif
     PyDict_SetItemString (dict, "display", tmp);
     Py_DECREF (tmp);
 
+#if PY_VERSION_HEX >= 0x03010000
+    tmp = PyCapsule_New ((void *)info.info.x11.lock_func, "lock_func", NULL);
+#else
     tmp = PyCObject_FromVoidPtr ((void *)info.info.x11.lock_func, NULL);
+#endif
     PyDict_SetItemString (dict, "lock_func", tmp);
     Py_DECREF (tmp);
 
+#if PY_VERSION_HEX >= 0x03010000
+    tmp = PyCapsule_New ((void*)info.info.x11.display, "unlock_func", NULL);
+#else
     tmp = PyCObject_FromVoidPtr ((void *)info.info.x11.unlock_func, NULL);
+#endif
     PyDict_SetItemString (dict, "unlock_func", tmp);
     Py_DECREF (tmp);
 

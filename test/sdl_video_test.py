@@ -16,11 +16,11 @@ class SDLVideoTest (unittest.TestCase):
         # 
         # Gets the name of the video driver or None, if the video system has
         # not been initialised or it could not be determined.
-        self.assert_ (video.get_drivername () == None)
+        self.assertTrue (video.get_drivername () == None)
         video.init ()
-        self.assert_ (video.get_drivername () != None)
+        self.assertTrue (video.get_drivername () != None)
         video.quit ()
-        self.assert_ (video.get_drivername () == None)
+        self.assertTrue (video.get_drivername () == None)
 
     def test_pygame2_sdl_video_get_gammaramp(self):
 
@@ -35,15 +35,15 @@ class SDLVideoTest (unittest.TestCase):
         # tuple contains 256 values.
         video.init ()
         r, g, b = video.get_gammaramp ()
-        self.assert_ (len (r) == 256)
-        self.assert_ (len (g) == 256)
-        self.assert_ (len (b) == 256)
+        self.assertTrue (len (r) == 256)
+        self.assertTrue (len (g) == 256)
+        self.assertTrue (len (b) == 256)
         for v in r:
-            self.assert_ (type (v) == int)
+            self.assertTrue (type (v) == int)
         for v in g:
-            self.assert_ (type (v) == int)
+            self.assertTrue (type (v) == int)
         for v in b:
-            self.assert_ (type (v) == int)
+            self.assertTrue (type (v) == int)
         video.quit ()
 
     def test_pygame2_sdl_video_get_info(self):
@@ -89,18 +89,18 @@ class SDLVideoTest (unittest.TestCase):
         self.assertRaises (pygame2.Error, video.get_info)
         video.init ()
         info = video.get_info ()
-        self.assert_ (type (info) == dict)
-        self.assert_ (type (info["hw_available"]) == bool)
-        self.assert_ (type (info["wm_available"]) == bool)
-        self.assert_ (type (info["blit_hw"]) == bool)
-        self.assert_ (type (info["blit_hw_CC"]) == bool)
-        self.assert_ (type (info["blit_hw_A"]) == bool)
-        self.assert_ (type (info["blit_sw"]) == bool)
-        self.assert_ (type (info["blit_sw_CC"]) == bool)
-        self.assert_ (type (info["blit_sw_A"]) == bool)
-        self.assert_ (type (info["blit_fill"]) == bool)
-        self.assert_ (type (info["video_mem"]) == int)
-        self.assert_ (type (info["vfmt"]) == video.PixelFormat)
+        self.assertTrue (type (info) == dict)
+        self.assertTrue (type (info["hw_available"]) == bool)
+        self.assertTrue (type (info["wm_available"]) == bool)
+        self.assertTrue (type (info["blit_hw"]) == bool)
+        self.assertTrue (type (info["blit_hw_CC"]) == bool)
+        self.assertTrue (type (info["blit_hw_A"]) == bool)
+        self.assertTrue (type (info["blit_sw"]) == bool)
+        self.assertTrue (type (info["blit_sw_CC"]) == bool)
+        self.assertTrue (type (info["blit_sw_A"]) == bool)
+        self.assertTrue (type (info["blit_fill"]) == bool)
+        self.assertTrue (type (info["video_mem"]) == int)
+        self.assertTrue (type (info["vfmt"]) == video.PixelFormat)
         video.quit ()
 
     def test_pygame2_sdl_video_get_videosurface(self):
@@ -112,12 +112,12 @@ class SDLVideoTest (unittest.TestCase):
         # Gets the current display surface or None, if there is no such Surface.
         self.assertRaises (pygame2.Error, video.get_videosurface)
         video.init ()
-        self.assert_ (video.get_videosurface () == None)
+        self.assertTrue (video.get_videosurface () == None)
         video.quit ()
         self.assertRaises (pygame2.Error, video.get_videosurface)
         video.init ()
         video.set_mode (1, 1)
-        self.assert_ (type (video.get_videosurface ()) == video.Surface)
+        self.assertTrue (type (video.get_videosurface ()) == video.Surface)
         video.quit ()
         self.assertRaises (pygame2.Error, video.get_videosurface)
 
@@ -149,7 +149,7 @@ class SDLVideoTest (unittest.TestCase):
         video.init ()
         modes = video.list_modes ()
         for r in modes:
-            self.assert_ (video.is_mode_ok (r.size) == True)
+            self.assertTrue (video.is_mode_ok (r.size) == True)
         video.quit ()
         self.assertRaises (pygame2.Error, video.is_mode_ok)
 
@@ -171,9 +171,9 @@ class SDLVideoTest (unittest.TestCase):
         self.assertRaises (pygame2.Error, video.list_modes)
         video.init ()
         modes = video.list_modes()
-        self.assert_ (type (modes) == list)
+        self.assertTrue (type (modes) == list)
         for r in modes:
-            self.assert_ (type (r) == pygame2.Rect)
+            self.assertTrue (type (r) == pygame2.Rect)
         video.quit ()
         self.assertRaises (pygame2.Error, video.list_modes)
 
@@ -206,11 +206,11 @@ class SDLVideoTest (unittest.TestCase):
         except pygame2.Error:
             video.quit ()
             return
-        self.assert_ (video.set_gamma (0, 0, 0) == None)
-        self.assert_ (video.set_gamma (1, 1, 1) == None)
-        self.assert_ (video.set_gamma (10, 1, 1) == None)
-        self.assert_ (video.set_gamma (10, 12.88, 3.385) == None)
-        self.assert_ (video.set_gamma (-10, -12.88, -3.385) == None)
+        self.assertTrue (video.set_gamma (0, 0, 0) == None)
+        self.assertTrue (video.set_gamma (1, 1, 1) == None)
+        self.assertTrue (video.set_gamma (10, 1, 1) == None)
+        self.assertTrue (video.set_gamma (10, 12.88, 3.385) == None)
+        self.assertTrue (video.set_gamma (-10, -12.88, -3.385) == None)
         video.quit ()
 
     def todo_test_pygame2_sdl_video_set_gammaramp(self):

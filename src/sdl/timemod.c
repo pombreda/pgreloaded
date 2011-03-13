@@ -57,7 +57,11 @@ static int _timer_traverse (PyObject *mod, visitproc visit, void *arg);
 static int _timer_clear (PyObject *mod);
 
 static Uint32 _sdl_timerfunc (Uint32 interval, void *param);
+#if PY_VERSION_HEX >= 0x03010000
+static void _free_timerdata (PyObject *p);
+#else
 static void _free_timerdata (void *p);
+#endif
 static void _remove_alltimers (_SDLTimerState *mod);
 
 static PyObject* _sdl_timeinit (PyObject *self);
@@ -109,7 +113,7 @@ _sdl_timerfunc (Uint32 interval, void *param)
     DEBUG_P ("GOT RUN SIGNAL");
 
 #ifdef WITH_THREAD
-    PyEval_AcquireLock ();
+    PyEval_AcquireThread (timerdata->thread);
     oldstate = PyThreadState_Swap (timerdata->thread);
 #endif
 
@@ -153,7 +157,7 @@ _sdl_timerfunc (Uint32 interval, void *param)
 ret:
 #ifdef WITH_THREAD
     PyThreadState_Swap (oldstate);
-    PyEval_ReleaseLock ();
+    PyEval_ReleaseThread (timerdata->thread);
 #endif
     if (timerdata->wait)
     {
@@ -165,12 +169,21 @@ ret:
     return retval;
 }
 
+#if PY_VERSION_HEX >= 0x03010000
+static void
+_free_timerdata (PyObject *p)
+{
+    _TimerData *data = (_TimerData*) PyCapsule_GetPointer (p, "timerdata");
+    if (!data)
+        return;
+#else
 static void
 _free_timerdata (void *p)
 {
     _TimerData *data = (_TimerData*) p;
     if (!data)
         return;
+#endif
 
     DEBUG_P ("FREEING");
     if (data->id)
@@ -205,7 +218,11 @@ _remove_alltimers (_SDLTimerState *state)
     for (pos = 0; pos < count; pos++)
     {
         val = PyList_GET_ITEM (state->timerlist, pos);
+#if PY_VERSION_HEX >= 0x03010000
+        timerdata = (_TimerData*) PyCapsule_GetPointer (val, "timerdata");
+#else
         timerdata = (_TimerData*) PyCObject_AsVoidPtr (val);
+#endif
         SDL_RemoveTimer (timerdata->id);
         timerdata->id = NULL;
     }
@@ -336,7 +353,11 @@ _sdl_addtimer (PyObject *self, PyObject *args)
     timerdata->thread = PyThreadState_New (PyThreadState_Get ()->interp);
 #endif
 
+#if PY_VERSION_HEX >= 0x03010000
+    retval = PyCapsule_New (timerdata, "timerdata", _free_timerdata);
+#else
     retval = PyCObject_FromVoidPtr (timerdata, _free_timerdata);
+#endif
     id = SDL_AddTimer (interval, _sdl_timerfunc, timerdata);
     if (!id)
     {
@@ -370,13 +391,21 @@ _sdl_removetimer (PyObject *self, PyObject *args)
         return NULL;
 
     state = SDLTIMER_MOD_STATE (self);
+#if PY_VERSION_HEX >= 0x03010000
+    if (!state->timerlist  || !PyCapsule_CheckExact (cobj))
+#else
     if (!state->timerlist  || !PyCObject_Check (cobj))
+#endif
     {
         PyErr_SetString (PyExc_TypeError, "invalid timer id");
         return NULL;
     }
 
+#if PY_VERSION_HEX >= 0x03010000
+    idobj = (_TimerData*) PyCapsule_GetPointer (cobj, "timerdata");
+#else
     idobj = (_TimerData*) PyCObject_AsVoidPtr (cobj);
+#endif
     if (!idobj || idobj->id == NULL)
     {
         PyErr_SetString (PyExc_ValueError, "timer already removed");
@@ -387,7 +416,11 @@ _sdl_removetimer (PyObject *self, PyObject *args)
     for (pos = 0; pos < count; pos++)
     {
         val = PyList_GET_ITEM (state->timerlist, pos);
-        timerdata = (_TimerData*) PyCObject_AsVoidPtr (val);
+#if PY_VERSION_HEX >= 0x03010000
+    timerdata = (_TimerData*) PyCapsule_GetPointer (cobj, "timerdata");
+#else
+    timerdata = (_TimerData*) PyCObject_AsVoidPtr (val);
+#endif
         if (timerdata->id != idobj->id)
             continue;
         found = 1;

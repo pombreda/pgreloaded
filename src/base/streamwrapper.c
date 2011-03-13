@@ -164,8 +164,8 @@ CPyStreamWrapper_Read_Threaded (CPyStreamWrapper *wrapper, void *buf,
     if (!wrapper->read || !wrapper->seek || !read_)
         return 0;
 
-#ifdef WITH_THREAD    
-    PyEval_AcquireLock ();
+#ifdef WITH_THREAD
+    PyEval_AcquireThread (wrapper->thread);
     oldstate = PyThreadState_Swap (wrapper->thread);
 #endif
 
@@ -219,7 +219,7 @@ CPyStreamWrapper_Read_Threaded (CPyStreamWrapper *wrapper, void *buf,
 end:
 #ifdef WITH_THREAD    
     PyThreadState_Swap (oldstate);
-    PyEval_ReleaseLock ();
+    PyEval_ReleaseThread (wrapper->thread);
 #endif
     *read_ = _read;
     return retval;
@@ -305,7 +305,7 @@ CPyStreamWrapper_Write_Threaded (CPyStreamWrapper *wrapper, const void *buf,
         return 0;
 
 #ifdef WITH_THREAD
-    PyEval_AcquireLock ();
+    PyEval_AcquireThread (wrapper->thread);
     oldstate = PyThreadState_Swap (wrapper->thread);
 #endif
 
@@ -327,7 +327,7 @@ CPyStreamWrapper_Write_Threaded (CPyStreamWrapper *wrapper, const void *buf,
 end:
 #ifdef WITH_THREAD
     PyThreadState_Swap (oldstate);
-    PyEval_ReleaseLock ();
+    PyEval_ReleaseThread (wrapper->thread);
 #endif
     return retval;
 }
@@ -376,7 +376,7 @@ CPyStreamWrapper_Seek_Threaded (CPyStreamWrapper *wrapper, pgint32 offset,
         return 0;
 
 #ifdef WITH_THREAD
-    PyEval_AcquireLock ();
+    PyEval_AcquireThread (wrapper->thread);
     oldstate = PyThreadState_Swap (wrapper->thread);
 #endif
 
@@ -391,7 +391,7 @@ CPyStreamWrapper_Seek_Threaded (CPyStreamWrapper *wrapper, pgint32 offset,
 end:
 #ifdef WITH_THREAD
     PyThreadState_Swap (oldstate);
-    PyEval_ReleaseLock ();
+    PyEval_ReleaseThread (wrapper->thread);
 #endif
     return retval;
 }
@@ -430,7 +430,7 @@ CPyStreamWrapper_Tell_Threaded (CPyStreamWrapper *wrapper)
         return -1;
 
 #ifdef WITH_THREAD
-    PyEval_AcquireLock ();
+    PyEval_AcquireThread (wrapper->thread);
     oldstate = PyThreadState_Swap (wrapper->thread);
 #endif
 
@@ -447,7 +447,7 @@ CPyStreamWrapper_Tell_Threaded (CPyStreamWrapper *wrapper)
 end:
 #ifdef WITH_THREAD
     PyThreadState_Swap (oldstate);
-    PyEval_ReleaseLock ();
+    PyEval_ReleaseThread (wrapper->thread);
 #endif
     return retval;
 }
@@ -488,7 +488,7 @@ CPyStreamWrapper_Close_Threaded (CPyStreamWrapper *wrapper)
         return -1;
 
 #ifdef WITH_THREAD
-    PyEval_AcquireLock ();
+    PyEval_AcquireThread (wrapper->thread);
     oldstate = PyThreadState_Swap (wrapper->thread);
 #endif
 
@@ -505,7 +505,7 @@ CPyStreamWrapper_Close_Threaded (CPyStreamWrapper *wrapper)
 
 #ifdef WITH_THREAD
     PyThreadState_Swap (oldstate);
-    PyEval_ReleaseLock ();
+    PyEval_ReleaseThread (wrapper->thread);
 #endif
     return retval;
 }

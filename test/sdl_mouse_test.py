@@ -1,6 +1,6 @@
 import unittest
 import pygame2
-import pygame2.sdl.mouse as image
+import pygame2.sdl.mouse as mouse
 import pygame2.sdl.video as video
 import pygame2.sdl.constants as constants
 

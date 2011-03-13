@@ -208,6 +208,12 @@ PyMODINIT_FUNC
     /* Import Pygame2 Base API to access PyFont_Type */
     if (import_pygame2_base() < 0)
         goto fail;
+#ifdef HAVE_PYGAME_SDL_VIDEO
+    if (import_pygame2_sdl_base () < 0)
+        goto fail;
+    if (import_pygame2_sdl_video () < 0)
+        goto fail;
+#endif /* HAVE_PYGAME_SDL_VIDEO */
 
     PyFreeTypeFont_Type.tp_base = &PyFont_Type;
     if (PyType_Ready(&PyFreeTypeFont_Type) < 0)
@@ -219,7 +225,11 @@ PyMODINIT_FUNC
      */
     ftfont_export_capi(c_api);
 
+#if PY_VERSION_HEX >= 0x03010000
+    c_api_obj = PyCapsule_New((void *)c_api, PYGAME_CFREETYPE_ENTRY, NULL);
+#else
     c_api_obj = PyCObject_FromVoidPtr((void *) c_api, NULL);
+#endif
 
     if (c_api_obj)
     {
@@ -229,13 +239,6 @@ PyMODINIT_FUNC
             goto fail;
         }
     }
-
-#ifdef HAVE_PYGAME_SDL_VIDEO
-    if (import_pygame2_sdl_base () < 0)
-        goto fail;
-    if (import_pygame2_sdl_video () < 0)
-        goto fail;
-#endif /* HAVE_PYGAME_SDL_VIDEO */
 
     MODINIT_RETURN(mod);
 
