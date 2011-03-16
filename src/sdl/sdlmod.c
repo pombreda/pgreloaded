@@ -48,6 +48,7 @@ static PyObject* _sdl_wasinit (PyObject *self, PyObject *args);
 static PyObject* _sdl_geterror (PyObject *self);
 static PyObject* _sdl_getcompiledversion (PyObject *self);
 static PyObject* _sdl_getversion (PyObject *self);
+static int _sdl_clear (PyObject *self);
 
 static PyMethodDef _sdl_methods[] = {
     { "init", _sdl_init, METH_O, DOC_BASE_INIT },
@@ -73,7 +74,7 @@ static struct PyModuleDef _sdlmodule = {
     _sdl_methods,
     NULL,
     NULL,
-    NULL,
+    _sdl_clear,
     NULL
 };
 #define SDL_MOD_STATE(mod) ((_SDLState*)PyModule_GetState(mod))
@@ -139,7 +140,7 @@ static PyObject*
 _sdl_quit (PyObject *self)
 {
     _quit ();
-    SDL_STATE->initialized = 0;
+    SDL_MOD_STATE (self)->initialized = 0;
     Py_RETURN_NONE;
 }
 
@@ -211,6 +212,14 @@ _sdl_getversion (PyObject *self)
 {
     const SDL_version *linked = SDL_Linked_Version ();
     return Py_BuildValue ("(iii)", linked->major, linked->minor, linked->patch);
+}
+
+static int
+_sdl_clear (PyObject *self)
+{
+    _quit ();
+    SDL_MOD_STATE (self)->initialized = 0;
+    return 0;
 }
 
 /* C API */

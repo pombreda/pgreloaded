@@ -204,6 +204,29 @@ _mixer_getdecoders (PyObject *self)
     return list;
 }
 
+static int
+_mixer_clear (PyObject *self)
+{
+    if (SDL_WasInit (SDL_INIT_AUDIO))
+        SDL_QuitSubSystem (SDL_INIT_AUDIO);
+    Mix_Quit ();
+    return 0;
+}
+
+#ifdef IS_PYTHON_3
+static struct PyModuleDef _module = {
+    PyModuleDef_HEAD_INIT,
+    "base",
+    DOC_BASE,
+    -1,
+    _mixer_methods,
+    NULL,
+    NULL,
+    _mixer_clear,
+    NULL
+    };
+#endif
+
 #ifdef IS_PYTHON_3
 PyMODINIT_FUNC PyInit_base (void)
 #else
@@ -215,14 +238,6 @@ PyMODINIT_FUNC initbase (void)
     static void *c_api[PYGAME_SDLMIXER_SLOTS];
     
 #ifdef IS_PYTHON_3
-    static struct PyModuleDef _module = {
-        PyModuleDef_HEAD_INIT,
-        "base",
-        DOC_BASE,
-        -1,
-        _mixer_methods,
-        NULL, NULL, NULL, NULL
-    };
     mod = PyModule_Create (&_module);
 #else
     mod = Py_InitModule3 ("base", _mixer_methods, DOC_BASE);
