@@ -31,15 +31,19 @@ Indexed color palettes. The following palettes are currently available:
 
 from pygame2.color import Color, ARGB
 
-def _create_8bpp_gray ():
+__all__ = ["MONOPALETTE", "GRAY2PALETTE", "GRAY4PALETTE", "CGAPALETTE",
+           "EGAPALETTE", "WEBPALETTE", "RGB3PALETTE", "VGAPALETTE"]
+
+
+def _create_8bpp_gray():
     """Creates a 8 bit grayscale color palette."""
     l = []
-    for x in range (0x00, 0xF1, 0x10):
-        for y in range (0x00, 0x10, 0x01):
-            l.append (Color(x | y, x | y, x | y))
-    return tuple (l)
+    for x in range(0x00, 0xF1, 0x10):
+        for y in range(0x00, 0x10, 0x01):
+            l.append(Color(x | y, x | y, x | y))
+    return tuple(l)
 
-MONOPALETTE = ( ARGB(0xFF000000), ARGB(0xFFFFFFFF), )
+MONOPALETTE = (ARGB(0xFF000000), ARGB(0xFFFFFFFF),)
 
 GRAY2PALETTE = (
     ARGB(0xFF000000), ARGB(0xFF555555), ARGB(0xFFAAAAAA), ARGB(0xFFFFFFFF),
@@ -52,7 +56,7 @@ GRAY4PALETTE = (
     ARGB(0xFFCCCCCC), ARGB(0xFFDDDDDD), ARGB(0xFFEEEEEE), ARGB(0xFFFFFFFF),
     )
 
-GRAY8PALETTE = _create_8bpp_gray ()
+GRAY8PALETTE = _create_8bpp_gray()
 
 CGAPALETTE = (
     ARGB(0xFF000000), ARGB(0xFF0000AA), ARGB(0xFF00AA00), ARGB(0xFF00AAAA),
@@ -104,7 +108,7 @@ WEBPALETTE = (
     ARGB(0xFF99CC99), ARGB(0xFF99CC66), ARGB(0xFF99CC33), ARGB(0xFF99CC00),
     ARGB(0xFF9999FF), ARGB(0xFF9999CC), ARGB(0xFF999999), ARGB(0xFF999966),
     ARGB(0xFF999933), ARGB(0xFF999900), ARGB(0xFF9966FF), ARGB(0xFF9966CC),
-    ARGB(0xFF996699), ARGB(0xFF996666), ARGB(0xFF996633), ARGB(0xFF996600), 
+    ARGB(0xFF996699), ARGB(0xFF996666), ARGB(0xFF996633), ARGB(0xFF996600),
     ARGB(0xFF9933FF), ARGB(0xFF9933CC), ARGB(0xFF993399), ARGB(0xFF993366),
     ARGB(0xFF993333), ARGB(0xFF993300), ARGB(0xFF9900FF), ARGB(0xFF9900CC),
     ARGB(0xFF990099), ARGB(0xFF990066), ARGB(0xFF990033), ARGB(0xFF990000),

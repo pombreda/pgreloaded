@@ -57,10 +57,10 @@ class SDL_RendererInfo(ctypes.Structure):
 class SDL_Renderer(ctypes.Structure):
     pass
 
-    
+
 class SDL_Texture(ctypes.Structure):
     pass
-    
+
 
 @sdltype("SDL_GetNumRenderDrivers", None, ctypes.c_int)
 def get_num_render_drivers():
@@ -96,7 +96,7 @@ def create_window_and_renderer(width, height, windowflags):
         raise SDLError()
     return window.value, renderer.value
 
-    
+
 @sdltype("SDL_CreateRenderer", [ctypes.POINTER(SDL_Window), ctypes.c_int,
                                 ctypes.c_uint], ctypes.POINTER(SDL_Renderer))
 def create_renderer(window, index, flags):
@@ -112,7 +112,7 @@ def create_renderer(window, index, flags):
 
 @sdltype("SDL_CreateSoftwareRenderer", [ctypes.POINTER(SDL_Surface)],
          ctypes.POINTER(SDL_Renderer))
-def create_software_renderer (surface):
+def create_software_renderer(surface):
     """
     """
     if not isinstance(surface, SDL_Surface):
@@ -122,7 +122,7 @@ def create_software_renderer (surface):
         raise SDLError()
     return renderer.value
 
-    
+
 @sdltype("SDL_GetRenderer", [ctypes.POINTER(SDL_Window)],
          ctypes.POINTER(SDL_Renderer))
 def get_renderer(window):
@@ -203,11 +203,11 @@ def query_texture(texture):
         raise SDLError()
     return flags, access, w, h
 
-    
+
 @sdltype("SDL_SetTextureColorMod", [ctypes.POINTER(SDL_Texture),
                                     ctypes.c_ubyte, ctypes.c_ubyte,
                                     ctypes.c_ubyte], ctypes.c_int)
-def set_texture_color_mod (texture, r, g, b):
+def set_texture_color_mod(texture, r, g, b):
     """
     """
     if not isinstance(texture, SDL_Texture):
@@ -576,6 +576,7 @@ def render_fill_rects(renderer, rects):
     if retval == -1:
         raise SDLError()
 
+
 @sdltype("SDL_RenderCopy", [ctypes.POINTER(SDL_Renderer),
                             ctypes.POINTER(SDL_Texture),
                             ctypes.POINTER(SDL_Rect),
@@ -599,13 +600,44 @@ def render_copy(renderer, texture, srcrect, dstrect):
                                   ctypes.POINTER(SDL_Rect), ctypes.c_uint,
                                   ctypes.POINTER(ctypes.c_uint), ctypes.c_int],
          ctypes.c_int)
-def render_read_pixels(renderer, rect, format_, ):
-# @sdltype("", [], None)
-# @sdltype("", [], None)
-# @sdltype("", [], None)
-# @sdltype("", [], None)
-# @sdltype("", [], None)
-# @sdltype("", [], None)
-# @sdltype("", [], None)
-# @sdltype("", [], None)
-# @sdltype("", [], None)
+def render_read_pixels(renderer, rect, format_, bufsize, pitch):
+    """
+    """
+    if not isinstance(renderer, SDL_Renderer):
+        raise TypeError("renderer is not a SDL_Renderer")
+    if not isinstance(rect, SDL_Rect):
+        raise TypeError("rect is not a SDL_Rect")
+    pixelbuf = (bufsize * ctypes.c_uint)()
+    retval = dll.SDL_RenderReadPixels(ctypes.byref(renderer),
+                                      ctypes.byref(rect), format_,
+                                      ctypes.byref(pixelbuf), pitch)
+    if retval == -1:
+        raise SDLError()
+    return pixelbuf
+
+
+@sdltype("SDL_RenderPresent", [ctypes.POINTER(SDL_Renderer)], None)
+def render_present(renderer):
+    """
+    """
+    if not isinstance(renderer, SDL_Renderer):
+        raise TypeError("renderer is not a SDL_Renderer")
+    dll.SDL_RenderPresent(ctypes.byref(renderer))
+
+
+@sdltype("SDL_DestroyTexture", [ctypes.byref(SDL_Texture)], None)
+def destroy_texture(texture):
+    """
+    """
+    if not isinstance(texture, SDL_Texture):
+        raise TypeError("texture is not a SDL_Texture")
+    dll.SDL_DestroyTexture(ctypes.byref(texture))
+
+
+@sdltype("SDL_DestroyRenderer", [ctypes.POINTER(SDL_Renderer)], None)
+def destroy_renderer(renderer):
+    """
+    """
+    if not isinstance(renderer, SDL_Renderer):
+        raise TypeError("renderer is not a SDL_Renderer")
+    dll.SDL_DestroyRenderer(ctypes.byref(renderer))
