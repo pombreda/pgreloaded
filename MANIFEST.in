@@ -1,0 +1,2 @@
+include lib/dll *.dll
+include test *.txt

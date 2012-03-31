@@ -1,0 +1,1 @@
+This NEWS file for dynrules covers a short overview about the latest changes.
