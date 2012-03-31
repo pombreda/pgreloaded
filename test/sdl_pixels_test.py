@@ -378,7 +378,7 @@ class SDLPixelsTest (unittest.TestCase):
 
     def test_SDL_Color__repr__ (self):
         c1 = SDL_Color ()
-        self.assertEqual ("SDL_Color (r=255, g=255, b=255)", repr(c1))
+        self.assertEqual ("SDL_Color(r=255, g=255, b=255)", repr(c1))
         c2 = eval (repr (c1))
         self.assertEqual (c2, c1)
         c3 = eval (repr (c2))

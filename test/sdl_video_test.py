@@ -688,7 +688,8 @@ class SDLVideoTest (unittest.TestCase):
                                       video.SDL_WINDOW_BORDERLESS)
         self.assertRaises (SDLError, video.gl_create_context, window)
         video.destroy_window (window)
-        
+
+        self.assertTrue (video.gl_load_library ())
         window = video.create_window ("OpenGL", 10, 10, 10, 10,
                                       video.SDL_WINDOW_OPENGL)
         ctx = video.gl_create_context (window)
@@ -696,21 +697,30 @@ class SDLVideoTest (unittest.TestCase):
         video.gl_delete_context (ctx)
         video.destroy_window (window)
         
-        #print ctx
-        #window = video.create_window ("OpenGL", 10, 10, 10, 10,
-        #                              video.SDL_WINDOW_OPENGL)
-        #ctx = video.gl_create_context (window)
+        window = video.create_window ("OpenGL", 10, 10, 10, 10,
+                                      video.SDL_WINDOW_OPENGL)
+        ctx = video.gl_create_context (window)
+        video.destroy_window (window)
+        video.gl_delete_context (ctx)
+        
+        video.gl_unload_library ()
 
-    @unittest.skip ("not implemented")
     def test_gl_make_current (self):
-        pass
+        self.assertTrue (video.gl_load_library ())
+        
+        self.assertRaises (TypeError, video.gl_make_current, None, None)
+        
+        window = video.create_window ("No OpenGL", 10, 10, 10, 10,
+                                      video.SDL_WINDOW_BORDERLESS)
+        self.assertRaises (SDLError, video.gl_create_context, window)
+        video.destroy_window (window)
+
+        self.assertRaises (TypeError, video.gl_make_current, None, None)
+        
+        video.gl_unload_library ()
     
     @unittest.skip ("not implemented")
-    def test_gl_set_swap_interval (self):
-        pass
-    
-    @unittest.skip ("not implemented")
-    def test_gl_get_swap_interval (self):
+    def test_gl_get_set_swap_interval (self):
         pass
     
     @unittest.skip ("not implemented")

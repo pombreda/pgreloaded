@@ -2,17 +2,16 @@
 SDL2 keyboard scancode constants.
 """
 
+__all__ = ["SDL_SCANCODE_TO_KEYCODE"]
+
 SDLK_SCANCODE_MASK = 1 << 30
 
-def SDL_SCANCODE_TO_KEYCODE (x):
-    """SDL_SCANCODE_TO_KEYCODE (x) -> int
-    
-    Converts the passed scancode to a keycode value.
-    """
+
+def SDL_SCANCODE_TO_KEYCODE(x):
+    """Converts the passed scancode to a keycode value."""
     return x | SDLK_SCANCODE_MASK
 
 SDL_SCANCODE_UNKNOWN = 0
-
 SDL_SCANCODE_A = 4
 SDL_SCANCODE_B = 5
 SDL_SCANCODE_C = 6
@@ -102,7 +101,7 @@ SDL_SCANCODE_RIGHT      = 79
 SDL_SCANCODE_LEFT       = 80
 SDL_SCANCODE_DOWN       = 81
 SDL_SCANCODE_UP         = 82
-    
+
 SDL_SCANCODE_NUMLOCKCLEAR   = 83
 SDL_SCANCODE_KP_DIVIDE      = 84
 SDL_SCANCODE_KP_MULTIPLY    = 85
@@ -125,7 +124,7 @@ SDL_SCANCODE_NONUSBACKSLASH = 100
 
 SDL_SCANCODE_APPLICATION    = 101
 SDL_SCANCODE_POWER          = 102
-    
+
 SDL_SCANCODE_KP_EQUALS      = 103
 
 SDL_SCANCODE_F13            = 104

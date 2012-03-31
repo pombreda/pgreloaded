@@ -1,6 +1,7 @@
 import unittest
 import copy
 from pygame2.color import *
+from pygame2.compat import *
 
 combs = [0, 1, 2, 4, 8, 16, 32, 62, 63, 64, 126, 127, 128, 255]
 all_combos = [(r, g, b, a) for r in combs

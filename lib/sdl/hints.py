@@ -6,63 +6,58 @@ from pygame2.compat import *
 from pygame2.sdl import sdltype, dll
 from pygame2.sdl.error import SDLError
 
-SDL_HINT_DEFAULT    = 0
-SDL_HINT_NORMAL     = 1
-SDL_HINT_OVERRIDE   = 2
+__all__ = ["clear_hints", "get_hint", "set_hint", "set_hint_with_priority"]
+
+
+SDL_HINT_DEFAULT  = 0
+SDL_HINT_NORMAL   = 1
+SDL_HINT_OVERRIDE = 2
 _supported_hints = (SDL_HINT_DEFAULT, SDL_HINT_NORMAL, SDL_HINT_OVERRIDE)
 
-SDL_HINT_FRAMEBUFFER_ACCELERATION   = b"SDL_FRAMEBUFFER_ACCELERATION"
-SDL_HINT_IDLE_TIMER_DISABLED        = b"SDL_IOS_IDLE_TIMER_DISABLED"
-SDL_HINT_ORIENTATIONS               = b"SDL_IOS_ORIENTATIONS"
-SDL_HINT_RENDER_DRIVER              = b"SDL_RENDER_DRIVER"
-SDL_HINT_RENDER_OPENGL_SHADERS      = b"SDL_RENDER_OPENGL_SHADERS"
-SDL_HINT_RENDER_SCALE_QUALITY       = b"SDL_RENDER_SCALE_QUALITY"
-SDL_HINT_RENDER_VSYNC               = b"SDL_RENDER_VSYNC"
+SDL_HINT_FRAMEBUFFER_ACCELERATION = b"SDL_FRAMEBUFFER_ACCELERATION"
+SDL_HINT_IDLE_TIMER_DISABLED      = b"SDL_IOS_IDLE_TIMER_DISABLED"
+SDL_HINT_ORIENTATIONS             = b"SDL_IOS_ORIENTATIONS"
+SDL_HINT_RENDER_DRIVER            = b"SDL_RENDER_DRIVER"
+SDL_HINT_RENDER_OPENGL_SHADERS    = b"SDL_RENDER_OPENGL_SHADERS"
+SDL_HINT_RENDER_SCALE_QUALITY     = b"SDL_RENDER_SCALE_QUALITY"
+SDL_HINT_RENDER_VSYNC             = b"SDL_RENDER_VSYNC"
+
 
 @sdltype("SDL_ClearHints", None, None)
-def clear_hints ():
-    """clear_hints () -> None
+def clear_hints():
+    """Clears all set hints."""
+    dll.SDL_ClearHints()
 
-    Clears all set hints.
-    """
-    dll.SDL_ClearHints ()
 
 @sdltype("SDL_GetHint", [c_char_p], c_char_p)
-def get_hint (name):
-    """get_hint (name) -> str
-
-    Gets the currently set value for the passed hint.
-    """
-    if type (name) is not str:
-        raise TypeError ("name must be a string")
-    retval = dll.SDL_GetHint (byteify (name, "utf-8"))
+def get_hint(name):
+    """Gets the currently set value for the passed hint."""
+    if type(name) is not str:
+        raise TypeError("name must be a string")
+    retval = dll.SDL_GetHint(byteify(name, "utf-8"))
     if retval is not None:
-        return stringify (retval, "utf-8")
+        return stringify(retval, "utf-8")
     return None
 
-@sdltype("SDL_SetHint", [c_char_p, c_char_p], c_int)
-def set_hint (name, value):
-    """set_hint (name, value) -> int
 
-    Sets the value of a specific hint.
-    """
-    if type (name) is not str:
-        raise TypeError ("name must be a string")
-    if type (value) is not str:
-        raise TypeError ("value must be a string")
-    return dll.SDL_SetHint (byteify (name, "utf-8"), byteify (value, "utf-8"))
+@sdltype("SDL_SetHint", [c_char_p, c_char_p], c_int)
+def set_hint(name, value):
+    """Sets the value of a specific hint."""
+    if type(name) is not str:
+        raise TypeError("name must be a string")
+    if type(value) is not str:
+        raise TypeError("value must be a string")
+    return dll.SDL_SetHint(byteify(name, "utf-8"), byteify(value, "utf-8"))
+
 
 @sdltype("SDL_SetHintWithPriority", [c_char_p, c_char_p, c_uint], c_int)
-def set_hint_with_priority (name, value, priority):
-    """set_hint_with_priority (name, value, priority) -> int
-
-    Sets the value of a specific hint using a priority override.
-    """
-    if type (name) is not str:
-        raise TypeError ("name must be a string")
-    if type (value) is not str:
-        raise TypeError ("value must be a string")
+def set_hint_with_priority(name, value, priority):
+    """Sets the value of a specific hint using a priority override."""
+    if type(name) is not str:
+        raise TypeError("name must be a string")
+    if type(value) is not str:
+        raise TypeError("value must be a string")
     if priority not in _supported_hints:
-        raise ValueError ("unsupported priority")
-    return dll.SDL_SetHintWithPriority (byteify (name, "utf-8"),
-                                        byteify (value, "utf-8"), priority)
+        raise ValueError("unsupported priority")
+    return dll.SDL_SetHintWithPriority(byteify(name, "utf-8"),
+                                       byteify(value, "utf-8"), priority)
