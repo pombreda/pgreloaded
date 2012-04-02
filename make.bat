@@ -74,14 +74,21 @@
 :buildall
 @CALL :clean
 @%PYTHON27% setup.py build
+@CALL :clean
 @%PYTHON31% setup.py build
+@CALL :clean
 @%PYTHON32% setup.py build
+@CALL :clean
 @GOTO :eof
 
 :installall
+@CALL :clean
 @%PYTHON27% setup.py install
+@CALL :clean
 @%PYTHON31% setup.py install
+@CALL :clean
 @%PYTHON32% setup.py install
+@CALL :clean
 @GOTO :eof
 
 :testall

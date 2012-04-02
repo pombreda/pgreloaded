@@ -147,8 +147,8 @@ class SDL_DisplayMode(ctypes.Structure):
                 ("_driverdata", ctypes.c_void_p)
                 ]
 
-    def __init__(self, format=0, w=0, h=0, refresh_rate=0):
-        self.format = format
+    def __init__(self, format_=0, w=0, h=0, refresh_rate=0):
+        self.format = format_
         self.w = w
         self.h = h
         self.refresh_rate = refresh_rate

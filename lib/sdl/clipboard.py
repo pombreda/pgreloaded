@@ -20,12 +20,8 @@ def get_clipboard_text():
         raise SDLError()
     # cast to get the whole content, then 'copy' to a new location,
     # so we can free retval safely
-    vvv = ctypes.cast(retval, ctypes.c_char_p).value
-    val = stringify(vvv, "utf-8")
-
-    # TODO: the leak needs to be fixed!
-    #free(retval)
-    #
+    val = stringify(ctypes.cast(retval, ctypes.c_char_p).value, "utf-8")
+    free(retval)
     return val
 
 

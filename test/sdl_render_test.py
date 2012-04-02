@@ -76,14 +76,10 @@ class SDLRenderTest (unittest.TestCase):
                                               render.SDL_RENDERER_ACCELERATED)
             self.assertIsInstance(renderer, render.SDL_Renderer)
             render.destroy_renderer(renderer)
-            render.destroy_renderer(renderer)
 
             renderer = render.create_renderer(window, -1,
                                               render.SDL_RENDERER_SOFTWARE)
             self.assertIsInstance(renderer, render.SDL_Renderer)
-            render.destroy_renderer(renderer)
-            render.destroy_renderer(renderer)
-            render.destroy_renderer(renderer)
             render.destroy_renderer(renderer)
         video.destroy_window(window)
 
@@ -138,7 +134,7 @@ class SDLRenderTest (unittest.TestCase):
         renderer = render.create_renderer(window, -1,
                                           render.SDL_RENDERER_SOFTWARE)
         self.assertIsInstance(renderer, render.SDL_Renderer)
-        
+
         formats = (pixels.SDL_PIXELFORMAT_ARGB8888,
                    pixels.SDL_PIXELFORMAT_RGB555,
                    pixels.SDL_PIXELFORMAT_RGBA4444,
@@ -193,7 +189,7 @@ class SDLRenderTest (unittest.TestCase):
         renderer = render.create_renderer(window, -1,
                                           render.SDL_RENDERER_SOFTWARE)
         self.assertIsInstance(renderer, render.SDL_Renderer)
-        
+
         formats = (pixels.SDL_PIXELFORMAT_ARGB8888,
                    pixels.SDL_PIXELFORMAT_RGB555,
                    pixels.SDL_PIXELFORMAT_RGBA4444,
@@ -249,7 +245,7 @@ class SDLRenderTest (unittest.TestCase):
         self.assertRaises(SDLError, render.set_texture_color_mod, tex,
                           10, 20, 30)
         self.assertRaises(SDLError, render.get_texture_color_mod, tex)
-        
+
         render.destroy_renderer(renderer)
         video.destroy_window(window)
 
@@ -274,7 +270,7 @@ class SDLRenderTest (unittest.TestCase):
         self.assertRaises(SDLError, render.set_texture_color_mod, tex,
                           10, 20, 30)
         self.assertRaises(SDLError, render.get_texture_color_mod, tex)
-        
+
         render.destroy_renderer(renderer)
         video.destroy_window(window)
 
@@ -304,7 +300,7 @@ class SDLRenderTest (unittest.TestCase):
         self.assertRaises(SDLError, render.set_texture_blend_mode, tex,
                           modes[2])
         self.assertRaises(SDLError, render.get_texture_blend_mode, tex)
-        
+
         render.destroy_renderer(renderer)
         video.destroy_window(window)
 
@@ -320,9 +316,20 @@ class SDLRenderTest (unittest.TestCase):
     def test_unlock_texture(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_render_target_supported(self):
-        pass
+        window = video.create_window("Test", 10, 10, 10, 10,
+                                     video.SDL_WINDOW_HIDDEN)
+        self.assertIsInstance(window, video.SDL_Window)
+
+        for i in range(render.get_num_render_drivers()):
+            renderer = render.create_renderer(window, i,
+                                              render.SDL_RENDERER_ACCELERATED)
+            self.assertIsInstance(renderer, render.SDL_Renderer)
+
+            val = render.render_target_supported(renderer)
+            self.assertIsInstance(val, bool)
+            render.destroy_renderer(renderer)
+        video.destroy_window(window)
 
     @unittest.skip("not implemented")
     def test_set_render_target(self):
@@ -332,13 +339,62 @@ class SDLRenderTest (unittest.TestCase):
     def test_render_set_get_viewport(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_get_set_render_draw_color(self):
-        pass
+        window = video.create_window("Test", 10, 10, 10, 10,
+                                     video.SDL_WINDOW_HIDDEN)
+        self.assertIsInstance(window, video.SDL_Window)
 
-    @unittest.skip("not implemented")
+        for i in range(render.get_num_render_drivers()):
+            renderer = render.create_renderer(window, i,
+                                              render.SDL_RENDERER_ACCELERATED)
+            self.assertIsInstance(renderer, render.SDL_Renderer)
+
+            colors = ((16, 22, 185, 217),
+                      (32, 64, 128, 255),
+                      (64, 32, 128, 255),
+                      (64, 32, 255, 128),
+                      (255, 32, 64, 128),
+                      (255, 32, 128, 64),
+                      (0, 0, 0, 0),
+                      (255, 255, 255, 255),
+                      (128, 128, 128, 255),
+                      )
+            for r, g, b, a in colors:
+                render.set_render_draw_color(renderer, r, g, b, a)
+                dr, dg, db, da = render.get_render_draw_color(renderer)
+                self.assertEqual((dr, dg, db, da), (r, g, b, a))
+            render.destroy_renderer(renderer)
+            self.assertRaises(SDLError, render.set_render_draw_color, renderer,
+                              10, 20, 30, 40)
+            self.assertRaises(SDLError, render.get_render_draw_color, renderer)
+
+        video.destroy_window(window)
+
     def test_get_set_render_draw_blend_mode(self):
-        pass
+        window = video.create_window("Test", 10, 10, 10, 10,
+                                     video.SDL_WINDOW_HIDDEN)
+        self.assertIsInstance(window, video.SDL_Window)
+
+        for i in range(render.get_num_render_drivers()):
+            renderer = render.create_renderer(window, i,
+                                              render.SDL_RENDERER_ACCELERATED)
+            self.assertIsInstance(renderer, render.SDL_Renderer)
+
+            modes = (video.SDL_BLENDMODE_NONE,
+                     video.SDL_BLENDMODE_ADD,
+                     video.SDL_BLENDMODE_BLEND,
+                     video.SDL_BLENDMODE_MOD,
+                     )
+            for mode in modes:
+                render.set_render_draw_blend_mode(renderer, mode)
+                bmode = render.get_render_draw_blend_mode(renderer)
+                self.assertEqual(bmode, mode)
+            render.destroy_renderer(renderer)
+            self.assertRaises(SDLError, render.set_render_draw_blend_mode,
+                              renderer, video.SDL_BLENDMODE_ADD)
+            self.assertRaises(SDLError, render.get_render_draw_blend_mode,
+                              renderer)
+        video.destroy_window(window)
 
     @unittest.skip("not implemented")
     def test_render_clear(self):

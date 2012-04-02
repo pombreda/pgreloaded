@@ -278,7 +278,7 @@ class SDL_Palette(ctypes.Structure):
     """A color palette class."""
     _fields_ = [("ncolors", ctypes.c_int),
                 ("_colors", ctypes.POINTER(SDL_Color)),
-                ("version", ctypes.c_uint),
+                ("_version", ctypes.c_uint),
                 ("_refcount", ctypes.c_int),
                 ]
 

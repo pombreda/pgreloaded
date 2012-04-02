@@ -40,6 +40,11 @@ class _DLL(object):
                 _LIBNAME = find_library("SDL2-2.0")
         self._dll = ctypes.CDLL(_LIBNAME)
 
+    def has_dll_function(self, name):
+        """Checks, if a function identified by name exists in the bound dll.
+        """
+        return hasattr(self._dll, name)
+            
     def get_dll_function(self, name):
         """Tries to retrieve the function identified by name from the bound
         dll.
@@ -159,15 +164,15 @@ def free(val):
     """Frees memory hold by a SDL resource."""
     if not hasattr(dll, "SDL_free"):
         # Bind it on the first time, the function is called.
-        try:
-            funcptr = dll.get_function("SDL_free")
+        if dll.has_dll_function("SDL_free"):
+            funcptr = dll.get_dll_function("SDL_free")
             dll.add_function("SDL_free", funcptr)
-        except Exception:
-            # SDL_Free might be a #define to free()
+        else:
+            # SDL_Free is most likely a #define for free()
             libc = None
             if sys.platform == "win32":
                 libc = ctypes.cdll.msvcrt
             else:
                 libc = ctypes.cdll.LoadLibrary("libc.so")
             dll.add_function("SDL_free", libc.free)
-    dll.SDL_free(ctypes.byref(val))
+    dll.SDL_free(ctypes.cast(val, ctypes.c_void_p))
