@@ -25,7 +25,8 @@ ShapeModeColorKey             = 3
 
 
 def SDL_SHAPEMODEALPHA(mode):
-    """"""
+    """Checks, if the passed shape mode supports alpha transparency.
+    """
     return mode == ShapeModeDefault or mode == ShapeModeBinarizeAlpha or \
         mode == ShapeModeReverseBinarizeAlpha
 
@@ -47,7 +48,7 @@ class SDL_WindowShapeMode(ctypes.Structure):
                                     ctypes.c_uint, ctypes.c_uint],
          ctypes.POINTER(SDL_Window))
 def create_shaped_window(title, x, y, w, h, flags):
-    """Create a winbdow that can be shaped with the specified position,
+    """Create a window that can be shaped with the specified position,
     dimension and flags.
 
     TODO
@@ -73,7 +74,7 @@ def is_shaped_window(window):
                                 ctypes.POINTER(SDL_WindowShapeMode)],
          ctypes.c_int)
 def set_window_shape(window, surface, shapemode):
-    """
+    """Sets the shape parameters of a shaped window.
     """
     if not isinstance(window, SDL_Window):
         raise TypeError("window must be a SDL_Window")
@@ -92,12 +93,13 @@ def set_window_shape(window, surface, shapemode):
                                      ctypes.POINTER(SDL_WindowShapeMode)],
          ctypes.c_int)
 def get_shaped_window_mode(window):
-    """
+    """Gets the shape parameters from a shaped window
     """
     if not isinstance(window, SDL_Window):
         raise TypeError("window must be a SDL_Window")
     mode = SDL_WindowShapeMode()
-    retval = SDL_GetShapedWindowMode(ctypes.byref(window), ctypes.byref(mode))
+    retval = dll.SDL_GetShapedWindowMode(ctypes.byref(window),
+                                         ctypes.byref(mode))
     if retval != 0:
         raise SDLError()
     return mode

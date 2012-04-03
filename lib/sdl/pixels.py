@@ -122,27 +122,27 @@ def SDL_BYTESPERPIXEL(x):
         return(((x) >> 0) & 0xFF)
 
 
-def SDL_ISPIXELFORMAT_INDEXED(format):
+def SDL_ISPIXELFORMAT_INDEXED(pformat):
     """Checks, if the passed format value is an indexed format."""
-    return ((SDL_ISPIXELFORMAT_FOURCC(format) == False) and
-            ((SDL_PIXELTYPE(format) == SDL_PIXELTYPE_INDEX1) or
-             (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_INDEX4) or
-             (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_INDEX8)))
+    return ((not SDL_ISPIXELFORMAT_FOURCC(pformat)) and
+            ((SDL_PIXELTYPE(pformat) == SDL_PIXELTYPE_INDEX1) or
+             (SDL_PIXELTYPE(pformat) == SDL_PIXELTYPE_INDEX4) or
+             (SDL_PIXELTYPE(pformat) == SDL_PIXELTYPE_INDEX8)))
 
 
-def SDL_ISPIXELFORMAT_ALPHA(format):
+def SDL_ISPIXELFORMAT_ALPHA(pformat):
     """Checks, if the passed format value is an alpha channel supporting format.
     """
-    return ((SDL_ISPIXELFORMAT_FOURCC(format) == False) and
-            ((SDL_PIXELORDER(format) == SDL_PACKEDORDER_ARGB) or
-             (SDL_PIXELORDER(format) == SDL_PACKEDORDER_RGBA) or
-             (SDL_PIXELORDER(format) == SDL_PACKEDORDER_ABGR) or
-             (SDL_PIXELORDER(format) == SDL_PACKEDORDER_BGRA)))
+    return ((not SDL_ISPIXELFORMAT_FOURCC(pformat)) and
+            ((SDL_PIXELORDER(pformat) == SDL_PACKEDORDER_ARGB) or
+             (SDL_PIXELORDER(pformat) == SDL_PACKEDORDER_RGBA) or
+             (SDL_PIXELORDER(pformat) == SDL_PACKEDORDER_ABGR) or
+             (SDL_PIXELORDER(pformat) == SDL_PACKEDORDER_BGRA)))
 
 
-def SDL_ISPIXELFORMAT_FOURCC(format):
+def SDL_ISPIXELFORMAT_FOURCC(pformat):
     """Checks, if the passed format value is a FourCC based format."""
-    return ((format != 0) and (format & 0x80000000 == 0))
+    return ((pformat != 0) and (pformat & 0x80000000 == 0))
 
 
 SDL_PIXELFORMAT_UNKNOWN = 0
@@ -239,6 +239,44 @@ SDL_PIXELFORMAT_IYUV = SDL_DEFINE_PIXELFOURCC('I', 'Y', 'U', 'V')
 SDL_PIXELFORMAT_YUY2 = SDL_DEFINE_PIXELFOURCC('Y', 'U', 'Y', '2')
 SDL_PIXELFORMAT_UYVY = SDL_DEFINE_PIXELFOURCC('U', 'Y', 'V', 'Y')
 SDL_PIXELFORMAT_YVYU = SDL_DEFINE_PIXELFOURCC('Y', 'V', 'Y', 'U')
+
+ALL_PIXELFORMATS = (
+    SDL_PIXELFORMAT_INDEX1LSB,
+    SDL_PIXELFORMAT_INDEX1MSB,
+    SDL_PIXELFORMAT_INDEX4LSB,
+    SDL_PIXELFORMAT_INDEX4MSB,
+    SDL_PIXELFORMAT_INDEX8,
+    SDL_PIXELFORMAT_RGB332,
+    SDL_PIXELFORMAT_RGB444,
+    SDL_PIXELFORMAT_RGB555,
+    SDL_PIXELFORMAT_BGR555,
+    SDL_PIXELFORMAT_ARGB4444,
+    SDL_PIXELFORMAT_RGBA4444,
+    SDL_PIXELFORMAT_ABGR4444,
+    SDL_PIXELFORMAT_BGRA4444,
+    SDL_PIXELFORMAT_ARGB1555,
+    SDL_PIXELFORMAT_RGBA5551,
+    SDL_PIXELFORMAT_ABGR1555,
+    SDL_PIXELFORMAT_BGRA5551,
+    SDL_PIXELFORMAT_RGB565,
+    SDL_PIXELFORMAT_BGR565,
+    SDL_PIXELFORMAT_RGB24,
+    SDL_PIXELFORMAT_BGR24,
+    SDL_PIXELFORMAT_RGB888,
+    SDL_PIXELFORMAT_RGBX8888,
+    SDL_PIXELFORMAT_BGR888,
+    SDL_PIXELFORMAT_BGRX8888,
+    SDL_PIXELFORMAT_ARGB8888,
+    SDL_PIXELFORMAT_RGBA8888,
+    SDL_PIXELFORMAT_ABGR8888,
+    SDL_PIXELFORMAT_BGRA8888,
+    SDL_PIXELFORMAT_ARGB2101010,
+    SDL_PIXELFORMAT_YV12,
+    SDL_PIXELFORMAT_IYUV,
+    SDL_PIXELFORMAT_YUY2,
+    SDL_PIXELFORMAT_UYVY,
+    SDL_PIXELFORMAT_YVYU,
+    )
 
 
 class SDL_Color(ctypes.Structure):
@@ -353,9 +391,9 @@ SDL_PixelFormat._fields_ = [("format", ctypes.c_uint),
 
 
 @sdltype("SDL_GetPixelFormatName", [ctypes.c_uint], ctypes.c_char_p)
-def get_pixelformat_name(format):
+def get_pixelformat_name(pformat):
     """Gets the name of a specific pixel format value."""
-    retval = dll.SDL_GetPixelFormatName(format)
+    retval = dll.SDL_GetPixelFormatName(pformat)
     return stringify(retval, "utf-8")
 
 
@@ -366,7 +404,7 @@ def get_pixelformat_name(format):
                                         ctypes.POINTER(ctypes.c_uint),
                                         ctypes.POINTER(ctypes.c_uint)],
          ctypes.c_int)
-def pixelformat_enum_to_masks(format):
+def pixelformat_enum_to_masks(pformat):
     """Gets the pixel masks for a specific pixel format value.
 
     The returned tuple consists of(bpp, red mask, green mask, blue mask,
@@ -377,7 +415,7 @@ def pixelformat_enum_to_masks(format):
     gmask = ctypes.c_uint()
     bmask = ctypes.c_uint()
     amask = ctypes.c_uint()
-    if dll.SDL_PixelFormatEnumToMasks(format, ctypes.byref(bpp),
+    if dll.SDL_PixelFormatEnumToMasks(pformat, ctypes.byref(bpp),
                                       ctypes.byref(rmask),
                                       ctypes.byref(gmask),
                                       ctypes.byref(bmask),
@@ -396,7 +434,7 @@ def masks_to_pixelformat_enum(bpp, rmask, gmask, bmask, amask):
 
 
 @sdltype("SDL_AllocFormat", [ctypes.c_uint], ctypes.POINTER(SDL_PixelFormat))
-def alloc_format(format):
+def alloc_format(pformat):
     """Creates a SDL_PixelFormat from the passed format value.
 
     In case the passed format value is not valid or an error occurs on
@@ -405,18 +443,18 @@ def alloc_format(format):
     Once not used anymore, the SDL_PixelFormat must be freed using
     free_format().
     """
-    fmt = dll.SDL_AllocFormat(format)
+    fmt = dll.SDL_AllocFormat(pformat)
     if not bool(fmt):
         raise SDLError()
     return fmt.contents
 
 
 @sdltype("SDL_FreeFormat", [ctypes.POINTER(SDL_PixelFormat)], None)
-def free_format(format):
+def free_format(pformat):
     """Frees a previously allocated SDL_PixelFormat."""
-    if type(format) is not SDL_PixelFormat:
-        raise TypeError("format must be a SDL_PixelFormat")
-    dll.SDL_FreeFormat(ctypes.byref(format))
+    if type(pformat) is not SDL_PixelFormat:
+        raise TypeError("pformat must be a SDL_PixelFormat")
+    dll.SDL_FreeFormat(ctypes.byref(pformat))
 
 
 @sdltype("SDL_AllocPalette", [ctypes.c_int], ctypes.POINTER(SDL_Palette))
@@ -462,17 +500,17 @@ def calculate_gamma_ramp(gamma):
                         ctypes.POINTER(ctypes.c_ubyte),
                         ctypes.POINTER(ctypes.c_ubyte),
                         ctypes.POINTER(ctypes.c_ubyte)], None)
-def get_rgb(pixel, format):
+def get_rgb(pixel, pformat):
     """Gets the mapped RGB values for a specific pixel value and format.
     """
     if type(pixel) not in(int, long):
         raise TypeError("pixel must be an int")
-    if type(format) is not SDL_PixelFormat:
-        raise TypeError("format must be a SDL_PixelFormat")
+    if type(pformat) is not SDL_PixelFormat:
+        raise TypeError("pformat must be a SDL_PixelFormat")
     r = ctypes.c_ubyte()
     g = ctypes.c_ubyte()
     b = ctypes.c_ubyte()
-    dll.SDL_GetRGB(pixel, ctypes.byref(format), ctypes.byref(r),
+    dll.SDL_GetRGB(pixel, ctypes.byref(pformat), ctypes.byref(r),
                    ctypes.byref(g), ctypes.byref(b))
     return(r.value, g.value, b.value)
 
@@ -482,49 +520,49 @@ def get_rgb(pixel, format):
                          ctypes.POINTER(ctypes.c_ubyte),
                          ctypes.POINTER(ctypes.c_ubyte),
                          ctypes.POINTER(ctypes.c_ubyte)], None)
-def get_rgba(pixel, format):
+def get_rgba(pixel, pformat):
     """Gets the mapped RGBA values for a specific pixel value and format.
     """
     if type(pixel) not in(int, long):
         raise TypeError("pixel must be an int")
-    if type(format) is not SDL_PixelFormat:
-        raise TypeError("format must be a SDL_PixelFormat")
+    if type(pformat) is not SDL_PixelFormat:
+        raise TypeError("pformat must be a SDL_PixelFormat")
     r = ctypes.c_ubyte()
     g = ctypes.c_ubyte()
     b = ctypes.c_ubyte()
     a = ctypes.c_ubyte()
-    dll.SDL_GetRGBA(pixel, ctypes.byref(format), ctypes.byref(r),
+    dll.SDL_GetRGBA(pixel, ctypes.byref(pformat), ctypes.byref(r),
                     ctypes.byref(g), ctypes.byref(b), ctypes.byref(a))
     return(r.value, g.value, b.value, a.value)
 
 
 @sdltype("SDL_MapRGB", [ctypes.POINTER(SDL_PixelFormat), ctypes.c_ubyte,
                         ctypes.c_ubyte, ctypes.c_ubyte], ctypes.c_uint)
-def map_rgb(format, r, g, b):
+def map_rgb(pformat, r, g, b):
     """Maps the passed RGB values to a specific pixel value using the
     passed format.
     """
     if type(r) is not int or type(g) is not int or type(b) is not int:
         raise TypeError("r, g and b must be int values")
-    if type(format) is not SDL_PixelFormat:
-        raise TypeError("format must be a SDL_PixelFormat")
-    val = dll.SDL_MapRGB(ctypes.byref(format), r, g, b)
+    if type(pformat) is not SDL_PixelFormat:
+        raise TypeError("pformat must be a SDL_PixelFormat")
+    val = dll.SDL_MapRGB(ctypes.byref(pformat), r, g, b)
     return val
 
 
 @sdltype("SDL_MapRGBA", [ctypes.POINTER(SDL_PixelFormat), ctypes.c_ubyte,
                          ctypes.c_ubyte, ctypes.c_ubyte, ctypes.c_ubyte],
          ctypes.c_uint)
-def map_rgba(format, r, g, b, a):
+def map_rgba(pformat, r, g, b, a):
     """Maps the passed RGBA values to a specific pixel value using the
     passed format.
     """
     if type(r) is not int or type(g) is not int or type(b) is not int or \
             type(a) is not int:
         raise TypeError("r, g, b and a must be int values")
-    if type(format) is not SDL_PixelFormat:
-        raise TypeError("format must be a SDL_PixelFormat")
-    val = dll.SDL_MapRGBA(ctypes.byref(format), r, g, b, a)
+    if type(pformat) is not SDL_PixelFormat:
+        raise TypeError("pformat must be a SDL_PixelFormat")
+    val = dll.SDL_MapRGBA(ctypes.byref(pformat), r, g, b, a)
     return val
 
 
@@ -547,11 +585,11 @@ def set_palette_colors(palette, colors, first, ncolors):
 @sdltype("SDL_SetPixelFormatPalette", [ctypes.POINTER(SDL_PixelFormat),
                                        ctypes.POINTER(SDL_Palette)],
          ctypes.c_int)
-def set_pixelformat_palette(format, palette):
+def set_pixelformat_palette(pformat, palette):
     """Binds a palette to the passed SDL_PixelFormat."""
-    if type(format) is not SDL_PixelFormat:
-        raise TypeError("format must be a SDL_PixelFormat")
+    if type(pformat) is not SDL_PixelFormat:
+        raise TypeError("pformat must be a SDL_PixelFormat")
     if type(palette) is not SDL_Palette:
         raise TypeError("palette must be a SDL_Palette")
-    return dll.SDL_SetPixelFormatPalette(ctypes.byref(format),
+    return dll.SDL_SetPixelFormatPalette(ctypes.byref(pformat),
                                          ctypes.byref(palette))

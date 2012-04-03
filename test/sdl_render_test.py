@@ -6,17 +6,19 @@ import pygame2.sdl.video as video
 from pygame2.sdl.error import SDLError
 import pygame2.sdl.pixels as pixels
 
+
 # TODO: mostly positive tests, improve this!
-class SDLRenderTest (unittest.TestCase):
-    __tags__ = [ "sdl" ]
+class SDLRenderTest(unittest.TestCase):
+    __tags__ = ["sdl"]
 
-    def setUp (self):
-        if sys.version.startswith ("3.1"):
-            self.assertIsInstance = lambda x, t: self.assertTrue (isinstance (x, t))
-        sdl.init (sdl.SDL_INIT_EVERYTHING)
+    def setUp(self):
+        if sys.version.startswith("3.1"):
+            self.assertIsInstance = \
+                lambda x, t: self.assertTrue(isinstance(x, t))
+        sdl.init(sdl.SDL_INIT_EVERYTHING)
 
-    def tearDown (self):
-        sdl.quit ()
+    def tearDown(self):
+        sdl.quit()
 
     def test_SDL_RendererInfo(self):
         info = render.SDL_RendererInfo()
@@ -43,8 +45,7 @@ class SDLRenderTest (unittest.TestCase):
             # We must find at least one software renderer
             if info.name == "software":
                 success = True
-        self.assertTrue(success,
-                        "Something failed on retrieving the driver information")
+        self.assertTrue(success, "failed on retrieving the driver information")
 
         self.assertRaises(TypeError, render.get_render_driver_info, None)
         self.assertRaises(TypeError, render.get_render_driver_info, "Test")
@@ -53,7 +54,7 @@ class SDLRenderTest (unittest.TestCase):
 
     def test_create_window_and_renderer(self):
         window, renderer = render.create_window_and_renderer \
-            (10, 10, video.SDL_WINDOW_HIDDEN)
+           (10, 10, video.SDL_WINDOW_HIDDEN)
         self.assertIsInstance(window, video.SDL_Window)
         self.assertIsInstance(renderer, render.SDL_Renderer)
 
@@ -62,10 +63,11 @@ class SDLRenderTest (unittest.TestCase):
 
         # TODO: the code below works, too - is that really expected from SDL?
         #window, renderer = render.create_window_and_renderer \
-        #    (-10, -10, video.SDL_WINDOW_HIDDEN)
+        #   (-10, -10, video.SDL_WINDOW_HIDDEN)
         #self.assertIsInstance(window, video.SDL_Window)
         #self.assertIsInstance(renderer, render.SDL_Renderer)
 
+    @unittest.skipIf(sys.platform == "win32", "crashes")
     def test_create_destroy_renderer(self):
         window = video.create_window("Test", 10, 10, 10, 10,
                                      video.SDL_WINDOW_HIDDEN)
@@ -146,8 +148,8 @@ class SDLRenderTest (unittest.TestCase):
                   render.SDL_TEXTUREACCESS_TARGET)
         for fmt in formats:
             for acc in access:
-                for w in range (1, 300, 5):
-                    for h in range (1, 300, 5):
+                for w in range(1, 300, 5):
+                    for h in range(1, 300, 5):
                         tex = render.create_texture(renderer, fmt, acc, w, h)
                         self.assertIsInstance(tex, render.SDL_Texture)
                         render.destroy_texture(tex)
@@ -201,8 +203,8 @@ class SDLRenderTest (unittest.TestCase):
                   render.SDL_TEXTUREACCESS_TARGET)
         for fmt in formats:
             for acc in access:
-                for w in range (1, 300, 5):
-                    for h in range (1, 300, 5):
+                for w in range(1, 300, 5):
+                    for h in range(1, 300, 5):
                         tex = render.create_texture(renderer, fmt, acc, w, h)
                         self.assertIsInstance(tex, render.SDL_Texture)
                         qf, qa, qw, qh = render.query_texture(tex)
@@ -445,4 +447,4 @@ class SDLRenderTest (unittest.TestCase):
         pass
 
 if __name__ == '__main__':
-    unittest.main ()
+    unittest.main()
