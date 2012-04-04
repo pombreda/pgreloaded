@@ -2,7 +2,7 @@
 Python compatibility helpers.
 """
 import sys
-
+import collections
 
 if sys.version_info[0] < 3:
     __all__ = ["stringify", "byteify"]
@@ -15,5 +15,6 @@ else:
     stringify = lambda x, enc: x.decode(enc)
     long = int
     unichr = chr
-    from collections import Callable
-    callable = lambda x: isinstance(x, Callable)
+    callable = lambda x: isinstance(x, collections.Callable)
+
+isiterable = lambda x: isinstance(x, collections.Iterable)

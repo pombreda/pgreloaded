@@ -117,12 +117,14 @@ def create_rgb_surface(width, height, depth, rmask=0, gmask=0, bmask=0,
                                       ctypes.c_uint, ctypes.c_uint,
                                       ctypes.c_uint, ctypes.c_uint],
          ctypes.POINTER(SDL_Surface))
-def create_rgb_surface_from(pixels, width, height, depth, rmask, gmask, bmask,
-    amask):
+def create_rgb_surface_from(pixels, width, height, depth, pitch, rmask, gmask,
+                            bmask, amask):
     """
     """
-    ret = dll.SDL_CreateRGBSurfaceFrom(pixels, width, height, depth,
-                                        rmask, gmask, bmask, amask)
+    ret = dll.SDL_CreateRGBSurfaceFrom(pixels, width, height, depth, pitch,
+                                       rmask, gmask, bmask, amask)
+    if ret is None or not bool(ret):
+        raise SDLError()
     return ret.contents
 
 

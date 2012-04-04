@@ -1,3 +1,4 @@
+import array
 import sys
 import unittest
 import pygame2.sdl as sdl
@@ -6,6 +7,7 @@ from pygame2.sdl.error import SDLError
 import pygame2.sdl.rect as rect
 import pygame2.sdl.pixels as pixels
 import pygame2.sdl.video as video
+import pygame2.sdl.array as sdlarray
 
 alldepths = (1, 4, 8, 12, 15, 16, 24, 32)
 indexdepths = (1, 4, 8)
@@ -72,9 +74,28 @@ class SDLSurfaceTest(unittest.TestCase):
         self.assertRaises(SDLError, surface.create_rgb_surface, 1, 1, 32,
                           0xf0, 0x0f, 0x01, 0x02)
 
-    @unittest.skip("not implemented")
     def test_create_rgb_surface_from(self):
-        pass
+        # 16x16 surfaces with 256 values
+        pixelations = (([x << 24 for x in range(16 * 16)], 32, 16,
+                        (0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF)),
+                       ([x << 8 for x in range(16 * 16)], 16, 16,
+                        (0xF000, 0x0F00, 0x00F0, 0x000F)),
+                       ([x for x in range(16 * 16)], 8, 16,
+                        (0x0, 0x0, 0x0, 0x0)),
+                       )
+        for pixels, bpp, pitch, masks in pixelations:
+            arflag = "B"
+            if bpp == 32:
+                arflag = "L"
+            elif bpp == 16:
+                arflag = "H"
+            bytebuf = sdlarray.CTypesView(array.array(arflag, pixels))
+            sf = surface.create_rgb_surface_from(bytebuf.to_bytes(), 16, 16,
+                                                 bpp, pitch, masks[0],
+                                                 masks[1], masks[2], masks[3])
+            self.assertIsInstance(sf, surface.SDL_Surface)
+            surface.free_surface(sf)
+
 
     def ttest_fill_rect(self):
         rectlist = (
