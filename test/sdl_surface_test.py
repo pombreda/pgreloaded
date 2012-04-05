@@ -14,6 +14,19 @@ indexdepths = (1, 4, 8)
 rgbdepths = (8, 12, 15, 16)
 rgbadepths = (16, 24, 32)
 
+rgba_pixelations_16x16 = (
+    # 32-bit 16x16 RGBA surface 
+    ([x << 24 for x in range(16 * 16)], 32, 16,
+     (0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF)),
+    # 16-bit 16x16 RGBA surface
+    ([x << 8 for x in range(16 * 16)], 16, 16,
+     (0xF000, 0x0F00, 0x00F0, 0x000F)),
+    # 8-bit 16x16 surface
+    ([x for x in range(16 * 16)], 8, 16,
+     (0x0, 0x0, 0x0, 0x0)),
+    )
+
+
 # TODO: mostly covers positive tests right now - fix this!
 class SDLSurfaceTest(unittest.TestCase):
     __tags__ = ["sdl"]
@@ -24,16 +37,30 @@ class SDLSurfaceTest(unittest.TestCase):
                 lambda x, t: self.assertTrue(isinstance(x, t))
         sdl.init(sdl.SDL_INIT_EVERYTHING)
 
-    def tearDown(self): 
+    def tearDown(self):
         sdl.quit()
 
     def test_SDL_Surface(self):
         sf = surface.SDL_Surface()
         self.assertIsInstance(sf, surface.SDL_Surface)
 
-    @unittest.skip("not implemented")
     def test_convert_pixels(self):
-        pass
+        for buf, bpp, pitch, masks in rgba_pixelations_16x16:
+            if bpp == 8:  # index/palette-based, skip this one
+                continue
+            arflag = None
+            if bpp == 32:
+                arflag = "I"
+            elif bpp == 16:
+                arflag = "H"
+            src = sdlarray.CTypesView(array.array(arflag, buf))
+            dst = surface.convert_pixels(16, 16,
+                                         pixels.SDL_PIXELFORMAT_RGBA8888,
+                                         src, 16,
+                                         pixels.SDL_PIXELFORMAT_RGBA8888,
+                                         16)
+            for index, val in enumerate(dst):
+                self.assertEqual(val, src.view[index])
 
     @unittest.skip("not implemented")
     def test_convert_surface(self):
@@ -43,8 +70,8 @@ class SDLSurfaceTest(unittest.TestCase):
     def test_convert_surface_format(self):
         pass
 
-    def ttest_create_rgb_surface(self):
-        for w in range (1, 100):
+    def test_create_rgb_surface(self):
+        for w in range(1, 100):
             for h in range(1, 100):
                 for bpp in alldepths:
                     sf = surface.create_rgb_surface(w, h, bpp)
@@ -54,7 +81,7 @@ class SDLSurfaceTest(unittest.TestCase):
         for fmt in pixels.ALL_PIXELFORMATS:
             if pixels.SDL_ISPIXELFORMAT_FOURCC(fmt):
                 continue
-            for w in range (1, 100):
+            for w in range(1, 100):
                 for h in range(1, 100):
                     bpp, rmask, gmask, bmask, amask = \
                         pixels.pixelformat_enum_to_masks(fmt)
@@ -75,37 +102,30 @@ class SDLSurfaceTest(unittest.TestCase):
                           0xf0, 0x0f, 0x01, 0x02)
 
     def test_create_rgb_surface_from(self):
-        # 16x16 surfaces with 256 values
-        pixelations = (([x << 24 for x in range(16 * 16)], 32, 16,
-                        (0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF)),
-                       ([x << 8 for x in range(16 * 16)], 16, 16,
-                        (0xF000, 0x0F00, 0x00F0, 0x000F)),
-                       ([x for x in range(16 * 16)], 8, 16,
-                        (0x0, 0x0, 0x0, 0x0)),
-                       )
-        for pixels, bpp, pitch, masks in pixelations:
-            arflag = "B"
+        for buf, bpp, pitch, masks in rgba_pixelations_16x16:
+            arflag = None
             if bpp == 32:
-                arflag = "L"
+                arflag = "I"
             elif bpp == 16:
                 arflag = "H"
-            bytebuf = sdlarray.CTypesView(array.array(arflag, pixels))
+            elif bpp == 8:
+                arflag = "B"
+            bytebuf = sdlarray.CTypesView(array.array(arflag, buf))
             sf = surface.create_rgb_surface_from(bytebuf.to_bytes(), 16, 16,
                                                  bpp, pitch, masks[0],
                                                  masks[1], masks[2], masks[3])
             self.assertIsInstance(sf, surface.SDL_Surface)
             surface.free_surface(sf)
 
-
-    def ttest_fill_rect(self):
+    def test_fill_rect(self):
         rectlist = (
-            rect.SDL_Rect (0, 0, 0, 0),
-            rect.SDL_Rect (0, 0, 10, 10),
-            rect.SDL_Rect (0, 0, -10, 10),
-            rect.SDL_Rect (0, 0, -10, -10),
-            rect.SDL_Rect (-10, -10, 10, 10),
-            rect.SDL_Rect (10, -10, 10, 10),
-            rect.SDL_Rect (10, 10, 10, 10),
+            rect.SDL_Rect(0, 0, 0, 0),
+            rect.SDL_Rect(0, 0, 10, 10),
+            rect.SDL_Rect(0, 0, -10, 10),
+            rect.SDL_Rect(0, 0, -10, -10),
+            rect.SDL_Rect(-10, -10, 10, 10),
+            rect.SDL_Rect(10, -10, 10, 10),
+            rect.SDL_Rect(10, 10, 10, 10),
             )
 
         for fmt in pixels.ALL_PIXELFORMATS:
@@ -113,7 +133,7 @@ class SDLSurfaceTest(unittest.TestCase):
                 continue
             if pixels.SDL_BITSPERPIXEL(fmt) < 8:
                 continue  # Skip < 8bpp, SDL_FillRect does not work on those
-            for w in range (1, 60):
+            for w in range(1, 60):
                 for h in range(1, 60):
                     bpp, rmask, gmask, bmask, amask = \
                         pixels.pixelformat_enum_to_masks(fmt)
@@ -125,15 +145,15 @@ class SDLSurfaceTest(unittest.TestCase):
                         surface.fill_rect(sf, r, 0xff00ff00)
                     surface.free_surface(sf)
 
-    def ttest_fill_rects(self):
+    def test_fill_rects(self):
         rectlist = (
-            rect.SDL_Rect (0, 0, 0, 0),
-            rect.SDL_Rect (0, 0, 10, 10),
-            rect.SDL_Rect (0, 0, -10, 10),
-            rect.SDL_Rect (0, 0, -10, -10),
-            rect.SDL_Rect (-10, -10, 10, 10),
-            rect.SDL_Rect (10, -10, 10, 10),
-            rect.SDL_Rect (10, 10, 10, 10),
+            rect.SDL_Rect(0, 0, 0, 0),
+            rect.SDL_Rect(0, 0, 10, 10),
+            rect.SDL_Rect(0, 0, -10, 10),
+            rect.SDL_Rect(0, 0, -10, -10),
+            rect.SDL_Rect(-10, -10, 10, 10),
+            rect.SDL_Rect(10, -10, 10, 10),
+            rect.SDL_Rect(10, 10, 10, 10),
             )
 
         for fmt in pixels.ALL_PIXELFORMATS:
@@ -141,7 +161,7 @@ class SDLSurfaceTest(unittest.TestCase):
                 continue
             if pixels.SDL_BITSPERPIXEL(fmt) < 8:
                 continue  # Skip < 8bpp, SDL_FillRect does not work on those
-            for w in range (1, 60):
+            for w in range(1, 60):
                 for h in range(1, 60):
                     bpp, rmask, gmask, bmask, amask = \
                         pixels.pixelformat_enum_to_masks(fmt)
@@ -173,22 +193,22 @@ class SDLSurfaceTest(unittest.TestCase):
 
     def test_get_set_clip_rect(self):
         rectlist = (
-            (rect.SDL_Rect (0, 0, 0, 0), False, False),
-            (rect.SDL_Rect (2, 2, 0, 0), False, False),
-            (rect.SDL_Rect (2, 2, 5, 1), True, True),
-            (rect.SDL_Rect (6, 5, 10, 3), True, False),
-            (rect.SDL_Rect (0, 0, 10, 10), True, True),
-            (rect.SDL_Rect (0, 0, -10, 10), False, False),
-            (rect.SDL_Rect (0, 0, -10, -10), False, False),
-            (rect.SDL_Rect (-10, -10, 10, 10), False, False),
-            (rect.SDL_Rect (10, -10, 10, 10), False, False),
-            (rect.SDL_Rect (10, 10, 10, 10), True, False)
+            (rect.SDL_Rect(0, 0, 0, 0), False, False),
+            (rect.SDL_Rect(2, 2, 0, 0), False, False),
+            (rect.SDL_Rect(2, 2, 5, 1), True, True),
+            (rect.SDL_Rect(6, 5, 10, 3), True, False),
+            (rect.SDL_Rect(0, 0, 10, 10), True, True),
+            (rect.SDL_Rect(0, 0, -10, 10), False, False),
+            (rect.SDL_Rect(0, 0, -10, -10), False, False),
+            (rect.SDL_Rect(-10, -10, 10, 10), False, False),
+            (rect.SDL_Rect(10, -10, 10, 10), False, False),
+            (rect.SDL_Rect(10, 10, 10, 10), True, False)
             )
 
         sf = surface.create_rgb_surface(15, 15, 32)
         clip = surface.get_clip_rect(sf)
         self.assertIsInstance(clip, rect.SDL_Rect)
-        self.assertEqual (clip, rect.SDL_Rect(0, 0, 15, 15))
+        self.assertEqual(clip, rect.SDL_Rect(0, 0, 15, 15))
 
         for r, clipsetval, cmpval in rectlist:
             retval = surface.set_clip_rect(sf, r)
@@ -221,7 +241,7 @@ class SDLSurfaceTest(unittest.TestCase):
                 surface.set_color_key(sf, 1, key)
                 skey = surface.get_color_key(sf)
                 self.assertEqual(skey, key,
-                    "Could not set color key (%d, %d, %d)" %(r, g, b))
+                    "Could not set color key (%d, %d, %d)" % (r, g, b))
             pixels.free_format(pformat)
             surface.free_surface(sf)
 
@@ -259,7 +279,7 @@ class SDLSurfaceTest(unittest.TestCase):
                 smode = surface.get_surface_blend_mode(sf)
                 self.assertEqual(smode, mode)
             surface.free_surface(sf)
-                
+
     def test_get_set_surface_color_mod(self):
         colormods = ((0, 0, 0),
                      (32, 64, 128),
@@ -315,7 +335,7 @@ class SDLSurfaceTest(unittest.TestCase):
                 surface.unlock_surface(sf)
                 self.assertFalse(sf.locked)
             surface.free_surface(sf)
-    
+
     @unittest.skip("not implemented")
     def test_SDL_MUSTLOCK(self):
         pass

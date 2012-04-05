@@ -34,6 +34,7 @@ class SDL_Point(ctypes.Structure):
     def __ne__(self, pt):
         return self.x != pt.x or self.y != pt.y
 
+
 class SDL_Rect(ctypes.Structure):
     """A simple 2D rectangular area class."""
     _fields_ = [("x", ctypes.c_int), ("y", ctypes.c_int),
@@ -48,7 +49,7 @@ class SDL_Rect(ctypes.Structure):
     def __repr__(self):
         return "SDL_Rect(x=%d, y=%d, w=%d, h=%d)" % (self.x, self.y, self.w,
                                                      self.h)
-    
+
     def __copy__(self):
         return SDL_Rect(self.x, self.y, self.w, self.h)
 

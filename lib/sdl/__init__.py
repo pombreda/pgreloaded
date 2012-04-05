@@ -44,7 +44,7 @@ class _DLL(object):
         """Checks, if a function identified by name exists in the bound dll.
         """
         return hasattr(self._dll, name)
-            
+
     def get_dll_function(self, name):
         """Tries to retrieve the function identified by name from the bound
         dll.

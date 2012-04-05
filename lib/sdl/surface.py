@@ -64,10 +64,16 @@ def convert_pixels(width, height, srcformat, src, srcpitch, dstformat,
                    dstpitch):
     """
     """
-    srcp = array.to_ctypes(src, ctypes.c_ubyte)
-    dst = ctypes.c_ubyte * width * height * dstpitch
+    srcp = src
+    if isinstance(srcp, array.CTypesView):
+        srcp = src.to_bytes()
+    else:
+        srcp = array.to_ctypes(src, ctypes.c_ubyte)
+    size = height * dstpitch
+    dst = (ctypes.c_ubyte * size)()
+    dstp = ctypes.cast(dst, ctypes.POINTER(ctypes.c_ubyte * size))
     ret = dll.SDL_ConvertPixels(width, height, srcformat, srcp, srcpitch,
-                                dstformat, dst, dstpitch)
+                                dstformat, dstp, dstpitch)
     if ret == 0:
         return dst
     return None

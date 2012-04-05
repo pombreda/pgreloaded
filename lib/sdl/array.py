@@ -49,9 +49,7 @@ class CTypesView(object):
             else:
                 raise TypeError("unsupported data type")
             self._obj = obj
-            self._view = (ctypes.c_ubyte * bsize).from_buffer(obj)
-        else:
-            self._view = (ctypes.c_ubyte * bsize).from_buffer(obj)
+        self._view = (ctypes.c_ubyte * bsize).from_buffer(obj)
 
     def __repr__(self):
         dtype = type(self._obj).__name__
@@ -61,13 +59,6 @@ class CTypesView(object):
 
     def to_bytes(self):
         """Returns a byte representation of the underlying object."""
-        if hasattr(self._obj, "bytes") and callable(self._obj.bytes):
-            return self._obj.bytes()
-        if hasattr(self._obj, "tobytes") and callable(self._obj.tobytes):
-            return self._obj.tobytes()
-        if hasattr(self._obj, "to_bytes") and callable(self._obj.to_bytes):
-            return self._obj.to_bytes()
-        # TODO
         castval = ctypes.POINTER(ctypes.c_ubyte * self.bytesize)
         return ctypes.cast(self.view, castval).contents
 
