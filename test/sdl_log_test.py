@@ -15,6 +15,8 @@ class SDLLogTest(unittest.TestCase):
         self.logdata = []
 
         def logfunc(userdata, category, priority, message):
+            if userdata is not None:
+                userdata = userdata.value
             self.logdata.append((userdata, category, priority, message,))
 
         # bind to the TestCase, so we do not loose the reference.

@@ -31,31 +31,50 @@ class CTypesView(object):
         self._isshared = True
         self._view = None
         self._itemsize = itemsize
-        self._create_view(obj, itemsize, bool(docopy))
+        self._create_view(itemsize, bool(docopy))
 
-    def _create_view(self, obj, itemsize, docopy):
+    def _create_view(self, itemsize, docopy):
         self._isshared = not docopy
         bsize = len(self._obj) * itemsize
 
         if docopy:
-            if itemsize == 1:
-                obj = _array.array("B", obj)
-            elif itemsize == 2:
-                obj = _array.array("H", obj)
-            elif itemsize == 4:
-                obj = _array.array("I", obj)
-            elif itemsize == 8:
-                obj = _array.array("d", obj)
-            else:
-                raise TypeError("unsupported data type")
-            self._obj = obj
-        self._view = (ctypes.c_ubyte * bsize).from_buffer(obj)
+            self._obj = self._create_copy(self._obj, itemsize)
+        try:
+            self._view = (ctypes.c_ubyte * bsize).from_buffer(self._obj)
+        except AttributeError:
+            # pypy ctypes arrays do not feature a from_buffer() method.
+            self._isshared = False
+            # in case we requested a copy earlier, we do not need to recreate
+            # the array, since we have it already. In any other case, create
+            # a byte array.
+            if not docopy:
+                # Try to determine the itemsize again for array
+                # instances, just in case the user assumed it to work.
+                if isinstance(self._obj, _array.array):
+                    itemsize = self._obj.itemsize
+                    bsize = len(self._obj) * itemsize
+                self._obj = self._create_copy(self._obj, itemsize)
+            self._view = (ctypes.c_ubyte * bsize)(*bytearray(self._obj))
+
+    def _create_copy(self, obj, itemsize):
+        if itemsize == 1:
+            return _array.array("B", obj)
+        elif itemsize == 2:
+            return _array.array("H", obj)
+        elif itemsize == 4:
+            return _array.array("I", obj)
+        elif itemsize == 8:
+            return _array.array("d", obj)
+        else:
+            raise TypeError("unsupported data type")
 
     def __repr__(self):
         dtype = type(self._obj).__name__
         bsize = self.bytesize
         return "CTypesView(type=%s, bytesize=%d, shared=%s)" % (dtype, bsize,
                                                                 self.is_shared)
+    def __len__(self):
+        return self.bytesize
 
     def to_bytes(self):
         """Returns a byte representation of the underlying object."""
@@ -108,5 +127,17 @@ def to_ctypes(array, dtype):
     match the passed type.
     """
     count = len(array)
+    if isinstance(array, CTypesView):
+        itemsize = ctypes.sizeof(dtype)
+        if itemsize == 1:
+            array = array.to_bytes()
+        elif itemsize == 2:
+            array = array.to_uint16()
+        elif itemsize == 4:
+            array = array.to_uint32()
+        elif itemsize == 8:
+            array = array.to_uint64()
+        else:
+            raise TypeError("unsupported data type for the passed CTypesView")
     valset = (count * dtype)(*array)
     return valset, count

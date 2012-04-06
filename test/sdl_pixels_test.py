@@ -184,7 +184,7 @@ class SDLPixelsTest(unittest.TestCase):
         self.assertEqual(val, pixels.SDL_PIXELFORMAT_INDEX1MSB)  # not LSB
         val = pixels.masks_to_pixelformat_enum(17, 3, 6, 64, 255)
         self.assertEqual(val, pixels.SDL_PIXELFORMAT_UNKNOWN)
-        val = pixels.masks_to_pixelformat_enum(None, None, None, None, None)
+        val = pixels.masks_to_pixelformat_enum(0, 0, 0, 0, 0)
         self.assertEqual(val, pixels.SDL_PIXELFORMAT_UNKNOWN)
 
     def test_pixelformat_enum_to_masks(self):
@@ -215,7 +215,7 @@ class SDLPixelsTest(unittest.TestCase):
             self.assertEqual(val, (32, 0, 0x0000FF00, 0x00FF0000, 0xFF000000))
         self.assertRaises(SDLError, pixels.pixelformat_enum_to_masks, 99999)
 
-        val = pixels.pixelformat_enum_to_masks(None)
+        val = pixels.pixelformat_enum_to_masks(0)
         self.assertEqual(val, (0, 0, 0, 0, 0))
         val = pixels.pixelformat_enum_to_masks(pixels.SDL_PIXELFORMAT_UNKNOWN)
         self.assertEqual(val, (0, 0, 0, 0, 0))
@@ -364,14 +364,11 @@ class SDLPixelsTest(unittest.TestCase):
         val = pixels.map_rgb(format, 0xFF, 0xAA, 0x88)
         self.assertEqual(val, 0xFFAA88FF)
 
-        format = pixels.alloc_format(None)
+        format = pixels.alloc_format(pixels.SDL_PIXELFORMAT_UNKNOWN)
         self.assertIsInstance(format, pixels.SDL_PixelFormat)
         self.assertEqual(format.format, pixels.SDL_PIXELFORMAT_UNKNOWN)
         val = pixels.map_rgb(format, 0xFF, 0xAA, 0x88)
         self.assertEqual(val, 0x0)
-
-        self.assertRaises(SDLError, pixels.alloc_format, "Test")
-        self.assertRaises(Exception, pixels.alloc_format, self)
 
     def test_map_rgba(self):
         format = pixels.alloc_format(pixels.SDL_PIXELFORMAT_RGBA8888)
@@ -379,14 +376,11 @@ class SDLPixelsTest(unittest.TestCase):
         val = pixels.map_rgba(format, 0xFF, 0xAA, 0x88, 0x11)
         self.assertEqual(val, 0xFFAA8811)
 
-        format = pixels.alloc_format(None)
+        format = pixels.alloc_format(pixels.SDL_PIXELFORMAT_UNKNOWN)
         self.assertIsInstance(format, pixels.SDL_PixelFormat)
         self.assertEqual(format.format, pixels.SDL_PIXELFORMAT_UNKNOWN)
         val = pixels.map_rgba(format, 0xFF, 0xAA, 0x88, 0x11)
         self.assertEqual(val, 0x0)
-
-        self.assertRaises(SDLError, pixels.alloc_format, "Test")
-        self.assertRaises(Exception, pixels.alloc_format, self)
 
     @unittest.skip("not implemented")
     def test_set_palette_colors(self):

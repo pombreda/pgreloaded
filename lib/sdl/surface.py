@@ -62,21 +62,26 @@ class SDL_Surface(ctypes.Structure):
                                ctypes.c_int], ctypes.c_int)
 def convert_pixels(width, height, srcformat, src, srcpitch, dstformat,
                    dstpitch):
-    """
+    """Converts the passed pixel pixel buffer and returns a new buffer.
+    
+    The pixels of the passed src buffer will be converted from srcformat
+    to values of dstformat. The size of the result buffer will be
+    height * dstpitch.
     """
     srcp = src
-    if isinstance(srcp, array.CTypesView):
+    srcsize = len(src)
+    if isinstance(src, array.CTypesView):
         srcp = src.to_bytes()
     else:
-        srcp = array.to_ctypes(src, ctypes.c_ubyte)
-    size = height * dstpitch
-    dst = (ctypes.c_ubyte * size)()
-    dstp = ctypes.cast(dst, ctypes.POINTER(ctypes.c_ubyte * size))
+        srcp, srcsize = array.to_ctypes(src, ctypes.c_ubyte)
+    srcp = ctypes.cast(srcp, ctypes.POINTER(ctypes.c_ubyte))
+    dst = (ctypes.c_ubyte * (height * dstpitch))()
+    dstp = ctypes.cast(dst, ctypes.POINTER(ctypes.c_ubyte))
     ret = dll.SDL_ConvertPixels(width, height, srcformat, srcp, srcpitch,
                                 dstformat, dstp, dstpitch)
-    if ret == 0:
-        return dst
-    return None
+    if ret == -1:
+        raise SDLError()
+    return dst
 
 
 @sdltype("SDL_ConvertSurface", [ctypes.POINTER(SDL_Surface),
@@ -125,7 +130,7 @@ def create_rgb_surface(width, height, depth, rmask=0, gmask=0, bmask=0,
          ctypes.POINTER(SDL_Surface))
 def create_rgb_surface_from(pixels, width, height, depth, pitch, rmask, gmask,
                             bmask, amask):
-    """
+    """Creates a RGB surface from a pixel buffer.
     """
     ret = dll.SDL_CreateRGBSurfaceFrom(pixels, width, height, depth, pitch,
                                        rmask, gmask, bmask, amask)
@@ -160,8 +165,8 @@ def fill_rects(dst, rects, color):
     if not isinstance(dst, SDL_Surface):
         raise TypeError("dst must be a SDL_Surface")
     rects, count = array.to_ctypes(rects, SDL_Rect)
-    retval = dll.SDL_FillRects(ctypes.byref(dst), ctypes.byref(rects), count,
-                               color)
+    rects = ctypes.cast(rects, ctypes.POINTER(SDL_Rect))
+    retval = dll.SDL_FillRects(ctypes.byref(dst), rects, count, color)
     if retval == -1:
         raise SDLError()
 

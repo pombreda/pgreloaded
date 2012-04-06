@@ -65,12 +65,14 @@ buildall: clean
 	@python2.7 setup.py build
 	@python3.1 setup.py build
 	@python3.2 setup.py build
+	@pypy1.8 setup.py build
 
 
 installall:
 	@python2.7 setup.py install
 	@python3.1 setup.py install
 	@python3.2 setup.py install
+	@pypy1.8 setup.py install
 
 testall:
 	@python2.7 test/util/runtests.py
@@ -79,14 +81,18 @@ testall:
 	@rm -rf test/*.pyc
 	@python3.2 test/util/runtests.py
 	@rm -rf test/*.pyc
+	@pypy1.8 test/util/runtests.py
+	@rm -rf test/*.pyc
 
 testall2:
 	@python2.7 -c "import pygame2.test; pygame2.test.run ()"
 	@python3.1 -c "import pygame2.test; pygame2.test.run ()"
 	@python3.2 -c "import pygame2.test; pygame2.test.run ()"
+	@pypy1.8 -c "import pygame2.test; pygame2.test.run ()"
 
 purge_installs:
 	rm -rf /usr/local/lib/python2.7/site-packages/pygame2*
 	rm -rf /usr/local/lib/python3.1/site-packages/pygame2*
 	rm -rf /usr/local/lib/python3.2/site-packages/pygame2*
+	rm -rf /usr/local/pypy-1.8/site-packages/pygame2*
 

@@ -176,8 +176,8 @@ SDL_LogOutputFunction = ctypes.CFUNCTYPE(None, ctypes.py_object, ctypes.c_int,
                                          ctypes.c_int, ctypes.c_char_p)
 
 
-@sdltype("SDL_LogSetOutputFunction", [SDL_LogOutputFunction,
-                                       ctypes.py_object], None)
+@sdltype("SDL_LogSetOutputFunction", [SDL_LogOutputFunction, ctypes.py_object],
+                                      None)
 def log_set_output_function(function, userdata=None):
     """Sets the output function for the logging methods to the passed
     SDL_LogOutputFunction.
@@ -185,15 +185,18 @@ def log_set_output_function(function, userdata=None):
     NOTE: You must keep a reference to the passed function to prevent
     it from getting dereferenced.
     """
-    userdata = ctypes.py_object(userdata)
-    if function:
+    if userdata is not None:
+        userdata = ctypes.py_object(userdata)
+    if function is not None:
         # Preserve the pointer, so it does not get GC'd
         function._userdata = userdata
+    else:
+        function = SDL_LogOutputFunction()
     dll.SDL_LogSetOutputFunction(function, userdata)
 
 
 @sdltype("SDL_LogGetOutputFunction", [ctypes.POINTER(SDL_LogOutputFunction),
-                                       ctypes.POINTER(ctypes.py_object)], None)
+                                      ctypes.POINTER(ctypes.py_object)], None)
 def log_get_output_function():
     """Gets the output function that is currently used for all logging methods.
     """

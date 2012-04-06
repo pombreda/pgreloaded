@@ -752,7 +752,7 @@ def set_window_fullscreen(window, fullscreen):
 
 
 @sdltype("SDL_GetWindowSurface", [ctypes.POINTER(SDL_Window)],
-    ctypes.POINTER(SDL_Surface))
+         ctypes.POINTER(SDL_Surface))
 def get_window_surface(window):
     """Gets the SDL_Surface associated with the passed SDL_Window.
 
@@ -861,15 +861,32 @@ def set_window_gamma_ramp(window, red, green, blue):
     """
     if not isinstance(window, SDL_Window):
         raise TypeError("window must be a SDL_Window")
-    rptr, size = array.to_ctypes(red, ctypes.c_ushort)
+    rptr, gptr, bptr, size = None, None, None, None
+
+    if isinstance(red, array.CTypesView):
+        rptr = red.to_uint16()
+        size = len(red)
+    else:
+        rptr, size = array.to_ctypes(red, ctypes.c_ushort)
     if size != 256:
         raise ValueError("red gamma table must contain 256 values")
-    gptr, size = array.to_ctypes(green, ctypes.c_ushort)
+
+    if isinstance(green, array.CTypesView):
+        gptr = green.to_uint16()
+        size = len(green)
+    else:
+        gptr, size = array.to_ctypes(green, ctypes.c_ushort)
     if size != 256:
         raise ValueError("green gamma table must contain 256 values")
-    bptr, size = array.to_ctypes(blue, ctypes.c_ushort)
+
+    if isinstance(blue, array.CTypesView):
+        bptr = blue.to_uint16()
+        size = len(bptr)
+    else:
+        bptr, size = array.to_ctypes(blue, ctypes.c_ushort)
     if size != 256:
         raise ValueError("blue gamma table must contain 256 values")
+
     retval = dll.SDL_SetWindowGammaRamp(ctypes.byref(window), rptr, gptr, bptr)
     if retval == -1:
         raise SDLError()
@@ -951,7 +968,7 @@ def gl_set_attribute(attr, value):
 
 
 @sdltype("SDL_GL_GetAttribute", [ctypes.c_int, ctypes.POINTER(ctypes.c_int)],
-    ctypes.c_int)
+         ctypes.c_int)
 def gl_get_attribute(attr):
     """Gets the current value for the passed OpenGL attribute.
 

@@ -6,7 +6,7 @@ from pygame2.test.util.testutils import interactive, doprint
 
 
 def is_win_or_mac():
-    return sys.platform in ("win32", "cygwin", "darwin")
+    return sys.platform in ("win32", "cygwin", "darwin", "cli")
 
 
 class SDLClipboardTest(unittest.TestCase):

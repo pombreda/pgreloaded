@@ -4,8 +4,9 @@ as stated on http://www.libsdl.org/license.php
 
 The DLLs within the lib/dll folder are licensed as follows:
 
-SDL.dll - this is the SDL 2.0 DLL, see http://www.libsdl.org/license.php
-          for details on its zlib license
+- SDL2.dll, SDL2_32bit.dll:
+  This is the SDL 2.0 DLL, see http://www.libsdl.org/license.php for details
+  on its zlib license
 
 
 For everything else, the following applies:

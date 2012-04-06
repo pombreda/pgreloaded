@@ -1,9 +1,13 @@
 import sys
-import multiprocessing
 import unittest
 import pygame2.sdl as sdl
 import pygame2.sdl.cpuinfo as cpuinfo
 
+_HASMP = True
+try:
+    import multiprocessing
+except:
+    _HASMP = False
 
 class SDLCPUInfoTest(unittest.TestCase):
     __tags__ = ["sdl"]
@@ -17,9 +21,10 @@ class SDLCPUInfoTest(unittest.TestCase):
         ret = cpuinfo.get_cpu_cache_line_size()
         self.assertIsInstance(ret, int)
 
+    @unittest.skipIf(not _HASMP, "no multiprocessing module found")
     def test_get_cpu_count(self):
         self.assertEqual(multiprocessing.cpu_count(),
-                          cpuinfo.get_cpu_count())
+                         cpuinfo.get_cpu_count())
 
     def test_has_3dnow(self):
         ret = cpuinfo.has_3dnow()

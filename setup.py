@@ -1,7 +1,8 @@
 #!/usr/bin/env python
+import sys
+import platform
 from distutils.core import setup
 from distutils.command.install_data import install_data
-import os, sys, glob
 
 VERSION = "2.0.0-alpha6"
 

@@ -165,6 +165,10 @@ class SDLArrayTest(unittest.TestCase):
         buf2 = sdlarray.CTypesView(singlebytebuf, docopy=False)
         for singlebytes, shared in ((buf1, False), (buf2, True)):
             self.assertIsInstance(singlebytes, sdlarray.CTypesView)
+            # Pypy 1.8.0 does not support ctypes.from_buffer(), hence we 
+            # never will receive a shared one
+            if hasattr(sys, "pypy_version_info"):
+                shared = False
             self.assertEqual(singlebytes.is_shared, shared)
             self.assertEqual(singlebytes.bytesize, len(singlebyteseq))
             for index, val in enumerate(singlebytes.to_bytes()):
@@ -193,6 +197,10 @@ class SDLArrayTest(unittest.TestCase):
         buf2 = sdlarray.CTypesView(doublebytebuf, USHORT_SIZE, docopy=False)
         for singlebytes, shared in ((buf1, False), (buf2, True)):
             self.assertIsInstance(singlebytes, sdlarray.CTypesView)
+            # Pypy 1.8.0 does not support ctypes.from_buffer(), hence we 
+            # never will receive a shared one
+            if hasattr(sys, "pypy_version_info"):
+                shared = False
             self.assertEqual(singlebytes.is_shared, shared)
             self.assertEqual(singlebytes.bytesize, len(doublebyteseq) * 2)
             offset = 0
@@ -228,6 +236,10 @@ class SDLArrayTest(unittest.TestCase):
         buf2 = sdlarray.CTypesView(quadbytebuf, UINT_SIZE, docopy=False)
         for singlebytes, shared in ((buf1, False), (buf2, True)):
             self.assertIsInstance(singlebytes, sdlarray.CTypesView)
+            # Pypy 1.8.0 does not support ctypes.from_buffer(), hence we 
+            # never will receive a shared one
+            if hasattr(sys, "pypy_version_info"):
+                shared = False
             self.assertEqual(singlebytes.is_shared, shared)
             self.assertEqual(singlebytes.bytesize, len(quadbyteseq) * 4)
             offset = 0
@@ -275,6 +287,11 @@ class SDLArrayTest(unittest.TestCase):
             otype = type(seq).__name__
             if not shared:
                 otype = 'array'
+                
+            # Pypy 1.8.0 does not support ctypes.from_buffer(), hence we 
+            # never will receive a shared one
+            if hasattr(sys, "pypy_version_info"):
+                shared = False
             text = "CTypesView(type=%s, bytesize=%d, shared=%s)" % \
                 (otype, len(seq) * factor, shared)
             self.assertEqual(text, repr(buf))

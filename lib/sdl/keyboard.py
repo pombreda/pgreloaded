@@ -85,15 +85,17 @@ def get_key_from_name(name):
     return dll.SDL_GetKeyFromName(byteify(str(name), "utf-8"))
 
 
-@sdltype("SDL_GetKeyFromScancode", [ctypes.c_ubyte], ctypes.c_int)
-def get_key_from_scancode(scancode):
+@sdltype("SDL_GetKeyFromScancode", [ctypes.c_int], ctypes.c_int)
+def get_key_from_scancode(code):
     """Retrieves the key code from the passed scancode.
 
     If no matching key code could be found, SDLK_UNKNOWN will be returned.
     """
-    if type(scancode) is not int:
+    if type(code) is not int:
         raise TypeError("scancode must be an int")
-    return dll.SDL_GetKeyFromScancode(scancode)
+    if code < 0 or code >= scancode.SDL_NUM_SCANCODES:
+        raise ValueError("invalid scancode value")
+    return dll.SDL_GetKeyFromScancode(code)
 
 
 @sdltype("SDL_GetKeyName", [ctypes.c_int], ctypes.c_char_p)
@@ -114,7 +116,7 @@ def get_mod_state():
     return dll.SDL_GetModState()
 
 
-@sdltype("SDL_GetScancodeFromKey", [ctypes.c_int], ctypes.c_ubyte)
+@sdltype("SDL_GetScancodeFromKey", [ctypes.c_int], ctypes.c_ushort)
 def get_scancode_from_key(key):
     """Retrieves the scancode for the passed key.
 
@@ -126,13 +128,13 @@ def get_scancode_from_key(key):
     return dll.SDL_GetScancodeFromKey(key)
 
 
-@sdltype("SDL_GetScancodeFromName", [ctypes.c_char_p], ctypes.c_ubyte)
+@sdltype("SDL_GetScancodeFromName", [ctypes.c_char_p], ctypes.c_ushort)
 def get_scancode_from_name(name):
     """Retrieves the scancode for the passed key name."""
     return dll.SDL_GetScancodeFromName(byteify(str(name), "utf-8"))
 
 
-@sdltype("SDL_GetScancodeName", [ctypes.c_ubyte], ctypes.c_char_p)
+@sdltype("SDL_GetScancodeName", [ctypes.c_int], ctypes.c_char_p)
 def get_scancode_name(code):
     """Retrieves the name of the passed scancode.
 

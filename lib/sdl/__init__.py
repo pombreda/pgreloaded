@@ -15,8 +15,12 @@ __all__ = ["init", "init_subsystem", "quit", "quit_subsystem", "was_init",
 
 
 _LIBNAME = None
-if sys.platform == "win32":
-    _LIBNAME = "SDL2.dll"
+if sys.platform in ("win32", "cli"):
+    if sys.maxsize > 2**32:
+        # 64bit platform
+        _LIBNAME = "SDL2.dll"
+    else:
+        _LIBNAME = "SDL2_32bit.dll"
 elif sys.platform == "darwin":
     _LIBNAME = "SDL2"
 else:
@@ -39,6 +43,8 @@ class _DLL(object):
             if not _LIBNAME:
                 _LIBNAME = find_library("SDL2-2.0")
         self._dll = ctypes.CDLL(_LIBNAME)
+        
+            
 
     def has_dll_function(self, name):
         """Checks, if a function identified by name exists in the bound dll.
@@ -71,7 +77,7 @@ class sdltype(object):
     """
     def __init__(self, funcname=None, args=None, returns=None):
         func = dll.get_dll_function(funcname)
-        func.argtype = args
+        func.argtypes = args
         func.restype = returns
         dll.add_function(funcname, func)
 
@@ -166,6 +172,7 @@ def free(val):
         # Bind it on the first time, the function is called.
         if dll.has_dll_function("SDL_free"):
             funcptr = dll.get_dll_function("SDL_free")
+            funcptr.argtypes = [ctypes.c_void_p]
             dll.add_function("SDL_free", funcptr)
         else:
             # SDL_Free is most likely a #define for free()
@@ -175,4 +182,5 @@ def free(val):
             else:
                 libc = ctypes.cdll.LoadLibrary("libc.so")
             dll.add_function("SDL_free", libc.free)
+            funcptr.argtypes = [ctypes.c_void_p]
     dll.SDL_free(ctypes.cast(val, ctypes.c_void_p))

@@ -1,5 +1,5 @@
-import array
 import sys
+import array
 import unittest
 import pygame2.sdl as sdl
 import pygame2.sdl.surface as surface
@@ -17,13 +17,12 @@ rgbadepths = (16, 24, 32)
 rgba_pixelations_16x16 = (
     # 32-bit 16x16 RGBA surface 
     ([x << 24 for x in range(16 * 16)], 32, 16,
-     (0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF)),
+     (0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF),
+     pixels.SDL_PIXELFORMAT_RGBA8888),
     # 16-bit 16x16 RGBA surface
     ([x << 8 for x in range(16 * 16)], 16, 16,
-     (0xF000, 0x0F00, 0x00F0, 0x000F)),
-    # 8-bit 16x16 surface
-    ([x for x in range(16 * 16)], 8, 16,
-     (0x0, 0x0, 0x0, 0x0)),
+     (0xF000, 0x0F00, 0x00F0, 0x000F),
+     pixels.SDL_PIXELFORMAT_RGB444),
     )
 
 
@@ -45,20 +44,16 @@ class SDLSurfaceTest(unittest.TestCase):
         self.assertIsInstance(sf, surface.SDL_Surface)
 
     def test_convert_pixels(self):
-        for buf, bpp, pitch, masks in rgba_pixelations_16x16:
-            if bpp == 8:  # index/palette-based, skip this one
-                continue
+        for buf, bpp, pitch, masks, fmt in rgba_pixelations_16x16:
+            bytecount = bpp // 8
             arflag = None
             if bpp == 32:
                 arflag = "I"
             elif bpp == 16:
                 arflag = "H"
-            src = sdlarray.CTypesView(array.array(arflag, buf))
-            dst = surface.convert_pixels(16, 16,
-                                         pixels.SDL_PIXELFORMAT_RGBA8888,
-                                         src, 16,
-                                         pixels.SDL_PIXELFORMAT_RGBA8888,
-                                         16)
+            src = sdlarray.CTypesView(array.array(arflag, buf), bytecount)
+            dst = surface.convert_pixels(16, 16, fmt, src, 16 * bytecount,
+                                         fmt, 16 * bytecount)
             for index, val in enumerate(dst):
                 self.assertEqual(val, src.view[index])
 
@@ -102,14 +97,12 @@ class SDLSurfaceTest(unittest.TestCase):
                           0xf0, 0x0f, 0x01, 0x02)
 
     def test_create_rgb_surface_from(self):
-        for buf, bpp, pitch, masks in rgba_pixelations_16x16:
+        for buf, bpp, pitch, masks, fmt in rgba_pixelations_16x16:
             arflag = None
             if bpp == 32:
                 arflag = "I"
             elif bpp == 16:
                 arflag = "H"
-            elif bpp == 8:
-                arflag = "B"
             bytebuf = sdlarray.CTypesView(array.array(arflag, buf))
             sf = surface.create_rgb_surface_from(bytebuf.to_bytes(), 16, 16,
                                                  bpp, pitch, masks[0],
@@ -342,6 +335,7 @@ class SDLSurfaceTest(unittest.TestCase):
 
     @unittest.skip("not implemented")
     def test_lower_blit(self):
+
         pass
 
     @unittest.skip("not implemented")

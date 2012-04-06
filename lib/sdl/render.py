@@ -80,7 +80,7 @@ SDL_Texture._fields_ = [
     ("_format", ctypes.c_uint),
     ("_access", ctypes.c_int),
     ("_w", ctypes.c_int),
-    ("_g", ctypes.c_int),
+    ("_h", ctypes.c_int),
     ("_modMode", ctypes.c_int),
     ("_blendMode", ctypes.c_int),
     ("_r", ctypes.c_ubyte),
@@ -393,7 +393,7 @@ def set_texture_blend_mode(texture, mode):
 
 
 @sdltype("SDL_GetTextureBlendMode", [ctypes.POINTER(SDL_Texture),
-                                     ctypes.POINTER(ctypes.c_ubyte)],
+                                     ctypes.POINTER(ctypes.c_int)],
          ctypes.c_int)
 def get_texture_blend_mode(texture):
     """Gets the blend mode used for texture copy operations.

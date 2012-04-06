@@ -108,6 +108,8 @@ class SDLEventsTest(unittest.TestCase):
         udata = "Something random"
         events.add_event_watch(filter, udata)
         ev = events.SDL_Event()
+        ev.type = events.SDL_USEREVENT
+        ev.user = events.SDL_UserEvent()
         events.push_event(ev)
         self.assertEqual(len(eventwatch), 1)
         self.assertEqual(eventwatch[0][1], udata)

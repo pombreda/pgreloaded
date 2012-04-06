@@ -1,1 +1,5 @@
 - Complete SDL2 wrapper code basis
+- PyPy 1.8 can't do
+       val = "This is a value"
+       pyobj = ctypes.py_object(val)
+  at the moment, which breaks the unit tests pygame2.sdl.log

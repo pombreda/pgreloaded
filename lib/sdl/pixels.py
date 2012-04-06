@@ -492,7 +492,8 @@ def calculate_gamma_ramp(gamma):
     if gamma < 0.0 or gamma > 1.0:
         raise ValueError("gamma must be in the range [0.0; 1.0]")
     result = (ctypes.c_ushort * 256)()
-    dll.SDL_CalculateGammaRamp(ctypes.c_float(gamma), ctypes.byref(result))
+    rptr = ctypes.cast(result, ctypes.POINTER(ctypes.c_ushort))
+    dll.SDL_CalculateGammaRamp(ctypes.c_float(gamma), rptr)
     return result
 
 

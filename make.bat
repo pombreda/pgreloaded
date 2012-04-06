@@ -11,6 +11,12 @@
 @IF "%PYTHON%" == "" (
     SET PYTHON=%PYTHON27%
 )
+@IF "%PYPY18%" == "" (
+    SET PYPY18=c:\pypy-1.8\pypy.exe
+)
+@IF "%IRONPYTHON27%" == "" (
+    SET IRONPYTHON=c:\IronPython27\ipy.exe
+)
 
 @IF "%1" == "" (
     GOTO :all
@@ -79,6 +85,10 @@
 @CALL :clean
 @%PYTHON32% setup.py build
 @CALL :clean
+@%PYPY18% setup.py build
+@CALL :clean
+@%IRONPYTHON27% setup.py build
+@CALL :clean
 @GOTO :eof
 
 :installall
@@ -89,6 +99,10 @@
 @CALL :clean
 @%PYTHON32% setup.py install
 @CALL :clean
+@%PYPY18% setup.py install
+@CALL :clean
+@%IRONPYTHON27% setup.py install
+@CALL :clean
 @GOTO :eof
 
 :testall
@@ -98,12 +112,18 @@
 @DEL /Q test\*.pyc  
 @%PYTHON32% test\util\runtests.py
 @DEL /Q test\*.pyc
+@%PYPY18% test\util\runtests.py
+@DEL /Q test\*.pyc
+@%IRONPYTHON27% test\util\runtests.py
+@DEL /Q test\*.pyc
 @GOTO :eof
 
 :testall2
 @%PYTHON27% -c "import pygame2.test; pygame2.test.run ()"
 @%PYTHON31% -c "import pygame2.test; pygame2.test.run ()"
 @%PYTHON32% -c "import pygame2.test; pygame2.test.run ()"
+@%PYPY18% -c "import pygame2.test; pygame2.test.run ()"
+@%IRONPYTHON27% -c "import pygame2.test; pygame2.test.run ()"
 @GOTO :eof
 
 :purge_installs
@@ -111,6 +131,8 @@
 @RMDIR /S /Q C:\Python27\Lib\site-packages\pygame2
 @RMDIR /S /Q C:\Python31\Lib\site-packages\pygame2
 @RMDIR /S /Q C:\Python32\Lib\site-packages\pygame2
+@RMDIR /S /Q C:\pypy-1.8\site-packages\pygame2
+@RMDIR /S /Q C:\IronPython27\Lib\site-packages\pygame2
 @echo done
 @GOTO :eof
 

@@ -13,7 +13,7 @@ __all__ = ["set_dll_path", "get_dll_path", "version_info"]
 
 # Manipulate the PATH environment, so that the DLLs are loaded correctly.
 _DLLPATH = None
-if sys.platform == "win32":
+if sys.platform in ("win32", "cli"):
     _path = os.path.dirname(os.path.abspath(__file__))
     os.environ['PATH'] += ";%s;%s" % (_path, os.path.join(_path, "dll"))
     _DLLPATH = os.path.join(_path, "dll")

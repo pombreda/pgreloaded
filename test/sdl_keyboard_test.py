@@ -77,9 +77,9 @@ class SDLKeyboardTest(unittest.TestCase):
 
     def test_get_key_from_scancode(self):
         p = 0
-        for x in range(scancode.SDL_SCANCODE_A,
-                        scancode.SDL_SCANCODE_B,
-                        scancode.SDL_SCANCODE_C):
+        for x in (scancode.SDL_SCANCODE_A,
+                  scancode.SDL_SCANCODE_B,
+                  scancode.SDL_SCANCODE_C):
             key = keyboard.get_key_from_scancode(x)
             self.assertEqual(key, p + 97)
             p += 1
