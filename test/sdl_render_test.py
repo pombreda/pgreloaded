@@ -385,7 +385,7 @@ class SDLRenderTest(unittest.TestCase):
             # self.assertRaises(SDLError, render.set_render_target, renderer,
             #                   tex2)
             # render.destroy_texture(tex2)
-            
+
             render.destroy_renderer(renderer)
         video.destroy_window(window)
 

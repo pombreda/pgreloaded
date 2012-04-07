@@ -165,7 +165,7 @@ class SDLArrayTest(unittest.TestCase):
         buf2 = sdlarray.CTypesView(singlebytebuf, docopy=False)
         for singlebytes, shared in ((buf1, False), (buf2, True)):
             self.assertIsInstance(singlebytes, sdlarray.CTypesView)
-            # Pypy 1.8.0 does not support ctypes.from_buffer(), hence we 
+            # Pypy 1.8.0 does not support ctypes.from_buffer(), hence we
             # never will receive a shared one
             if hasattr(sys, "pypy_version_info"):
                 shared = False
@@ -197,7 +197,7 @@ class SDLArrayTest(unittest.TestCase):
         buf2 = sdlarray.CTypesView(doublebytebuf, USHORT_SIZE, docopy=False)
         for singlebytes, shared in ((buf1, False), (buf2, True)):
             self.assertIsInstance(singlebytes, sdlarray.CTypesView)
-            # Pypy 1.8.0 does not support ctypes.from_buffer(), hence we 
+            # Pypy 1.8.0 does not support ctypes.from_buffer(), hence we
             # never will receive a shared one
             if hasattr(sys, "pypy_version_info"):
                 shared = False
@@ -236,7 +236,7 @@ class SDLArrayTest(unittest.TestCase):
         buf2 = sdlarray.CTypesView(quadbytebuf, UINT_SIZE, docopy=False)
         for singlebytes, shared in ((buf1, False), (buf2, True)):
             self.assertIsInstance(singlebytes, sdlarray.CTypesView)
-            # Pypy 1.8.0 does not support ctypes.from_buffer(), hence we 
+            # Pypy 1.8.0 does not support ctypes.from_buffer(), hence we
             # never will receive a shared one
             if hasattr(sys, "pypy_version_info"):
                 shared = False
@@ -287,8 +287,8 @@ class SDLArrayTest(unittest.TestCase):
             otype = type(seq).__name__
             if not shared:
                 otype = 'array'
-                
-            # Pypy 1.8.0 does not support ctypes.from_buffer(), hence we 
+
+            # Pypy 1.8.0 does not support ctypes.from_buffer(), hence we
             # never will receive a shared one
             if hasattr(sys, "pypy_version_info"):
                 shared = False

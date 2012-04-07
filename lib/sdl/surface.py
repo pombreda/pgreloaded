@@ -5,6 +5,7 @@ import ctypes
 from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE
 from pygame2.sdl.pixels import SDL_PixelFormat, SDL_Palette
 from pygame2.sdl.rect import SDL_Rect
+import pygame2.sdl.rwops as rwops
 import pygame2.sdl.array as array
 from pygame2.sdl.error import SDLError
 
@@ -63,7 +64,7 @@ class SDL_Surface(ctypes.Structure):
 def convert_pixels(width, height, srcformat, src, srcpitch, dstformat,
                    dstpitch):
     """Converts the passed pixel pixel buffer and returns a new buffer.
-    
+
     The pixels of the passed src buffer will be converted from srcformat
     to values of dstformat. The size of the result buffer will be
     height * dstpitch.
@@ -342,24 +343,58 @@ def set_surface_color_mod(surface, r, g, b):
         raise SDLError()
 
 
-#@sdltype("SDL_LoadBMP", [ctypes.c_char_p], ctypes.POINTER(SDL_Surface))
-#def load_bmp(filename):
-#    """
-#    """
-#    sf = dll.SDL_LoadBMP(filename)
-#   return sf.contents
-# TODO: load_bmp_rw
+@sdltype("SDL_LoadBMP_RW", [ctypes.POINTER(rwops.SDL_RWops), ctypes.c_int],
+         ctypes.POINTER(SDL_Surface))
+def load_bmp_rw(src, freesrc):
+    """Load a surface from a seekable data stream.
 
-#@sdltype("SDL_SaveBMP", [ctypes.POINTER(SDL_Surface), ctypes.c_char_p],
-#         ctypes.c_int)
-#def save_bmp(surface, filename):
-#    """
-#    """
-#    ret = dll.SDL_SaveBMP(surface, filename)
-#    if ret != 0:
-#        raise SDLError()
-#
-# TODO: save_bmp_rw
+    If freesrc evaluates to True, the passed stream will be closed after
+    being read.
+    """
+    if not isinstance(src, rwops.SDL_RWops):
+        raise TypeError("src must be a SDL_RWops")
+    if bool(freesrc):
+        retval = dll.SDL_LoadBMP_RW(ctypes.byref(src), 1)
+    else:
+        retval = dll.SDL_LoadBMP_RW(ctypes.byref(src), 0)
+    if retval is None or not bool(retval):
+        raise SDLError()
+    return retval.contents
+
+
+def load_bmp(filename):
+    """Loads a surface from a BMP file.
+    """
+    rw = rwops.rw_from_file(filename, "rb")
+    return dll.SDL_LoadBMP_RW(rw, True)
+
+
+@sdltype("SDL_SaveBMP_RW", [ctypes.POINTER(SDL_Surface),
+                            ctypes.POINTER(rwops.SDL_RWops), ctypes.c_int],
+         ctypes.c_int)
+def save_bmp_rw(surface, dst, freedst):
+    """Saves a surface to a seekable data stream.
+
+    If freedst evaluates to True, the passed stream will be closed after
+    being written.
+    """
+    if not isinstance(surface, SDL_Surface):
+        raise TypeError("surface must be a SDL_Surface")
+    if not isinstance(dst, rwops.SDL_RWops):
+        raise TypeError("dst must be a SDL_RWops")
+    if bool(freedst):
+        retval = dll.SDL_LoadBMP_RW(ctypes.byref(src), 1)
+    else:
+        retval = dll.SDL_LoadBMP_RW(ctypes.byref(src), 0)
+    if retval == -1:
+        raise SDLError()
+
+
+def save_bmp(surface, filename):
+    """Saves a surface to a file.
+    """
+    rw = rwops.rw_from_file(filename, "wb")
+    dll.SDL_SaveBMP_RW(rw, True)
 
 
 @sdltype("SDL_LockSurface", [ctypes.POINTER(SDL_Surface)], ctypes.c_int)

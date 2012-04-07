@@ -5,6 +5,7 @@ import pygame2.sdl as sdl
 import pygame2.sdl.surface as surface
 from pygame2.sdl.error import SDLError
 import pygame2.sdl.rect as rect
+import pygame2.sdl.rwops as rwops
 import pygame2.sdl.pixels as pixels
 import pygame2.sdl.video as video
 import pygame2.sdl.array as sdlarray
@@ -15,7 +16,7 @@ rgbdepths = (8, 12, 15, 16)
 rgbadepths = (16, 24, 32)
 
 rgba_pixelations_16x16 = (
-    # 32-bit 16x16 RGBA surface 
+    # 32-bit 16x16 RGBA surface
     ([x << 24 for x in range(16 * 16)], 32, 16,
      (0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF),
      pixels.SDL_PIXELFORMAT_RGBA8888),
@@ -402,5 +403,21 @@ class SDLSurfaceTest(unittest.TestCase):
     def test_set_surface_rle(self):
         pass
 
+    @unittest.skip("not implemented")
+    def test_load_bmp_rw(self):
+        pass
+
+    @unittest.skip("not implemented")
+    def test_load_bmp(self):
+        pass
+
+    @unittest.skip("not implemented")
+    def test_save_bmp_rw(self):
+        pass
+
+    @unittest.skip("not implemented")
+    def test_save_bmp(self):
+        pass
+    
 if __name__ == '__main__':
     unittest.main()

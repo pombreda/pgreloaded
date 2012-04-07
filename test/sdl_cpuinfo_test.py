@@ -9,6 +9,7 @@ try:
 except:
     _HASMP = False
 
+
 class SDLCPUInfoTest(unittest.TestCase):
     __tags__ = ["sdl"]
 

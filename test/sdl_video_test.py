@@ -755,9 +755,9 @@ class SDLVideoTest(unittest.TestCase):
         video.gl_make_current(window, ctx)
 
         video.gl_set_swap_interval(0)
-        self.assertEqual (video.gl_get_swap_interval(), 0)
+        self.assertEqual(video.gl_get_swap_interval(), 0)
         video.gl_set_swap_interval(1)
-        self.assertEqual (video.gl_get_swap_interval(), 1)
+        self.assertEqual(video.gl_get_swap_interval(), 1)
 
         video.gl_delete_context(ctx)
         video.destroy_window(window)
