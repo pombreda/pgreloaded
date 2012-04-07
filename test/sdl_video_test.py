@@ -3,7 +3,7 @@ from ctypes.util import find_library
 import unittest
 import pygame2.sdl as sdl
 import pygame2.sdl.video as video
-from pygame2.sdl.surface import SDL_Surface
+import pygame2.sdl.surface as surface
 from pygame2.sdl.error import SDLError
 import pygame2.sdl.rect as rect
 import pygame2.sdl.pixels as pixels
@@ -381,10 +381,21 @@ class SDLVideoTest(unittest.TestCase):
         video.destroy_window(window)
         self.assertRaises(SDLError, video.get_window_title, window)
 
-    @unittest.skip("not implemented")
     def test_set_window_icon(self):
-        pass
+        sf = surface.create_rgb_surface(16, 16, 16, 0xF000, 0x0F00,
+                                        0x00F0, 0x000F)
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        window = video.create_window("Test", 10, 10, 10, 10, 0)
+        video.set_window_icon(window, sf)
 
+        self.assertRaises(TypeError, video.set_window_icon, None, None)
+        self.assertRaises(TypeError, video.set_window_icon, window, None)
+        self.assertRaises(TypeError, video.set_window_icon, None, sf)
+        self.assertRaises(TypeError, video.set_window_icon, window, "Test")
+        self.assertRaises(TypeError, video.set_window_icon, window, 123456)
+
+    @unittest.skipIf(hasattr(sys, "pypy_version_info"),
+                     "PyPy's ctypes can't encapsule str in py_object()")
     def test_get_set_window_data(self):
         window = video.create_window("Test", 10, 10, 10, 10, 0)
         self.assertIsInstance(window, video.SDL_Window)
@@ -522,8 +533,8 @@ class SDLVideoTest(unittest.TestCase):
                  video.SDL_WINDOW_RESIZABLE | video.SDL_WINDOW_MINIMIZED)
         for flag in flags:
             window = video.create_window("Test", 200, 200, 200, 200, flag)
-            surface = video.get_window_surface(window)
-            self.assertIsInstance(surface, SDL_Surface)
+            sf = video.get_window_surface(window)
+            self.assertIsInstance(sf, surface.SDL_Surface)
             video.destroy_window(window)
             self.assertRaises(SDLError, video.get_window_surface, window)
 
@@ -728,9 +739,30 @@ class SDLVideoTest(unittest.TestCase):
 
         video.gl_unload_library()
 
-    @unittest.skip("not implemented")
     def test_gl_get_set_swap_interval(self):
-        pass
+        self.assertRaises(ValueError, video.gl_set_swap_interval, None)
+        self.assertRaises(ValueError, video.gl_set_swap_interval, "Test")
+        self.assertRaises(ValueError, video.gl_set_swap_interval, 1234)
+
+        # No current OpenGL context yet.
+        self.assertRaises(SDLError, video.gl_set_swap_interval, 1)
+        self.assertRaises(SDLError, video.gl_set_swap_interval, 0)
+
+        self.assertTrue(video.gl_load_library())
+        window = video.create_window("OpenGL", 10, 10, 10, 10,
+                                     video.SDL_WINDOW_OPENGL)
+        ctx = video.gl_create_context(window)
+        video.gl_make_current(window, ctx)
+
+        video.gl_set_swap_interval(0)
+        self.assertEqual (video.gl_get_swap_interval(), 0)
+        video.gl_set_swap_interval(1)
+        self.assertEqual (video.gl_get_swap_interval(), 1)
+
+        video.gl_delete_context(ctx)
+        video.destroy_window(window)
+
+        video.gl_unload_library()
 
     @unittest.skip("not implemented")
     def test_gl_swap_window(self):

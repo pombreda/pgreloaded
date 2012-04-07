@@ -38,20 +38,20 @@ class SDLPixelsTest(unittest.TestCase):
 
     def test_SDL_DEFINE_PIXELFORMAT(self):
         fmt = pixels.SDL_DEFINE_PIXELFORMAT(pixels.SDL_PIXELTYPE_INDEX1,
-                                             pixels.SDL_BITMAPORDER_4321, 0,
-                                             1, 0)
+                                            pixels.SDL_BITMAPORDER_4321, 0,
+                                            1, 0)
         self.assertEqual(fmt, pixels.SDL_PIXELFORMAT_INDEX1LSB)
 
         fmt = pixels.SDL_DEFINE_PIXELFORMAT(pixels.SDL_PIXELTYPE_PACKED16,
-                                             pixels.SDL_PACKEDORDER_XRGB,
-                                             pixels.SDL_PACKEDLAYOUT_4444,
-                                             12, 2)
+                                            pixels.SDL_PACKEDORDER_XRGB,
+                                            pixels.SDL_PACKEDLAYOUT_4444,
+                                            12, 2)
         self.assertEqual(fmt, pixels.SDL_PIXELFORMAT_RGB444)
 
         fmt = pixels.SDL_DEFINE_PIXELFORMAT(pixels.SDL_PIXELTYPE_PACKED16,
-                                             pixels.SDL_PACKEDORDER_ABGR,
-                                             pixels.SDL_PACKEDLAYOUT_1555,
-                                             16, 2)
+                                            pixels.SDL_PACKEDORDER_ABGR,
+                                            pixels.SDL_PACKEDLAYOUT_1555,
+                                            16, 2)
         self.assertEqual(fmt, pixels.SDL_PIXELFORMAT_ABGR1555)
 
     def test_SDL_PIXELTYPE(self):
@@ -221,26 +221,26 @@ class SDLPixelsTest(unittest.TestCase):
         self.assertEqual(val, (0, 0, 0, 0, 0))
 
     def test_alloc_free_format(self):
-        format = pixels.alloc_format(pixels.SDL_PIXELFORMAT_RGBA8888)
-        self.assertIsInstance(format, pixels.SDL_PixelFormat)
-        self.assertEqual(format.format, pixels.SDL_PIXELFORMAT_RGBA8888)
-        self.assertEqual(format.BitsPerPixel, 32)
-        self.assertEqual(format.BytesPerPixel, 4)
-        pixels.free_format(format)
+        pformat = pixels.alloc_format(pixels.SDL_PIXELFORMAT_RGBA8888)
+        self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
+        self.assertEqual(pformat.format, pixels.SDL_PIXELFORMAT_RGBA8888)
+        self.assertEqual(pformat.BitsPerPixel, 32)
+        self.assertEqual(pformat.BytesPerPixel, 4)
+        pixels.free_format(pformat)
 
-        format = pixels.alloc_format(pixels.SDL_PIXELFORMAT_INDEX1LSB)
-        self.assertIsInstance(format, pixels.SDL_PixelFormat)
-        self.assertEqual(format.format, pixels.SDL_PIXELFORMAT_INDEX1LSB)
-        self.assertEqual(format.BitsPerPixel, 1)
-        self.assertEqual(format.BytesPerPixel, 1)
-        pixels.free_format(format)
+        pformat = pixels.alloc_format(pixels.SDL_PIXELFORMAT_INDEX1LSB)
+        self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
+        self.assertEqual(pformat.format, pixels.SDL_PIXELFORMAT_INDEX1LSB)
+        self.assertEqual(pformat.BitsPerPixel, 1)
+        self.assertEqual(pformat.BytesPerPixel, 1)
+        pixels.free_format(pformat)
 
-        format = pixels.alloc_format(pixels.SDL_PIXELFORMAT_INDEX4MSB)
-        self.assertIsInstance(format, pixels.SDL_PixelFormat)
-        self.assertEqual(format.format, pixels.SDL_PIXELFORMAT_INDEX4MSB)
-        self.assertEqual(format.BitsPerPixel, 4)
-        self.assertEqual(format.BytesPerPixel, 1)
-        pixels.free_format(format)
+        pformat = pixels.alloc_format(pixels.SDL_PIXELFORMAT_INDEX4MSB)
+        self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
+        self.assertEqual(pformat.format, pixels.SDL_PIXELFORMAT_INDEX4MSB)
+        self.assertEqual(pformat.BitsPerPixel, 4)
+        self.assertEqual(pformat.BytesPerPixel, 1)
+        pixels.free_format(pformat)
 
         self.assertRaises(SDLError, pixels.alloc_format,
                            pixels.SDL_PIXELFORMAT_UYVY)
@@ -296,90 +296,90 @@ class SDLPixelsTest(unittest.TestCase):
 
     def test_get_rgb(self):
         # TODO: invalid parameters
-        format = pixels.alloc_format(pixels.SDL_PIXELFORMAT_RGBA8888)
-        self.assertIsInstance(format, pixels.SDL_PixelFormat)
-        rgb = pixels.get_rgb(0xFFAA8811, format)
+        pformat = pixels.alloc_format(pixels.SDL_PIXELFORMAT_RGBA8888)
+        self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
+        rgb = pixels.get_rgb(0xFFAA8811, pformat)
         self.assertEqual(rgb, (0xFF, 0xAA, 0x88))
-        rgb = pixels.get_rgb(0x00000000, format)
+        rgb = pixels.get_rgb(0x00000000, pformat)
         self.assertEqual(rgb, (0x00, 0x00, 0x00))
-        rgb = pixels.get_rgb(0xFFFFFFFF, format)
+        rgb = pixels.get_rgb(0xFFFFFFFF, pformat)
         self.assertEqual(rgb, (0xFF, 0xFF, 0xFF))
-        rgb = pixels.get_rgb(0x11223344, format)
+        rgb = pixels.get_rgb(0x11223344, pformat)
         self.assertEqual(rgb, (0x11, 0x22, 0x33))
-        pixels.free_format(format)
+        pixels.free_format(pformat)
         fmts = (pixels.SDL_PIXELFORMAT_INDEX1LSB,
                 pixels.SDL_PIXELFORMAT_INDEX1MSB)
         for fmt in fmts:
-            format = pixels.alloc_format(fmt)
-            self.assertIsInstance(format, pixels.SDL_PixelFormat)
-            rgb = pixels.get_rgb(0x11223344, format)
+            pformat = pixels.alloc_format(fmt)
+            self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
+            rgb = pixels.get_rgb(0x11223344, pformat)
             self.assertEqual(rgb, (0xFF, 0xFF, 0xFF))
-            rgb = pixels.get_rgb(0x00000000, format)
+            rgb = pixels.get_rgb(0x00000000, pformat)
             # TODO: Seems to be always(0xFF, 0xFF, 0xFF) ???
             #self.assertEqual(rgb,(0x00, 0x00, 0x00))
-            pixels.free_format(format)
+            pixels.free_format(pformat)
         fmts = (pixels.SDL_PIXELFORMAT_INDEX4LSB,
                 pixels.SDL_PIXELFORMAT_INDEX4MSB)
         for fmt in fmts:
-            format = pixels.alloc_format(fmt)
-            self.assertIsInstance(format, pixels.SDL_PixelFormat)
+            pformat = pixels.alloc_format(fmt)
+            self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
             # TODO
-            pixels.free_format(format)
+            pixels.free_format(pformat)
 
     def test_get_rgba(self):
         # TODO: invalid parameters
-        format = pixels.alloc_format(pixels.SDL_PIXELFORMAT_RGBA8888)
-        self.assertIsInstance(format, pixels.SDL_PixelFormat)
-        rgba = pixels.get_rgba(0xFFAA8811, format)
+        pformat = pixels.alloc_format(pixels.SDL_PIXELFORMAT_RGBA8888)
+        self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
+        rgba = pixels.get_rgba(0xFFAA8811, pformat)
         self.assertEqual(rgba, (0xFF, 0xAA, 0x88, 0x11))
-        rgba = pixels.get_rgba(0x00000000, format)
+        rgba = pixels.get_rgba(0x00000000, pformat)
         self.assertEqual(rgba, (0x00, 0x00, 0x00, 0x00))
-        rgba = pixels.get_rgba(0xFFFFFFFF, format)
+        rgba = pixels.get_rgba(0xFFFFFFFF, pformat)
         self.assertEqual(rgba, (0xFF, 0xFF, 0xFF, 0xFF))
-        rgba = pixels.get_rgba(0x11223344, format)
+        rgba = pixels.get_rgba(0x11223344, pformat)
         self.assertEqual(rgba, (0x11, 0x22, 0x33, 0x44))
-        pixels.free_format(format)
+        pixels.free_format(pformat)
         fmts = (pixels.SDL_PIXELFORMAT_INDEX1LSB,
                 pixels.SDL_PIXELFORMAT_INDEX1MSB)
         for fmt in fmts:
-            format = pixels.alloc_format(fmt)
-            self.assertIsInstance(format, pixels.SDL_PixelFormat)
-            rgba = pixels.get_rgba(0x11223344, format)
+            pformat = pixels.alloc_format(fmt)
+            self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
+            rgba = pixels.get_rgba(0x11223344, pformat)
             self.assertEqual(rgba, (0xFF, 0xFF, 0xFF, 0xFF))
-            rgba = pixels.get_rgba(0x00000000, format)
+            rgba = pixels.get_rgba(0x00000000, pformat)
             # TODO: Seems to be always(0xFF, 0xFF, 0xFF) ???
             #self.assertEqual(rgb,(0x00, 0x00, 0x00))
-            pixels.free_format(format)
+            pixels.free_format(pformat)
         fmts = (pixels.SDL_PIXELFORMAT_INDEX4LSB,
                 pixels.SDL_PIXELFORMAT_INDEX4MSB)
         for fmt in fmts:
-            format = pixels.alloc_format(fmt)
-            self.assertIsInstance(format, pixels.SDL_PixelFormat)
+            pformat = pixels.alloc_format(fmt)
+            self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
             # TODO
-            pixels.free_format(format)
+            pixels.free_format(pformat)
 
     def test_map_rgb(self):
-        format = pixels.alloc_format(pixels.SDL_PIXELFORMAT_RGBA8888)
-        self.assertIsInstance(format, pixels.SDL_PixelFormat)
-        val = pixels.map_rgb(format, 0xFF, 0xAA, 0x88)
+        pformat = pixels.alloc_format(pixels.SDL_PIXELFORMAT_RGBA8888)
+        self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
+        val = pixels.map_rgb(pformat, 0xFF, 0xAA, 0x88)
         self.assertEqual(val, 0xFFAA88FF)
 
-        format = pixels.alloc_format(pixels.SDL_PIXELFORMAT_UNKNOWN)
-        self.assertIsInstance(format, pixels.SDL_PixelFormat)
-        self.assertEqual(format.format, pixels.SDL_PIXELFORMAT_UNKNOWN)
-        val = pixels.map_rgb(format, 0xFF, 0xAA, 0x88)
+        pformat = pixels.alloc_format(pixels.SDL_PIXELFORMAT_UNKNOWN)
+        self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
+        self.assertEqual(pformat.format, pixels.SDL_PIXELFORMAT_UNKNOWN)
+        val = pixels.map_rgb(pformat, 0xFF, 0xAA, 0x88)
         self.assertEqual(val, 0x0)
 
     def test_map_rgba(self):
-        format = pixels.alloc_format(pixels.SDL_PIXELFORMAT_RGBA8888)
-        self.assertIsInstance(format, pixels.SDL_PixelFormat)
-        val = pixels.map_rgba(format, 0xFF, 0xAA, 0x88, 0x11)
+        pformat = pixels.alloc_format(pixels.SDL_PIXELFORMAT_RGBA8888)
+        self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
+        val = pixels.map_rgba(pformat, 0xFF, 0xAA, 0x88, 0x11)
         self.assertEqual(val, 0xFFAA8811)
 
-        format = pixels.alloc_format(pixels.SDL_PIXELFORMAT_UNKNOWN)
-        self.assertIsInstance(format, pixels.SDL_PixelFormat)
-        self.assertEqual(format.format, pixels.SDL_PIXELFORMAT_UNKNOWN)
-        val = pixels.map_rgba(format, 0xFF, 0xAA, 0x88, 0x11)
+        pformat = pixels.alloc_format(pixels.SDL_PIXELFORMAT_UNKNOWN)
+        self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
+        self.assertEqual(pformat.format, pixels.SDL_PIXELFORMAT_UNKNOWN)
+        val = pixels.map_rgba(pformat, 0xFF, 0xAA, 0x88, 0x11)
         self.assertEqual(val, 0x0)
 
     @unittest.skip("not implemented")
@@ -394,8 +394,8 @@ class SDLPixelsTest(unittest.TestCase):
 
     @unittest.skip("not implemented")
     def test_SDL_PixelFormat(self):
-        format = pixels.SDL_PixelFormat()
-        self.assertIsInstance(format, pixels.SDL_PixelFormat)
+        pformat = pixels.SDL_PixelFormat()
+        self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
 
     @unittest.skip("not implemented")
     def test_SDL_Palette(self):

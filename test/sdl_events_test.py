@@ -97,16 +97,18 @@ class SDLEventsTest(unittest.TestCase):
         event = events.SDL_Event()
         self.assertIsInstance(event, events.SDL_Event)
 
+    @unittest.skipIf(hasattr(sys, "pypy_version_info"),
+                     "PyPy's ctypes can't encapsule str in py_object()")
     def test_add_del_event_watch(self):
         eventwatch = []
 
         def watch(data, event):
             eventwatch.append((event.contents, data,))
             return 0
-        filter = events.SDL_EventFilter(watch)
+        efilter = events.SDL_EventFilter(watch)
 
         udata = "Something random"
-        events.add_event_watch(filter, udata)
+        events.add_event_watch(efilter, udata)
         ev = events.SDL_Event()
         ev.type = events.SDL_USEREVENT
         ev.user = events.SDL_UserEvent()
@@ -114,7 +116,7 @@ class SDLEventsTest(unittest.TestCase):
         self.assertEqual(len(eventwatch), 1)
         self.assertEqual(eventwatch[0][1], udata)
 
-        events.del_event_watch(filter, udata)
+        events.del_event_watch(efilter, udata)
         ev = events.SDL_Event()
         events.push_event(ev)
         self.assertEqual(len(eventwatch), 1)

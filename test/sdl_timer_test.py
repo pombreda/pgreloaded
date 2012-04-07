@@ -42,11 +42,11 @@ class SDLTimerTest(unittest.TestCase):
 
     def test_get_performance_counter(self):
         perf = timer.get_performance_counter()
-        self.assertTrue(type(perf) in(int, long))
+        self.assertTrue(type(perf) in (int, long))
 
     def test_get_performance_frequency(self):
         freq = timer.get_performance_frequency()
-        self.assertTrue(type(freq) in(int, long))
+        self.assertTrue(type(freq) in (int, long))
 
     def test_delay(self):
         for wait in range(5, 200, 5):
@@ -57,6 +57,8 @@ class SDLTimerTest(unittest.TestCase):
             self.assertTrue(abs(wait - sum) <= 3,
                 "%f is not <= 3 for %f and %f" % (abs(wait - sum), wait, sum))
 
+    @unittest.skipIf(hasattr(sys, "pypy_version_info"),
+                     "PyPy's ctypes can't encapsule str in py_object()")
     def test_add_remove_timer(self):
         calls = []
 

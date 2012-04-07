@@ -580,7 +580,7 @@ def set_window_title(window, title):
 @sdltype("SDL_SetWindowIcon", [ctypes.POINTER(SDL_Window),
                                ctypes.POINTER(SDL_Surface)], None)
 def set_window_icon(window, icon):
-    """
+    """Sets the icon for the window.
     """
     if not isinstance(window, SDL_Window):
         raise TypeError("window must be a SDL_Window")
@@ -1031,7 +1031,12 @@ def gl_make_current(window, context):
 
 @sdltype("SDL_GL_SetSwapInterval", [ctypes.c_int], ctypes.c_int)
 def gl_set_swap_interval(interval):
-    """
+    """Set the swap interval for the current OpenGL context.
+
+    interval can be either 0 for immediate updates or 1 for updates
+    synchronized with the vertical retrace.
+
+    Raises a SDLError, if setting the swap interval is not supported.
     """
     if interval not in(0, 1):
         raise ValueError("interval must be either 0 or 1")
@@ -1041,8 +1046,12 @@ def gl_set_swap_interval(interval):
 
 
 @sdltype("SDL_GL_GetSwapInterval", None, ctypes.c_int)
-def gl_get_swap_interval(interval):
-    """
+def gl_get_swap_interval():
+    """Gets the swap interval for the current OpenGL context.
+
+    This returns either 0 for immediate updates or 1 if the updates are
+    synchronized with the vertical retrace. If getting the swap interval
+    is not supported, a SDLError is raised.
     """
     retval = dll.SDL_GL_GetSwapInterval()
     if retval == -1:
@@ -1052,7 +1061,8 @@ def gl_get_swap_interval(interval):
 
 @sdltype("SDL_GL_SwapWindow", [ctypes.POINTER(SDL_Window)], None)
 def gl_swap_window(window):
-    """
+    """Swaps the OpenGL buffers for a window, if double-buffering is
+    supported.
     """
     if not isinstance(window, SDL_Window):
         raise TypeError("window must be a SDL_Window")

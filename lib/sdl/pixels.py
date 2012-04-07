@@ -452,7 +452,7 @@ def alloc_format(pformat):
 @sdltype("SDL_FreeFormat", [ctypes.POINTER(SDL_PixelFormat)], None)
 def free_format(pformat):
     """Frees a previously allocated SDL_PixelFormat."""
-    if type(pformat) is not SDL_PixelFormat:
+    if not isinstance(pformat, SDL_PixelFormat):
         raise TypeError("pformat must be a SDL_PixelFormat")
     dll.SDL_FreeFormat(ctypes.byref(pformat))
 

@@ -57,17 +57,54 @@ class SDLSurfaceTest(unittest.TestCase):
             for index, val in enumerate(dst):
                 self.assertEqual(val, src.view[index])
 
-    @unittest.skip("not implemented")
     def test_convert_surface(self):
-        pass
+        pfmt = pixels.alloc_format(pixels.SDL_PIXELFORMAT_RGB444)
+        for fmt in pixels.ALL_PIXELFORMATS:
+            if pixels.SDL_ISPIXELFORMAT_FOURCC(fmt):
+                continue
+            if fmt in (pixels.SDL_PIXELFORMAT_RGB332,
+                       pixels.SDL_PIXELFORMAT_ARGB2101010):
+                # SDL2 segfault in the DUFFS_LOOOP() macros
+                continue
+            bpp, rmask, gmask, bmask, amask = \
+                pixels.pixelformat_enum_to_masks(fmt)
+            sf = surface.create_rgb_surface(10, 20, bpp, rmask, gmask,
+                                            bmask, amask)
+            self.assertIsInstance(sf, surface.SDL_Surface)
+            csf = surface.convert_surface(sf, pfmt, 0)
+            self.assertIsInstance(csf, surface.SDL_Surface)
+            surface.free_surface(sf)
+            surface.free_surface(csf)
 
-    @unittest.skip("not implemented")
-    def test_convert_surface_format(self):
-        pass
+        sf = surface.create_rgb_surface(10, 10, 32, 0, 0, 0)
+        self.assertRaises(TypeError, surface.convert_surface, None, None, None)
+        self.assertRaises(TypeError, surface.convert_surface, sf, None, None)
+        self.assertRaises(TypeError, surface.convert_surface, sf, "Test", 0)
+        self.assertRaises(TypeError, surface.convert_surface, sf, 12345, 0)
+        self.assertRaises(TypeError, surface.convert_surface, None, pfmt, 0)
+        self.assertRaises(TypeError, surface.convert_surface, "Test", pfmt, 0)
+        self.assertRaises(TypeError, surface.convert_surface, 12345, pfmt, 0)
+        pixels.free_format(pfmt)
+        surface.free_surface(sf)
+
+    def ttest_convert_surface_format(self):
+        pfmt = pixels.SDL_PIXELFORMAT_RGB444
+        for fmt in pixels.ALL_PIXELFORMATS:
+            if pixels.SDL_ISPIXELFORMAT_FOURCC(fmt):
+                continue
+            bpp, rmask, gmask, bmask, amask = \
+                pixels.pixelformat_enum_to_masks(fmt)
+            sf = surface.create_rgb_surface(10, 20, bpp, rmask, gmask,
+                                            bmask, amask)
+            self.assertIsInstance(sf, surface.SDL_Surface)
+            csf = surface.convert_surface_format(sf, pfmt, 0)
+            self.assertIsInstance(csf, surface.SDL_Surface)
+            surface.free_surface(sf)
+            surface.free_surface(csf)
 
     def test_create_rgb_surface(self):
-        for w in range(1, 100):
-            for h in range(1, 100):
+        for w in range(1, 100, 5):
+            for h in range(1, 100, 5):
                 for bpp in alldepths:
                     sf = surface.create_rgb_surface(w, h, bpp)
                     self.assertIsInstance(sf, surface.SDL_Surface)
@@ -76,8 +113,8 @@ class SDLSurfaceTest(unittest.TestCase):
         for fmt in pixels.ALL_PIXELFORMATS:
             if pixels.SDL_ISPIXELFORMAT_FOURCC(fmt):
                 continue
-            for w in range(1, 100):
-                for h in range(1, 100):
+            for w in range(1, 100, 5):
+                for h in range(1, 100, 5):
                     bpp, rmask, gmask, bmask, amask = \
                         pixels.pixelformat_enum_to_masks(fmt)
                     sf = surface.create_rgb_surface(w, h, bpp, rmask, gmask,
@@ -126,8 +163,8 @@ class SDLSurfaceTest(unittest.TestCase):
                 continue
             if pixels.SDL_BITSPERPIXEL(fmt) < 8:
                 continue  # Skip < 8bpp, SDL_FillRect does not work on those
-            for w in range(1, 60):
-                for h in range(1, 60):
+            for w in range(1, 100, 5):
+                for h in range(1, 100, 5):
                     bpp, rmask, gmask, bmask, amask = \
                         pixels.pixelformat_enum_to_masks(fmt)
                     sf = surface.create_rgb_surface(w, h, bpp, rmask, gmask,
@@ -154,8 +191,8 @@ class SDLSurfaceTest(unittest.TestCase):
                 continue
             if pixels.SDL_BITSPERPIXEL(fmt) < 8:
                 continue  # Skip < 8bpp, SDL_FillRect does not work on those
-            for w in range(1, 60):
-                for h in range(1, 60):
+            for w in range(1, 100, 5):
+                for h in range(1, 100, 5):
                     bpp, rmask, gmask, bmask, amask = \
                         pixels.pixelformat_enum_to_masks(fmt)
                     sf = surface.create_rgb_surface(w, h, bpp, rmask, gmask,
@@ -335,7 +372,6 @@ class SDLSurfaceTest(unittest.TestCase):
 
     @unittest.skip("not implemented")
     def test_lower_blit(self):
-
         pass
 
     @unittest.skip("not implemented")

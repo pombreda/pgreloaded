@@ -4,7 +4,10 @@ import pygame2.sdl as sdl
 import pygame2.sdl.log as log
 from pygame2.compat import byteify
 
+_ISPYPY = hasattr(sys, "pypy_version_info")
 
+
+@unittest.skipIf(_ISPYPY, "PyPy's ctypes can't encapsule str in py_object()")
 class SDLLogTest(unittest.TestCase):
     __tags__ = ["sdl"]
 

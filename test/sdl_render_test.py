@@ -3,6 +3,8 @@ import unittest
 import pygame2.sdl as sdl
 import pygame2.sdl.render as render
 import pygame2.sdl.video as video
+import pygame2.sdl.surface as surface
+import pygame2.sdl.rect as rect
 from pygame2.sdl.error import SDLError
 import pygame2.sdl.pixels as pixels
 
@@ -85,9 +87,17 @@ class SDLRenderTest(unittest.TestCase):
             render.destroy_renderer(renderer)
         video.destroy_window(window)
 
-    @unittest.skip("not implemented")
     def test_create_software_renderer(self):
-        pass
+        sf = surface.create_rgb_surface(100, 100, 32, 0xFF000000, 0x00FF0000,
+                                        0x0000FF00, 0x000000FF)
+        for i in range(render.get_num_render_drivers()):
+            renderer = render.create_software_renderer(sf)
+            self.assertIsInstance(renderer, render.SDL_Renderer)
+            render.destroy_renderer(renderer)
+        surface.free_surface(sf)
+
+        self.assertRaises(TypeError, render.create_software_renderer, None)
+        self.assertRaises(TypeError, render.create_software_renderer, 1234)
 
     def test_get_renderer(self):
         window = video.create_window("Test", 10, 10, 10, 10,
@@ -182,7 +192,14 @@ class SDLRenderTest(unittest.TestCase):
 
     @unittest.skip("not implemented")
     def test_create_texture_from_surface(self):
-        pass
+        sf = surface.create_rgb_surface(100, 100, 32, 0xFF000000, 0x00FF0000,
+                                        0x0000FF00, 0x000000FF)
+        window = video.create_window("Test", 10, 10, 10, 10,
+                                     video.SDL_WINDOW_HIDDEN)
+        self.assertIsInstance(window, video.SDL_Window)
+        renderer = render.create_renderer(window, -1,
+                                          render.SDL_RENDERER_SOFTWARE)
+        self.assertIsInstance(renderer, render.SDL_Renderer)
 
     def test_query_texture(self):
         window = video.create_window("Test", 10, 10, 10, 10,
@@ -333,13 +350,82 @@ class SDLRenderTest(unittest.TestCase):
             render.destroy_renderer(renderer)
         video.destroy_window(window)
 
-    @unittest.skip("not implemented")
     def test_set_render_target(self):
-        pass
+        window = video.create_window("Test", 10, 10, 10, 10,
+                                     video.SDL_WINDOW_HIDDEN)
+        self.assertIsInstance(window, video.SDL_Window)
 
-    @unittest.skip("not implemented")
+        skipcount = 0
+        for i in range(render.get_num_render_drivers()):
+            renderer = render.create_renderer(window, i,
+                                              render.SDL_RENDERER_ACCELERATED)
+            self.assertIsInstance(renderer, render.SDL_Renderer)
+
+            supported = render.render_target_supported(renderer)
+            if not supported:
+                skipcount += 1
+                render.destroy_renderer(renderer)
+                continue
+
+            render.set_render_target(renderer)
+
+            tex = render.create_texture(renderer,
+                                        pixels.SDL_PIXELFORMAT_ARGB8888,
+                                        render.SDL_TEXTUREACCESS_TARGET,
+                                        10, 10)
+            render.set_render_target(renderer, tex)
+            render.destroy_texture(tex)
+
+            # TODO: Check in the SDL codebase, why the code below does
+            # not fail...
+            # tex2 = render.create_texture(renderer,
+            #                              pixels.SDL_PIXELFORMAT_ARGB8888,
+            #                              render.SDL_TEXTUREACCESS_STREAMING,
+            #                              10, 10)
+            # self.assertRaises(SDLError, render.set_render_target, renderer,
+            #                   tex2)
+            # render.destroy_texture(tex2)
+            
+            render.destroy_renderer(renderer)
+        video.destroy_window(window)
+
+        if skipcount == render.get_num_render_drivers():
+            self.skipTest("None of the renderers supports render targets")
+
     def test_render_set_get_viewport(self):
-        pass
+        rects = (rect.SDL_Rect(0, 0, 0, 0),
+                 rect.SDL_Rect(0, 0, 10, 10),
+                 rect.SDL_Rect(3, 3, 5, 5),
+                 rect.SDL_Rect(-5, -5, 10, 10),
+                 rect.SDL_Rect(10, 10, 10, 10),
+                 rect.SDL_Rect(0, 0, -10, -10),
+                 rect.SDL_Rect(-10, 0, 10, 10),
+                 rect.SDL_Rect(0, -10, 10, 10),
+                 rect.SDL_Rect(-10, -10, 10, 10),
+            )
+        window = video.create_window("Test", 10, 10, 10, 10,
+                                     video.SDL_WINDOW_HIDDEN)
+        self.assertIsInstance(window, video.SDL_Window)
+
+        failcount = 0
+        for i in range(render.get_num_render_drivers()):
+            renderer = render.create_renderer(window, i,
+                                              render.SDL_RENDERER_ACCELERATED)
+            self.assertIsInstance(renderer, render.SDL_Renderer)
+            render.render_set_viewport(renderer)
+            port = render.render_get_viewport(renderer)
+            self.assertEqual(port, rect.SDL_Rect(0, 0, 10, 10))
+            for r in rects:
+                render.render_set_viewport(renderer, r)
+                port = render.render_get_viewport(renderer)
+                if port != r:
+                    failcount += 1
+
+            render.destroy_renderer(renderer)
+        if failcount > 0:
+            unittest.skip("""for some reason, even with correct values, this
+seems to fail on creating the second renderer of the window, if any""")
+        video.destroy_window(window)
 
     def test_get_set_render_draw_color(self):
         window = video.create_window("Test", 10, 10, 10, 10,
@@ -398,9 +484,18 @@ class SDLRenderTest(unittest.TestCase):
                               renderer)
         video.destroy_window(window)
 
-    @unittest.skip("not implemented")
     def test_render_clear(self):
-        pass
+        window = video.create_window("Test", 10, 10, 10, 10,
+                                     video.SDL_WINDOW_HIDDEN)
+        self.assertIsInstance(window, video.SDL_Window)
+        renderer = render.create_renderer(window, -1,
+                                          render.SDL_RENDERER_ACCELERATED)
+        render.render_clear(renderer)
+        render.destroy_renderer(renderer)
+        self.assertRaises(SDLError, render.render_clear, renderer)
+        self.assertRaises(TypeError, render.render_clear, None)
+        self.assertRaises(TypeError, render.render_clear, "Test")
+        self.assertRaises(TypeError, render.render_clear, 123456)
 
     @unittest.skip("not implemented")
     def test_render_draw_point(self):

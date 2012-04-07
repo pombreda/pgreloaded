@@ -88,9 +88,18 @@ def convert_pixels(width, height, srcformat, src, srcpitch, dstformat,
                                 ctypes.POINTER(SDL_PixelFormat),
                                 ctypes.c_uint], ctypes.POINTER(SDL_Surface))
 def convert_surface(src, pformat, flags):
+    """Creates a new surface with the specified format and copies and maps the
+    passed surface to it.
     """
-    """
+    if not isinstance(src, SDL_Surface):
+        raise TypeError("src must be a SDL_Surface")
+    if not isinstance(pformat, SDL_PixelFormat):
+        raise TypeError("pformat must be a SDL_PixelFormat")
+    if type(flags) is not int:
+        raise TypeError("flags must be an int")
     ret = dll.SDL_ConvertSurface(src, pformat, flags)
+    if ret is None or not bool(ret):
+        raise SDLError()
     return ret.contents
 
 
@@ -98,9 +107,18 @@ def convert_surface(src, pformat, flags):
                                       ctypes.c_uint, ctypes.c_uint],
          ctypes.POINTER(SDL_Surface))
 def convert_surface_format(src, pformat, flags):
+    """Creates a new surface with the specified format and copies and maps the
+    passed surface to it.
     """
-    """
+    if not isinstance(src, SDL_Surface):
+        raise TypeError("src must be a SDL_Surface")
+    if type(pformat) is not int:
+        raise TypeError("pformat must be an int")
+    if type(flags) is not int:
+        raise TypeError("flags must be an int")
     ret = dll.SDL_ConvertSurfaceFormat(src, pformat, flags)
+    if ret is None or not bool(ret):
+        raise SDLError()
     return ret.contents
 
 
