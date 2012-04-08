@@ -13,9 +13,9 @@ class SDLRWopsTest(unittest.TestCase):
     __tags__ = ["sdl"]
 
     def setUp(self):
-        self.testfile = os.path.join(os.path.dirname
-                                     (os.path.abspath(__file__)),
-                                      "rwopstest.txt")
+        fpath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             "resources")
+        self.testfile = os.path.join(fpath, "rwopstest.txt")
 
         if sys.version.startswith("3.1"):
             self.assertIsInstance = \
@@ -44,7 +44,7 @@ class SDLRWopsTest(unittest.TestCase):
             buf.write(byteify(chr(ch >> 8), "utf-8"))
             length -= 2
         self.assertEqual(stringify(buf.getvalue(), "utf-8"),
-                          "This is a test file for pygame2.sdl.rwops!")
+                         "This is a test file for pygame2.sdl.rwops!")
 
     @unittest.skip("not implemented")
     def test_rw_from_fp(self):

@@ -12,5 +12,5 @@ from pygame2.resources import Resources
 
 __all__ = ["run", "RESOURCES"]
 
-
-RESOURCES = Resources(os.path.dirname(os.path.abspath(__file__)), ".*py*")
+_fpath = os.path.dirname(os.path.abspath(__file__))
+RESOURCES = Resources(os.path.join(_fpath, "resources"))

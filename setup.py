@@ -24,7 +24,7 @@ if __name__ == "__main__":
                     "pygame2.dll" : "lib/dll",
                     "pygame2.test" : "test" }
 
-    package_data = { "pygame2.test" : ["*.txt"],
+    package_data = { "pygame2.test" : ["resources/*.*"],
                      "pygame2.dll" : ["*.dll"] }
                     
     setupdata = {

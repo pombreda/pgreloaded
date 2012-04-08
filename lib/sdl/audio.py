@@ -18,30 +18,37 @@ SDL_AUDIO_MASK_SIGNED = 1 << 15
 
 
 def SDL_AUDIO_BITSIZE(x):
+    """Gets the bitsize of an audio format."""
     return x & SDL_AUDIO_MASK_BITSIZE
 
 
 def SDL_AUDIO_ISFLOAT(x):
+    """Checks, if the audio format is a float format."""
     return x & SDL_AUDIO_MASK_DATATYPE
 
 
 def SDL_AUDIO_ISBIGENDIAN(x):
+    """Checks, if the audio format is in big-endian byte order."""
     return x & SDL_AUDIO_MASK_ENDIAN
 
 
 def SDL_AUDIO_ISSIGNED(x):
+    """Checks, if the audio format uses signed values."""
     return x & SDL_AUDIO_MASK_SIGNED
 
 
 def SDL_AUDIO_ISINT(x):
+    """Checks, if the audio format is an int format."""
     return not SDL_AUDIO_ISFLOAT(x)
 
 
 def SDL_AUDIO_ISLITTLEENDIAN(x):
+    """Checks, if the audio format is in little-endian byte order."""
     return not SDL_AUDIO_ISBIGENDIAN(x)
 
 
 def SDL_AUDIO_ISUNSIGNED(x):
+    """Checks, if the audio format usses unsigned values."""
     return not SDL_AUDIO_ISSIGNED(x)
 
 
@@ -91,6 +98,7 @@ SDL_AudioCallback = ctypes.CFUNCTYPE(None, ctypes.c_void_p,
 
 
 class SDL_AudioSpec(ctypes.Structure):
+    """Audio specification."""
     _fields_ = [("freq", ctypes.c_int),
                 ("format", ctypes.c_ushort),
                 ("channels", ctypes.c_ubyte),
@@ -102,6 +110,26 @@ class SDL_AudioSpec(ctypes.Structure):
                 ("userdata", ctypes.c_void_p)
                 ]
 
+    def __init__(self, frequency, aformat, channels, samples,
+                 callback, userdata=None):
+        self.freq = frequency
+        self.format = aformat
+        self.channels = channels
+        self.samples = samples
+        if callback is None:
+            self.callback = SDL_AudioCallback()
+        else:
+            self.callback = callback
+        if userdata is None:
+            self.userdata = ctypes.c_void_p(0)
+        else:
+            self.userdata = ctypes.cast(ctypes.py_object(userdata),
+                                        ctypes.c_void_p)
+
+    def __repr__(self):
+        return """SDL_AudioSpec(freq=%d, format=%d, channels=%d, silence=%d,
+samples=%d, size=%d)""" % (self.freq, self.format, self.channels, self.silence,
+                           self.samples, self.size)
 
 class SDL_AudioCVT(ctypes.Structure):
     pass
@@ -136,6 +164,8 @@ def get_num_audio_drivers():
 def get_audio_driver(index):
     """Gets the name of a specific audio driver.
     """
+    if type(index) is not int:
+        raise TypeError("index must be an int")
     retval = dll.SDL_GetAudioDriver(index)
     if retval is None or not bool(retval):
         raise SDLError()
@@ -170,11 +200,16 @@ def get_current_audio_driver():
 @sdltype("SDL_OpenAudio", [ctypes.POINTER(SDL_AudioSpec),
                            ctypes.POINTER(SDL_AudioSpec)], ctypes.c_int)
 def open_audio(desired):
-    """
+    """Opens the audio device with the desired parameters.
+
+    If the return value is None, the audio data passed to the set
+    callback function in desired will be guaranteed to be in the
+    requested format, and will be automatically converted to the
+    hardware audio format if necessary.
     """
     if not isinstance(desired, SDL_AudioSpec):
         raise TypeError("desired must be a SDL_AudioSpec")
-    obtained = SDL_AudioSpec()
+    obtained = SDL_AudioSpec(0, 0, 0, 0, None, None)
     retval = dll.SDL_OpenAudio(ctypes.byref(desired), ctypes.byref(obtained))
     if retval == -1:
         raise SDLError()
@@ -211,7 +246,7 @@ def open_audio_device(device, iscapture, desired, allowed_changes):
     if not isinstance(desired, SDL_AudioSpec):
         raise TypeError("desired must be a SDL_AudioSpec")
     device = byteify(device, "utf-8")
-    obtained = SDL_AudioSpec()
+    obtained = SDL_AudioSpec(0, 0, 0, 0, None, None)
     retval = dll.SDL_OpenAudioDevice(device, iscapture, ctypes.byref(desired),
                                      ctypes.byref(obtained), allowed_changes)
     if retval == 0:

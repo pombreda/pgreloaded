@@ -120,6 +120,8 @@ def init(flags=None):
         if flags != SDL_INIT_TIMER|SDL_INIT_VIDEO:
             print(pygame2.error.get_error())
     """
+    if flags is None:
+        return dll.SDL_Init(0)
     return dll.SDL_Init(flags)
 
 
