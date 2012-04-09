@@ -1,7 +1,6 @@
 import sys
 import unittest
 import pygame2.sdl as sdl
-from pygame2.sdl.error import SDLError
 import pygame2.sdl.shape as shape
 import pygame2.sdl.video as video
 

@@ -2,12 +2,11 @@
 Wrapper methods around the SDL2 surface routines.
 """
 import ctypes
-from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE
+from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE, SDLError
 from pygame2.sdl.pixels import SDL_PixelFormat, SDL_Palette
 from pygame2.sdl.rect import SDL_Rect
 import pygame2.sdl.rwops as rwops
 import pygame2.sdl.array as array
-from pygame2.sdl.error import SDLError
 
 __all__ = ["SDL_Surface", "SDL_MUSTLOCK", "convert_pixels", "convert_surface",
            "convert_surface_format", "create_rgb_surface",

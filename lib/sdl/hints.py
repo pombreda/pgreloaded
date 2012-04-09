@@ -3,8 +3,7 @@ Wrapper methods around the SDL2 hint routines.
 """
 from ctypes import c_char_p, c_int, c_uint
 from pygame2.compat import *
-from pygame2.sdl import sdltype, dll
-from pygame2.sdl.error import SDLError
+from pygame2.sdl import sdltype, dll, SDLError
 
 __all__ = ["clear_hints", "get_hint", "set_hint", "set_hint_with_priority"]
 

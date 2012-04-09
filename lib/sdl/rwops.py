@@ -4,8 +4,7 @@ Wrapper methods around the SDL2 rwops routines.
 import ctypes
 import sys
 from pygame2.compat import *
-from pygame2.sdl import sdltype, dll
-from pygame2.sdl.error import SDLError
+from pygame2.sdl import sdltype, dll, SDLError
 
 __all__ = ["SDL_RWops", "rw_from_file", "rw_from_fp", "rw_from_mem",
            "rw_from_const_mem", "rw_from_object", "rw_seek", "rw_tell",

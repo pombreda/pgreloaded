@@ -3,8 +3,7 @@ Wrapper methods around the SDL2 clipboard routines.
 """
 import ctypes
 from pygame2.compat import *
-from pygame2.sdl import sdltype, dll, free, SDL_TRUE
-from pygame2.sdl.error import SDLError
+from pygame2.sdl import sdltype, dll, free, SDL_TRUE, SDLError
 
 __all__ = ["get_clipboard_text", "has_clipboard_text", "set_clipboard_text"]
 

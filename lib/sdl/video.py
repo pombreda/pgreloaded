@@ -3,11 +3,10 @@ Wrapper methods around the SDL2 video management routines.
 """
 import ctypes
 from pygame2.compat import *
-from pygame2.sdl import sdltype, dll, SDL_TRUE
+from pygame2.sdl import sdltype, dll, SDL_TRUE, SDLError
 import pygame2.sdl.array as array
 from pygame2.sdl.surface import SDL_Surface
 from pygame2.sdl.rect import SDL_Rect
-from pygame2.sdl.error import SDLError
 
 __all__ = ["SDL_WINDOWPOS_UNDEFINED_DISPLAY", "SDL_WINDOWPOS_ISUNDEFINED",
            "SDL_WINDOWPOS_CENTERED_DISPLAY", "SDL_WINDOWPOS_ISCENTERED",

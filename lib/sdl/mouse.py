@@ -2,10 +2,9 @@
 Wrapper methods around the SDL2 mouse routines.
 """
 import ctypes
-from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE
+from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE, SDLError
 from pygame2.sdl.surface import SDL_Surface
 from pygame2.sdl.video import SDL_Window
-from pygame2.sdl.error import SDLError
 
 __all__ = ["SDL_BUTTON", "SDL_Cursor", "create_color_cursor", "create_cursor",
            "free_cursor", "get_cursor", "set_cursor", "get_mouse_focus",

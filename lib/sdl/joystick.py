@@ -3,8 +3,7 @@ Wrapper methods around the SDL2 joystick routines.
 """
 import ctypes
 from pygame2.compat import *
-from pygame2.sdl import sdltype, dll
-from pygame2.sdl.error import SDLError
+from pygame2.sdl import sdltype, dll, SDLError
 
 __all__ = ["SDL_Joystick", "joystick_open", "joystick_opened",
            "joystick_close", "joystick_event_state", "joystick_get_axis",

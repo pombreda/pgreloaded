@@ -3,8 +3,7 @@ Wrapper methods around the SDL2 timer routines.
 """
 import ctypes
 from pygame2.compat import *
-from pygame2.sdl import sdltype, dll, SDL_TRUE
-from pygame2.sdl.error import SDLError
+from pygame2.sdl import sdltype, dll, SDL_TRUE, SDLError
 
 __all__ = ["get_ticks", "get_performance_counter", "get_performance_frequency",
            "delay", "SDL_TimerCallback", "add_timer", "remove_timer"

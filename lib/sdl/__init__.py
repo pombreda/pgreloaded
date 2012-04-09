@@ -6,11 +6,13 @@ import sys
 import ctypes
 from ctypes.util import find_library
 from pygame2 import get_dll_path
+from pygame2.compat import byteify, stringify
 
 __all__ = ["init", "init_subsystem", "quit", "quit_subsystem", "was_init",
            "SDL_INIT_TIMER", "SDL_INIT_AUDIO", "SDL_INIT_VIDEO",
            "SDL_INIT_JOYSTICK", "SDL_INIT_HAPTIC", "SDL_INIT_NOPARACHUTE",
-           "SDL_INIT_EVERYTHING"
+           "SDL_INIT_EVERYTHING", "get_error", "set_error", "clear_error",
+           "SDLError"
            ]
 
 
@@ -43,8 +45,6 @@ class _DLL(object):
             if not _LIBNAME:
                 _LIBNAME = find_library("SDL2-2.0")
         self._dll = ctypes.CDLL(_LIBNAME)
-        
-            
 
     def has_dll_function(self, name):
         """Checks, if a function identified by name exists in the bound dll.
@@ -113,16 +113,13 @@ def init(flags=None):
     SDL_INIT_EVERYTHING - Initializes all modules from above
     SDL_INIT_NOPARACHUTE - Deactivates the interrupt wrappers
                           (e.g. for SIGINT, SIGSEGV, etc.)
-
-    Example:
-
-        flags = init(SDL_INIT_TIMER|SDL_INIT_VIDEO)
-        if flags != SDL_INIT_TIMER|SDL_INIT_VIDEO:
-            print(pygame2.error.get_error())
     """
     if flags is None:
-        return dll.SDL_Init(0)
-    return dll.SDL_Init(flags)
+        retval = dll.SDL_Init(0)
+    else:
+        retval = dll.SDL_Init(flags)
+    if retval == -1:
+        raise SDLError()
 
 
 @sdltype("SDL_InitSubSystem", [ctypes.c_uint], ctypes.c_uint)
@@ -130,7 +127,9 @@ def init_subsystem(flags):
     """Similar to init(), but can be called to explicitly initialize a certain
     module. init() needs to be called beforehand.
     """
-    return dll.SDL_InitSubSystem(flags)
+    retval = dll.SDL_InitSubSystem(flags)
+    if retval == -1:
+        raise SDLError()
 
 
 @sdltype("SDL_QuitSubSystem", [ctypes.c_uint], None)
@@ -186,3 +185,40 @@ def free(val):
             dll.add_function("SDL_free", libc.free)
             funcptr.argtypes = [ctypes.c_void_p]
     dll.SDL_free(ctypes.cast(val, ctypes.c_void_p))
+
+
+@sdltype("SDL_GetError", None, ctypes.c_char_p)
+def get_error():
+    """Gets the last SDL-related error message that occured."""
+    retval = dll.SDL_GetError()
+    return stringify(retval, "utf-8")
+
+
+@sdltype("SDL_SetError", [ctypes.c_char_p], None)
+def set_error(text):
+    """Sets a SDL error message that can be retrieved using get_error()."""
+    dll.SDL_SetError(byteify(str(text), "utf-8"))
+
+
+@sdltype("SDL_ClearError", None, None)
+def clear_error():
+    """Clears the current error message so that get_error() will return an
+    empty string.
+    """
+    dll.SDL_ClearError()
+
+
+class SDLError(Exception):
+    """A SDL specific exception class."""
+    def __init__(self, msg=None):
+        """Creates a new SDLError instance with the specified message.
+
+        If no msg is provided, the message will be set to the value of
+        get_error().
+        """
+        self.msg = msg
+        if msg is None:
+            msg = get_error()
+
+    def __str__(self):
+        return repr(self.msg)

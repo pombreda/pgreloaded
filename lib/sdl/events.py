@@ -2,8 +2,7 @@
 Wrapper methods around the SDL2 event routines.
 """
 import ctypes
-from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE
-import pygame2.sdl.error as error
+from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE, get_error, SDLError
 
 __all__ = ["SDL_WindowEvent", "SDL_KeyboardEvent", "SDL_TextEditingEvent",
            "SDL_TextInputEvent", "SDL_MouseMotionEvent",
@@ -363,8 +362,8 @@ def event_state(type, state):
     specific event type will be returned.
     """
     ret = dll.SDL_EventState(type, state)
-    if error.get_error() != "":
-        raise error.SDLError()
+    if get_error() != "":
+        raise SDLError()
     return ret
 
 
@@ -413,8 +412,8 @@ def get_event_filter():
     data = ctypes.py_object()
     ret = dll.SDL_GetEventFilter(ctypes.byref(filter), ctypes.byref(data))
     if ret.value == SDL_FALSE:
-        if error.get_error() != "":
-            raise error.SDLError()
+        if get_error() != "":
+            raise SDLError()
         return None, None
     if bool(data):
         return filter, data
@@ -538,7 +537,7 @@ def push_event(event):
     """
     ret = dll.SDL_PushEvent(ctypes.byref(event))
     if ret < 0:
-        raise error.SDLError()
+        raise SDLError()
     return ret == 1
 
 
@@ -551,7 +550,7 @@ def register_events(numevents):
     """
     ret = dll.SDL_RegisterEvents(numevents)
     if ret == (0xFFFFFFFF - 1):
-        raise error.SDLError()
+        raise SDLError()
     return ret
 
 
@@ -564,7 +563,7 @@ def wait_event():
     event = SDL_Event()
     ret = dll.SDL_WaitEvent(ctypes.byref(event))
     if ret == 0:
-        raise error.SDLError()
+        raise SDLError()
     return event
 
 
@@ -577,7 +576,7 @@ def wait_event_timeout(timeout):
 
     ret = dll.SDL_WaitEventTimeout(ctypes.byref(event), timeout)
     if ret == 0:
-        raise error.SDLError()
+        raise SDLError()
     return event
 
 

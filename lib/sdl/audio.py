@@ -3,8 +3,7 @@ Wrapper methods around the SDL2 audio routines.
 """
 import ctypes
 from pygame2.compat import *
-from pygame2.sdl import sdltype, dll
-from pygame2.sdl.error import SDLError
+from pygame2.sdl import sdltype, dll, SDLError
 from pygame2.sdl.rwops import SDL_RWops, rw_from_file
 from pygame2.sdl.endian import SDL_BYTEORDER, SDL_LIL_ENDIAN
 
@@ -169,7 +168,7 @@ def get_audio_driver(index):
     retval = dll.SDL_GetAudioDriver(index)
     if retval is None or not bool(retval):
         raise SDLError()
-    return retval
+    return stringify(retval, "utf-8")
 
 
 @sdltype("SDL_AudioInit", [ctypes.c_char_p], ctypes.c_int)
@@ -194,6 +193,8 @@ def get_current_audio_driver():
     """Gets the currently used audio driver.
     """
     retval = dll.SDL_GetCurrentAudioDriver()
+    if retval is None or not bool(retval):
+        return None
     return stringify(retval, "utf-8")
 
 

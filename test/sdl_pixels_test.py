@@ -2,7 +2,6 @@ import sys
 import unittest
 import copy
 import pygame2.sdl as sdl
-from pygame2.sdl.error import SDLError
 import pygame2.sdl.pixels as pixels
 from pygame2.sdl.pixels import SDL_Color
 
@@ -213,7 +212,7 @@ class SDLPixelsTest(unittest.TestCase):
             self.assertEqual(val, (32, 0xFF000000, 0x00FF0000, 0x0000FF00, 0))
         else:
             self.assertEqual(val, (32, 0, 0x0000FF00, 0x00FF0000, 0xFF000000))
-        self.assertRaises(SDLError, pixels.pixelformat_enum_to_masks, 99999)
+        self.assertRaises(sdl.SDLError, pixels.pixelformat_enum_to_masks, 99999)
 
         val = pixels.pixelformat_enum_to_masks(0)
         self.assertEqual(val, (0, 0, 0, 0, 0))
@@ -242,9 +241,9 @@ class SDLPixelsTest(unittest.TestCase):
         self.assertEqual(pformat.BytesPerPixel, 1)
         pixels.free_format(pformat)
 
-        self.assertRaises(SDLError, pixels.alloc_format,
+        self.assertRaises(sdl.SDLError, pixels.alloc_format,
                            pixels.SDL_PIXELFORMAT_UYVY)
-        self.assertRaises(SDLError, pixels.alloc_format,
+        self.assertRaises(sdl.SDLError, pixels.alloc_format,
                            pixels.SDL_PIXELFORMAT_YUY2)
 
     def test_alloc_free_palette(self):

@@ -2,8 +2,7 @@
 Wrapper methods around the SDL2 cpuinfo routines.
 """
 import ctypes
-from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE
-from pygame2.sdl.error import SDLError
+from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE, SDLError
 
 __all__ = ["get_cpu_cache_line_size", "get_cpu_count", "has_3dnow",
            "has_altivec", "has_mmx", "has_rdtsc", "has_sse", "has_sse2",

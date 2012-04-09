@@ -3,8 +3,7 @@ Wrapper methods around the SDL2 keyboard handling routines.
 """
 import ctypes
 from pygame2.compat import *
-from pygame2.sdl import sdltype, dll
-from pygame2.sdl.error import SDLError
+from pygame2.sdl import sdltype, dll, SDLError
 import pygame2.sdl.keycode as keycode
 import pygame2.sdl.scancode as scancode
 from pygame2.sdl.video import SDL_Window

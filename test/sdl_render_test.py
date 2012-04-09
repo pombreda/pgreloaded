@@ -5,7 +5,6 @@ import pygame2.sdl.render as render
 import pygame2.sdl.video as video
 import pygame2.sdl.surface as surface
 import pygame2.sdl.rect as rect
-from pygame2.sdl.error import SDLError
 import pygame2.sdl.pixels as pixels
 
 
@@ -52,7 +51,7 @@ class SDLRenderTest(unittest.TestCase):
         self.assertRaises(TypeError, render.get_render_driver_info, None)
         self.assertRaises(TypeError, render.get_render_driver_info, "Test")
         self.assertRaises(TypeError, render.get_render_driver_info, self)
-        self.assertRaises(SDLError, render.get_render_driver_info, -1)
+        self.assertRaises(sdl.SDLError, render.get_render_driver_info, -1)
 
     def test_create_window_and_renderer(self):
         window, renderer = render.create_window_and_renderer \
@@ -133,7 +132,7 @@ class SDLRenderTest(unittest.TestCase):
             self.assertIsInstance(info, render.SDL_RendererInfo)
             render.destroy_renderer(renderer)
 
-            self.assertRaises(SDLError, render.get_renderer_info, renderer)
+            self.assertRaises(sdl.SDLError, render.get_renderer_info, renderer)
 
         video.destroy_window(window)
         self.assertRaises(TypeError, render.get_renderer_info, None)
@@ -164,11 +163,11 @@ class SDLRenderTest(unittest.TestCase):
                         self.assertIsInstance(tex, render.SDL_Texture)
                         render.destroy_texture(tex)
 
-        self.assertRaises(SDLError, render.create_texture, renderer,
+        self.assertRaises(sdl.SDLError, render.create_texture, renderer,
                           pixels.SDL_PIXELFORMAT_RGB555, 1, -10, 10)
-        self.assertRaises(SDLError, render.create_texture, renderer,
+        self.assertRaises(sdl.SDLError, render.create_texture, renderer,
                           pixels.SDL_PIXELFORMAT_RGB555, 1, 10, -10)
-        self.assertRaises(SDLError, render.create_texture, renderer,
+        self.assertRaises(sdl.SDLError, render.create_texture, renderer,
                           pixels.SDL_PIXELFORMAT_RGB555, 1, -10, -10)
         self.assertRaises(ValueError, render.create_texture, renderer,
                           pixels.SDL_PIXELFORMAT_RGB555, -5, 10, 10)
@@ -186,7 +185,7 @@ class SDLRenderTest(unittest.TestCase):
                           pixels.SDL_PIXELFORMAT_RGB555, "Test", 10, 10)
 
         render.destroy_renderer(renderer)
-        self.assertRaises(SDLError, render.create_texture, renderer,
+        self.assertRaises(sdl.SDLError, render.create_texture, renderer,
                           pixels.SDL_PIXELFORMAT_RGB555, 1, 10, 10)
         video.destroy_window(window)
 
@@ -261,9 +260,9 @@ class SDLRenderTest(unittest.TestCase):
             self.assertEqual((tr, tg, tb), (r, g, b))
 
         render.destroy_texture(tex)
-        self.assertRaises(SDLError, render.set_texture_color_mod, tex,
+        self.assertRaises(sdl.SDLError, render.set_texture_color_mod, tex,
                           10, 20, 30)
-        self.assertRaises(SDLError, render.get_texture_color_mod, tex)
+        self.assertRaises(sdl.SDLError, render.get_texture_color_mod, tex)
 
         render.destroy_renderer(renderer)
         video.destroy_window(window)
@@ -286,9 +285,9 @@ class SDLRenderTest(unittest.TestCase):
             self.assertEqual(talpha, alpha)
 
         render.destroy_texture(tex)
-        self.assertRaises(SDLError, render.set_texture_color_mod, tex,
+        self.assertRaises(sdl.SDLError, render.set_texture_color_mod, tex,
                           10, 20, 30)
-        self.assertRaises(SDLError, render.get_texture_color_mod, tex)
+        self.assertRaises(sdl.SDLError, render.get_texture_color_mod, tex)
 
         render.destroy_renderer(renderer)
         video.destroy_window(window)
@@ -316,9 +315,9 @@ class SDLRenderTest(unittest.TestCase):
             self.assertEqual(tmode, mode)
 
         render.destroy_texture(tex)
-        self.assertRaises(SDLError, render.set_texture_blend_mode, tex,
+        self.assertRaises(sdl.SDLError, render.set_texture_blend_mode, tex,
                           modes[2])
-        self.assertRaises(SDLError, render.get_texture_blend_mode, tex)
+        self.assertRaises(sdl.SDLError, render.get_texture_blend_mode, tex)
 
         render.destroy_renderer(renderer)
         video.destroy_window(window)
@@ -452,9 +451,10 @@ seems to fail on creating the second renderer of the window, if any""")
                 dr, dg, db, da = render.get_render_draw_color(renderer)
                 self.assertEqual((dr, dg, db, da), (r, g, b, a))
             render.destroy_renderer(renderer)
-            self.assertRaises(SDLError, render.set_render_draw_color, renderer,
-                              10, 20, 30, 40)
-            self.assertRaises(SDLError, render.get_render_draw_color, renderer)
+            self.assertRaises(sdl.SDLError, render.set_render_draw_color,
+                              renderer, 10, 20, 30, 40)
+            self.assertRaises(sdl.SDLError, render.get_render_draw_color,
+                              renderer)
 
         video.destroy_window(window)
 
@@ -478,9 +478,9 @@ seems to fail on creating the second renderer of the window, if any""")
                 bmode = render.get_render_draw_blend_mode(renderer)
                 self.assertEqual(bmode, mode)
             render.destroy_renderer(renderer)
-            self.assertRaises(SDLError, render.set_render_draw_blend_mode,
+            self.assertRaises(sdl.SDLError, render.set_render_draw_blend_mode,
                               renderer, video.SDL_BLENDMODE_ADD)
-            self.assertRaises(SDLError, render.get_render_draw_blend_mode,
+            self.assertRaises(sdl.SDLError, render.get_render_draw_blend_mode,
                               renderer)
         video.destroy_window(window)
 
@@ -492,7 +492,7 @@ seems to fail on creating the second renderer of the window, if any""")
                                           render.SDL_RENDERER_ACCELERATED)
         render.render_clear(renderer)
         render.destroy_renderer(renderer)
-        self.assertRaises(SDLError, render.render_clear, renderer)
+        self.assertRaises(sdl.SDLError, render.render_clear, renderer)
         self.assertRaises(TypeError, render.render_clear, None)
         self.assertRaises(TypeError, render.render_clear, "Test")
         self.assertRaises(TypeError, render.render_clear, 123456)

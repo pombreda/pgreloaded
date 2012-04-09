@@ -3,7 +3,6 @@ import array
 import unittest
 import pygame2.sdl as sdl
 import pygame2.sdl.surface as surface
-from pygame2.sdl.error import SDLError
 import pygame2.sdl.rect as rect
 import pygame2.sdl.rwops as rwops
 import pygame2.sdl.pixels as pixels
@@ -123,15 +122,15 @@ class SDLSurfaceTest(unittest.TestCase):
                     self.assertIsInstance(sf, surface.SDL_Surface)
                     surface.free_surface(sf)
 
-        self.assertRaises(SDLError, surface.create_rgb_surface, 1, 1, 66)
-        self.assertRaises(SDLError, surface.create_rgb_surface, 1, 1, 0)
-        self.assertRaises(SDLError, surface.create_rgb_surface, 1, 1, 8,
+        self.assertRaises(sdl.SDLError, surface.create_rgb_surface, 1, 1, 66)
+        self.assertRaises(sdl.SDLError, surface.create_rgb_surface, 1, 1, 0)
+        self.assertRaises(sdl.SDLError, surface.create_rgb_surface, 1, 1, 8,
                           0xf0, 0x0f, 0x01, 0x02)
-        self.assertRaises(SDLError, surface.create_rgb_surface, 1, 1, 16,
+        self.assertRaises(sdl.SDLError, surface.create_rgb_surface, 1, 1, 16,
                           0xf0, 0x0f, 0x01, 0x02)
-        self.assertRaises(SDLError, surface.create_rgb_surface, 1, 1, 24,
+        self.assertRaises(sdl.SDLError, surface.create_rgb_surface, 1, 1, 24,
                           0xf0, 0x0f, 0x01, 0x02)
-        self.assertRaises(SDLError, surface.create_rgb_surface, 1, 1, 32,
+        self.assertRaises(sdl.SDLError, surface.create_rgb_surface, 1, 1, 32,
                           0xf0, 0x0f, 0x01, 0x02)
 
     def test_create_rgb_surface_from(self):

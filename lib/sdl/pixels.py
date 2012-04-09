@@ -4,8 +4,7 @@ Wrapper methods around the SDL2 pixel routines
 import sys
 import ctypes
 from pygame2.compat import *
-from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE
-from pygame2.sdl.error import SDLError
+from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE, SDLError
 
 __all__ = ["SDL_FOURCC", "SDL_DEFINE_PIXELFOURCC", "SDL_DEFINE_PIXELFORMAT",
            "SDL_PIXELTYPE", "SDL_PIXELORDER", "SDL_PIXELLAYOUT",
