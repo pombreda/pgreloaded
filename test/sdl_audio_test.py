@@ -62,11 +62,11 @@ class SDLAudioTest(unittest.TestCase):
     def test_SDL_AudioCVT(self):
         pass
 
-    def ttest_get_num_audio_drivers(self):
+    def test_get_num_audio_drivers(self):
         count = audio.get_num_audio_drivers()
         self.assertGreaterEqual(count, 1)
 
-    def ttest_get_audio_driver(self):
+    def test_get_audio_driver(self):
         founddummy = False
         drivercount = audio.get_num_audio_drivers()
         for index in range(drivercount):
@@ -80,7 +80,7 @@ class SDLAudioTest(unittest.TestCase):
         self.assertRaises(TypeError, audio.get_audio_driver, "Test")
         self.assertRaises(TypeError, audio.get_audio_driver, None)
 
-    def test_audio_init_quit(self):
+    def test_get_current_audio_driver(self):
         success = 0
         for index in range(audio.get_num_audio_drivers()):
             drivername = audio.get_audio_driver(index)
@@ -101,31 +101,26 @@ class SDLAudioTest(unittest.TestCase):
         self.assertGreaterEqual(success, 1,
                                 "Could not initialize any sound driver")
 
-    def ttest_get_current_audio_driver(self):
-        success = 0
-        for index in range(audio.get_num_audio_drivers()):
-            drivername = audio.get_audio_driver(index)
-            try:
-                audio.audio_init(drivername)
-                current = audio.get_current_audio_driver()
-                self.assertEqual(current, drivername)
-                success += 1
-            except sdl.SDLError:
-                continue
-            #audio.audio_quit()
-        self.assertGreaterEqual(success, 1,
-                                "Could not initialize any sound driver")
-
-    def ttest_open_audio(self):
-        audio.audio_init("dummy")
+    def test_open_audio(self):
+        os.environ["SDL_AUDIODRIVER"] = "dummy"
+        sdl.init_subsystem(sdl.SDL_INIT_AUDIO)
         reqspec = audio.SDL_AudioSpec(44100, audio.AUDIO_U16SYS, 2, 8192,
                                       self.audiocallback, None)
-        audiospec = audio.open_audio(reqspec)
-        #audio.audio_quit()
+        spec = audio.open_audio(reqspec)
+        self.assertIsInstance(spec, audio.SDL_AudioSpec)
+        self.assertEqual(spec.format, reqspec.format)
+        self.assertEqual(spec.freq, reqspec.freq)
+        self.assertEqual(spec.channels, reqspec.channels)
+        sdl.quit_subsystem(sdl.SDL_INIT_AUDIO)
                 
-    @unittest.skip("not implemented")
     def test_get_num_audio_devices(self):
-        pass
+        os.environ["SDL_AUDIODRIVER"] = "dummy"
+        sdl.init_subsystem(sdl.SDL_INIT_AUDIO)
+        outnum = audio.get_num_audio_devices()
+        self.assertGreaterEqual(outnum, 1)
+        innum = audio.get_num_audio_devices(True)
+        self.assertGreaterEqual(innum, 0)
+        sdl.quit_subsystem(sdl.SDL_INIT_AUDIO)
 
     @unittest.skip("not implemented")
     def test_get_audio_device_name(self):

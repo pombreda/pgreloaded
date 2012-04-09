@@ -1,5 +1,12 @@
-- Complete SDL2 wrapper code basis
+- SDL_assert.h API - we do not really need that one
+- SDL_gesture.h API
+- SDL_haptic.h API
+- SDL_mutex.h API - better be handled by multiprocessing and friends
+- SDL_thread.h API - better be handled by multiprocessing and friends
+- SDL_touch.h API
+- SDL_syswm.h API
+
 - PyPy 1.8 can't do
        val = "This is a value"
        pyobj = ctypes.py_object(val)
-  at the moment, which breaks the unit tests pygame2.sdl.log
+  at the moment, which breaks the unit tests for pygame2.sdl.log and others

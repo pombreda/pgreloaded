@@ -174,6 +174,10 @@ def get_audio_driver(index):
 @sdltype("SDL_AudioInit", [ctypes.c_char_p], ctypes.c_int)
 def audio_init(drivername):
     """Initializes the SDL audio subsystem  with the passed driver.
+
+    NOTE: Do not use init() - those might lead to SIGSEGV crashes - use
+    the SDL_AUDIODRIVER environment variable before calling
+    pygame2.sdl.init_subsystem() instead.
     """
     drivername = byteify(drivername, "utf-8")
     retval = dll.SDL_AudioInit(drivername)
@@ -184,6 +188,9 @@ def audio_init(drivername):
 @sdltype("SDL_AudioQuit", None, None)
 def audio_quit():
     """Quits the SDL audio subsystem.
+
+    NOTE: Do not use quit() - this might lead to inconsistent internal
+    SDL2 states - use pygame2.sdl.quit_subsystem() instead.
     """
     dll.SDL_AudioQuit()
 
@@ -218,12 +225,19 @@ def open_audio(desired):
 
 
 @sdltype("SDL_GetNumAudioDevices", [ctypes.c_int], ctypes.c_int)
-def get_num_audio_devices(iscapture):
+def get_num_audio_devices(iscapture=False):
+    """Gets the number of available audio devices.
+
+    If iscapture is True, only input (capture) devices are queried,
+    otherwise only output devices are queried. In some cases, this might
+    return -1, indicating that the number of available devices could not
+    be determined (e.g. for network sound servers). You should check for
+    an error by calling pygame2.sdl.get_error() in those cases.
     """
-    """
-    retval = dll.SDL_GetNumAudioDevices(iscapture)
-    if retval == -1:
-        raise SDLError()
+    if bool(iscapture):
+        return dll.SDL_GetNumAudioDevices(1)
+    else:
+        return dll.SDL_GetNumAudioDevices(0)
 
 
 @sdltype("SDL_GetAudioDeviceName", [ctypes.c_int, ctypes.c_int],
@@ -247,6 +261,10 @@ def open_audio_device(device, iscapture, desired, allowed_changes):
     if not isinstance(desired, SDL_AudioSpec):
         raise TypeError("desired must be a SDL_AudioSpec")
     device = byteify(device, "utf-8")
+    if bool(iscapture):
+        iscapture = 1
+    else:
+        iscapture = 0
     obtained = SDL_AudioSpec(0, 0, 0, 0, None, None)
     retval = dll.SDL_OpenAudioDevice(device, iscapture, ctypes.byref(desired),
                                      ctypes.byref(obtained), allowed_changes)
