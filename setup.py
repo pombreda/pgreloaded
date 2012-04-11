@@ -15,6 +15,7 @@ if __name__ == "__main__":
 
 
     packages = [ "pygame2",
+                 "pygame2.openal",
                  "pygame2.dll",
                  "pygame2.sdl",
                  "pygame2.test",

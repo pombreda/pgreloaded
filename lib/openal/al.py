@@ -1,5 +1,5 @@
 """
-OpenAL AL implementation
+Pygame2 OpenAL wrapper.
 """
 import ctypes
 import pygame2.array as array
@@ -151,25 +151,25 @@ class OpenALError(Exception):
 
 @openaltype("alEnable", [ctypes.c_int], None)
 def enable(capability):
-    """TODO"""
+    """Enables a feature of the OpenAL driver."""
     dll.alEnable(capability)
 
 
 @openaltype("alDisable", [ctypes.c_int], None)
 def disable(capability):
-    """TODO"""
+    """Disables a feature of the OpenAL driver."""
     dll.alDisable(capability)
 
 
 @openaltype("alIsEnabled", [ctypes.c_int], ctypes.c_byte)
 def is_enabled(capability):
-    """TODO"""
+    """Checks, if a feature of the OpenAL driver is currently enabled."""
     return dll.alIsEnabled(capability) == AL_TRUE
 
 
 @openaltype("alGetString", [ctypes.c_int], ctypes.c_char_p)
 def get_string(param):
-    """TODO"""
+    """Retrieves an OpenAL string property."""
     retval = dll.alGetString(param)
     if retval is None or not bool(retval):
         raise OpenALError()
@@ -178,7 +178,7 @@ def get_string(param):
 @openaltype("alGetBooleanv", [ctypes.c_int, ctypes.POINTER(ctypes.c_byte)],
             None)
 def get_boolean_v(param):
-    """TODO"""
+    """Retrieves an OpenAL boolean state."""
     val = ctypes.c_byte(0)
     dll.alGetBooleanv(param, ctypes.byref(val))
     return val.value
@@ -187,7 +187,7 @@ def get_boolean_v(param):
 @openaltype("alGetIntegerv", [ctypes.c_int, ctypes.POINTER(ctypes.c_int)],
             None)
 def get_integer_v(param):
-    """TODO"""
+    """Retrieves an OpenAL integer state."""
     val = ctypes.c_int(0)
     dll.alGetIntegerv(param, ctypes.byref(val))
     return val.value
@@ -196,7 +196,7 @@ def get_integer_v(param):
 @openaltype("alGetFloatv", [ctypes.c_int, ctypes.POINTER(ctypes.c_float)],
             None)
 def get_float_v(param):
-    """TODO"""
+    """Retrieves an OpenAL float state."""
     val = ctypes.c_float(0)
     dll.alGetFloatv(param, ctypes.byref(val))
     return val.value
@@ -205,7 +205,7 @@ def get_float_v(param):
 @openaltype("alGetDoublev", [ctypes.c_int, ctypes.POINTER(ctypes.c_double)],
             None)
 def get_double_v(param):
-    """TODO"""
+    """Retrieves an OpenAL double state."""
     val = ctypes.c_double(0)
     dll.alGetDoublev(param, ctypes.byref(val))
     return val.value
@@ -213,66 +213,66 @@ def get_double_v(param):
 
 @openaltype("alGetBoolean", [ctypes.c_int], ctypes.c_byte)
 def get_boolean(param):
-    """TODO"""
+    """Returns an OpenAL boolean state."""
     return dll.alGetBoolean(param)
 
 
 @openaltype("alGetInteger", [ctypes.c_int], ctypes.c_int)
 def get_integer(param):
-    """TODO"""
+    """Returns an OpenAL integer state."""
     return dll.alGetInteger(param)
 
 
 @openaltype("alGetFloat", [ctypes.c_int], ctypes.c_float)
 def get_float(param):
-    """TODO"""
+    """Returns an OpenAL float state."""
     return dll.alGetFloat(param)
 
 
 @openaltype("alGetDouble", [ctypes.c_int], ctypes.c_double)
 def get_double(param):
-    """TODO"""
+    """Returns an OpenAL double state."""
     return dll.alGetDouble(param)
 
 
 @openaltype("alIsExtensionPresent", [ctypes.c_char_p], ctypes.c_byte)
 def is_extension_present(extname):
-    """TODO"""
+    """Tests if the specified extension is available for the OpenAL driver."""
     extname = byteify(extname, "utf-8")
     return dll.alIsExtensionPresent(extname) == AL_TRUE
 
 
 @openaltype("alGetProcAddress", [ctypes.c_char_p], ctypes.c_void_p)
 def get_proc_address(fname):
-    """TODO"""
+    """Returns the address of an OpenAL extension function."""
     fname = byteify(fname, "utf-8")
     return dll.alGetProcAddress(fname)
 
 
 @openaltype("alGetEnumValue", [ctypes.c_char_p], ctypes.c_int)
 def get_enum_value(ename):
-    """TODO"""
+    """Returns the enumeration value of an OpenAL enum."""
     ename = byteify(ename, "utf-8")
     return dll.alGetEnumValue(ename)
 
 
 @openaltype("alListenerf", [ctypes.c_int, ctypes.c_float], None)
 def listener_f(param, value):
-    """TODO"""
+    """Sets a floating point property for the listener."""
     dll.alListenerf(param, value)
 
 
 @openaltype("alListener3f", [ctypes.c_int, ctypes.c_float, ctypes.c_float,
                              ctypes.c_float], None)
 def listener_3f(param, value1, value2, value3):
-    """TODO"""
+    """Sets a floating point property for the listener."""
     dll.alListener3f(param, value1, value2, value3)
 
 
 @openaltype("alListenerfv", [ctypes.c_int, ctypes.POINTER(ctypes.c_float)],
             None)
 def listener_fv(param, values):
-    """TODO"""
+    """Sets a floating point-vector property for the listener """
     values = array.to_ctypes(values, ctypes.c_float)
     ptr = ctypes.cast(values, ctypes.POINTER(ctypes.c_float))
     dll.alListenerfv(param, ptr)
@@ -280,20 +280,20 @@ def listener_fv(param, values):
 
 @openaltype("alListeneri", [ctypes.c_int, ctypes.c_int], None)
 def listener_i(param, value):
-    """TODO"""
+    """Sets an integer property for the listener."""
     dll.alListeneri(param, value)
 
 
 @openaltype("alListener3i", [ctypes.c_int, ctypes.c_int, ctypes.c_int,
                              ctypes.c_int], None)
 def listener_3i(param, value1, value2, value3):
-    """TODO"""
+    """Sets an integer property for the listener."""
     dll.alListener3i(param, value1, value2, value3)
 
 
 @openaltype("alListeneriv", [ctypes.c_int, ctypes.POINTER(ctypes.c_int)], None)
 def listener_iv(param, values):
-    """TODO"""
+    """Sets an integer-vector property for the listener."""
     values, size = array.to_ctypes(values, ctypes.c_int)
     ptr = ctypes.cast(values, ctypes.POINTER(ctypes.c_int))
     dll.alListeneriv(param, ptr)
@@ -302,7 +302,7 @@ def listener_iv(param, values):
 @openaltype("alGetListenerf", [ctypes.c_int, ctypes.POINTER(ctypes.c_float)],
             None)
 def get_listener_f(param):
-    """TODO"""
+    """Gets a floating point property for the listener."""
     val = ctypes.c_float(0)
     dll.alGetListenerf(param, ctypes.byref(val))
     return val.value
@@ -312,7 +312,9 @@ def get_listener_f(param):
                                 ctypes.POINTER(ctypes.c_float),
                                 ctypes.POINTER(ctypes.c_float)], None)
 def get_listener_3f(param):
-    """TODO"""
+    """Gets a floating point property for the listener and returns it
+    as tuple.
+    """
     val1 = ctypes.c_float(0)
     val2 = ctypes.c_float(0)
     val3 = ctypes.c_float(0)
@@ -324,7 +326,9 @@ def get_listener_3f(param):
 @openaltype("alGetListenerfv", [ctypes.c_int, ctypes.POINTER(ctypes.c_float)],
             None)
 def get_listener_fv(param, size):
-    """TODO"""
+    """Gets a floating point-vector property for the listener and
+    returns it as tuple.
+    """
     val = (ctypes.c_float * size)()
     dll.alGetListenerfv(param, ctypes.byref(val))
     return val
@@ -333,7 +337,7 @@ def get_listener_fv(param, size):
 @openaltype("alGetListeneri", [ctypes.c_int, ctypes.POINTER(ctypes.c_int)],
             None)
 def get_listener_i(param):
-    """TODO"""
+    """Gets an integer property for the listener."""
     val = ctypes.c_int(0)
     dll.alGetListeneri(param, ctypes.byref(val))
     return val.value
@@ -343,7 +347,9 @@ def get_listener_i(param):
                                 ctypes.POINTER(ctypes.c_int),
                                 ctypes.POINTER(ctypes.c_int)], None)
 def get_listener_3i(param):
-    """TODO"""
+    """Gets an integer property for the listener and returns it as
+    tuple.
+    """
     val1 = ctypes.c_int(0)
     val2 = ctypes.c_int(0)
     val3 = ctypes.c_int(0)
@@ -355,7 +361,9 @@ def get_listener_3i(param):
 @openaltype("alGetListeneriv", [ctypes.c_int, ctypes.POINTER(ctypes.c_int)],
             None)
 def get_listener_iv(param, size):
-    """TODO"""
+    """Gets an integer-vector property for the listener and returns it
+    as tuple.
+    """
     val = (ctypes.c_int * size)()
     dll.alGetListeneriv(param, ctypes.byref(val))
     return val
@@ -363,17 +371,18 @@ def get_listener_iv(param, size):
 
 @openaltype("alGenSources", [ctypes.c_int, ctypes.POINTER(ctypes.c_uint)],
             None)
-def gen_sources(sources):
-    """TODO"""
-    sources, size = array.to_ctypes(sources, ctypes.c_uint)
+def gen_sources(size):
+    """Generates one or more sources and returns their ids as tuple."""
+    sources = (ctypes.c_uint * size)()
     ptr = ctypes.cast(sources, ctypes.POINTER(ctypes.c_uint))
     dll.alGenSources(size, ptr)
+    return sources
 
 
 @openaltype("alDeleteSources", [ctypes.c_int, ctypes.POINTER(ctypes.c_uint)],
             None)
 def delete_sources(sources):
-    """TODO"""
+    """Deletes one or more sources."""
     sources, size = array.to_ctypes(sources, ctypes.c_uint)
     ptr = ctypes.cast(sources, ctypes.POINTER(ctypes.c_uint))
     dll.alDeleteSources(size, ptr)
@@ -381,27 +390,27 @@ def delete_sources(sources):
 
 @openaltype("alIsSource", [ctypes.c_uint], ctypes.c_byte)
 def is_source(sid):
-    """TODO"""
+    """Tests if the passed sid is a valid source identifier."""
     return dll.alIsSource(sid) == AL_TRUE
 
 
 @openaltype("alSourcef", [ctypes.c_uint, ctypes.c_int, ctypes.c_float], None)
 def source_f(sid, param, value):
-    """TODO"""
+    """Sets a floating point property of a source."""
     dll.alSourcef(sid, param, value)
 
 
 @openaltype("alSource3f", [ctypes.c_uint, ctypes.c_int, ctypes.c_float,
                            ctypes.c_float, ctypes.c_float], None)
 def source_3f(sid, param, value1, value2, value3):
-    """TODO"""
+    """Sets a floating point property of a source."""
     dll.alSource3f(sid, param, value1, value2, value3)
 
 
 @openaltype("alSourcefv", [ctypes.c_uint, ctypes.c_int,
                            ctypes.POINTER(ctypes.c_float)], None)
 def source_fv(sid, param, values):
-    """TODO"""
+    """Sets a floating point-vector property of a source."""
     values = array.to_ctypes(values, ctypes.c_float)
     ptr = ctypes.cast(values, ctypes.POINTER(ctypes.c_float))
     dll.alSourcefv(sid, param, ptr)
@@ -409,21 +418,21 @@ def source_fv(sid, param, values):
 
 @openaltype("alSourcei", [ctypes.c_uint, ctypes.c_int, ctypes.c_int], None)
 def source_i(sid, param, value):
-    """TODO"""
+    """Sets an integer property of a source."""
     dll.alSourcei(sid, param, value)
 
 
 @openaltype("alSource3i", [ctypes.c_uint, ctypes.c_int, ctypes.c_int,
                            ctypes.c_int, ctypes.c_int], None)
 def source_3i(sid, param, value1, value2, value3):
-    """TODO"""
+    """Sets an integer property of a source."""
     dll.alSource3i(sid, param, value1, value2, value3)
 
 
 @openaltype("alSourceiv", [ctypes.c_uint, ctypes.c_int,
                            ctypes.POINTER(ctypes.c_int)], None)
 def source_iv(sid, param, values):
-    """TODO"""
+    """Sets an integer-vector property of a source."""
     values = array.to_ctypes(values, ctypes.c_int)
     ptr = ctypes.cast(values, ctypes.POINTER(ctypes.c_int))
     dll.alSourceiv(sid, param, ptr)
@@ -432,7 +441,7 @@ def source_iv(sid, param, values):
 @openaltype("alGetSourcef", [ctypes.c_uint, ctypes.POINTER(ctypes.c_float)],
             None)
 def get_source_f(sid, param):
-    """TODO"""
+    """Gets a floating point property of a source."""
     val = ctypes.c_float(0)
     dll.alGetSourcef(sid, param, ctypes.byref(val))
     return val.value
@@ -443,7 +452,8 @@ def get_source_f(sid, param):
                               ctypes.POINTER(ctypes.c_float),
                               ctypes.POINTER(ctypes.c_float)], None)
 def get_source_3f(sid, param):
-    """TODO"""
+    """Gets a floating point property of a source and returns it as
+    tuple.  """
     val1 = ctypes.c_float(0)
     val2 = ctypes.c_float(0)
     val3 = ctypes.c_float(0)
@@ -455,7 +465,7 @@ def get_source_3f(sid, param):
 @openaltype("alGetSourcefv", [ctypes.c_uint, ctypes.c_int,
                               ctypes.POINTER(ctypes.c_float)], None)
 def get_source_fv(sid, param, size):
-    """TODO"""
+    """Gets a floating point-vector property of a source."""
     val = (ctypes.c_float * size)()
     dll.alGetSourcefv(sid, param, ctypes.byref(val))
     return val
@@ -464,7 +474,7 @@ def get_source_fv(sid, param, size):
 @openaltype("alGetSourcei", [ctypes.c_uint, ctypes.POINTER(ctypes.c_int)],
             None)
 def get_source_i(sid, param):
-    """TODO"""
+    """Gets an integer property of a source."""
     val = ctypes.c_int(0)
     dll.alGetSourcei(sid, param, ctypes.byref(val))
     return val.value
@@ -475,7 +485,7 @@ def get_source_i(sid, param):
                               ctypes.POINTER(ctypes.c_int),
                               ctypes.POINTER(ctypes.c_int)], None)
 def get_source_3i(sid, param):
-    """TODO"""
+    """Gets an integer property of a source."""
     val1 = ctypes.c_int(0)
     val2 = ctypes.c_int(0)
     val3 = ctypes.c_int(0)
@@ -487,7 +497,7 @@ def get_source_3i(sid, param):
 @openaltype("alGetSourceiv", [ctypes.c_uint, ctypes.c_int,
                               ctypes.POINTER(ctypes.c_int)], None)
 def get_source_iv(sid, param, size):
-    """TODO"""
+    """Gets an integer-vector property of a source."""
     val = (ctypes.c_int * size)()
     dll.alGetSourceiv(sid, param, ctypes.byref(val))
     return val
@@ -496,7 +506,7 @@ def get_source_iv(sid, param, size):
 @openaltype("alSourcePlayv", [ctypes.c_int, ctypes.POINTER(ctypes.c_uint)],
             None)
 def source_play_v(sids):
-    """TODO"""
+    """Plays a set of sources."""
     sids, size = array.to_ctypes(sids)
     ptr = ctypes.cast(sids, ctypes.POINTER(ctypes.c_uint))
     dll.alSourcePlayv(size, ptr)
@@ -505,7 +515,7 @@ def source_play_v(sids):
 @openaltype("alSourceStopv", [ctypes.c_int, ctypes.POINTER(ctypes.c_uint)],
             None)
 def source_stop_v(sids):
-    """TODO"""
+    """Stops a set of sources.O"""
     sids, size = array.to_ctypes(sids)
     ptr = ctypes.cast(sids, ctypes.POINTER(ctypes.c_uint))
     dll.alSourceStopv(size, ptr)
@@ -514,7 +524,7 @@ def source_stop_v(sids):
 @openaltype("alSourceRewindv", [ctypes.c_int, ctypes.POINTER(ctypes.c_uint)],
             None)
 def source_rewind_v(sids):
-    """TODO"""
+    """Rewinds a set of sources."""
     sids, size = array.to_ctypes(sids)
     ptr = ctypes.cast(sids, ctypes.POINTER(ctypes.c_uint))
     dll.alSourceRewindv(size, ptr)
@@ -523,7 +533,7 @@ def source_rewind_v(sids):
 @openaltype("alSourcePausev", [ctypes.c_int, ctypes.POINTER(ctypes.c_uint)],
             None)
 def source_pause_v(sids):
-    """TODO"""
+    """Pauses a set of sources."""
     sids, size = array.to_ctypes(sids)
     ptr = ctypes.cast(sids, ctypes.POINTER(ctypes.c_uint))
     dll.alSourcePausev(size, ptr)
@@ -531,32 +541,37 @@ def source_pause_v(sids):
 
 @openaltype("alSourcePlay", [ctypes.c_uint], None)
 def source_play(sid):
-    """TODO"""
+    """Plays a source."""
     dll.alSourcePlay(sid)
 
 
 @openaltype("alSourceStop", [ctypes.c_uint], None)
 def source_stop(sid):
-    """TODO"""
+    """Stops a source."""
     dll.alSourceStop(sid)
 
 
 @openaltype("alSourceRewind", [ctypes.c_uint], None)
 def source_rewind(sid):
-    """TODO"""
+    """Rewinds a source."""
     dll.alSourceRewind(sid)
 
 
 @openaltype("alSourcePause", [ctypes.c_uint], None)
 def source_pause(sid):
-    """TODO"""
+    """Pauses a source."""
     dll.alSourcePause(sid)
 
 
 @openaltype("alSourceQueueBuffers", [ctypes.c_uint, ctypes.c_int,
                                      ctypes.POINTER(ctypes.c_uint)], None)
 def source_queue_buffers(sid, bids):
-    """TODO"""
+    """Queues a set of buffers on a source.
+
+    All buffers attached to a source will be played in sequence and the
+    number of buffers played can be retrieved using a source_i() call to
+    retrieve AL_BUFFERS_PRCESSED.
+    """
     bufs, size = array.to_ctypes(bids, ctypes.c_uint)
     dll.alSourceQueueBuffers(sid, size, bufs)
 
@@ -564,7 +579,7 @@ def source_queue_buffers(sid, bids):
 @openaltype("alSourceUnqueueBuffers", [ctypes.c_uint, ctypes.c_int,
                                        ctypes.POINTER(ctypes.c_uint)], None)
 def source_unqueue_buffers(sid, bids):
-    """TODO"""
+    """Unqueues a set off buffers attached to a source."""
     bufs, size = array.to_ctypes(bids, ctypes.c_uint)
     dll.alSourceUnqueueBuffers(sid, size, bufs)
 
@@ -572,7 +587,7 @@ def source_unqueue_buffers(sid, bids):
 @openaltype("alGenBuffers", [ctypes.c_int, ctypes.POINTER(ctypes.c_uint)],
             None)
 def gen_buffers(buffers):
-    """TODO"""
+    """Generates one or more buffers, which contain audio data."""
     buffers, size = array.to_ctypes(buffers, ctypes.c_uint)
     ptr = ctypes.cast(buffers, ctypes.POINTER(ctypes.c_uint))
     dll.alGenBuffers(size, ptr)
@@ -581,7 +596,7 @@ def gen_buffers(buffers):
 @openaltype("alDeleteBuffers", [ctypes.c_int, ctypes.POINTER(ctypes.c_uint)],
             None)
 def delete_buffers(buffers):
-    """TODO"""
+    """Deletes one or more buffers, freeing the resources used by them."""
     buffers, size = array.to_ctypes(buffers, ctypes.c_uint)
     ptr = ctypes.cast(buffers, ctypes.POINTER(ctypes.c_uint))
     dll.alDeleteBuffers(size, ptr)
@@ -589,7 +604,7 @@ def delete_buffers(buffers):
 
 @openaltype("alIsBuffer", [ctypes.c_uint], ctypes.c_byte)
 def is_buffer(bid):
-    """TODO"""
+    """Tests if the passed bid is a valid buffer identifier."""
     return dll.alIsBuffer(bid) == AL_TRUE
 
 
@@ -597,7 +612,10 @@ def is_buffer(bid):
                              ctypes.POINTER(ctypes.c_ubyte), ctypes.c_int,
                              ctypes.c_int], None)
 def buffer_data(bid, bformat, data, freq):
-    """TODO"""
+    """Fille a buffer with audio data.
+
+    The predefined formats expect tha data to be valid PCM data,
+    extension functions might load other data types as well."""
     datap = data
     size = len(data)
     if isinstance(data, array.CTypesView):
@@ -611,21 +629,21 @@ def buffer_data(bid, bformat, data, freq):
 
 @openaltype("alBufferf", [ctypes.c_uint, ctypes.c_int, ctypes.c_float], None)
 def buffer_f(bid, param, value):
-    """TODO"""
+    """Sets a floating point property of the buffer."""
     dll.alBufferf(bid, param, value)
 
 
 @openaltype("alBuffer3f", [ctypes.c_uint, ctypes.c_int, ctypes.c_float,
                            ctypes.c_float, ctypes.c_float], None)
 def buffer_3f(bid, param, value1, value2, value3):
-    """TODO"""
+    """Sets a floating point property of the buffer."""
     dll.alBuffer3f(bid, param, value1, value2, value3)
 
 
 @openaltype("alBufferfv", [ctypes.c_uint, ctypes.c_int,
                            ctypes.POINTER(ctypes.c_float)], None)
 def buffer_fv(bid, param, values):
-    """TODO"""
+    """Sets a floating point-vector property of the buffer."""
     values = array.to_ctypes(values, ctypes.c_float)
     ptr = ctypes.cast(values, ctypes.POINTER(ctypes.c_float))
     dll.alBufferfv(bid, param, ptr)
@@ -633,21 +651,21 @@ def buffer_fv(bid, param, values):
 
 @openaltype("alBufferi", [ctypes.c_uint, ctypes.c_int, ctypes.c_int], None)
 def buffer_i(bid, param, value):
-    """TODO"""
+    """Sets an integer property of the buffer."""
     dll.alBufferi(bid, param, value)
 
 
 @openaltype("alBuffer3i", [ctypes.c_uint, ctypes.c_int, ctypes.c_int,
                            ctypes.c_int, ctypes.c_int], None)
 def buffer_3i(bid, param, value1, value2, value3):
-    """TODO"""
+    """Sets an integer property of the buffer."""
     dll.alBuffer3i(bid, param, value1, value2, value3)
 
 
 @openaltype("alBufferiv", [ctypes.c_uint, ctypes.c_int,
                            ctypes.POINTER(ctypes.c_int)], None)
 def buffer_iv(bid, param, values):
-    """TODO"""
+    """Sets an integer-vector property of the buffer."""
     values = array.to_ctypes(values, ctypes.c_int)
     ptr = ctypes.cast(values, ctypes.POINTER(ctypes.c_int))
     dll.alBufferiv(bid, param, ptr)
@@ -656,7 +674,7 @@ def buffer_iv(bid, param, values):
 @openaltype("alGetBufferf", [ctypes.c_uint, ctypes.POINTER(ctypes.c_float)],
             None)
 def get_buffer_f(bid, param):
-    """TODO"""
+    """Gets a floating point property of the buffer."""
     val = ctypes.c_float(0)
     dll.alGetBufferf(bid, param, ctypes.byref(val))
     return val.value
@@ -667,7 +685,7 @@ def get_buffer_f(bid, param):
                               ctypes.POINTER(ctypes.c_float),
                               ctypes.POINTER(ctypes.c_float)], None)
 def get_buffer_3f(bid, param):
-    """TODO"""
+    """Gets a floating point property of the buffer."""
     val1 = ctypes.c_float(0)
     val2 = ctypes.c_float(0)
     val3 = ctypes.c_float(0)
@@ -679,7 +697,7 @@ def get_buffer_3f(bid, param):
 @openaltype("alGetBufferfv", [ctypes.c_uint, ctypes.c_int,
                               ctypes.POINTER(ctypes.c_float)], None)
 def get_buffer_fv(bid, param, size):
-    """TODO"""
+    """Gets a floating point-vector property of the buffer."""
     val = (ctypes.c_float * size)()
     dll.alGetBufferfv(bid, param, ctypes.byref(val))
     return val
@@ -688,7 +706,7 @@ def get_buffer_fv(bid, param, size):
 @openaltype("alGetBufferi", [ctypes.c_uint, ctypes.POINTER(ctypes.c_int)],
             None)
 def get_buffer_i(bid, param):
-    """TODO"""
+    """Gets an integer property of the buffer."""
     val = ctypes.c_int(0)
     dll.alGetBufferi(bid, param, ctypes.byref(val))
     return val.value
@@ -699,7 +717,7 @@ def get_buffer_i(bid, param):
                               ctypes.POINTER(ctypes.c_int),
                               ctypes.POINTER(ctypes.c_int)], None)
 def get_buffer_3i(sid, param):
-    """TODO"""
+    """Gets an integer property of the buffer."""
     val1 = ctypes.c_int(0)
     val2 = ctypes.c_int(0)
     val3 = ctypes.c_int(0)
@@ -711,7 +729,7 @@ def get_buffer_3i(sid, param):
 @openaltype("alGetBufferiv", [ctypes.c_uint, ctypes.c_int,
                               ctypes.POINTER(ctypes.c_int)], None)
 def get_buffer_iv(sid, param, size):
-    """TODO"""
+    """Gets an integer-vector property of the buffer."""
     val = (ctypes.c_int * size)()
     dll.alGetBufferiv(sid, param, ctypes.byref(val))
     return val
@@ -719,23 +737,27 @@ def get_buffer_iv(sid, param, size):
 
 @openaltype("alDopplerFactor", [ctypes.c_float], None)
 def doppler_factor(value):
-    """TODO"""
+    """Sets the OpenAL doppler factor value."""
     dll.alDopplerFactor(value)
 
 
 @openaltype("alDopplerVelocity", [ctypes.c_float], None)
 def doppler_velocity(value):
-    """TODO"""
+    """Sets the speed of sound to be used in Doppler calculations.
+    
+    NOTE: this is a legacy function from OpenAL 1.0 and should not be
+    used anymore. Use speed_of_source() instead.
+    """
     dll.alDopplerVelocity(value)
 
 
 @openaltype("alSpeedOfSound", [ctypes.c_float], None)
 def speed_of_source(value):
-    """TODO"""
+    """Sets the speed of sound to be used in Doppler calculuations."""
     dll.alSpeedOfSound(value)
 
 
 @openaltype("alDistanceModel", [ctypes.c_int], None)
 def distance_model(value):
-    """TODO"""
+    """Sets the OpenAL distance model."""
     dll.alDistanceModel(value)
