@@ -178,7 +178,7 @@ def run():
     options, args = optparser.parse_args()
     #err, out = support.redirect_output()
     writer = support.StreamOutput(sys.stdout)
-
+    
     if options.verbose:
         writer.writeline(HEAVYDELIM)
         writer.writeline("-- Starting tests --")
@@ -240,6 +240,7 @@ def run():
     writer.writeline(HEAVYDELIM)
     writer.writeline("-- Statistics --")
     writer.writeline(HEAVYDELIM)
+    writer.writeline("Python:         %s" % sys.executable)
     writer.writeline("Options:")
     for key in optkeys:
         writer.writeline("                '%s' = '%s'" %

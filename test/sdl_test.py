@@ -6,33 +6,35 @@ import pygame2.sdl as sdl
 class SDLTest(unittest.TestCase):
     __tags__ = ["sdl"]
 
+    def setUp(self):
+        sdl.init(0)
+    
+    def tearDown(self):
+        sdl.quit()
+    
     def test_init_timer(self):
         sdl.init(sdl.SDL_INIT_TIMER)
         ret = sdl.was_init(sdl.SDL_INIT_TIMER)
         self.assertEqual(ret, sdl.SDL_INIT_TIMER)
         sdl.quit_subsystem(sdl.SDL_INIT_TIMER)
-        sdl.quit()
 
     def test_init_audio(self):
         sdl.init(sdl.SDL_INIT_AUDIO)
         ret = sdl.was_init(sdl.SDL_INIT_AUDIO)
         self.assertEqual(ret, sdl.SDL_INIT_AUDIO)
         sdl.quit_subsystem(sdl.SDL_INIT_AUDIO)
-        sdl.quit()
 
     def test_init_video(self):
         sdl.init(sdl.SDL_INIT_VIDEO)
         ret = sdl.was_init(sdl.SDL_INIT_VIDEO)
         self.assertEqual(ret, sdl.SDL_INIT_VIDEO)
         sdl.quit_subsystem(sdl.SDL_INIT_VIDEO)
-        sdl.quit()
 
     def test_init_joystick(self):
         sdl.init(sdl.SDL_INIT_JOYSTICK)
         ret = sdl.was_init(sdl.SDL_INIT_JOYSTICK)
         self.assertEqual(ret, sdl.SDL_INIT_JOYSTICK)
         sdl.quit_subsystem(sdl.SDL_INIT_JOYSTICK)
-        sdl.quit()
 
     def test_init_haptic(self):
         if sys.platform.startswith("freebsd"):
@@ -42,7 +44,6 @@ class SDLTest(unittest.TestCase):
         ret = sdl.was_init(sdl.SDL_INIT_HAPTIC)
         self.assertEqual(ret, sdl.SDL_INIT_HAPTIC)
         sdl.quit_subsystem(sdl.SDL_INIT_HAPTIC)
-        sdl.quit()
 
     def test_get_error(self):
         sdl.clear_error()

@@ -7,7 +7,7 @@ import pygame2.sdl.rect as rect
 import pygame2.sdl.rwops as rwops
 import pygame2.sdl.pixels as pixels
 import pygame2.sdl.video as video
-import pygame2.sdl.array as sdlarray
+import pygame2.array as pgarray
 
 alldepths = (1, 4, 8, 12, 15, 16, 24, 32)
 indexdepths = (1, 4, 8)
@@ -51,7 +51,7 @@ class SDLSurfaceTest(unittest.TestCase):
                 arflag = "I"
             elif bpp == 16:
                 arflag = "H"
-            src = sdlarray.CTypesView(array.array(arflag, buf), bytecount)
+            src = pgarray.CTypesView(array.array(arflag, buf), bytecount)
             dst = surface.convert_pixels(16, 16, fmt, src, 16 * bytecount,
                                          fmt, 16 * bytecount)
             for index, val in enumerate(dst):
@@ -140,7 +140,7 @@ class SDLSurfaceTest(unittest.TestCase):
                 arflag = "I"
             elif bpp == 16:
                 arflag = "H"
-            bytebuf = sdlarray.CTypesView(array.array(arflag, buf))
+            bytebuf = pgarray.CTypesView(array.array(arflag, buf))
             sf = surface.create_rgb_surface_from(bytebuf.to_bytes(), 16, 16,
                                                  bpp, pitch, masks[0],
                                                  masks[1], masks[2], masks[3])

@@ -73,6 +73,7 @@ class CTypesView(object):
         bsize = self.bytesize
         return "CTypesView(type=%s, bytesize=%d, shared=%s)" % (dtype, bsize,
                                                                 self.is_shared)
+
     def __len__(self):
         return self.bytesize
 

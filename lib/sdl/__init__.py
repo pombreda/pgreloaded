@@ -1,11 +1,9 @@
 """
 A thin wrapper package around the SDL2 library.
 """
-import os
 import sys
 import ctypes
-from ctypes.util import find_library
-from pygame2 import get_dll_path
+from pygame2.dll import DLL
 from pygame2.compat import byteify, stringify
 
 __all__ = ["init", "init_subsystem", "quit", "quit_subsystem", "was_init",
@@ -23,66 +21,15 @@ if sys.platform in ("win32", "cli"):
         _LIBNAME = "SDL2.dll"
     else:
         _LIBNAME = "SDL2_32bit.dll"
-elif sys.platform == "darwin":
-    _LIBNAME = "SDL2"
 else:
-    _LIBNAME = "libSDL2.so"
+    _LIBNAME = "SDL2"
 
-
-class _DLL(object):
-    """Function wrapper around the different DLL functions. Do not use or
-    instantiate this one directly from your user code.
-    """
-    def __init__(self):
-        self._dll = None
-        path = get_dll_path()
-        if path:
-            # Explicit path provided by the user or Win32
-            global _LIBNAME
-            _LIBNAME = os.path.join(path, _LIBNAME)
-        else:
-            _LIBNAME = find_library("SDL2")
-            if not _LIBNAME:
-                _LIBNAME = find_library("SDL2-2.0")
-        self._dll = ctypes.CDLL(_LIBNAME)
-
-    def has_dll_function(self, name):
-        """Checks, if a function identified by name exists in the bound dll.
-        """
-        return hasattr(self._dll, name)
-
-    def get_dll_function(self, name):
-        """Tries to retrieve the function identified by name from the bound
-        dll.
-        """
-        func = getattr(self._dll, name)
-        return func
-
-    def add_function(self, name, func):
-        """Adds the passed function to the _DLL instance.
-
-        The function will be identified by the passed name, so that a
-        invocation of mydll.name (...) will invoke the bound function.
-        """
-        self.__dict__[name] = func
-
-
-dll = _DLL()
-
-
-class sdltype(object):
-    """Decorator class used to wrap SDL2 related functions.
-
-    You should not use this decorator in user code.
-    """
-    def __init__(self, funcname=None, args=None, returns=None):
-        func = dll.get_dll_function(funcname)
-        func.argtypes = args
-        func.restype = returns
-        dll.add_function(funcname, func)
-
-    def __call__(self, func):
-        return func
+dll = None
+try:
+    dll = DLL(_LIBNAME)
+except:
+    dll = DLL("SDL2-2.0")
+sdltype = dll.get_decorator()
 
 SDL_INIT_TIMER =       0x00000001
 SDL_INIT_AUDIO =       0x00000010
@@ -96,7 +43,7 @@ SDL_FALSE = 0
 SDL_TRUE = 1
 
 
-@sdltype("SDL_Init", [ctypes.c_uint], ctypes.c_uint)
+@sdltype("SDL_Init", [ctypes.c_uint], ctypes.c_int)
 def init(flags=None):
     """Initializes the SDL library.
 
@@ -118,19 +65,15 @@ def init(flags=None):
         retval = dll.SDL_Init(0)
     else:
         retval = dll.SDL_Init(flags)
-    if retval == -1:
-        raise SDLError()
+    return retval
 
-
-@sdltype("SDL_InitSubSystem", [ctypes.c_uint], ctypes.c_uint)
+@sdltype("SDL_InitSubSystem", [ctypes.c_uint], ctypes.c_int)
 def init_subsystem(flags):
     """Similar to init(), but can be called to explicitly initialize a certain
     module. init() needs to be called beforehand.
     """
-    retval = dll.SDL_InitSubSystem(flags)
-    if retval == -1:
-        raise SDLError()
-
+    return dll.SDL_InitSubSystem(flags)
+    
 
 @sdltype("SDL_QuitSubSystem", [ctypes.c_uint], None)
 def quit_subsystem(flags):
@@ -218,7 +161,7 @@ class SDLError(Exception):
         """
         self.msg = msg
         if msg is None:
-            msg = get_error()
+            self.msg = get_error()
 
     def __str__(self):
         return repr(self.msg)

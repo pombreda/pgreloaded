@@ -15,7 +15,7 @@
     SET PYPY18=c:\pypy-1.8\pypy.exe
 )
 @IF "%IRONPYTHON27%" == "" (
-    SET IRONPYTHON=c:\IronPython27\ipy.exe
+    SET IRONPYTHON27=c:\IronPython27\ipy.exe
 )
 
 @IF "%1" == "" (

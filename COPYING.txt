@@ -7,7 +7,9 @@ The DLLs within the lib/dll folder are licensed as follows:
 - SDL2.dll, SDL2_32bit.dll:
   This is the SDL 2.0 DLL, see http://www.libsdl.org/license.php for details
   on its zlib license
-
+- soft_oal.dll
+  This is the OpenAL Soft DLL, see http://kcat.strangesoft.net/openal.html for
+  details. The DLL is distributed under the GPLv2.
 
 For everything else, the following applies:
 

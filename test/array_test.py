@@ -3,7 +3,7 @@ import array
 import ctypes
 import struct
 import unittest
-import pygame2.sdl.array as sdlarray
+import pygame2.array as pgarray
 
 singlebyteseq = [x for x in range(0x100)]
 doublebyteseq = [x for x in range(0x10000)]
@@ -138,7 +138,7 @@ def ltrbyte32(val, pos):
             raise IndexError("invalid position")
 
 
-class SDLArrayTest(unittest.TestCase):
+class pgarrayTest(unittest.TestCase):
 
     def setUp(self):
         if sys.version.startswith("3.1"):
@@ -155,16 +155,16 @@ class SDLArrayTest(unittest.TestCase):
                            (doublebytebuf, ctypes.c_ushort),
                            (quadbyteseq, ctypes.c_uint),
                            (quadbytebuf, ctypes.c_uint)):
-            bytebuf, size = sdlarray.to_ctypes(seq, dtype)
+            bytebuf, size = pgarray.to_ctypes(seq, dtype)
             self.assertEqual(size, len(seq))
             for index, x in enumerate(bytebuf):
                 self.assertEqual(x, seq[index])
 
     def test_CTypesView__singlebytes(self):
-        buf1 = sdlarray.CTypesView(singlebyteseq, docopy=True)
-        buf2 = sdlarray.CTypesView(singlebytebuf, docopy=False)
+        buf1 = pgarray.CTypesView(singlebyteseq, docopy=True)
+        buf2 = pgarray.CTypesView(singlebytebuf, docopy=False)
         for singlebytes, shared in ((buf1, False), (buf2, True)):
-            self.assertIsInstance(singlebytes, sdlarray.CTypesView)
+            self.assertIsInstance(singlebytes, pgarray.CTypesView)
             # Pypy 1.8.0 does not support ctypes.from_buffer(), hence we
             # never will receive a shared one
             if hasattr(sys, "pypy_version_info"):
@@ -193,10 +193,10 @@ class SDLArrayTest(unittest.TestCase):
                 offset += 8
 
     def test_CTypesView__doublebytes(self):
-        buf1 = sdlarray.CTypesView(doublebyteseq, USHORT_SIZE, docopy=True)
-        buf2 = sdlarray.CTypesView(doublebytebuf, USHORT_SIZE, docopy=False)
+        buf1 = pgarray.CTypesView(doublebyteseq, USHORT_SIZE, docopy=True)
+        buf2 = pgarray.CTypesView(doublebytebuf, USHORT_SIZE, docopy=False)
         for singlebytes, shared in ((buf1, False), (buf2, True)):
-            self.assertIsInstance(singlebytes, sdlarray.CTypesView)
+            self.assertIsInstance(singlebytes, pgarray.CTypesView)
             # Pypy 1.8.0 does not support ctypes.from_buffer(), hence we
             # never will receive a shared one
             if hasattr(sys, "pypy_version_info"):
@@ -232,10 +232,10 @@ class SDLArrayTest(unittest.TestCase):
                 offset += 4
 
     def test_CTypesView__quadbytes(self):
-        buf1 = sdlarray.CTypesView(quadbyteseq, UINT_SIZE, docopy=True)
-        buf2 = sdlarray.CTypesView(quadbytebuf, UINT_SIZE, docopy=False)
+        buf1 = pgarray.CTypesView(quadbyteseq, UINT_SIZE, docopy=True)
+        buf2 = pgarray.CTypesView(quadbytebuf, UINT_SIZE, docopy=False)
         for singlebytes, shared in ((buf1, False), (buf2, True)):
-            self.assertIsInstance(singlebytes, sdlarray.CTypesView)
+            self.assertIsInstance(singlebytes, pgarray.CTypesView)
             # Pypy 1.8.0 does not support ctypes.from_buffer(), hence we
             # never will receive a shared one
             if hasattr(sys, "pypy_version_info"):
@@ -283,7 +283,7 @@ class SDLArrayTest(unittest.TestCase):
                 (quadbytebuf, UINT_SIZE, 4, True),
                 )
         for seq, size, factor, shared in seqs:
-            buf = sdlarray.CTypesView(seq, size, not shared)
+            buf = pgarray.CTypesView(seq, size, not shared)
             otype = type(seq).__name__
             if not shared:
                 otype = 'array'

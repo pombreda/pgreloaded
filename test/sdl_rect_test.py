@@ -1,3 +1,4 @@
+import sys
 import copy
 import unittest
 import pygame2.sdl as sdl
@@ -331,9 +332,10 @@ class SDLRectTest(unittest.TestCase):
         self.assertEqual(ret, (False, rect.SDL_Rect()))
 
         self.assertRaises(TypeError, rect.enclose_points, None, None)
-        self.assertRaises(TypeError, rect.enclose_points, "Test", None)
-        self.assertRaises(TypeError, rect.enclose_points, (1, 2, 3), None)
-        self.assertRaises(TypeError, rect.enclose_points, (None,), None)
+        if sys.platform != "cli":  # IronPython can't handle this correctly
+            self.assertRaises(TypeError, rect.enclose_points, "Test", None)
+            self.assertRaises(TypeError, rect.enclose_points, (1, 2, 3), None)
+            self.assertRaises(TypeError, rect.enclose_points, (None,), None)
 
     def test_has_intersection(self):
         r1 = rect.SDL_Rect()

@@ -3,11 +3,11 @@ Wrapper methods around the SDL2 platform routines.
 """
 import ctypes
 from pygame2.compat import *
-from pygame2.sdl import sdltype, dll, SDL_TRUE, SDLError
+from pygame2.sdl import dll, sdltype, SDL_TRUE, SDLError
 from pygame2.sdl.video import SDL_Window
 from pygame2.sdl.surface import SDL_Surface
 from pygame2.sdl.rect import SDL_Point, SDL_Rect
-import pygame2.sdl.array as array
+import pygame2.array as array
 
 __all__ = ["SDL_RendererInfo", "SDL_Renderer", "SDL_Texture",
            "get_num_render_drivers", "get_render_driver_info",

@@ -252,10 +252,10 @@ class SDLVideoTest(unittest.TestCase):
         for flag in flags:
             window = video.create_window("Test", 10, 10, 10, 10, flag)
             self.assertIsInstance(window, video.SDL_Window)
-            self.assertEqual(window.position, (10, 10))
-            self.assertEqual(window.size, (10, 10))
-            self.assertEqual(window.flags & flag, flag)
-            self.assertEqual(window.title, "Test")
+            self.assertEqual(video.get_window_position(window), (10, 10))
+            self.assertEqual(video.get_window_size(window), (10, 10))
+            self.assertEqual(video.get_window_flags(window) & flag, flag)
+            self.assertEqual(video.get_window_title(window), "Test")
             video.destroy_window(window)
         # TODO
 
@@ -278,10 +278,10 @@ class SDLVideoTest(unittest.TestCase):
         for flag in flags:
             window = video.create_window("Test", 10, 10, 10, 10, flag)
             self.assertIsInstance(window, video.SDL_Window)
-            self.assertEqual(window.position, (10, 10))
-            self.assertEqual(window.size, (10, 10))
-            self.assertEqual(window.flags & flag, flag)
-            self.assertEqual(window.title, "Test")
+            self.assertEqual(video.get_window_position(window), (10, 10))
+            self.assertEqual(video.get_window_size(window), (10, 10))
+            self.assertEqual(video.get_window_flags(window) & flag, flag)
+            self.assertEqual(video.get_window_title(window), "Test")
 
             dindex = video.get_window_display(window)
             self.assertTrue(0 <= dindex <= numdisplays,
@@ -429,16 +429,12 @@ class SDLVideoTest(unittest.TestCase):
         flags = video.SDL_WINDOW_BORDERLESS
         window = video.create_window("Test", 10, 10, 10, 10, flags)
         self.assertEqual(video.get_window_size(window), (10, 10))
-        self.assertEqual(window.size, (10, 10))
         video.set_window_size(window, 0, 0)
         self.assertEqual(video.get_window_size(window), (0, 0))
-        self.assertEqual(window.size, (0, 0))
         video.set_window_size(window, 600, 900)
         self.assertEqual(video.get_window_size(window), (600, 900))
-        self.assertEqual(window.size, (600, 900))
         video.set_window_size(window, -200, -10)
         self.assertEqual(video.get_window_size(window), (-200, -10))
-        self.assertEqual(window.size, (-200, -10))
         video.destroy_window(window)
 
     @interactive("Was the window shown?")

@@ -2,8 +2,8 @@
 Wrapper methods around the SDL 2 rect routines.
 """
 import ctypes
-from pygame2.sdl import sdltype, dll, SDL_TRUE, SDL_FALSE
-import pygame2.sdl.array as array
+from pygame2.sdl import dll, sdltype, SDL_TRUE, SDL_FALSE
+import pygame2.array as array
 
 __all__ = ["SDL_Point", "SDL_Rect", "enclose_points", "has_intersection",
            "intersect_rect", "intersect_rect_and_line", "union_rect",
@@ -80,6 +80,7 @@ def enclose_points(points, clip=None):
         raise TypeError("clip must be a SDL_Rect or None")
 
     arptr, count = array.to_ctypes(points, SDL_Point)
+    arptr = ctypes.cast(arptr, ctypes.POINTER(SDL_Point))
     if count == 0:
         return False, SDL_Rect()
 

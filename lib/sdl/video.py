@@ -3,8 +3,8 @@ Wrapper methods around the SDL2 video management routines.
 """
 import ctypes
 from pygame2.compat import *
-from pygame2.sdl import sdltype, dll, SDL_TRUE, SDLError
-import pygame2.sdl.array as array
+from pygame2.sdl import dll, sdltype, SDL_TRUE, SDLError
+import pygame2.array as array
 from pygame2.sdl.surface import SDL_Surface
 from pygame2.sdl.rect import SDL_Rect
 
@@ -168,29 +168,9 @@ class SDL_DisplayMode(ctypes.Structure):
 class SDL_Window(ctypes.Structure):
     """
     """
-    @property
-    def position(self):
-        return get_window_position(self)
-
-    @property
-    def size(self):
-        return get_window_size(self)
-
-    @property
-    def flags(self):
-        return get_window_flags(self)
-
-    @property
-    def title(self):
-        return get_window_title(self)
-
-    @property
-    def id(self):
-        return get_window_id(self)
-
     def __repr__(self):
         return "SDL_Window(id=%d, title=%s, position=%s, size=%s)" % \
-           (self.id, self.title, self.position, self.size)
+           (self._id, self._title, (self._x, self._y), (self._w, self._h))
 
 SDL_Window._fields_ = [("_magic", ctypes.c_void_p),
                        ("_id", ctypes.c_uint),
@@ -796,6 +776,7 @@ def update_window_surface_rects(window, rects):
     if not isinstance(window, SDL_Window):
         raise TypeError("window must be a SDL_Window")
     rptr, count = array.to_ctypes(rects, SDL_Rect)
+    rptr = ctypes.cast(rptr, ctypes.POINTER(SDL_Rect))
     retval = dll.SDL_UpdateWindowSurfaceRects(ctypes.byref(window), rptr,
                                               count)
     if retval == -1:

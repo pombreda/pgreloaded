@@ -130,6 +130,7 @@ class SDL_AudioSpec(ctypes.Structure):
 samples=%d, size=%d)""" % (self.freq, self.format, self.channels, self.silence,
                            self.samples, self.size)
 
+
 class SDL_AudioCVT(ctypes.Structure):
     pass
 
