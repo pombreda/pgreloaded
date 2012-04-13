@@ -744,7 +744,7 @@ def doppler_factor(value):
 @openaltype("alDopplerVelocity", [ctypes.c_float], None)
 def doppler_velocity(value):
     """Sets the speed of sound to be used in Doppler calculations.
-    
+
     NOTE: this is a legacy function from OpenAL 1.0 and should not be
     used anymore. Use speed_of_source() instead.
     """

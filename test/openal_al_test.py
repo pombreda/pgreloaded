@@ -35,7 +35,7 @@ class ALTest(unittest.TestCase):
     @unittest.skip("not implemented")
     def test_get_string(self):
         pass
-    
+
     @unittest.skip("not implemented")
     def test_get_boolean_v(self):
         pass

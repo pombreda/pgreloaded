@@ -79,12 +79,14 @@ def get_error(device):
 @openaltype("alcCreateContext", [ctypes.POINTER(ALCdevice),
                                  ctypes.POINTER(ctypes.c_int)],
             ctypes.POINTER(ALCcontext))
-def create_context(device, attrs):
+def create_context(device, attrs=None):
     """Creates a context from the specified device."""
     if not isinstance(device, ALCdevice):
         raise TypeError("device must be a ALCdevice")
-    attrs = array.to_ctypes(attrs, ctypes.c_int)
-    ptr = ctypes.POINTER(attrs, ctypes.POINTER(ctypes.c_int))
+    ptr = None
+    if attrs is not None:
+        attrs = array.to_ctypes(attrs, ctypes.c_int)
+        ptr = ctypes.POINTER(attrs, ctypes.POINTER(ctypes.c_int))
     retval = dll.alcCreateContext(ctypes.byref(device), ptr)
     if retval is None or not bool(retval):
         raise OpenALError(get_error(device))
@@ -146,9 +148,13 @@ def get_context_device(context):
 
 
 @openaltype("alcOpenDevice", [ctypes.c_char_p], ctypes.POINTER(ALCdevice))
-def open_device(devicename):
-    """Opens an OpenAL device with the specified name."""
-    devicename = byteify(devicename, "utf-8")
+def open_device(devicename=None):
+    """Opens an OpenAL device with the specified name.
+
+    If no devicename is passed, the default output device is opened.
+    """
+    if devicename is not None:
+        devicename = byteify(devicename, "utf-8")
     retval = dll.alcOpenDevice(devicename)
     if retval is None or not bool(retval):
         return None
@@ -167,10 +173,13 @@ def close_device(device):
                                       ctypes.c_char_p], ctypes.c_byte)
 def is_extension_present(device, extname):
     """Checks, if a certain extension is available for the passed device."""
-    if not isinstance(device, ALCdevice):
-        raise TypeError("device must be a ALCdevice")
     extname = byteify(extname, "utf-8")
-    return dll.alcIsExtensionPresent(ctypes.byref(device), extname) == ALC_TRUE
+    devptr = None
+    if device is not None:
+        if not isinstance(device, ALCdevice):
+            raise TypeError("device must be a ALCdevice")
+        devptr = ctypes.byref(device)
+    return dll.alcIsExtensionPresent(devptr, extname) == ALC_TRUE
 
 
 @openaltype("alcGetProcAddress", [ctypes.POINTER(ALCdevice), ctypes.c_char_p],
@@ -191,6 +200,8 @@ def get_enum_value(device, enumname):
     """
     if not isinstance(device, ALCdevice):
         raise TypeError("device must be a ALCdevice")
+    if type(enumname) is not str:
+        raise TypeError("enumname must be a string")
     enumname = byteify(enumname, "utf-8")
     return dll.alcGetEnumValue(ctypes.byref(device), enumname)
 
@@ -199,9 +210,12 @@ def get_enum_value(device, enumname):
             ctypes.c_char_p)
 def get_string(device, param):
     """Returns a set of strings related to the context device."""
-    if not isinstance(device, ALCdevice):
-        raise TypeError("device must be a ALCdevice")
-    retval = dll.alcGetString(ctypes.byref(device), param)
+    devptr = None
+    if device is not None:
+        if not isinstance(device, ALCdevice):
+            raise TypeError("device must be a ALCdevice")
+        devptr = ctypes.byref(device)
+    retval = dll.alcGetString(devptr, param)
     if retval is None or not bool(retval):
         raise OpenALError(get_error(device))
     return stringify(retval, "utf-8")

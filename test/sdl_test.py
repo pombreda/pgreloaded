@@ -8,10 +8,10 @@ class SDLTest(unittest.TestCase):
 
     def setUp(self):
         sdl.init(0)
-    
+
     def tearDown(self):
         sdl.quit()
-    
+
     def test_init_timer(self):
         sdl.init(sdl.SDL_INIT_TIMER)
         ret = sdl.was_init(sdl.SDL_INIT_TIMER)

@@ -5,6 +5,7 @@ import copy
 import pygame2.sdl as sdl
 import pygame2.sdl.audio as audio
 
+
 # We won't use pygame2.sdl.audio.audio_init() and
 # pygame2.sdl.audio.audio_quit() here, since they only set the internal
 # states of the SDL audio subsystem without configuring the other parts
@@ -76,7 +77,8 @@ class SDLAudioTest(unittest.TestCase):
                 founddummy = True
         self.assertTrue(founddummy, "could not find dummy driver")
         self.assertRaises(sdl.SDLError, audio.get_audio_driver, -1)
-        self.assertRaises(sdl.SDLError, audio.get_audio_driver, drivercount + 1)
+        self.assertRaises(sdl.SDLError, audio.get_audio_driver,
+                          drivercount + 1)
         self.assertRaises(TypeError, audio.get_audio_driver, "Test")
         self.assertRaises(TypeError, audio.get_audio_driver, None)
 
@@ -92,7 +94,7 @@ class SDLAudioTest(unittest.TestCase):
                 driver = audio.get_current_audio_driver()
                 # Do not handle wrong return values.
                 if driver is not None:
-                    self.assertEqual (drivername, driver)
+                    self.assertEqual(drivername, driver)
                     success += 1
             except sdl.SDLError:
                 pass
@@ -112,7 +114,7 @@ class SDLAudioTest(unittest.TestCase):
         self.assertEqual(spec.freq, reqspec.freq)
         self.assertEqual(spec.channels, reqspec.channels)
         sdl.quit_subsystem(sdl.SDL_INIT_AUDIO)
-                
+
     def test_get_num_audio_devices(self):
         os.environ["SDL_AUDIODRIVER"] = "dummy"
         sdl.init_subsystem(sdl.SDL_INIT_AUDIO)

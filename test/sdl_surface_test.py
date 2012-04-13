@@ -417,6 +417,6 @@ class SDLSurfaceTest(unittest.TestCase):
     @unittest.skip("not implemented")
     def test_save_bmp(self):
         pass
-    
+
 if __name__ == '__main__':
     unittest.main()
