@@ -48,7 +48,8 @@ class SDLKeyboardTest(unittest.TestCase):
         rwin = video.create_window("", 10, 10, 10, 10, 0)
         window = keyboard.get_keyboard_focus()
         if window:
-            self.assertEqual(window.id, rwin.id)
+            self.assertEqual(video.get_window_id(window),
+                             video.get_window_id(rwin))
         video.destroy_window(rwin)
 
         window = keyboard.get_keyboard_focus()

@@ -66,7 +66,7 @@ _errmap = {
     ALC_INVALID_VALUE: "Invalid value",
     ALC_OUT_OF_MEMORY: "Out of memory"
     }
-
+_fasterror = lambda dev: _errmap[dll.alcGetError(ctypes.byref(dev))]
 
 @openaltype("alcGetError", [ctypes.POINTER(ALCdevice)], ctypes.c_int)
 def get_error(device):
@@ -85,11 +85,11 @@ def create_context(device, attrs=None):
         raise TypeError("device must be a ALCdevice")
     ptr = None
     if attrs is not None:
-        attrs = array.to_ctypes(attrs, ctypes.c_int)
-        ptr = ctypes.POINTER(attrs, ctypes.POINTER(ctypes.c_int))
+        arr, size = array.to_ctypes(attrs, ctypes.c_int)
+        ptr = ctypes.cast(arr, ctypes.POINTER(ctypes.c_int))
     retval = dll.alcCreateContext(ctypes.byref(device), ptr)
     if retval is None or not bool(retval):
-        raise OpenALError(get_error(device))
+        raise OpenALError(_fasterror(device))
     return retval.contents
 
 
@@ -141,9 +141,9 @@ def get_context_device(context):
     """Retrieves the device used by the context."""
     if not isinstance(context, ALCcontext):
         raise TypeError("context must be a ALCcontext")
-    retval = dll.alcDestroyContext(ctypes.byref(context))
+    retval = dll.alcGetContextsDevice(ctypes.byref(context))
     if retval is None or not bool(retval):
-        return None
+        raise OpenALError(_fasterror(device))
     return retval.contents
 
 

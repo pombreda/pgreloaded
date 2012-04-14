@@ -20,6 +20,8 @@ class DLL(object):
         if path:
             # Explicit path provided by the user or Win32
             lib = os.path.join(path, libname)
+            if not os.path.exists(lib):
+                lib = find_library(libname)
         else:
             lib = find_library(libname)
         if lib is None:

@@ -7,6 +7,10 @@ class ALCTest(unittest.TestCase):
     __tags__ = ["openal"]
 
     def setUp(self):
+        if sys.version.startswith("3.1"):
+            self.assertIsInstance = \
+                lambda x, t: self.assertTrue(isinstance(x, t))
+
         self._device = alc.open_device()
         if self._device is None:
             self.skipTest("could not open a default OpenAL device")
@@ -52,23 +56,75 @@ class ALCTest(unittest.TestCase):
         dev = alc.open_device(None)
         errval = alc.get_error(dev)
         self.assertEqual(errval, alc.ALC_NO_ERROR)
-        alc.close_device(dev)
-        errval = alc.get_error(dev)
-        self.assertEqual(errval, alc.ALC_INVALID_VALUE)
+        self.assertTrue(alc.close_device(dev))
+
         errval = alc.get_error(self._device)
         self.assertEqual(errval, alc.ALC_NO_ERROR)
 
-    @unittest.skip("not implemented")
+        # Closing a device with an attached context should not work according
+        # to the OpenAL specification.
+        ctx = alc.create_context(self._device)
+
+        # The test below ideally should work, however the SI
+        # implementation as well as openal-soft close the device without
+        # caring about any context attached to it.
+        # All contexts are implicitly destroyed.
+        #
+        # self.assertFalse(alc.close_device(self._device))
+
+        alc.destroy_context(ctx)
+
     def test_create_destroy_context(self):
-        pass
+        self.assertRaises(TypeError, alc.create_context, None, None)
+        self.assertRaises(TypeError, alc.create_context, 1234, None)
+        self.assertRaises(TypeError, alc.create_context, "Test", None)
+        self.assertRaises(TypeError, alc.create_context, self._device, 1234)
+        self.assertRaises(TypeError, alc.create_context, self._device, "Test")
 
-    @unittest.skip("not implemented")
+        ctx = alc.create_context(self._device)
+        self.assertEqual(alc.get_error(self._device), alc.ALC_NO_ERROR)
+        self.assertIsInstance(ctx, alc.ALCcontext)
+        alc.destroy_context(ctx)
+        self.assertEqual(alc.get_error(self._device), alc.ALC_NO_ERROR)
+
+        ctx = alc.create_context(self._device, None)
+        self.assertEqual(alc.get_error(self._device), alc.ALC_NO_ERROR)
+        self.assertIsInstance(ctx, alc.ALCcontext)
+        alc.destroy_context(ctx)
+        self.assertEqual(alc.get_error(self._device), alc.ALC_NO_ERROR)
+
+        ctx = alc.create_context(self._device, [1, 2, 3, 4])
+        self.assertEqual(alc.get_error(self._device), alc.ALC_NO_ERROR)
+        self.assertIsInstance(ctx, alc.ALCcontext)
+        alc.destroy_context(ctx)
+        self.assertEqual(alc.get_error(self._device), alc.ALC_NO_ERROR)
+
     def test_get_context_device(self):
-        pass
+        self.assertRaises(TypeError, alc.get_context_device, None)
+        self.assertRaises(TypeError, alc.get_context_device, "Test")
+        self.assertRaises(TypeError, alc.get_context_device, None)
 
-    @unittest.skip("not implemented")
-    def test_get_current_context(self):
-        pass
+        ctx = alc.create_context(self._device)
+        device = alc.get_context_device(ctx)
+        self.assertIsInstance(device, alc.ALCdevice)
+        self.assertEqual(alc.get_error(self._device), alc.ALC_NO_ERROR)
+        self.assertEqual(alc.get_error(device), alc.ALC_NO_ERROR)
+        alc.destroy_context(ctx)
+
+    def test_make_context_current_get_current_context(self):
+        self.assertRaises(TypeError, alc.make_context_current, None)
+        self.assertRaises(TypeError, alc.make_context_current, "Test")
+        self.assertRaises(TypeError, alc.make_context_current, 1234)
+
+        self.assertIsNone(alc.get_current_context())
+
+        ctx = alc.create_context(self._device)
+        self.assertTrue(alc.make_context_current(ctx))
+        cur = alc.get_current_context()
+        self.assertIsInstance(cur, alc.ALCcontext)
+        alc.destroy_context(ctx)
+        self.assertFalse(alc.make_context_current(ctx))
+        self.assertIsNone(alc.get_current_context())
 
     def test_get_enum_value(self):
         self.assertRaises(TypeError, alc.get_enum_value, None, None)
@@ -108,10 +164,6 @@ class ALCTest(unittest.TestCase):
 
         self.assertRaises(TypeError, alc.is_extension_present, 1234, "Test")
         self.assertRaises(TypeError, alc.is_extension_present, "Test", "Test")
-
-    @unittest.skip("not implemented")
-    def test_make_context_current(self):
-        pass
 
     @unittest.skip("not implemented")
     def test_process_context(self):

@@ -68,7 +68,7 @@ class SDLRenderTest(unittest.TestCase):
         #self.assertIsInstance(window, video.SDL_Window)
         #self.assertIsInstance(renderer, render.SDL_Renderer)
 
-    #@unittest.skipIf(sys.platform in ("win32", "cli"), "crashes")
+    @unittest.skipIf(sys.platform in ("win32", "cli"), "crashes randomly")
     def test_create_destroy_renderer(self):
         window = video.create_window("Test", 10, 10, 10, 10,
                                      video.SDL_WINDOW_HIDDEN)
