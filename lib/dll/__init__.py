@@ -1,5 +1,5 @@
 """
-DLL loading helpers
+DLL loading helpers.
 """
 import os
 import ctypes
@@ -29,19 +29,20 @@ class DLL(object):
         self._dll = ctypes.CDLL(lib)
 
     def has_dll_function(self, name):
-        """Checks, if a function identified by name exists in the bound dll.
+        """Checks, if a function identified by name exists in the bound
+        DLL.
         """
         return hasattr(self._dll, name)
 
     def get_dll_function(self, name):
-        """Tries to retrieve the function identified by name from the bound
-        dll.
+        """Tries to retrieve the function identified by name from the
+        bound DLL.
         """
         func = getattr(self._dll, name)
         return func
 
     def add_function(self, name, func):
-        """Adds the passed function to the _DLL instance.
+        """Adds the passed function to the DLL instance.
 
         The function will be identified by the passed name, so that a
         invocation of mydll.name (...) will invoke the bound function.
@@ -49,7 +50,7 @@ class DLL(object):
         self.__dict__[name] = func
 
     def get_decorator(self):
-        """Gets the decorator binding for the DLL-"""
+        """Gets the decorator binding for the DLL."""
         class dlltype(object):
             """Decorator class used to wrap DLL related functions.
             

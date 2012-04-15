@@ -45,7 +45,7 @@ without SDL support, we add a typical safety net to get out without too
 much noise, if SDL support is not given.
 
 Window Creation and Image Loading
-=================================
+---------------------------------
 Any graphical application requires access to the screen, mostly in form
 of a window, which basically represents a portion of the screen, the
 application has access to and the application can manipulate. In most cases
@@ -63,7 +63,8 @@ to the user. ::
 
   white = pygame2.Color (255, 255, 255)
   
-  window = pygame2.video.Window ("Hello World!", surface.width + 10, surface.height + 10)
+  window = pygame2.video.Window ("Hello World!", surface.width + 10,
+                                 surface.height + 10)
   window.fill (white)
   window.blit (surface, (5, 5))
   window.show ()
@@ -96,7 +97,7 @@ should be shown on the screen, which we can do with
 :meth:`pygame2.video.Window.show()`
 
 Making the Application responsive
-=================================
+---------------------------------
 We are nearly done now. We have an image to display, we have a window, where
 the image should be displayed on, so we can execute the written code, not?
 

@@ -49,6 +49,7 @@ clean:
 
 docs:
 	@echo "Creating docs package"
+	@rm -rf doc/html
 	@cd doc && make html
 	@mv doc/_build/html doc/html
 	@rm -rf doc/_build

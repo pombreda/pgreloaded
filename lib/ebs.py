@@ -42,7 +42,7 @@ class Entity(object):
     def __new__(cls, world, *args, **kwargs):
         if not isinstance(world, World):
             raise TypeError("world must be a World")
-        entity = object.__new__(cls, *args, **kwargs)
+        entity = object.__new__(cls)
         entity._id = uuid4()
         entity._world = world
         world.entities.add(entity)
@@ -187,7 +187,7 @@ class System(object):
     but only is aware of the data carried by all entities.
     """
     def __new__(cls, *args, **kwargs):
-        system = object.__new__(cls, *args, **kwargs)
+        system = object.__new__(cls)
         system.componenttypes = None
         return system
 

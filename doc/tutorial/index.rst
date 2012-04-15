@@ -1,5 +1,6 @@
-The Pygame2 Tutorial
-====================
+Learn to fly - the tutorials
+============================
+
 Pygame2 is easy to learn and a powerful game and multimedia programming
 framework. It features efficient high- and low-level structures and an
 excellent object-oriented programming layout.
@@ -13,13 +14,3 @@ Pygame2, but instead show you the most noteworthy features.
   :maxdepth: 2
 
   helloworld
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
-Last generated on: |today|
-

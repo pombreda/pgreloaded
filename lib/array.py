@@ -75,6 +75,7 @@ class CTypesView(object):
                                                                 self.is_shared)
 
     def __len__(self):
+        """Returns the length of the underlying object in bytes."""
         return self.bytesize
 
     def to_bytes(self):
@@ -109,8 +110,8 @@ class CTypesView(object):
 
     @property
     def is_shared(self):
-        """Indicates, if changes on the CTypesView data affect the underlying
-        object directly.
+        """Indicates, if changes on the CTypesView data effect the
+        underlying object directly.
         """
         return self._isshared
 
@@ -120,25 +121,26 @@ class CTypesView(object):
         return self._obj
 
 
-def to_ctypes(array, dtype):
-    """Converts an arbitrary sequence to a ctypes array of the specified type
-    and returns the ctypes array and amount of items as two-value tuple.
+def to_ctypes(dataseq, dtype):
+    """Converts an arbitrary sequence to a ctypes array of the specified
+    type and returns the ctypes array and amount of items as two-value
+    tuple.
 
-    Raises a TypeError, if one or more elements in the passed array do not
-    match the passed type.
+    Raises a TypeError, if one or more elements in the passed sequence
+    do not match the passed type.
     """
-    count = len(array)
-    if isinstance(array, CTypesView):
+    count = len(dataseq)
+    if isinstance(dataseq, CTypesView):
         itemsize = ctypes.sizeof(dtype)
         if itemsize == 1:
-            array = array.to_bytes()
+            dataseq = dataseq.to_bytes()
         elif itemsize == 2:
-            array = array.to_uint16()
+            dataseq = dataseq.to_uint16()
         elif itemsize == 4:
-            array = array.to_uint32()
+            dataseq = dataseq.to_uint32()
         elif itemsize == 8:
-            array = array.to_uint64()
+            dataseq = dataseq.to_uint64()
         else:
             raise TypeError("unsupported data type for the passed CTypesView")
-    valset = (count * dtype)(*array)
+    valset = (count * dtype)(*dataseq)
     return valset, count

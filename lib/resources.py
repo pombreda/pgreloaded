@@ -39,13 +39,14 @@ def _get_stringio(data):
 def open_zipfile(archive, filename, directory=None):
     """Opens and reads a certain file from a ZIP archive.
 
-    Opens and reads a certain file from a ZIP archive. The result is returned
-    as StringIO stream. filename can be a relative or absolute path within
-    the ZIP archive. The optional directory argument can be used to supply a
-    relative directory path, under which filename will be tried to retrieved.
+    Opens and reads a certain file from a ZIP archive. The result is
+    returned as StringIO stream. filename can be a relative or absolute
+    path within the ZIP archive. The optional directory argument can be
+    used to supply a relative directory path, under which filename will
+    be searched.
 
-    If the filename could not be found or an error occured on reading it,
-    None will be returned.
+    If the filename could not be found or an error occured on reading
+    it, None will be returned.
 
     Raises a TypeError, if archive is not a valid ZIP archive.
     """
@@ -75,18 +76,19 @@ def open_zipfile(archive, filename, directory=None):
 def open_tarfile(archive, filename, directory=None, ftype=None):
     """Opens and reads a certain file from a TAR archive.
 
-    Opens and reads a certain file from a TAR archive. The result is returned
-    as StringIO stream. filename can be a relative or absolute path within
-    the TAR archive. The optional directory argument can be used to supply a
-    relative directory path, under which filename will be tried to retrieved.
+    Opens and reads a certain file from a TAR archive. The result is
+    returned as StringIO stream. filename can be a relative or absolute
+    path within the TAR archive. The optional directory argument can be
+    used to supply a relative directory path, under which filename will
+    be searched.
 
-    ftype is used to supply additional compression information, in case the
-    system cannot determine the compression type itself, and can be either
-    'gz' for gzip compression or 'bz2' for bzip2 compression.
+    ftype is used to supply additional compression information, in case
+    the system cannot determine the compression type itself, and can be
+    either 'gz' for gzip compression or 'bz2' for bzip2 compression.
 
     Note:
 
-      If ftype is supplied, the compreesion mode will be enforced for opening
+      If ftype is supplied, the compression mode will be enforced for opening
       and reading.
 
     If the filename could not be found or an error occured on reading it,
