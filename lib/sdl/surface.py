@@ -364,8 +364,10 @@ def load_bmp_rw(src, freesrc):
 def load_bmp(filename):
     """Loads a surface from a BMP file.
     """
+    if type(filename) is not str:
+        raise TypeError("filename must be a string")
     rw = rwops.rw_from_file(filename, "rb")
-    return dll.SDL_LoadBMP_RW(rw, True)
+    return load_bmp_rw(rw, True)
 
 
 @sdltype("SDL_SaveBMP_RW", [ctypes.POINTER(SDL_Surface),
@@ -392,13 +394,17 @@ def save_bmp_rw(surface, dst, freedst):
 def save_bmp(surface, filename):
     """Saves a surface to a file.
     """
+    if type(filename) is not str:
+        raise TypeError("filename must be a string")
+    if not isinstance(surface, SDL_Surface):
+        raise TypeError("surface must be a SDL_Surface")
     rw = rwops.rw_from_file(filename, "wb")
-    dll.SDL_SaveBMP_RW(rw, True)
+    save_bmp_rw(surface, rw, True)
 
 
 @sdltype("SDL_LockSurface", [ctypes.POINTER(SDL_Surface)], ctypes.c_int)
 def lock_surface(surface):
-    """
+    """Locks the surface to allow a direct acces to its pixels.
     """
     if not isinstance(surface, SDL_Surface):
         raise TypeError("surface must be a SDL_Surface")
@@ -408,15 +414,15 @@ def lock_surface(surface):
 
 
 def SDL_MUSTLOCK(surface):
+    """Checks, if the surface must be locked prior to access its
+    pixels.
     """
-    """
-    return (surface.flags & SDL_RLEACCEL) != 0
+    return (surface._flags & SDL_RLEACCEL) != 0
 
 
 @sdltype("SDL_UnlockSurface", [ctypes.POINTER(SDL_Surface)], None)
 def unlock_surface(surface):
-    """
-    """
+    """Unlocks the surface."""
     if not isinstance(surface, SDL_Surface):
         raise TypeError("surface must be a SDL_Surface")
     dll.SDL_UnlockSurface(ctypes.byref(surface))

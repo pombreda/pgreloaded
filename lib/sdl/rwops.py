@@ -249,7 +249,7 @@ def rw_from_object(obj):
     if hasattr(obj, "write") and callable(obj.write):
         rwops.write = _sdlwrite(_rwwrite)
     else:
-        rwops.write = None
+        rwops.write = _sdlwrite()
     return rwops
 
 

@@ -1,6 +1,7 @@
 import sys
 import array
 import unittest
+from pygame2.test import RESOURCES
 import pygame2.sdl as sdl
 import pygame2.sdl.surface as surface
 import pygame2.sdl.rect as rect
@@ -332,8 +333,7 @@ class SDLSurfaceTest(unittest.TestCase):
                 self.assertEqual((sr, sg, sb), (r, g, b))
             surface.free_surface(sf)
 
-    @unittest.skip("not implemented")
-    def test_lock_unlock_surface(self):
+    def test_lock_unlock_MUSTLOCK_surface(self):
         colormods = ((0, 0, 0),
                      (32, 64, 128),
                      (10, 20, 30),
@@ -367,10 +367,6 @@ class SDLSurfaceTest(unittest.TestCase):
             surface.free_surface(sf)
 
     @unittest.skip("not implemented")
-    def test_SDL_MUSTLOCK(self):
-        pass
-
-    @unittest.skip("not implemented")
     def test_lower_blit(self):
         pass
 
@@ -402,13 +398,26 @@ class SDLSurfaceTest(unittest.TestCase):
     def test_set_surface_rle(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_load_bmp_rw(self):
-        pass
+        imgfile = RESOURCES.get("surfacetest.bmp")
+        imgrw = rwops.rw_from_object(imgfile)
+        imgsurface = surface.load_bmp_rw(imgrw, False)
+        self.assertIsInstance(imgsurface, surface.SDL_Surface)
+        surface.free_surface(imgsurface)
 
-    @unittest.skip("not implemented")
+        self.assertRaises(TypeError, surface.load_bmp_rw, "Test")
+        self.assertRaises(TypeError, surface.load_bmp, None)
+        self.assertRaises(TypeError, surface.load_bmp, 1234)
+
     def test_load_bmp(self):
-        pass
+        imgfile = RESOURCES.get_path("surfacetest.bmp")
+        imgsurface = surface.load_bmp(imgfile)
+        self.assertIsInstance(imgsurface, surface.SDL_Surface)
+        surface.free_surface(imgsurface)
+
+        self.assertRaises(sdl.SDLError, surface.load_bmp, "invalid path")
+        self.assertRaises(TypeError, surface.load_bmp, None)
+        self.assertRaises(TypeError, surface.load_bmp, 1234)
 
     @unittest.skip("not implemented")
     def test_save_bmp_rw(self):

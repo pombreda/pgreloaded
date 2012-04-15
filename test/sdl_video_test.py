@@ -135,9 +135,9 @@ class SDLVideoTest(unittest.TestCase):
         self.assertTrue(DMode(10, 0, 0, 0) != DMode(0, 0, 10, 0))
         self.assertTrue(DMode(10, 0, 0, 0) != DMode(0, 0, 0, 10))
 
-    @unittest.skip("not implemented")
     def test_SDL_Window(self):
-        pass
+        window = video.SDL_Window()
+        self.assertIsInstance(window, video.SDL_Window)
 
     def test_get_num_video_drivers(self):
         numdrivers = video.get_num_video_drivers()
