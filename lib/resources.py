@@ -26,7 +26,8 @@ else:
 
 
 def _get_stringio(data):
-    """Returns a StringIO instance for Python < 3 or a BytesIO or Python > 3.
+    """Returns a StringIO instance for Python < 3 or a BytesIO or Python
+    > 3.
     """
     iodata = None
     if _ISPYTHON3:
@@ -45,9 +46,7 @@ def open_zipfile(archive, filename, directory=None):
     used to supply a relative directory path, under which filename will
     be searched.
 
-    If the filename could not be found or an error occured on reading
-    it, None will be returned.
-
+    If the filename could not be found, a KeyError will be raised.
     Raises a TypeError, if archive is not a valid ZIP archive.
     """
     data = None
@@ -88,8 +87,8 @@ def open_tarfile(archive, filename, directory=None, ftype=None):
 
     Note:
 
-      If ftype is supplied, the compression mode will be enforced for opening
-      and reading.
+      If ftype is supplied, the compression mode will be enforced for
+      opening and reading.
 
     If the filename could not be found or an error occured on reading it,
     None will be returned.
@@ -129,9 +128,9 @@ def open_tarfile(archive, filename, directory=None, ftype=None):
 def open_url(filename, basepath=None):
     """Opens and reads a certain file from a web or remote location.
 
-    Opens and reads a certain file from a web or remote location. This function
-    utilizes the urllib2 module, which means that it is restricted to the types
-    of remote locations supported by urllib2.
+    Opens and reads a certain file from a web or remote location. This
+    function utilizes the urllib2 module, which means that it is
+    restricted to the types of remote locations supported by urllib2.
 
     basepath can be used to supply an additional location prefix.
     """
@@ -205,8 +204,8 @@ class Resources(object):
     def add_file(self, filename):
         """Adds a file to the Resources container.
 
-        This will only add the passed file and do not scan an archive or check
-        a stream for availability.
+        This will only add the passed file and do not scan an archive or
+        check a stream for availability.
         """
         abspath = os.path.abspath(filename)
         fname = os.path.split(abspath)[1]
@@ -217,8 +216,8 @@ class Resources(object):
     def add_archive(self, filename, typehint='zip'):
         """Adds an archive file to the Resources container.
 
-        This will scan the passed archive and add its contents to the list
-        of available resources.
+        This will scan the passed archive and add its contents to the
+        list of available resources.
         """
         if typehint == 'zip':
             self._scanzip(filename)
@@ -290,7 +289,8 @@ class Resources(object):
         return pathname
 
     def scan(self, path, excludepattern=None):
-        """Scans a path and adds all found files to the Resource container.
+        """Scans a path and adds all found files to the Resource
+        container.
 
         Scans a path and adds all found files to the Resource
         container. If a file is a supported (ZIP or TAR) archive, its

@@ -88,10 +88,14 @@ class SDLSurfaceTest(unittest.TestCase):
         pixels.free_format(pfmt)
         surface.free_surface(sf)
 
-    def ttest_convert_surface_format(self):
+    def test_convert_surface_format(self):
         pfmt = pixels.SDL_PIXELFORMAT_RGB444
         for fmt in pixels.ALL_PIXELFORMATS:
             if pixels.SDL_ISPIXELFORMAT_FOURCC(fmt):
+                continue
+            if fmt in (pixels.SDL_PIXELFORMAT_RGB332,
+                       pixels.SDL_PIXELFORMAT_ARGB2101010):
+                # SDL2 segault in the DUFFS_LOOP() macros
                 continue
             bpp, rmask, gmask, bmask, amask = \
                 pixels.pixelformat_enum_to_masks(fmt)

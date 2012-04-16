@@ -107,7 +107,5 @@
    argument can be used to supply a relative directory path, under which
    ``filename`` will be searched.
 
-   If the filename could not be found or an error occured on reading
-   it, ``None`` will be returned.
-
+   If the filename could not be found, a :exc:`KeyError` will be raised.
    Raises a :exc:`TypeError`, if ``archive`` is not a valid ZIP archive.
