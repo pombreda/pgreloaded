@@ -3,6 +3,7 @@ Wrapper methods around the SDL2 pixel routines
 """
 import sys
 import ctypes
+import pygame2.array as array
 from pygame2.compat import *
 from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE, SDLError
 
@@ -474,7 +475,7 @@ def alloc_palette(ncolors):
 @sdltype("SDL_FreePalette", [ctypes.POINTER(SDL_Palette)], None)
 def free_palette(palette):
     """Frees a previously allocated SDL_Palette."""
-    if type(palette) is not SDL_Palette:
+    if not isinstance(palette, SDL_Palette):
         raise TypeError("palette must be a SDL_Palette")
     dll.SDL_FreePalette(ctypes.byref(palette))
 
@@ -505,7 +506,7 @@ def get_rgb(pixel, pformat):
     """
     if type(pixel) not in(int, long):
         raise TypeError("pixel must be an int")
-    if type(pformat) is not SDL_PixelFormat:
+    if not isinstance(pformat, SDL_PixelFormat):
         raise TypeError("pformat must be a SDL_PixelFormat")
     r = ctypes.c_ubyte()
     g = ctypes.c_ubyte()
@@ -525,7 +526,7 @@ def get_rgba(pixel, pformat):
     """
     if type(pixel) not in(int, long):
         raise TypeError("pixel must be an int")
-    if type(pformat) is not SDL_PixelFormat:
+    if not isinstance(pformat, SDL_PixelFormat):
         raise TypeError("pformat must be a SDL_PixelFormat")
     r = ctypes.c_ubyte()
     g = ctypes.c_ubyte()
@@ -544,7 +545,7 @@ def map_rgb(pformat, r, g, b):
     """
     if type(r) is not int or type(g) is not int or type(b) is not int:
         raise TypeError("r, g and b must be int values")
-    if type(pformat) is not SDL_PixelFormat:
+    if not isinstance(pformat, SDL_PixelFormat):
         raise TypeError("pformat must be a SDL_PixelFormat")
     val = dll.SDL_MapRGB(ctypes.byref(pformat), r, g, b)
     return val
@@ -560,7 +561,7 @@ def map_rgba(pformat, r, g, b, a):
     if type(r) is not int or type(g) is not int or type(b) is not int or \
             type(a) is not int:
         raise TypeError("r, g, b and a must be int values")
-    if type(pformat) is not SDL_PixelFormat:
+    if not isinstance(pformat, SDL_PixelFormat):
         raise TypeError("pformat must be a SDL_PixelFormat")
     val = dll.SDL_MapRGBA(ctypes.byref(pformat), r, g, b, a)
     return val
@@ -569,17 +570,21 @@ def map_rgba(pformat, r, g, b, a):
 @sdltype("SDL_SetPaletteColors", [ctypes.POINTER(SDL_Palette),
                                   ctypes.POINTER(SDL_Color), ctypes.c_int,
                                   ctypes.c_int], ctypes.c_int)
-def set_palette_colors(palette, colors, first, ncolors):
+def set_palette_colors(palette, colors, first=0, ncolors=0):
     """Sets the colors of a SDL_Palette to the passed values, starting at
     first in the colors array and setting ncolors.
     """
-    if type(palette) is not SDL_Palette:
+    if not isinstance(palette, SDL_Palette):
         raise TypeError("palette must be a SDL_Palette")
     if type(first) is not int:
         raise TypeError("first must be an int")
     if type(ncolors) is not int:
         raise TypeError("ncolors must be an int")
-    return dll.SDL_SetPaletteColors(palette, colors, first, ncolors)
+    colors, size = array.to_ctypes(colors, SDL_Color)
+    ncolors = min(size, ncolors)
+    pcolor = ctypes.cast(colors, ctypes.POINTER(SDL_Color))
+    return dll.SDL_SetPaletteColors(ctypes.byref(palette), pcolor, first,
+                                    ncolors)
 
 
 @sdltype("SDL_SetPixelFormatPalette", [ctypes.POINTER(SDL_PixelFormat),
@@ -587,9 +592,11 @@ def set_palette_colors(palette, colors, first, ncolors):
          ctypes.c_int)
 def set_pixelformat_palette(pformat, palette):
     """Binds a palette to the passed SDL_PixelFormat."""
-    if type(pformat) is not SDL_PixelFormat:
+    if not isinstance(pformat, SDL_PixelFormat):
         raise TypeError("pformat must be a SDL_PixelFormat")
-    if type(palette) is not SDL_Palette:
-        raise TypeError("palette must be a SDL_Palette")
-    return dll.SDL_SetPixelFormatPalette(ctypes.byref(pformat),
-                                         ctypes.byref(palette))
+    pptr = None
+    if palette is not None:
+        if not isinstance(palette, SDL_Palette):
+            raise TypeError("palette must be a SDL_Palette")
+        pptr = ctypes.byref(palette)
+    return dll.SDL_SetPixelFormatPalette(ctypes.byref(pformat), pptr)

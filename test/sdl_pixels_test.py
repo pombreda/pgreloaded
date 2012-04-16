@@ -381,23 +381,45 @@ class SDLPixelsTest(unittest.TestCase):
         val = pixels.map_rgba(pformat, 0xFF, 0xAA, 0x88, 0x11)
         self.assertEqual(val, 0x0)
 
-    @unittest.skip("not implemented")
     def test_set_palette_colors(self):
-        # TODO
-        pass
+        colors = []
+        for v in range(20):
+            colors.append(SDL_Color(v, v + 10, v + 20))
 
-    @unittest.skip("not implemented")
+        palette = pixels.alloc_palette(10)
+        self.assertIsInstance(palette, pixels.SDL_Palette)
+        self.assertEqual(palette.ncolors, 10)
+        for rgb in palette.colors:
+            self.assertEqual((rgb.r, rgb.g, rgb.b), (255, 255, 255))
+        pixels.set_palette_colors(palette, colors, 0, 10)
+        for index, rgb in enumerate(palette.colors):
+            self.assertEqual(rgb, colors[index])
+        pixels.set_palette_colors(palette, colors, 5, 1000)
+        for index, rgb in enumerate(palette.colors):
+            if index < 5:
+                self.assertEqual(rgb, colors[index])
+            elif index > 5:
+                self.assertEqual(rgb, colors[index - 5])
+
+        pixels.free_palette(palette)
+
     def test_set_pixelformat_palette(self):
-        # TODO
-        pass
+        palette = pixels.alloc_palette(10)
+        self.assertIsInstance(palette, pixels.SDL_Palette)
+        pformat = pixels.alloc_format(pixels.SDL_PIXELFORMAT_RGBA8888)
+        self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
+        pixels.set_pixelformat_palette(pformat, palette)
+        # TODO: improve tests
+        pixels.free_format(pformat)
+        pixels.free_palette(palette)
 
-    @unittest.skip("not implemented")
     def test_SDL_PixelFormat(self):
+        # test_alloc_free_format() contains the real tests
         pformat = pixels.SDL_PixelFormat()
         self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
 
-    @unittest.skip("not implemented")
     def test_SDL_Palette(self):
+        # test_alloc_free_palette() contains the real tests
         palette = pixels.SDL_Palette()
         self.assertIsInstance(palette, pixels.SDL_Palette)
 
