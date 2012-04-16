@@ -99,6 +99,8 @@ class SDLEventsTest(unittest.TestCase):
 
     @unittest.skipIf(hasattr(sys, "pypy_version_info"),
                      "PyPy's ctypes can't encapsule str in py_object()")
+    @unittest.skipIf(sys.platform == "cli",
+                     "IronPython's ctypes can't handle Union types correctly")
     def test_add_del_event_watch(self):
         eventwatch = []
 

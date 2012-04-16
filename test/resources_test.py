@@ -80,8 +80,16 @@ class ResourcesTest(unittest.TestCase):
         pass
 
     def test_Resources(self):
+        self.assertRaises(ValueError, resources.Resources, "invalid")
+        
         res = resources.Resources()
         self.assertIsInstance(res, resources.Resources)
+        self.assertRaises(KeyError, res.get, "surfacetest.bmp")
+        
+        fpath = os.path.join(os.path.dirname(__file__), "resources")
+        res = resources.Resources(fpath)
+        self.assertIsNotNone(res.get("rwopstest.txt"))
+        self.assertIsNotNone(res.get("surfacetest.bmp"))
 
     def test_Resources_add(self):
         fpath = os.path.join(os.path.dirname(__file__), "resources")
@@ -96,30 +104,114 @@ class ResourcesTest(unittest.TestCase):
         res.add(zfile)
         self.assertIsNotNone(res.get("rwopstest.txt"))
         self.assertIsNotNone(res.get("surfacetest.bmp"))
+        
+        self.assertRaises(TypeError, res.add, None)
+        self.assertRaises(ValueError, res.add, "invalid_name.txt")
 
-    @unittest.skip("not implemented")
     def test_Resources_add_file(self):
-        pass
+        fpath = os.path.join(os.path.dirname(__file__), "resources")
+        sfile = os.path.join(fpath, "surfacetest.bmp")
+        zfile = os.path.join(fpath, "resources.zip")
+        
+        res = resources.Resources()
+        res.add_file(sfile)
+        res.add_file(zfile)
+        
+        self.assertRaises(KeyError, res.get, "rwopstest.txt")
+        self.assertIsNotNone(res.get("surfacetest.bmp"))
+        self.assertIsNotNone(res.get("resources.zip"))
 
-    @unittest.skip("not implemented")
+        self.assertRaises(TypeError, res.add_file, None)
+        self.assertRaises(ValueError, res.add_file, "invalid_name.txt")
+
     def test_Resources_add_archive(self):
-        pass
+        fpath = os.path.join(os.path.dirname(__file__), "resources")
+        zfile = os.path.join(fpath, "resources.zip")
+        tfile = os.path.join(fpath, "resources.tar.gz")
+        
+        res = resources.Resources()
+        res.add_archive(zfile)
+        
+        self.assertIsNotNone(res.get("surfacetest.bmp"))
+        self.assertIsNotNone(res.get("rwopstest.txt"))
+        self.assertRaises(KeyError, res.get, "resources.zip")
 
-    @unittest.skip("not implemented")
+        self.assertRaises(TypeError, res.add_archive, None)
+        self.assertRaises(ValueError, res.add_archive, "invalid_name.txt")
+        
+        res = resources.Resources()
+        res.add_archive(tfile, typehint="targz")
+        self.assertIsNotNone(res.get("surfacetest.bmp"))
+        self.assertIsNotNone(res.get("rwopstest.txt"))
+        self.assertRaises(KeyError, res.get, "resources.tar.gz")
+
     def test_Resources_get(self):
-        pass
+        fpath = os.path.join(os.path.dirname(__file__), "resources")
+        
+        for path in (fpath, None):
+            res = resources.Resources(path)
+            
+            self.assertRaises(KeyError, res.get, "invalid_file.txt")
+            self.assertRaises(KeyError, res.get, None)
+            self.assertRaises(KeyError, res.get, 123456)
+            if path is None:
+                self.assertRaises(KeyError, res.get, "surfacetest.bmp")
+                self.assertRaises(KeyError, res.get, "rwopstest.txt")
+            else:
+                self.assertIsNotNone(res.get("surfacetest.bmp"))
+                self.assertIsNotNone(res.get("rwopstest.txt"))
 
-    @unittest.skip("not implemented")
     def test_Resources_get_filelike(self):
-        pass
+        fpath = os.path.join(os.path.dirname(__file__), "resources")
+        zfile = os.path.join(fpath, "resources.zip")
+        pfile = os.path.join(fpath, "rwopstest.txt")
+        
+        res = resources.Resources()
+        res.add(zfile)
+        
+        v1 = res.get_filelike("rwopstest.txt")
+        v2 = res.get_filelike("surfacetest.bmp")
+        self.assertEqual(type(v1), type(v2))
 
-    @unittest.skip("not implemented")
+        res.add(pfile)
+        
+        v1 = res.get_filelike("rwopstest.txt")
+        v2 = res.get_filelike("surfacetest.bmp")
+        self.assertNotEqual(type(v1), type(v2))
+        
+        self.assertRaises(KeyError, res.get_filelike, None)
+        self.assertRaises(KeyError, res.get_filelike, "invalid")
+        self.assertRaises(KeyError, res.get_filelike, 1234)
+
     def test_Resources_get_path(self):
-        pass
+        fpath = os.path.join(os.path.dirname(__file__), "resources")
+        zfile = os.path.join(fpath, "resources.zip")
+        pfile = os.path.join(fpath, "rwopstest.txt")
+        
+        res = resources.Resources()
+        res.add(zfile)
+        res.add(pfile)
+        
+        zpath = res.get_path("surfacetest.bmp")
+        self.assertTrue(zpath.find("surfacetest.bmp@") != -1)
+        self.assertNotEqual(zpath, zfile)
+        ppath = res.get_path("rwopstest.txt")
+        self.assertTrue(ppath.find("rwopstest.txt") != -1)
+        
+        self.assertRaises(KeyError, res.get_path, None)
+        self.assertRaises(KeyError, res.get_path, "invalid")
+        self.assertRaises(KeyError, res.get_path, 1234)
 
-    @unittest.skip("not implemented")
     def test_Resources_scan(self):
-        pass
+        fpath = os.path.join(os.path.dirname(__file__))
+        res = resources.Resources()
+        res.scan(fpath)
+        self.assertIsNotNone(res.get("rwopstest.txt"))
+        self.assertIsNotNone(res.get("surfacetest.bmp"))
+
+        self.assertRaises(ValueError, res.scan, "invalid")
+        self.assertRaises(Exception, res.scan, None)
+        self.assertRaises(Exception, res.scan, 12345)
 
 if __name__ == '__main__':
     unittest.main()

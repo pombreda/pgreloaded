@@ -8,6 +8,8 @@ import traceback
 import unittest
 import optparse
 import random
+import subprocess
+import time
 
 try:
     from pygame2.test.util import support, testrunner
@@ -49,7 +51,8 @@ def exclude_tag(option, opt, value, parser, *args, **kwargs):
 def list_tags(option, opt, value, parser, *args, **kwargs):
     alltags = []
     testsuites = []
-    testdir, testfiles = gettestfiles()
+    testdir, testfiles = gettestfiles(os.path.join
+                                      (os.path.dirname(__file__), ".."))
     testloader = unittest.defaultTestLoader
 
     for test in testfiles:
@@ -81,6 +84,10 @@ def create_options():
                           default=False,
                           help="run everything in an own subprocess "
                           "(default: use a single process)")
+    optparser.add_option("-t", "--timeout", action="store_true",
+                          default=70,
+                          help="Timout for subprocesses before being killed "
+                          "(default: 70s per file)")
     optparser.add_option("-v", "--verbose", action="store_true", default=False,
                           help="be verbose adnd print anything instantly")
     optparser.add_option("-r", "--random", action="store_true", default=False,
@@ -100,6 +107,7 @@ def create_options():
                           help="lists all available tags and exits")
     optkeys = [
         "subprocess",
+        "timeout",
         "random",
         "seed",
         "verbose"
@@ -195,6 +203,7 @@ def run():
     testdir, testfiles = gettestfiles(os.path.join
                                       (os.path.dirname(__file__), ".."),
                                       randomizer=randomizer)
+    
     testsuites = []
     for test in testfiles:
         testsuites.extend(loadtests(test, testdir, writer, loader, options))

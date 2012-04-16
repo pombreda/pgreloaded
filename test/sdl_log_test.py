@@ -5,9 +5,11 @@ import pygame2.sdl.log as log
 from pygame2.compat import byteify
 
 _ISPYPY = hasattr(sys, "pypy_version_info")
+_ISIPY = sys.platform == "cli"
 
 
 @unittest.skipIf(_ISPYPY, "PyPy's ctypes can't encapsule str in py_object()")
+@unittest.skipIf(_ISIPY, "IronPython does not handle exceptions correctly")
 class SDLLogTest(unittest.TestCase):
     __tags__ = ["sdl"]
 

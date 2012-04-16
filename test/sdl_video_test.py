@@ -397,6 +397,8 @@ class SDLVideoTest(unittest.TestCase):
 
     @unittest.skipIf(hasattr(sys, "pypy_version_info"),
                      "PyPy's ctypes can't encapsule str in py_object()")
+    @unittest.skipIf(sys.platform == "cli",
+                     "IronPython's ctypes fails with access violations")
     def test_get_set_window_data(self):
         window = video.create_window("Test", 10, 10, 10, 10, 0)
         self.assertIsInstance(window, video.SDL_Window)

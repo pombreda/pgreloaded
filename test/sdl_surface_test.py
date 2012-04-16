@@ -1,3 +1,4 @@
+import os
 import sys
 import array
 import unittest
@@ -414,8 +415,9 @@ class SDLSurfaceTest(unittest.TestCase):
         self.assertRaises(TypeError, surface.load_bmp, 1234)
 
     def test_load_bmp(self):
-        imgfile = RESOURCES.get_path("surfacetest.bmp")
-        imgsurface = surface.load_bmp(imgfile)
+        fpath = os.path.join(os.path.dirname(__file__), "resources")
+        imgpath = os.path.join(fpath, "surfacetest.bmp")
+        imgsurface = surface.load_bmp(imgpath)
         self.assertIsInstance(imgsurface, surface.SDL_Surface)
         surface.free_surface(imgsurface)
 

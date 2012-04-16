@@ -2,6 +2,7 @@
 Wrapper methods around the SDL2 surface routines.
 """
 import ctypes
+from pygame2.compat import *
 from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE, SDLError
 from pygame2.sdl.pixels import SDL_PixelFormat, SDL_Palette
 from pygame2.sdl.rect import SDL_Rect
@@ -112,7 +113,7 @@ def convert_surface_format(src, pformat, flags):
     """
     if not isinstance(src, SDL_Surface):
         raise TypeError("src must be a SDL_Surface")
-    if type(pformat) is not int:
+    if type(pformat) not in (int, long):
         raise TypeError("pformat must be an int")
     if type(flags) is not int:
         raise TypeError("flags must be an int")
@@ -150,7 +151,8 @@ def create_rgb_surface_from(pixels, width, height, depth, pitch, rmask, gmask,
                             bmask, amask):
     """Creates a RGB surface from a pixel buffer.
     """
-    ret = dll.SDL_CreateRGBSurfaceFrom(pixels, width, height, depth, pitch,
+    pptr = ctypes.cast(pixels, ctypes.POINTER(ctypes.c_ubyte))
+    ret = dll.SDL_CreateRGBSurfaceFrom(pptr, width, height, depth, pitch,
                                        rmask, gmask, bmask, amask)
     if ret is None or not bool(ret):
         raise SDLError()

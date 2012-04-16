@@ -239,7 +239,8 @@ def get_integer_v(device, param, size):
             ctypes.POINTER(ALCdevice))
 def capture_open_device(devicename, frequency, dformat, buffersize):
     """Opens an OpenAL capture device with the specified name."""
-    devicename = byteify(devicename, "utf-8")
+    if devicename is not None:
+        devicename = byteify(devicename, "utf-8")
     retval = dll.alcCaptureOpenDevice(devicename, frequency, dformat,
                                       buffersize)
     if retval is None or not bool(retval):

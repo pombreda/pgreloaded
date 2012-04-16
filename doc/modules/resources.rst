@@ -4,7 +4,7 @@
 :mod:`pygame2.resources` - Resource management
 ==============================================
 
-.. class:: Resources()
+.. class:: Resources([path=None[, excludepattern=None]])
 
    The Resources class manages a set of file resources and eases
    accessing them by using relative paths, scanning archives
@@ -61,7 +61,7 @@
       container. If a file within the path is a supported archive (ZIP
       or TAR), its contents will be indexed aut added automatically.
 
-      ``excludepattern`` can be a regular expression to skip files,
+      ``excludepattern`` can be a regular expression to skip directories,
       which match the pattern.
 
 .. function:: open_tarfile(archive : string, filename : string \

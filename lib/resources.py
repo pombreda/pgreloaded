@@ -147,6 +147,9 @@ class Resources(object):
     """
     def __init__(self, path=None, excludepattern=None):
         """Creates a new resource container instance.
+        
+        If path is provided, the resource container will scan the path and add
+        all found files to itself by invokding scan(path, excludepattern).
         """
         self.files = {}
         if path:
@@ -194,6 +197,9 @@ class Resources(object):
         the file will be automatically scanned (if it is an archive) or
         checked for availability (if it is a stream/network resource).
         """
+        if not os.path.exists(filename):
+            raise ValueError("invalid file path")
+
         if zipfile.is_zipfile(filename):
             self.add_archive(filename)
         elif tarfile.is_tarfile(filename):
@@ -207,6 +213,9 @@ class Resources(object):
         This will only add the passed file and do not scan an archive or
         check a stream for availability.
         """
+        if not os.path.exists(filename):
+            raise ValueError("invalid file path")
+        
         abspath = os.path.abspath(filename)
         fname = os.path.split(abspath)[1]
         if not fname:
@@ -219,6 +228,9 @@ class Resources(object):
         This will scan the passed archive and add its contents to the
         list of available resources.
         """
+        if not os.path.exists(filename):
+            raise ValueError("invalid file path")
+
         if typehint == 'zip':
             self._scanzip(filename)
         elif typehint == 'tar':
@@ -242,9 +254,9 @@ class Resources(object):
             elif ftype == 'tar':
                 return open_tarfile(archive, pathname)
             elif ftype == 'tarbz2':
-                return open_tarfile(archive, pathname, 'bz2')
+                return open_tarfile(archive, pathname, ftype='bz2')
             elif ftype == 'targz':
-                return open_tarfile(archive, pathname, 'gz')
+                return open_tarfile(archive, pathname, ftype='gz')
             else:
                 raise ValueError("unsupported archive type")
         dmpdata = open(pathname, 'rb')
@@ -268,9 +280,9 @@ class Resources(object):
             elif ftype == 'tar':
                 return open_tarfile(archive, pathname)
             elif ftype == 'tarbz2':
-                return open_tarfile(archive, pathname, 'bz2')
+                return open_tarfile(archive, pathname, ftype='bz2')
             elif ftype == 'targz':
-                return open_tarfile(archive, pathname, 'gz')
+                return open_tarfile(archive, pathname, ftype='gz')
             else:
                 raise ValueError("unsupported archive type")
         return open(pathname, 'rb')
@@ -296,7 +308,7 @@ class Resources(object):
         container. If a file is a supported (ZIP or TAR) archive, its
         contents will be indexed and added automatically.
 
-        excludepattern can be a regular expression to skip files, which
+        excludepattern can be a regular expression to skip directories, which
         match the pattern.
         """
         match = None
@@ -305,6 +317,8 @@ class Resources(object):
         join = os.path.join
         add = self.add
         abspath = os.path.abspath(path)
+        if not os.path.exists(path) or not os.path.isdir(path):
+            raise ValueError("invalid path")
         for (pdir, dirnames, filenames) in os.walk(abspath):
             if match and match(pdir) is not None:
                 continue
