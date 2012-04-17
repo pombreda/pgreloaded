@@ -1,3 +1,4 @@
+import sys
 import os
 import unittest
 import pygame2.sdl as sdl
@@ -26,5 +27,6 @@ class SDLPowerTest(unittest.TestCase):
         output += "Percent left (-1 = undetermined): %d" % retval[2] + \
             os.linesep
         doprint(output)
+
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

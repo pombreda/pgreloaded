@@ -63,4 +63,4 @@ class SDLEndianTest(unittest.TestCase):
         self.assertRaises(NotImplementedError, endian.swap_float, 10)
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

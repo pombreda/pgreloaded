@@ -1,3 +1,4 @@
+import sys
 import unittest
 import pygame2.sdl as sdl
 import pygame2.sdl.version as version
@@ -37,4 +38,4 @@ class SDLVersionTest(unittest.TestCase):
         self.assertGreaterEqual(version.get_revision_number(), 6302)
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

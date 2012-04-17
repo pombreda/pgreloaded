@@ -16,7 +16,7 @@ __all__ = ["init", "init_subsystem", "quit", "quit_subsystem", "was_init",
 
 _LIBNAME = None
 if sys.platform in ("win32", "cli"):
-    if sys.maxsize > 2**32:
+    if sys.maxsize > 2 ** 32:
         # 64bit platform
         _LIBNAME = "SDL2.dll"
     else:
@@ -67,13 +67,14 @@ def init(flags=None):
         retval = dll.SDL_Init(flags)
     return retval
 
+
 @sdltype("SDL_InitSubSystem", [ctypes.c_uint], ctypes.c_int)
 def init_subsystem(flags):
     """Similar to init(), but can be called to explicitly initialize a certain
     module. init() needs to be called beforehand.
     """
     return dll.SDL_InitSubSystem(flags)
-    
+
 
 @sdltype("SDL_QuitSubSystem", [ctypes.c_uint], None)
 def quit_subsystem(flags):

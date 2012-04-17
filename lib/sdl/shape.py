@@ -3,7 +3,7 @@ Wrapper methods around the SDL2 shape routines.
 """
 import ctypes
 from pygame2.compat import *
-from pygame2.sdl import sdltype, dll, SDL_TRUE
+from pygame2.sdl import sdltype, dll, SDL_TRUE, SDLError
 from pygame2.sdl.video import SDL_Window
 from pygame2.sdl.pixels import SDL_Color
 from pygame2.sdl.surface import SDL_Surface
@@ -32,14 +32,14 @@ def SDL_SHAPEMODEALPHA(mode):
 
 
 class SDL_WindowShapeParams(ctypes.Union):
-    _fields_ = [("_binarizationCutoff", ctypes.c_ubyte),
-                ("_colorKey", SDL_Color)
+    _fields_ = [("binarizationCutoff", ctypes.c_ubyte),
+                ("colorKey", SDL_Color)
                 ]
 
 
 class SDL_WindowShapeMode(ctypes.Structure):
-    _fields_ = [("_mode", ctypes.c_int),
-                ("_parameters", SDL_WindowShapeParams)
+    _fields_ = [("mode", ctypes.c_int),
+                ("parameters", SDL_WindowShapeParams)
                 ]
 
 
@@ -86,7 +86,15 @@ def set_window_shape(window, surface, shapemode):
                                     ctypes.byref(surface),
                                     ctypes.byref(shapemode))
     if retval != 0:
-        raise SDLError()
+        # The shape functions in SDL2 do not set any error.
+        if retval == SDL_WINDOW_LACKS_SHAPE:
+            raise SDLError("window has no shape")
+        elif retval == SDL_NONSHAPEABLE_WINDOW:
+            raise SDLError("window is not shapeable")
+        elif retval == SDL_INVALID_SHAPE_ARGUMENT:
+            raise SDLError("invalid shape argument")
+        else:
+            raise SDLError()
 
 
 @sdltype("SDL_GetShapedWindowMode", [ctypes.POINTER(SDL_Window),
@@ -101,5 +109,11 @@ def get_shaped_window_mode(window):
     retval = dll.SDL_GetShapedWindowMode(ctypes.byref(window),
                                          ctypes.byref(mode))
     if retval != 0:
-        raise SDLError()
+        # The shape functions in SDL2 do not set any error.
+        if retval == SDL_WINDOW_LACKS_SHAPE:
+            raise SDLError("window has no shape")
+        elif retval == SDL_NONSHAPEABLE_WINDOW:
+            raise SDLError("window is not shapeable")
+        else:
+            raise SDLError()
     return mode

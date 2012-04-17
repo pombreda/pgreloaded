@@ -17,7 +17,7 @@ class ResourcesTest(unittest.TestCase):
     def test_open_zipfile(self):
         fpath = os.path.join(os.path.dirname(__file__), "resources")
         zfile = os.path.join(fpath, "resources.zip")
-        
+
         # resources.zip is a packed version of resources/, which at
         # least contains
         #
@@ -47,7 +47,7 @@ class ResourcesTest(unittest.TestCase):
     def test_open_tarfile(self):
         fpath = os.path.join(os.path.dirname(__file__), "resources")
         tfile = os.path.join(fpath, "resources.tar.gz")
-        
+
         # resources.tar.gz is a packed version of resources/, which at
         # least contains
         #
@@ -81,11 +81,11 @@ class ResourcesTest(unittest.TestCase):
 
     def test_Resources(self):
         self.assertRaises(ValueError, resources.Resources, "invalid")
-        
+
         res = resources.Resources()
         self.assertIsInstance(res, resources.Resources)
         self.assertRaises(KeyError, res.get, "surfacetest.bmp")
-        
+
         fpath = os.path.join(os.path.dirname(__file__), "resources")
         res = resources.Resources(fpath)
         self.assertIsNotNone(res.get("rwopstest.txt"))
@@ -104,7 +104,7 @@ class ResourcesTest(unittest.TestCase):
         res.add(zfile)
         self.assertIsNotNone(res.get("rwopstest.txt"))
         self.assertIsNotNone(res.get("surfacetest.bmp"))
-        
+
         self.assertRaises(TypeError, res.add, None)
         self.assertRaises(ValueError, res.add, "invalid_name.txt")
 
@@ -112,11 +112,11 @@ class ResourcesTest(unittest.TestCase):
         fpath = os.path.join(os.path.dirname(__file__), "resources")
         sfile = os.path.join(fpath, "surfacetest.bmp")
         zfile = os.path.join(fpath, "resources.zip")
-        
+
         res = resources.Resources()
         res.add_file(sfile)
         res.add_file(zfile)
-        
+
         self.assertRaises(KeyError, res.get, "rwopstest.txt")
         self.assertIsNotNone(res.get("surfacetest.bmp"))
         self.assertIsNotNone(res.get("resources.zip"))
@@ -128,17 +128,17 @@ class ResourcesTest(unittest.TestCase):
         fpath = os.path.join(os.path.dirname(__file__), "resources")
         zfile = os.path.join(fpath, "resources.zip")
         tfile = os.path.join(fpath, "resources.tar.gz")
-        
+
         res = resources.Resources()
         res.add_archive(zfile)
-        
+
         self.assertIsNotNone(res.get("surfacetest.bmp"))
         self.assertIsNotNone(res.get("rwopstest.txt"))
         self.assertRaises(KeyError, res.get, "resources.zip")
 
         self.assertRaises(TypeError, res.add_archive, None)
         self.assertRaises(ValueError, res.add_archive, "invalid_name.txt")
-        
+
         res = resources.Resources()
         res.add_archive(tfile, typehint="targz")
         self.assertIsNotNone(res.get("surfacetest.bmp"))
@@ -147,10 +147,10 @@ class ResourcesTest(unittest.TestCase):
 
     def test_Resources_get(self):
         fpath = os.path.join(os.path.dirname(__file__), "resources")
-        
+
         for path in (fpath, None):
             res = resources.Resources(path)
-            
+
             self.assertRaises(KeyError, res.get, "invalid_file.txt")
             self.assertRaises(KeyError, res.get, None)
             self.assertRaises(KeyError, res.get, 123456)
@@ -165,20 +165,20 @@ class ResourcesTest(unittest.TestCase):
         fpath = os.path.join(os.path.dirname(__file__), "resources")
         zfile = os.path.join(fpath, "resources.zip")
         pfile = os.path.join(fpath, "rwopstest.txt")
-        
+
         res = resources.Resources()
         res.add(zfile)
-        
+
         v1 = res.get_filelike("rwopstest.txt")
         v2 = res.get_filelike("surfacetest.bmp")
         self.assertEqual(type(v1), type(v2))
 
         res.add(pfile)
-        
+
         v1 = res.get_filelike("rwopstest.txt")
         v2 = res.get_filelike("surfacetest.bmp")
         self.assertNotEqual(type(v1), type(v2))
-        
+
         self.assertRaises(KeyError, res.get_filelike, None)
         self.assertRaises(KeyError, res.get_filelike, "invalid")
         self.assertRaises(KeyError, res.get_filelike, 1234)
@@ -187,17 +187,17 @@ class ResourcesTest(unittest.TestCase):
         fpath = os.path.join(os.path.dirname(__file__), "resources")
         zfile = os.path.join(fpath, "resources.zip")
         pfile = os.path.join(fpath, "rwopstest.txt")
-        
+
         res = resources.Resources()
         res.add(zfile)
         res.add(pfile)
-        
+
         zpath = res.get_path("surfacetest.bmp")
         self.assertTrue(zpath.find("surfacetest.bmp@") != -1)
         self.assertNotEqual(zpath, zfile)
         ppath = res.get_path("rwopstest.txt")
         self.assertTrue(ppath.find("rwopstest.txt") != -1)
-        
+
         self.assertRaises(KeyError, res.get_path, None)
         self.assertRaises(KeyError, res.get_path, "invalid")
         self.assertRaises(KeyError, res.get_path, 1234)
@@ -214,4 +214,4 @@ class ResourcesTest(unittest.TestCase):
         self.assertRaises(Exception, res.scan, 12345)
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

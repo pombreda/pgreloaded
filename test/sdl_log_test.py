@@ -334,4 +334,4 @@ class SDLLogTest(unittest.TestCase):
         log.log_set_output_function(origfunc, userdata)
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

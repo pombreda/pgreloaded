@@ -147,7 +147,7 @@ class Resources(object):
     """
     def __init__(self, path=None, excludepattern=None):
         """Creates a new resource container instance.
-        
+
         If path is provided, the resource container will scan the path and add
         all found files to itself by invokding scan(path, excludepattern).
         """
@@ -199,7 +199,6 @@ class Resources(object):
         """
         if not os.path.exists(filename):
             raise ValueError("invalid file path")
-
         if zipfile.is_zipfile(filename):
             self.add_archive(filename)
         elif tarfile.is_tarfile(filename):
@@ -215,7 +214,6 @@ class Resources(object):
         """
         if not os.path.exists(filename):
             raise ValueError("invalid file path")
-        
         abspath = os.path.abspath(filename)
         fname = os.path.split(abspath)[1]
         if not fname:
@@ -230,7 +228,6 @@ class Resources(object):
         """
         if not os.path.exists(filename):
             raise ValueError("invalid file path")
-
         if typehint == 'zip':
             self._scanzip(filename)
         elif typehint == 'tar':

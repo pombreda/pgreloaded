@@ -363,4 +363,4 @@ class SDLRWopsTest(unittest.TestCase):
         self.assertEqual(stringify(buf.getvalue(), "utf-8"), "qwbkqwbkacfz")
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

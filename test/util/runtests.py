@@ -4,6 +4,7 @@
 
 import os
 import sys
+import imp
 import traceback
 import unittest
 import optparse
@@ -58,8 +59,8 @@ def list_tags(option, opt, value, parser, *args, **kwargs):
     for test in testfiles:
         try:
             testmod = os.path.splitext(test)[0]
-            glob, loc = {}, {}
-            package = __import__(testmod, glob, loc)
+            fp, pathname, descr = imp.find_module(testmod, [testdir, ])
+            package = imp.load_module(testmod, fp, pathname, descr)
             try:
                 testsuites.append(loadtests_frompkg(package, testloader))
             except:
@@ -80,12 +81,13 @@ def list_tags(option, opt, value, parser, *args, **kwargs):
 def create_options():
     """Create the accepatble options for the test runner."""
     optparser = optparse.OptionParser()
+    optparser.add_option("-f", "--filename", type="string",
+                         help="execute a single unit test file")
     optparser.add_option("-s", "--subprocess", action="store_true",
                           default=False,
                           help="run everything in an own subprocess "
                           "(default: use a single process)")
-    optparser.add_option("-t", "--timeout", action="store_true",
-                          default=70,
+    optparser.add_option("-t", "--timeout", type="int", default=70,
                           help="Timout for subprocesses before being killed "
                           "(default: 70s per file)")
     optparser.add_option("-v", "--verbose", action="store_true", default=False,
@@ -102,10 +104,11 @@ def create_options():
     optparser.add_option("-e", "--exclude", action="callback",
                           callback=exclude_tag, type="string",
                           help="exclude test containing the tag")
-    optparser.add_option("-T", "--listtags", action="callback",
+    optparser.add_option("-l", "--listtags", action="callback",
                           callback=list_tags,
                           help="lists all available tags and exits")
     optkeys = [
+        "filename",
         "subprocess",
         "timeout",
         "random",
@@ -150,8 +153,8 @@ def loadtests(test, testdir, writer, loader, options):
     suites = []
     try:
         testmod = os.path.splitext(test)[0]
-        glob, loc = {}, {}
-        package = __import__(testmod, glob, loc)
+        fp, pathname, descr = imp.find_module(testmod, [testdir, ])
+        package = imp.load_module(testmod, fp, pathname, descr)
         if options.verbose:
             writer.writeline("Loading tests from [%s] ..." % testmod)
         else:
@@ -181,13 +184,18 @@ def prepare_results(results):
     return testcount, errors, failures, skips, ok
 
 
+def validate_args(options):
+    if options.subprocess and options.filename:
+        raise RuntimeError("-s cannot be used together with -f")
+
+
 def run():
     optparser, optkeys = create_options()
     options, args = optparser.parse_args()
-    #err, out = support.redirect_output()
+    validate_args(options)
     writer = support.StreamOutput(sys.stdout)
 
-    if options.verbose:
+    if options.verbose and not options.subprocess:
         writer.writeline(HEAVYDELIM)
         writer.writeline("-- Starting tests --")
         writer.writeline(HEAVYDELIM)
@@ -200,10 +208,42 @@ def run():
         randomizer = random.Random(options.seed)
     loader = testrunner.TagTestLoader(EXCLUDETAGS, randomizer)
 
-    testdir, testfiles = gettestfiles(os.path.join
-                                      (os.path.dirname(__file__), ".."),
-                                      randomizer=randomizer)
-    
+    testdir, testfiles = None, None
+    if options.filename is not None:
+        testdir = os.path.dirname(os.path.abspath(options.filename))
+        testfiles = [os.path.basename(options.filename), ]
+    else:
+        testdir, testfiles = gettestfiles(os.path.join
+                                          (os.path.dirname(__file__), ".."),
+                                          randomizer=randomizer)
+
+    if options.subprocess:
+        timeout = options.timeout
+        gettime = time.time
+        for test in testfiles:
+            writer.write("Executing tests from [%s]... " % test)
+            procargs = [sys.executable, __file__]
+            procargs += ["-f", os.path.join(testdir, test)]
+            proc = subprocess.Popen(procargs, stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE)
+            maxtime = gettime() + timeout
+            retval = None
+            while retval is None and gettime() < maxtime:
+                retval = proc.poll()
+            if retval is None:
+                proc.kill()
+                writer.writeline("execution timed out")
+            elif retval != 0:
+                writer.writeline("ERROR")
+                writer.write(proc.stdout.read())
+                writer.writeline()
+            else:
+                writer.writeline("OK")
+                if options.verbose:
+                    writer.write(proc.stdout.read())
+                    writer.writeline()
+        return 0
+
     testsuites = []
     for test in testfiles:
         testsuites.extend(loadtests(test, testdir, writer, loader, options))
@@ -269,6 +309,7 @@ def run():
             writer.writeline("ERROR: %s" % err[0])
             writer.writeline(HEAVYDELIM)
             writer.writeline(err[1])
+        return 1
     if len(failures) > 0:
         writer.writeline("Failures:" + os.linesep)
         for fail in failures:
@@ -276,7 +317,7 @@ def run():
             writer.writeline("FAILURE: %s" % fail[0])
             writer.writeline(HEAVYDELIM)
             writer.writeline(fail[1])
-    #support.restore_output(err, out)
+        return 1
 
 if __name__ == "__main__":
-    run()
+    sys.exit(run())

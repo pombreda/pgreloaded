@@ -68,6 +68,7 @@ _errmap = {
     }
 _fasterror = lambda dev: _errmap[dll.alcGetError(ctypes.byref(dev))]
 
+
 @openaltype("alcGetError", [ctypes.POINTER(ALCdevice)], ctypes.c_int)
 def get_error(device):
     """Gets the most recent error generated within the AL system."""

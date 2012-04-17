@@ -3,6 +3,7 @@ import unittest
 import pygame2.sdl as sdl
 import pygame2.sdl.shape as shape
 import pygame2.sdl.video as video
+import pygame2.sdl.surface as surface
 
 
 class SDLShapeTest(unittest.TestCase):
@@ -40,9 +41,45 @@ class SDLShapeTest(unittest.TestCase):
             self.assertFalse(val)
             video.destroy_window(window)
 
-    @unittest.skip("not implemented")
     def test_set_window_shape(self):
-        pass
+        sf = surface.create_rgb_surface(10, 10, 32)
+        mode = shape.SDL_WindowShapeMode()
+        mode.mode = shape.ShapeModeDefault
+        mode.parameters = shape.SDL_WindowShapeParams()
+        mode.parameters.binarizationCutoff = 1
+
+        flags = (video.SDL_WINDOW_HIDDEN, )
+        for flag in flags:
+            # TODO: find out, how shaping is supposed to work :-)
+            # window = shape.create_shaped_window("Test", 10, 10, 10, 10, flag)
+            # self.assertIsInstance(window, video.SDL_Window)
+            # self.assertTrue(shape.is_shaped_window(window))
+
+            # self.assertRaises(TypeError, shape.set_window_shape,
+            #                   None, None, None)
+            # self.assertRaises(TypeError, shape.set_window_shape,
+            #                   window, None, None)
+            # self.assertRaises(TypeError, shape.set_window_shape,
+            #                   window, sf, None)
+            # self.assertRaises(TypeError, shape.set_window_shape,
+            #                   "Test", sf, mode)
+            # self.assertRaises(TypeError, shape.set_window_shape,
+            #                   window, 12345, mode)
+            # self.assertRaises(TypeError, shape.set_window_shape,
+            #                   window, sf, "Test")
+
+            # shape.set_window_shape(window, sf, mode)
+            # wmode = shape.get_shaped_window_mode(window)
+            # self.assertEqual(wmode.mode, mode.mode)
+            # self.assertEqual(wmode.parameters.binarizationCutoff,
+            #                  mode.parameters.binarizationCutoff)
+            # video.destroy_window(window)
+
+            window = video.create_window("Test", 10, 10, 10, 10, flag)
+            self.assertIsInstance(window, video.SDL_Window)
+            self.assertRaises(sdl.SDLError, shape.set_window_shape,
+                              window, sf, mode)
+            video.destroy_window(window)
 
     def test_get_shaped_window_mode(self):
         flags = (video.SDL_WINDOW_HIDDEN, )
@@ -54,4 +91,4 @@ class SDLShapeTest(unittest.TestCase):
             video.destroy_window(window)
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

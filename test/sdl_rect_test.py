@@ -403,4 +403,4 @@ class SDLRectTest(unittest.TestCase):
         self.assertEqual(ret, (True, rect.SDL_Rect(0, 0, 1, 1)))
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

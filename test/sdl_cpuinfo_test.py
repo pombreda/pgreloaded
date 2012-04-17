@@ -64,4 +64,4 @@ class SDLCPUInfoTest(unittest.TestCase):
         self.assertIsInstance(ret, bool)
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

@@ -395,9 +395,25 @@ class SDLSurfaceTest(unittest.TestCase):
     def test_soft_stretch(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_set_surface_palette(self):
-        pass
+        invpalette = pixels.alloc_palette(10)
+        palette = pixels.alloc_palette(1 << 16)
+        sf = surface.create_rgb_surface(10, 10, 16)
+
+        self.assertRaises(TypeError, surface.set_surface_palette, None, None)
+        self.assertRaises(TypeError, surface.set_surface_palette, None, palette)
+        self.assertIsNone(sf.format.palette)
+        surface.set_surface_palette(sf, palette)
+        self.assertIsNotNone(sf.format.palette)
+        self.assertRaises(sdl.SDLError, surface.set_surface_palette, sf,
+                          invpalette)
+        self.assertIsNotNone(sf.format.palette)
+        surface.set_surface_palette(sf, None)
+        self.assertIsNone(sf.format.palette)
+        
+        surface.free_surface(sf)
+        pixels.free_palette(invpalette)
+        pixels.free_palette(palette)
 
     @unittest.skip("not implemented")
     def test_set_surface_rle(self):
@@ -434,4 +450,4 @@ class SDLSurfaceTest(unittest.TestCase):
         pass
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

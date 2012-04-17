@@ -126,7 +126,6 @@ class World(object):
             if classtype not in self.components:
                 self.components[classtype] = {}
                 self._componenttypes[classtype.__name__.lower()] = classtype
-        
 
     def delete_entity(self, entity):
         """Removes an Entity from the World, including all its data."""
@@ -139,7 +138,7 @@ class World(object):
 
     def add_system(self, system):
         """Adds a processing system to the world.
-        
+
         The system will be added as last item in the processing order.
         """
         self._add_system_information(system)

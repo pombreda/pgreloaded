@@ -56,6 +56,10 @@ class SDL_Surface(ctypes.Structure):
     def clip_rect(self):
         return self._clip_rect
 
+    @property
+    def format(self):
+        if self._format:
+            return self._format.contents
 
 @sdltype("SDL_ConvertPixels", [ctypes.c_int, ctypes.c_int, ctypes.c_uint,
                                ctypes.POINTER(ctypes.c_ubyte), ctypes.c_int,
@@ -541,13 +545,16 @@ def soft_stretch(src, srcrect, dst, dstrect):
 @sdltype("SDL_SetSurfacePalette", [ctypes.POINTER(SDL_Surface),
                                    ctypes.POINTER(SDL_Palette)], ctypes.c_int)
 def set_surface_palette(surface, palette):
-    """
+    """Sets the palette used by the surface.
     """
     if not isinstance(surface, SDL_Surface):
         raise TypeError("surface must be a SDL_Surface")
-    if not isinstance(palette, SDL_Palette):
-        raise TypeError("palette must be a SDL_Palette")
-    ret = dll.SDL_SetSurfacePalette(surface, palette)
+    pptr = None
+    if palette is not None:
+        if not isinstance(palette, SDL_Palette):
+            raise TypeError("palette must be a SDL_Palette")
+        pptr = ctypes.byref(palette)
+    ret = dll.SDL_SetSurfacePalette(ctypes.byref(surface), pptr)
     if ret != 0:
         raise SDLError()
 
@@ -555,10 +562,17 @@ def set_surface_palette(surface, palette):
 @sdltype("SDL_SetSurfaceRLE", [ctypes.POINTER(SDL_Surface), ctypes.c_int],
          ctypes.c_int)
 def set_surface_rle(surface, flag):
-    """
+    """Sets the RLE acceleration hint for the surface.
+
+    If RLE is enabled, colorkey and alpha blending blits are much
+    faster, but the surface must be locked before directly accessing the
+    pixels.
     """
     if not isinstance(surface, SDL_Surface):
         raise TypeError("surface must be a SDL_Surface")
-    ret = dll.SDL_SetSurfaceRLE(surface, flag)
+    if bool(flag):
+        ret = dll.SDL_SetSurfaceRLE(ctypes.byref(surface), 1)
+    else:
+        ret = dll.SDL_SetSurfaceRLE(ctypes.byref(surface), 0)
     if ret != 0:
         raise SDLError()

@@ -12,4 +12,4 @@ class Pygame2Test(unittest.TestCase):
         # TODO
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

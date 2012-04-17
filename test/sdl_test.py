@@ -37,12 +37,13 @@ class SDLTest(unittest.TestCase):
         sdl.quit_subsystem(sdl.SDL_INIT_JOYSTICK)
 
     def test_init_haptic(self):
-        if sys.platform.startswith("freebsd"):
-            # not supported yet
-            self.skipTest("haptic is not supported on this platform")
         sdl.init(sdl.SDL_INIT_HAPTIC)
         ret = sdl.was_init(sdl.SDL_INIT_HAPTIC)
-        self.assertEqual(ret, sdl.SDL_INIT_HAPTIC)
+        if sys.platform.startswith("freebsd"):
+            # not supported yet
+            self.assertNotEqual(ret, sdl.SDL_INIT_HAPTIC)
+        else:
+            self.assertEqual(ret, sdl.SDL_INIT_HAPTIC)
         sdl.quit_subsystem(sdl.SDL_INIT_HAPTIC)
 
     def test_get_error(self):
@@ -62,4 +63,4 @@ class SDLTest(unittest.TestCase):
         self.assertEqual(sdl.get_error(), "123456789")
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

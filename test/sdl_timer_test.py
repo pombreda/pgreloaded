@@ -83,4 +83,4 @@ class SDLTimerTest(unittest.TestCase):
         timer.delay(10)
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

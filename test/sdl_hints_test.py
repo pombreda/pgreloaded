@@ -1,3 +1,4 @@
+import sys
 import unittest
 import pygame2.sdl as sdl
 import pygame2.sdl.hints as hints
@@ -65,4 +66,4 @@ class SDLHintsTest(unittest.TestCase):
                           "TEST", "123456789", "bananas")
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

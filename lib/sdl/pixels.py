@@ -345,28 +345,6 @@ class SDL_PixelFormat(ctypes.Structure):
             return self._next.contents
         return None
 
-    def __copy__(self):
-        format = SDL_PixelFormat()
-        format.format = self.format
-        format._palette = self._palette
-        format.BitsPerPixel = self.BitsPerPixel
-        format.BytesPerPixel = self.BytesPerPixel
-        format.padding = self.padding
-        format.Rloss = self.Rloss
-        format.Gloss = self.Gloss
-        format.Bloss = self.Bloss
-        format.Aloss = self.Aloss
-        format.Rshift = self.Rshift
-        format.Gshift = self.Gshift
-        format.Bshift = self.Bshift
-        format.Ashift = self.Ashift
-        format.Rmask = self.Rmask
-        format.Gmask = self.Gmask
-        format.Bmask = self.Bmask
-        format.Amask = self.Amask
-        format._next = self._next
-        return format
-
 
 SDL_PixelFormat._fields_ = [("format", ctypes.c_uint),
                             ("_palette", ctypes.POINTER(SDL_Palette)),

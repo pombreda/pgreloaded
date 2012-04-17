@@ -1,3 +1,4 @@
+import sys
 import unittest
 import copy
 from pygame2.color import *
@@ -764,4 +765,4 @@ class ColorTest(unittest.TestCase):
         self.assertRaises(ValueError, convert_to_color, "Test")
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

@@ -53,16 +53,17 @@ class DLL(object):
         """Gets the decorator binding for the DLL."""
         class dlltype(object):
             """Decorator class used to wrap DLL related functions.
-            
+
             You should not use this decorator in user code.
             """
             dll = None
+
             def __init__(self_, funcname=None, args=None, returns=None):
                 func = self_.dll.get_dll_function(funcname)
                 func.argtypes = args
                 func.restype = returns
                 self_.dll.add_function(funcname, func)
-                
+
             def __call__(self_, func):
                 return func
         dlltype.dll = self

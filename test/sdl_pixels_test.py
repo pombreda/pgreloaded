@@ -518,4 +518,4 @@ class SDLPixelsTest(unittest.TestCase):
         self.assertRaises(TypeError, setb,  c1, None)
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

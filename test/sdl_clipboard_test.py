@@ -51,4 +51,4 @@ class SDLClipboardTest(unittest.TestCase):
         self.assertEqual(retval, str(None))
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())

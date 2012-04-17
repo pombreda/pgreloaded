@@ -21,4 +21,4 @@ class SDLPlatformTest(unittest.TestCase):
         # return here,
 
 if __name__ == '__main__':
-    unittest.main()
+    sys.exit(unittest.main())
