@@ -17,27 +17,50 @@ if __name__ == "__main__":
     packages = [ "pygame2",
                  "pygame2.openal",
                  "pygame2.dll",
+                 "pygame2.examples",
                  "pygame2.sdl",
                  "pygame2.test",
                  "pygame2.test.util",
+                 "pygame2.video",
                  ]
     package_dir = { "pygame2" : "lib",
                     "pygame2.dll" : "lib/dll",
-                    "pygame2.test" : "test" }
+                    "pygame2.test" : "test",
+                    "pygame2.examples" : "examples",
+                    }
 
     package_data = { "pygame2.test" : ["resources/*.*"],
-                     "pygame2.dll" : ["*.dll"] }
+                     "pygame2.examples" : ["resources/*.*"],
+                     "pygame2.dll" : ["*.dll"],
+                     }
                     
     setupdata = {
         "name" :  "pygame2",
         "version" : VERSION,
-        "description" : "Python Game Development Library",
+        "description" : "Python Multimedia Development Library",
         "author" : "Marcus von Appen",
         "author_email" : "marcus@sysfault.org",
-        "license" : "ZLIB",
+        "license" : "Public Domain / zlib",
         "url" : "http://code.google.com/p/pgreloaded",
         "packages" : packages,
         "package_dir" : package_dir,
         "package_data" : package_data,
+        "classifiers" : [
+            "Development Status :: 4 - Beta",
+            "Intended Audience :: Developers",
+            "License :: Public Domain",
+            "License :: OSI Approved :: zlib/libpng License",
+            "Operating System :: OS Independent",
+            "Programming Language :: Python",
+            "Programming Language :: Python :: 2.7",
+            "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3.1",
+            "Programming Language :: Python :: 3.2",
+            "Programming Language :: Python :: Implementation :: CPython",
+            "Programming Language :: Python :: Implementation :: IronPython",
+            "Programming Language :: Python :: Implementation :: PyPy",
+            "Topic :: Multimedia",
+            "Topic :: Software Development :: Libraries :: Python Modules",
+            ],
         }
     setup (**setupdata)

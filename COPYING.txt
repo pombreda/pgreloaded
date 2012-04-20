@@ -1,7 +1,3 @@
-The code below lib/sdl/ (package pygame2.sdl) is a wrapper around SDL2
-(http://www.libsdl.org) and as such is licensed under the zlib license
-as stated on http://www.libsdl.org/license.php
-
 The DLLs within the lib/dll folder are licensed as follows:
 
 - SDL2.dll, SDL2_32bit.dll:

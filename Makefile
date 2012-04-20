@@ -76,13 +76,13 @@ installall:
 	@pypy1.8 setup.py install
 
 testall:
-	@python2.7 test/util/runtests.py
+	@-python2.7 test/util/runtests.py
 	@rm -rf test/*.pyc
-	@python3.1 test/util/runtests.py
+	@-python3.1 test/util/runtests.py
 	@rm -rf test/*.pyc
-	@python3.2 test/util/runtests.py
+	@-python3.2 test/util/runtests.py
 	@rm -rf test/*.pyc
-	@pypy1.8 test/util/runtests.py
+	@-pypy1.8 test/util/runtests.py
 	@rm -rf test/*.pyc
 
 testall2:

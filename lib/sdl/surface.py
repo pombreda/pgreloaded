@@ -173,9 +173,12 @@ def fill_rect(dst, rect, color):
     """
     if not isinstance(dst, SDL_Surface):
         raise TypeError("dst must be a SDL_Surface")
-    if rect is not None and not isinstance(rect, SDL_Rect):
-        raise TypeError("rect must be None or a SDL_Rect")
-    retval = dll.SDL_FillRect(ctypes.byref(dst), ctypes.byref(rect), color)
+    rptr = None
+    if rect is not None:
+        if not isinstance(rect, SDL_Rect):
+            raise TypeError("rect must be None or a SDL_Rect")
+        rptr = ctypes.byref(rptr)
+    retval = dll.SDL_FillRect(ctypes.byref(dst), rptr, color)
     if retval == -1:
         raise SDLError()
 
@@ -489,9 +492,12 @@ def upper_blit(src, srcrect, dst, dstrect):
         raise TypeError("dst must be a SDL_Surface")
     if not isinstance(dstrect, SDL_Rect):
         raise TypeError("dstrect must be a SDL_Rect")
-    if not isinstance(srcrect, SDL_Rect):
-        raise TypeError("srcrect must be a SDL_Rect")
-    ret = dll.SDL_UpperBlit(ctypes.byref(src), ctypes.byref(srcrect),
+    srptr = None
+    if srcrect is not None:
+        if not isinstance(srcrect, SDL_Rect):
+            raise TypeError("srcrect must be a SDL_Rect")
+        srptr = ctypes.byref(srcrect)
+    ret = dll.SDL_UpperBlit(ctypes.byref(src), srptr,
                             ctypes.byref(dst), ctypes.byref(dstrect))
     if ret != 0:
         raise SDLError()
@@ -513,9 +519,12 @@ def upper_blit_scaled(src, srcrect, dst, dstrect):
         raise TypeError("dst must be a SDL_Surface")
     if not isinstance(dstrect, SDL_Rect):
         raise TypeError("dstrect must be a SDL_Rect")
-    if not isinstance(srcrect, SDL_Rect):
-        raise TypeError("srcrect must be a SDL_Rect")
-    ret = dll.SDL_UpperBlitScaled(ctypes.byref(src), ctypes.byref(srcrect),
+    srptr = None
+    if srcrect is not None:
+        if not isinstance(srcrect, SDL_Rect):
+            raise TypeError("srcrect must be a SDL_Rect")
+        srptr = ctypes.byref(srcrect)
+    ret = dll.SDL_UpperBlitScaled(ctypes.byref(src), srptr,
                                   ctypes.byref(dst), ctypes.byref(dstrect))
     if ret != 0:
         raise SDLError()
