@@ -37,3 +37,7 @@ class Window(object):
     def minimize(self):
         """Minimizes the window to an iconified state in the system tray."""
         video.minimize_window(self.window)
+
+    def refresh(self):
+        """Refreshes the entire window surface."""
+        video.update_window_surface(self.window)

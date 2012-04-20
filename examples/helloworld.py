@@ -64,7 +64,7 @@ def run():
     # Start the event processing. This will run in an endless loop, so
     # everything following after processor.run() will not be executed
     # before some quitting event is raised.
-    processor.run()
+    processor.run(window)
 
     # We called video.init(), so we have to call video.quit() as well to
     # release the resources hold by the SDL DLL.

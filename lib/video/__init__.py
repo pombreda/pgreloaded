@@ -38,7 +38,7 @@ def quit():
 
 class TestEventProcessor(object):
     """A simple event processor for testing purposes."""
-    def run(self):
+    def run(self, window):
         """Starts an event loop without actually processing any event.
         """
         while True:
@@ -47,3 +47,5 @@ class TestEventProcessor(object):
                 timer.delay(10)
             elif event.type == events.SDL_QUIT:
                 return
+            else:
+                window.refresh()

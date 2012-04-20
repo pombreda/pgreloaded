@@ -6,35 +6,19 @@ import os
 import re
 import zipfile
 import tarfile
+import io
 
 __all__ = ["open_zipfile", "open_tarfile", "open_url", "Resources"]
 
 _ISPYTHON3 = sys.version_info[0] >= 3
 
-# Python 3.x workarounds for the changed urllib and stringio modules.
+# Python 3.x workarounds for the changed urllib modules.
 if _ISPYTHON3:
     import urllib.parse as urlparse
     import urllib.request as urllib2
-    import io
 else:
     import urlparse
     import urllib2
-    try:
-        import cStringIO as io
-    except ImportError:
-        import StringIO as io
-
-
-def _get_stringio(data):
-    """Returns a StringIO instance for Python < 3 or a BytesIO or Python
-    > 3.
-    """
-    iodata = None
-    if _ISPYTHON3:
-        iodata = io.BytesIO(data)
-    else:
-        iodata = io.StringIO(data)
-    return iodata
 
 
 def open_zipfile(archive, filename, directory=None):
@@ -65,7 +49,7 @@ def open_zipfile(archive, filename, directory=None):
 
     try:
         dmpdata = archive.open(apath)
-        data = _get_stringio(dmpdata.read())
+        data = io.BytesIO(dmpdata.read())
     finally:
         if opened:
             archive.close()
@@ -118,7 +102,7 @@ def open_tarfile(archive, filename, directory=None, ftype=None):
 
     try:
         dmpdata = archive.extractfile(apath)
-        data = _get_stringio(dmpdata.read())
+        data = io.BytesIO(dmpdata.read())
     finally:
         if opened:
             archive.close()
@@ -257,7 +241,7 @@ class Resources(object):
             else:
                 raise ValueError("unsupported archive type")
         dmpdata = open(pathname, 'rb')
-        data = _get_stringio(dmpdata.read())
+        data = io.BytesIO(dmpdata.read())
         dmpdata.close()
         return data
 

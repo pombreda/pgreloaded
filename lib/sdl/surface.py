@@ -177,7 +177,7 @@ def fill_rect(dst, rect, color):
     if rect is not None:
         if not isinstance(rect, SDL_Rect):
             raise TypeError("rect must be None or a SDL_Rect")
-        rptr = ctypes.byref(rptr)
+        rptr = ctypes.byref(rect)
     retval = dll.SDL_FillRect(ctypes.byref(dst), rptr, color)
     if retval == -1:
         raise SDLError()

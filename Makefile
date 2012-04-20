@@ -3,11 +3,17 @@ EXPERIMENTAL = 1
 top_srcdir = `pwd`
 SUBDIRS = \
 	$(top_srcdir)/doc \
+	$(top_srcdir)/examples \
+	$(top_srcdir)/examples/resources \
 	$(top_srcdir)/test \
+	$(top_srcdir)/test/resources \
 	$(top_srcdir)/test/util \
 	$(top_srcdir)/lib \
 	$(top_srcdir)/lib/dll \
-	$(top_srcdir)/lib/sdl
+	$(top_srcdir)/lib/openal \
+	$(top_srcdir)/lib/sdl \
+	$(top_srcdir)/lib/video \
+	$(top_srcdir)/util
 
 all: clean build
 
