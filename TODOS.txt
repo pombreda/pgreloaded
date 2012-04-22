@@ -5,7 +5,9 @@
 - SDL_thread.h API - better be handled by multiprocessing and friends
 - SDL_touch.h API
 - SDL_syswm.h API
-
+- encapsule pygame2.openal in an easy to use wrapper
+- there seem to be random dead locks with GL related unit tests on
+  Linux
 - PyPy 1.8 can't do
        val = "This is a value"
        pyobj = ctypes.py_object(val)

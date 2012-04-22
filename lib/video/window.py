@@ -1,4 +1,4 @@
-"""window routines to manage on-screen windows."""
+"""Window routines to manage on-screen windows."""
 import pygame2.sdl.video as video
 
 
@@ -15,12 +15,28 @@ class Window(object):
     def __init__(self, title, size, position=(0, 0), flags=None):
         """Creates a Window with a specific size and title.
 
-        TODO
+        The created Window is hidden by default, which can be overriden
+        at the time of creation by providing other SDL window flags
+        through the flags parameter.
+
+        The default flags for creating Window instances can be adjusted
+        through the DEFAULTFLAGS class variable. Example:
+
+            Window.DEFAULTFLAGS = pygame2.sdl.video.SDL_WINDOW_SHOWN
         """
         if flags is None:
             flags = self.DEFAULTFLAGS
         self.window = video.create_window(title, position[0], position[1],
                                           size[0], size[1], flags)
+
+    @property
+    def title(self):
+        """The title of the window."""
+        return video.get_window_title(self.window)
+
+    @title.setter
+    def title(self, value):
+        video.set_window_title(self.window, title)
 
     def show(self):
         """Show the window on the display."""
@@ -41,3 +57,12 @@ class Window(object):
     def refresh(self):
         """Refreshes the entire window surface."""
         video.update_window_surface(self.window)
+
+    def get_surface(self):
+        """Gets the SDL_Surface used by the Window to display 2D pixel
+        data.
+        
+        Using this method will make the usage of GL operations, such
+        as texture handling, or using SDL renderers impossible.
+        """
+        return video.get_window_surface(self.window)

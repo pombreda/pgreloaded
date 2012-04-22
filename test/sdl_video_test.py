@@ -744,8 +744,11 @@ class SDLVideoTest(unittest.TestCase):
         self.assertRaises(ValueError, video.gl_set_swap_interval, 1234)
 
         # No current OpenGL context yet.
-        self.assertRaises(sdl.SDLError, video.gl_set_swap_interval, 1)
-        self.assertRaises(sdl.SDLError, video.gl_set_swap_interval, 0)
+        # Might crash on certain platforms, since the internal state of
+        # SDL2 does not support calling GL functions without having a
+        # GL library loaded.
+        # self.assertRaises(sdl.SDLError, video.gl_set_swap_interval, 1)
+        # self.assertRaises(sdl.SDLError, video.gl_set_swap_interval, 0)
 
         self.assertTrue(video.gl_load_library())
         window = video.create_window("OpenGL", 10, 10, 10, 10,

@@ -45,6 +45,14 @@ class SDL_Surface(ctypes.Structure):
                 ]
 
     @property
+    def format(self):
+        return self._format
+
+    @property
+    def size(self):
+        return self._w, self._h
+
+    @property
     def locked(self):
         return self._locked
 

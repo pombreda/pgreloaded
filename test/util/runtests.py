@@ -309,7 +309,6 @@ def run():
             writer.writeline("ERROR: %s" % err[0])
             writer.writeline(HEAVYDELIM)
             writer.writeline(err[1])
-        return 1
     if len(failures) > 0:
         writer.writeline("Failures:" + os.linesep)
         for fail in failures:
@@ -317,7 +316,9 @@ def run():
             writer.writeline("FAILURE: %s" % fail[0])
             writer.writeline(HEAVYDELIM)
             writer.writeline(fail[1])
+    if len(errors) > 0 or len(failures) > 0:
         return 1
+    return 0
 
 if __name__ == "__main__":
     sys.exit(run())

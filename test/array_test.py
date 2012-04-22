@@ -138,7 +138,7 @@ def ltrbyte32(val, pos):
             raise IndexError("invalid position")
 
 
-class pgarrayTest(unittest.TestCase):
+class ArrayTest(unittest.TestCase):
 
     def setUp(self):
         if sys.version.startswith("3.1"):
