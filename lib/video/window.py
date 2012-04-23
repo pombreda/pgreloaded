@@ -1,6 +1,8 @@
 """Window routines to manage on-screen windows."""
 import pygame2.sdl.video as video
 
+__all__ = ["Window"]
+
 
 class Window(object):
     """The Window class represents a visible on-screen object with an
@@ -36,7 +38,7 @@ class Window(object):
 
     @title.setter
     def title(self, value):
-        video.set_window_title(self.window, title)
+        video.set_window_title(self.window, value)
 
     def show(self):
         """Show the window on the display."""
@@ -61,7 +63,7 @@ class Window(object):
     def get_surface(self):
         """Gets the SDL_Surface used by the Window to display 2D pixel
         data.
-        
+
         Using this method will make the usage of GL operations, such
         as texture handling, or using SDL renderers impossible.
         """

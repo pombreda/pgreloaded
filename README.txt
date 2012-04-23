@@ -41,9 +41,18 @@ Python installation. Additionally other libraries are needed, if you
 want to enable certain features of Pygame Reloaded.
 
 * Python 2.7, 3.1, 3.2 supported    (http://www.python.org)
+* PyPy 1.8.0+ supported             (http://www.pypy.org)
 
-[Optional dependencies]
+Please note, that some parts of PyPy's ctypes implementation currently
+do not support everything, Python's ctypes implementation
+supports. There are some regressions, which are described in the
+TODOS.txt file.
+
+Optional dependencies:
+
 * SDL >= 2.0.0                      (http://www.libsdl.org)
+* OpenAL >= 1.1                     (http://www.openal.org
+                                     http://kcat.strangesoft.net/openal.html)
 
 1.2 Notes on Mercurial usage
 ----------------------------

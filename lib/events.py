@@ -50,7 +50,7 @@ class EventHandler(object):
         """Removes a callback from the EventHandler."""
         self.callbacks.remove(callback)
 
-    
+
 # class MPEventHandler(EventHandler):
 #     """TODO"""
 #     def __init__(self, sender, procs=5):

@@ -6,6 +6,7 @@ import pygame2.sdl.rect as rect
 import pygame2.sdl.video as video
 import pygame2.sdl.rwops as rwops
 
+__all__ = ["SpriteRenderer", "Sprite"]
 
 class SpriteRenderer(System):
     """A rendering system for Sprite components.

@@ -410,7 +410,7 @@ class SDLSurfaceTest(unittest.TestCase):
         self.assertIsNotNone(sf.format.palette)
         surface.set_surface_palette(sf, None)
         self.assertIsNone(sf.format.palette)
-        
+
         surface.free_surface(sf)
         pixels.free_palette(invpalette)
         pixels.free_palette(palette)

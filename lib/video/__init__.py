@@ -10,9 +10,10 @@ import pygame2.sdl.events as events
 import pygame2.sdl.timer as timer
 from pygame2.video.sprite import Sprite, SpriteRenderer
 from pygame2.video.window import Window
+from pygame2.video.draw import prepare_color
 
 __all__ = ["Window", "Sprite", "SpriteRenderer", "TestEventProcessor",
-           "init", "quit"]
+           "init", "quit", "prepare_color"]
 
 
 def init():

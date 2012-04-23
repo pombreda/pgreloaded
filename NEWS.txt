@@ -1,1 +1,2 @@
-This NEWS file for dynrules covers a short overview about the latest changes.
+This NEWS file for Pygame Reloaded covers a short overview about the
+latest changes.

@@ -536,6 +536,9 @@ def string_to_color(s):
 
 def convert_to_color(v):
     """Tries to convert the passed value to a Color object."""
+    if isinstance(v, Color):
+        return v
+
     if type(v) is str:
         return string_to_color(v)
     if type(v) in (int, long):

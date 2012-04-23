@@ -13,9 +13,16 @@ provide you full access to all of its features.
 You must have at least one of the following Python versions installed:
 
 * Python 2.7, 3.1, 3.2 (http://www.python.org)
+* PyPy 1.8.0           (http://www.pypy.org)
 
-Other Python versions might work, but are (currently) not officially
-tested or supported by the Pygame2 distribution.
+Other Python versions or Python implementations might work, but are
+(currently) not officially tested or supported by the Pygame2
+distribution.
+
+.. note::
+   PyPy's :mod:`ctypes` implementation does not support everything
+   supported by Python's :mod:`ctypes` implementation. For PyPy there
+   are some known regressions as listed in the TODOS.txt file.
 
 Additionally, you will need the following packages and libraries to be
 installed:
@@ -29,16 +36,16 @@ OpenAL  >= 1.1   :mod:`pygame2.openal` http://www.openal.org
 ======= ======== ===================== =======================================
 
 .. note::
-    The Pygame2 distribution ships with a set of pre-built DLLs for
-    Microsoft Windows. The DLLs can be found in the lib\\dll\\ folder
-    and will be installed under :mod:`pygame2.dll` by default. If you do
-    not want the shipped DLLs to be used, you can replace them with your
-    own DLLs.
-    
-    The shipped DLLs are 64-bit builds, thus your Python installation
-    needs to be a 64-bit build, too, if you want to use them. If you
-    want or need a 32-bit Python installation, you have to exchange the
-    DLLs with matching 32-bit versions.
+   The Pygame2 distribution ships with a set of pre-built DLLs for
+   Microsoft Windows. The DLLs can be found in the lib\\dll\\ folder
+   and will be installed under :mod:`pygame2.dll` by default. If you do
+   not want the shipped DLLs to be used, you can replace them with your
+   own DLLs.
+   
+   The shipped DLLs are 64-bit builds, thus your Python installation
+   needs to be a 64-bit build, too, if you want to use them. If you
+   want or need a 32-bit Python installation, you have to exchange the
+   DLLs with matching 32-bit versions.
 
 Installation
 ------------

@@ -6,8 +6,12 @@
 - SDL_touch.h API
 - SDL_syswm.h API
 - encapsule pygame2.openal in an easy to use wrapper
-- there seem to be random dead locks with GL related unit tests on
-  Linux
+
+- there seem to be random dead locks (with X11/GL related unit tests on
+  Linux running in a VM - might be related to the heavy X11 context
+  switches within the setUp() and tearDown() calls. The dead locks are
+  caused by a futex(... FUTEX_WAIT_PRIVATE ...) call never returning...
+
 - PyPy 1.8 can't do
        val = "This is a value"
        pyobj = ctypes.py_object(val)

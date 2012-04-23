@@ -69,6 +69,7 @@ class SDL_Surface(ctypes.Structure):
         if self._format:
             return self._format.contents
 
+
 @sdltype("SDL_ConvertPixels", [ctypes.c_int, ctypes.c_int, ctypes.c_uint,
                                ctypes.POINTER(ctypes.c_ubyte), ctypes.c_int,
                                ctypes.c_uint, ctypes.POINTER(ctypes.c_ubyte),
