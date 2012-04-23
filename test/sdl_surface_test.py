@@ -2,6 +2,7 @@ import os
 import sys
 import array
 import unittest
+import ctypes
 from pygame2.test import RESOURCES
 import pygame2.sdl as sdl
 import pygame2.sdl.surface as surface
@@ -25,6 +26,23 @@ rgba_pixelations_16x16 = (
     ([x << 8 for x in range(16 * 16)], 16, 16,
      (0xF000, 0x0F00, 0x00F0, 0x000F),
      pixels.SDL_PIXELFORMAT_RGB444),
+    )
+
+blitsizes = (
+    (2, 2), #(5, 5), (10, 10), (20, 20), (2, 4), (5, 3), (8, 12), (27, 9),
+    )
+
+blitpositions = (
+    #rect.SDL_Rect(0, 0),
+    #rect.SDL_Rect(4, 4),
+    #rect.SDL_Rect(10, 10),
+    #rect.SDL_Rect(15, 15),
+    rect.SDL_Rect(-2, 1),
+    #rect.SDL_Rect(3, -4),
+    #rect.SDL_Rect(0, 3),
+    #rect.SDL_Rect(4, 0),
+    #rect.SDL_Rect(12, 6),
+    #rect.SDL_Rect(13, 22),
     )
 
 
@@ -385,7 +403,39 @@ class SDLSurfaceTest(unittest.TestCase):
 
     @unittest.skip("not implemented")
     def test_blit_surface(self):
-        pass
+        bpp = 32
+        w, h = 10, 10
+        # no alpha to prevent blending
+        masks = (0xFF000000, 0x00FF0000, 0x0000FF00, 0x00000000)
+        dest = surface.create_rgb_surface(w, h, bpp, masks[0], masks[1],
+                                          masks[2], masks[3])
+        pixelsize = h * dest.pitch
+        rowlen = dest.pitch / 4
+
+        sources = []
+        for width, height in blitsizes:
+            src = surface.create_rgb_surface(width, height, bpp, masks[0],
+                                             masks[1], masks[2], masks[3])
+            surface.fill_rect(src, None, 0xFFFFFFFF)  # fill with white
+            sources.append(src)
+
+        for src in sources:
+            for pos in blitpositions:
+                surface.fill_rect(dest, None, 0x00000000)  # fill with black
+                surface.blit_surface(src, None, dest, pos)
+                buf = ctypes.cast(dest.pixels,
+                                  ctypes.POINTER(ctypes.c_ubyte * pixelsize))
+                pbuf = pgarray.CTypesView(buf.contents, itemsize=1,
+                                          objsize=pixelsize)
+                iview = pbuf.to_uint32()
+
+                for px in range(pos.x, pos.x + src.size[0]):
+                    if px < 0 or px >= w:
+                        continue  # skip out of bounds pixels
+                    for py in range(pos.y, pos.y + src.size[1]):
+                        if py < 0 or py >= h:
+                            continue  # skip out of bounds pixels
+                        self.assertEqual(iview[py * rowlen + px], 0xFFFFFFFF)
 
     @unittest.skip("not implemented")
     def test_upper_blit_scaled(self):

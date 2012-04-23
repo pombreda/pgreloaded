@@ -50,10 +50,11 @@ def run():
     # Display the surface on the window. This will copy the contents
     # (pixels) of the surface to the window. The surface will be
     # displayed at surface.position on the window. Play around with the
-    # surface.x and surface.y values!
+    # surface.x and surface.y values or surface.position (which is just
+    # surface.x and surface.y grouped as tuple)!
     renderer.render(sprite)
 
-    # Set up an example event loop processing system. This is necessary,
+    # Set up an example event loop processing system. This is a necessity,
     # so the application can exit correctly, mouse movements, etc. are
     # recognised and so on. The TestEventProcessor class is just for
     # testing purposes and does not do anything meaningful.  Take a look

@@ -16,7 +16,7 @@ class CTypesView(object):
     """A proxy for byte-wise accessible data types to be used in ctypes
     bindings.
     """
-    def __init__(self, obj, itemsize=1, docopy=False):
+    def __init__(self, obj, itemsize=1, docopy=False, objsize=None):
         """Creates a new CTypesView for the passed object.
 
         Unless docopy is True, the CTypesView tries to let ctypes
@@ -31,11 +31,15 @@ class CTypesView(object):
         self._isshared = True
         self._view = None
         self._itemsize = itemsize
-        self._create_view(itemsize, bool(docopy))
+        self._create_view(itemsize, bool(docopy), objsize)
 
-    def _create_view(self, itemsize, docopy):
+    def _create_view(self, itemsize, docopy, objsize):
         self._isshared = not docopy
-        bsize = len(self._obj) * itemsize
+        bsize = 0
+        if objsize is None:
+            bsize = len(self._obj) * itemsize
+        else:
+            bsize = objsize * itemsize
 
         if docopy:
             self._obj = self._create_copy(self._obj, itemsize)

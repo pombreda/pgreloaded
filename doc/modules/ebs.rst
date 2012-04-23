@@ -1,5 +1,5 @@
 .. module:: pygame2.ebs
-   :synopsis: Core information for all modules.
+   :synopsis: A component-based entity system framework.
 
 :mod:`pygame2.ebs` - A component-based entity system framework
 ==============================================================

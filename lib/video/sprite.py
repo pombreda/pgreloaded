@@ -71,3 +71,8 @@ class Sprite(Component):
     def position(self):
         """The top-left position of the Sprite as tuple."""
         return self.x, self.y
+
+    @position.setter
+    def position(self, value):
+        self.x = value[0]
+        self.y = value[1]

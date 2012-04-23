@@ -9,42 +9,29 @@ do not hesitate, if the one or other explanation is missing.
 
 Importing
 ---------
-Pygame2 uses a strict seperation of modules to allow you to build and
-import only those parts needed for your specific needs. In contrast to
-Pygame, this forces you to write more import statements, but the benefit
-is that you can keep your dependencies small.
-
 Let's start with importing some basic SDL modules, which are necessary
 to display a small nice window and to do some basic drawing within that
 window. ::
 
-  import sys
-  import pygame2
-  import pygame2.event
-  import pygame2.image
-  import pygame2.examples
-  try:
-      import pygame2.video
-  except ImportError:
-      print ("No pygame2.sdl support, which is required for pygame2.video")
-      sys.exit ()
+    import sys
+    from pygame2.examples import RESOURCES
+    try:
+        import pygame2.video as video
+    except ImportError:
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
 
-First of all, we import the :mod:`pygame2` core module, which allows us
-to use some basic things, such as :class:`pygame2.Color` and
-:class:`pygame2.Rect` objects. In nearly all graphics applications
-written with pygame2, you will need the core.
+We start with importing some resources from :mod:`pygame2.examples`, so that
+we have a test image around to display on the window later on. In your own
+applications, it is unlikely that you will ever need to import them.
 
-Afterwards, we import the shipped examples. This is mainly done to have
-the logo around, which resides within the :mod:`pygame2.examples`
-package. In your own applications, it is unlikely that you will ever
-need to import them.
+Afterwards, we try to import :mod:`pygame2.video` module, which is
+necessary for displaying the window and image. :mod:`pygame2.video` requires
+:mod:`pygame2.sdl`, so in case it could not load the SDL bindings, we will
+print the exact error stack information and exit with a failure.
 
-Finally, we try to get the :mod:`pygame2.video` module, which is
-necessary for displaying the window and image. As Pygame2 can run
-without SDL support, we add a typical safety net to get out without too
-much noise, if SDL support is not given.
-
-Window Creation and Image Loading
+Window creation and image loading
 ---------------------------------
 Any graphical application requires access to the screen, mostly in form
 of a window, which basically represents a portion of the screen, the
@@ -56,54 +43,61 @@ Once we have imported all necessary parts, let's create a window to have
 access to the screen, so we can display the logo and thus represent it
 to the user. ::
 
-  pygame2.video.init ()
+    video.init ()
 
-  imgresource = pygame2.examples.RESOURCES.get ("logo.bmp")
-  surface = pygame2.image.load (imgresource)
+    sprite = video.Sprite(RESOURCES.get("hello.bmp"))
 
-  white = pygame2.Color (255, 255, 255)
-  
-  window = pygame2.video.Window ("Hello World!", surface.width + 10,
-                                 surface.height + 10)
-  window.fill (white)
-  window.blit (surface, (5, 5))
-  window.show ()
+    window = video.Window("Hello World!", size=(640, 480))
+    window.show()
+
+    renderer = video.SpriteRenderer(window)
+    renderer.render(sprite)
 
 First, we initialize the :mod:`pygame2.video` internals, so we can
 have access to the screen and create windows on top of it. Afterwards,
-we get the logo from the :mod:`pygame2.examples` package and create a
-:class:`pygame2.Surface` from it, which can be easily shown later on and
-which allows us to determine the minimum window size we need to display it.
+we get an image from the :mod:`pygame2.examples` package and create a
+:class:`pygame2.video.Sprite` from it, which can be easily shown later on.
  
 Once done with that, :class:`pygame2.video.Window` will create the
-window for us. We make the window slightly larger than the image size
-to have some small border around the image.
+window for us and we supply a title to be shown on the window's border along
+with its initial size. Since :class:`pygame2.video.Window` instances are not
+shown by default, we have to tell the operating system and window manager that
+there is a new window to display by calling :meth:`pygame2.video.Window.show()`.
 
-If the window is first created, it will appear all black on the screen
-by default. We change that by filling the window with a white color
-now and afterwards copy (which is called *blitting*) our loaded image to
-the window. As you can see, we are using ``(5, 5)`` as second argument
-to :meth:`pygame2.video.Window.blit`. This is the top-left (x, y) offset to
-start copying the image contents at.
+To display the image, we will use a :class:`pygame2.video.SpriteRenderer`,
+which can copy the image to the window for display. The
+:class:`pygame2.video.SpriteRenderer` needs to know, where to copy to, so we
+supply the window as target for copy and display operations. All left to do is
+to actually initiate the copy process by calling
+:class:`pygame2.video.SpriteRenderer.render()` with the image we created
+earlier.
 
 .. tip::
 
-   Try to experiment with different values instead of (5, 5), for
-   example (-10, 8) or (17, -12) to learn more about the blit offset and
-   its behaviour.
+   You will notice that the sprite used above will always be drawn at the
+   top-left corner of the :class:`pygame2.video.Window`. You can change the
+   position of where to draw it by changing its
+   :attr:`pygame2.video.Sprite.position` value. ::
+   
+        # will cause the renderer to draw the sprite 10px to the right and
+        # 20 px to the bottom
+        sprite.position = 10, 20
+        
+        # will cause the renderer to draw the sprite 55px to the right and
+        # 10 px to the bottom
+        sprite.position = 55, 10
+   
+   Experiment with different values to see their effect. Do not forget to do
+   this *before* ``renderer.render(sprite)`` is called.
 
-Finally, we have to tell the operating system or window manager that the window
-should be shown on the screen, which we can do with
-:meth:`pygame2.video.Window.show()`
-
-Making the Application responsive
+Making the application responsive
 ---------------------------------
 We are nearly done now. We have an image to display, we have a window, where
 the image should be displayed on, so we can execute the written code, not?
 
 Well, yes, but the only thing that will happen is that we will notice a
 short flickering before the application exits. Maybe we can even see
-the window with the logo for a short moment, but that's not what we
+the window with the image for a short moment, but that's not what we
 want, do we?
 
 To keep the window on the screen and to make it responsive to user
@@ -111,20 +105,26 @@ input, such as closing the window, react upon the mouse cursor or key
 presses, we have to add a so-called event loop. The event loop will deal
 with certain types of actions happening on the window or while the
 window is focused by the user and - as long as the event loop is
-running - will keep the window shown on the screen [#f1]_. ::
+running - will keep the window shown on the screen. ::
 
-  okay = True
-  while okay:
-      for ev in pygame2.event.get ():
-          if ev.is_quit ():
-              okay = False
-          if ev.is_keydown () and ev.key == pygame2.event.K_ESCAPE:
-              okay = False
+    processor = video.TestEventProcessor()
+    processor.run(window)
 
-  video.quit ()
+Since this is a very first tutorial, we keep things simple here and hide the
+dummy class for testing an application startup without actually dealing with
+event loop magic in the :class:`pygame2.video.TestEventProcessor`. It is a
+events. By calling :meth:`pygame2.video.TestEventProcessor.run()`, we
+implicitly start the event loop, so that it can take care of everything for us.
 
-TBD
+And here it ends...
+-------------------
 
-.. rubric:: Footnotes
+The window is shown, the image is shown, great! All left to do is to actually
+clean up everything, once the application finishes. Luckily the
+:class:`pygame2.video.TestEventProcessor` knows, when the window is closed, so
+it will exit from the event loop. Once it exits, we definitely should clean up
+the video internals, we initialized at the beginning. Thus, a final call to ::
 
-.. [#f1] *shown* is not entirely true, but let's go with that for now.
+    video.quit()
+    
+should definitely be made.

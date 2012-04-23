@@ -44,9 +44,6 @@ class SDL_Surface(ctypes.Structure):
                 ("_refcount", ctypes.c_int)
                 ]
 
-    @property
-    def format(self):
-        return self._format
 
     @property
     def size(self):
@@ -69,6 +66,15 @@ class SDL_Surface(ctypes.Structure):
         if self._format:
             return self._format.contents
 
+    @property
+    def pixels(self):
+        if SDL_MUSTLOCK(self) and not self._locked:
+            raise SDLError("must be locked before accessing the pixels")
+        return self._pixels
+
+    @property
+    def pitch(self):
+        return self._pitch
 
 @sdltype("SDL_ConvertPixels", [ctypes.c_int, ctypes.c_int, ctypes.c_uint,
                                ctypes.POINTER(ctypes.c_ubyte), ctypes.c_int,
