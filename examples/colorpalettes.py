@@ -23,7 +23,7 @@ except ImportError:
 def draw_palette(surface, palette):
     sdlsurface.fill_rect(surface, None, 0) # Black
     width, height = surface.size
-    rw = width / len(palette)
+    rw = width // len(palette)
     rect = sdlrect.SDL_Rect(0, 0, rw, height)
     for color in palette:
         cval = video.prepare_color(color, surface)
