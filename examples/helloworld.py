@@ -71,5 +71,7 @@ def run():
     # release the resources hold by the SDL DLL.
     video.quit()
 
+    return 0
+
 if __name__ == "__main__":
     sys.exit(run())

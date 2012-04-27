@@ -5,11 +5,36 @@ import struct
 import ctypes
 from pygame2.compat import *
 
-__all__ = ["CTypesView", "to_ctypes"]
+__all__ = ["CTypesView", "to_ctypes", "MemoryView"]
 
 
 # Hack around an import error using relative import paths in Python 2.7
 _array = __import__("array")
+
+
+def to_ctypes(dataseq, dtype):
+    """Converts an arbitrary sequence to a ctypes array of the specified
+    type and returns the ctypes array and amount of items as two-value
+    tuple.
+
+    Raises a TypeError, if one or more elements in the passed sequence
+    do not match the passed type.
+    """
+    count = len(dataseq)
+    if isinstance(dataseq, CTypesView):
+        itemsize = ctypes.sizeof(dtype)
+        if itemsize == 1:
+            dataseq = dataseq.to_bytes()
+        elif itemsize == 2:
+            dataseq = dataseq.to_uint16()
+        elif itemsize == 4:
+            dataseq = dataseq.to_uint32()
+        elif itemsize == 8:
+            dataseq = dataseq.to_uint64()
+        else:
+            raise TypeError("unsupported data type for the passed CTypesView")
+    valset = (count * dtype)(*dataseq)
+    return valset, count
 
 
 class CTypesView(object):
@@ -125,26 +150,99 @@ class CTypesView(object):
         return self._obj
 
 
-def to_ctypes(dataseq, dtype):
-    """Converts an arbitrary sequence to a ctypes array of the specified
-    type and returns the ctypes array and amount of items as two-value
-    tuple.
+class MemoryView(object):
+    """Simple n-dimensional access to buffers"""
+    def __init__(self, source, itemsize, strides, getfunc=None, setfunc=None):
+        """Creates a new MemoryView from a source."""
+        self._source = source
+        self._itemsize = itemsize
+        self._strides = strides
+        self._srcsize = len(source)
 
-    Raises a TypeError, if one or more elements in the passed sequence
-    do not match the passed type.
-    """
-    count = len(dataseq)
-    if isinstance(dataseq, CTypesView):
-        itemsize = ctypes.sizeof(dtype)
-        if itemsize == 1:
-            dataseq = dataseq.to_bytes()
-        elif itemsize == 2:
-            dataseq = dataseq.to_uint16()
-        elif itemsize == 4:
-            dataseq = dataseq.to_uint32()
-        elif itemsize == 8:
-            dataseq = dataseq.to_uint64()
+        self._getfunc = getfunc or self._getbytes
+        self._setfunc = setfunc or self._setbytes
+
+        tsum = 1
+        for v in strides:
+            tsum *= v
+        if tsum > self._srcsize:
+            raise ValueError("strides exceed the accesible source size")
+        if itemsize > strides[-1]:
+            raise ValueError("itemsize exceeds the accessible stride length")
+
+    def _getbytes(self, start, end):
+        return self._source[start:end]
+
+    def _setbytes(self, start, end, value):
+        self._source[start:end] = value
+
+    def __len__(self):
+        return self.strides[0]
+
+    def __repr__(self):
+        retval = "["
+        for dim in range(self.strides[0]):
+            retval += "%s, " % self[dim]
+        retval = retval.rstrip(", ")
+        retval += "]"
+        return retval
+
+    def __getitem__(self, index):
+        if type(index) is slice:
+            raise IndexError("slicing is not supported")
         else:
-            raise TypeError("unsupported data type for the passed CTypesView")
-    valset = (count * dtype)(*dataseq)
-    return valset, count
+            if index >= len(self):
+                raise IndexError("index is out of bounds")
+            if self.ndim == 1:
+                offset = index * self.itemsize
+                return self._getfunc(offset, offset + self.itemsize)
+            else:
+                advance = 1
+                for b in self.strides[1:]:
+                    advance *= b
+                offset = advance * index
+                return MemoryView(self._source, self.itemsize,
+                                  self.strides[1:])
+
+    def __setitem__(self, index, value):
+        if type(index) is slice:
+            raise IndexError("slicing is not supported")
+        else:
+            if index >= len(self):
+                raise IndexError("index is out of bounds")
+            offset = index * self.itemsize
+            if self.ndim == 1:
+                self._setfunc(offset, offset + self.itemsize, value)
+            else:
+                advance = 1
+                for b in self.strides[1:]:
+                    advance *= b
+                offset = advance * index
+                view = MemoryView(self._source, self.itemsize,
+                                  self.strides[1:])
+                if len(value) != len(view):
+                    raise ValueError("value does not match the view strides")
+                for x in range(len(view)):
+                    view[x] = value[x]
+
+    @property
+    def size(self):
+        """The size in bytes of the underlying source object."""
+        return self._srcsize
+
+    @property
+    def strides(self):
+        """The length in bytes for accessing all elements in each
+        dimension of the MemoryView.
+        """
+        return self._strides
+
+    @property
+    def itemsize(self):
+        """The size of a single item in bytes."""
+        return self._itemsize
+
+    @property
+    def ndim(self):
+        """The number of dimensions of the MemoryView."""
+        return len(self.strides)

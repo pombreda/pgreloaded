@@ -296,6 +296,9 @@ class ArrayTest(unittest.TestCase):
                 (otype, len(seq) * factor, shared)
             self.assertEqual(text, repr(buf))
 
+    @unittest.skip("not implemented")
+    def test_MemoryView(self):
+        pass
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

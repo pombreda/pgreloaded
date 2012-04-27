@@ -8,6 +8,7 @@ import pygame2.sdl.rwops as rwops
 
 __all__ = ["SpriteRenderer", "Sprite"]
 
+
 class SpriteRenderer(System):
     """A rendering system for Sprite components.
 
