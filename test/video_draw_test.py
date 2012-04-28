@@ -19,8 +19,29 @@ class VideoDrawTest(unittest.TestCase):
         video.quit()
 
     def test_fill(self):
-        sprite = video.Sprite(size=(50, 50), bpp=32)
-        pixels = sprite.surface.pixels
+        rects = ((0, 0, 3, 2),
+                 (2, 3, 4, 2),
+                 (5, -1, 2, 2),
+                 (1, 7, 4, 8)
+                 )
+        sprite = video.Sprite(size=(10, 10), bpp=32)
+        view = video.PixelView(sprite)
+        for rect in rects:
+            video.fill(sprite, 0)
+            colorval = video.prepare_color(0xAABBCCDD, sprite)
+            video.fill(sprite, 0xAABBCCDD, rect)
+            for y, row in enumerate(view):
+                for x, col in enumerate(row):
+                    if y >= rect[1] and y < (rect[1] + rect[3]):
+                        if x >= rect[0] and x < (rect[0] + rect[2]):
+                            self.assertEqual(col, colorval,
+                                             "color mismatch at (x, y)")
+                        else:
+                            self.assertEqual(col, 0,
+                                             "color mismatch at (x, y)")
+
+                    else:
+                        self.assertEqual(col, 0, "color mismatch at (x, y)")
 
     @unittest.skip("not implemented")
     def test_prepare_color(self):

@@ -44,7 +44,6 @@ class SDL_Surface(ctypes.Structure):
                 ("_refcount", ctypes.c_int)
                 ]
 
-
     @property
     def size(self):
         return self._w, self._h
@@ -75,6 +74,7 @@ class SDL_Surface(ctypes.Structure):
     @property
     def pitch(self):
         return self._pitch
+
 
 @sdltype("SDL_ConvertPixels", [ctypes.c_int, ctypes.c_int, ctypes.c_uint,
                                ctypes.POINTER(ctypes.c_ubyte), ctypes.c_int,

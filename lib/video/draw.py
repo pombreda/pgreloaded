@@ -19,7 +19,7 @@ def prepare_color(color, target):
     elif isinstance(target, sdlsurface.SDL_Surface):
         pformat = target.format
     elif isinstance(target, sprite.Sprite):
-        pformat = sprite.surface.format
+        pformat = target.surface.format
     if pformat is None:
         raise TypeError("unsupported target type")
     return sdlpixels.map_rgb(pformat, color.r, color.g, color.b)
@@ -39,7 +39,7 @@ def fill(target, color, area=None):
     if isinstance(target, sdlsurface.SDL_Surface):
         rtarget = target
     elif isinstance(target, sprite.Sprite):
-        rtarget = targt.surface
+        rtarget = target.surface
 
     varea = None
     if area is not None and isiterable(area):

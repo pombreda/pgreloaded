@@ -152,12 +152,14 @@ class CTypesView(object):
 
 class MemoryView(object):
     """Simple n-dimensional access to buffers"""
-    def __init__(self, source, itemsize, strides, getfunc=None, setfunc=None):
+    def __init__(self, source, itemsize, strides, getfunc=None, setfunc=None,
+                 srcsize=None):
         """Creates a new MemoryView from a source."""
         self._source = source
         self._itemsize = itemsize
         self._strides = strides
-        self._srcsize = len(source)
+        self._srcsize = srcsize or len(source)
+        self._offset = 0
 
         self._getfunc = getfunc or self._getbytes
         self._setfunc = setfunc or self._setbytes
@@ -194,15 +196,18 @@ class MemoryView(object):
             if index >= len(self):
                 raise IndexError("index is out of bounds")
             if self.ndim == 1:
-                offset = index * self.itemsize
+                offset = self._offset + index * self.itemsize
                 return self._getfunc(offset, offset + self.itemsize)
             else:
-                advance = 1
+                advance = self.itemsize
                 for b in self.strides[1:]:
                     advance *= b
-                offset = advance * index
-                return MemoryView(self._source, self.itemsize,
-                                  self.strides[1:])
+                offset = self._offset + advance * index
+                view = MemoryView(self._source, self.itemsize,
+                                  self.strides[1:], self._getfunc,
+                                  self._setfunc, self._srcsize)
+                view._offset = offset
+                return view
 
     def __setitem__(self, index, value):
         if type(index) is slice:
@@ -210,16 +215,18 @@ class MemoryView(object):
         else:
             if index >= len(self):
                 raise IndexError("index is out of bounds")
-            offset = index * self.itemsize
+            offset = self._offset + index * self.itemsize
             if self.ndim == 1:
                 self._setfunc(offset, offset + self.itemsize, value)
             else:
-                advance = 1
+                advance = self.itemsize
                 for b in self.strides[1:]:
                     advance *= b
-                offset = advance * index
+                offset = self._offset + advance * index
                 view = MemoryView(self._source, self.itemsize,
-                                  self.strides[1:])
+                                  self.strides[1:], self._getfunc,
+                                  self._setfunc, self._srcsize)
+                view._offset = offset
                 if len(value) != len(view):
                     raise ValueError("value does not match the view strides")
                 for x in range(len(view)):
@@ -232,8 +239,8 @@ class MemoryView(object):
 
     @property
     def strides(self):
-        """The length in bytes for accessing all elements in each
-        dimension of the MemoryView.
+        """A tuple defining the length in bytes for accessing all
+        elements in each dimension of the MemoryView.
         """
         return self._strides
 
@@ -246,3 +253,8 @@ class MemoryView(object):
     def ndim(self):
         """The number of dimensions of the MemoryView."""
         return len(self.strides)
+
+    @property
+    def source(self):
+        """The underlying data source."""
+        return self._source
