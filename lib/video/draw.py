@@ -1,5 +1,8 @@
 """Drawing routines."""
+import ctypes
 from pygame2.compat import *
+import pygame2.color as color
+from pygame2.array import MemoryView
 from pygame2.color import convert_to_color
 import pygame2.sdl.surface as sdlsurface
 import pygame2.sdl.pixels as sdlpixels
@@ -60,3 +63,68 @@ def fill(target, color, area=None):
         sdlsurface.fill_rect(rtarget, varea, color)
     else:
         sdlsurface.fill_rects(rtarget, varea, color)
+
+
+class PixelView(MemoryView):
+    """2D memory view for Sprite and surface pixel access."""
+    def __init__(self, source):
+        """Creates a new PixelView from a Sprite or SDL_Surface.
+
+        If necessary, the surface will be locked for accessing its pixel data.
+        The lock will be removed once the PixelView is garbage-collected or
+        deleted.
+        """
+        target = None
+        if isinstance(source, sprite.Sprite):
+            target = source.surface
+        elif isinstance(source, sdlsurface.SDL_Surface):
+            target = source
+        else:
+            raise TypeError("source must be a Sprite or SDL_Surface")
+        self._surface = target
+        if sdlsurface.SDL_MUSTLOCK(self._surface):
+            sdlsurface.lock_surface(self._surface)
+
+        pxbuf = self._surface.pixels
+        itemsize = self._surface.format.BytesPerPixel
+        strides = self._surface.size
+        srcsize = self._surface.size[1] * self._surface.pitch
+        super(PixelView, self).__init__(pxbuf, itemsize, strides,
+                                        getfunc=self._getitem,
+                                        setfunc=self._setitem,
+                                        srcsize=srcsize)
+
+    def _getitem(self, start, end):
+        if self.itemsize == 1:
+            # byte-wise access
+            return self.source[start:end]
+        # move the pointer to the correct location
+        src = ctypes.byref(self.source.contents, start)
+        casttype = ctypes.c_ubyte
+        if self.itemsize == 2:
+            casttype = ctypes.c_ushort
+        elif self.itemsize == 3:
+            # TODO
+            raise NotImplementedError("unsupported bpp")
+        elif self.itemsize == 4:
+            casttype = ctypes.c_uint
+        return ctypes.cast(src, ctypes.POINTER(casttype)).contents.value
+
+    def _setitem(self, start, end, value):
+        target = None
+        if self.itemsize == 1:
+            target = ctypes.cast(self.source, ctypes.POINTER(ctypes.c_ubyte))
+        elif self.itemsize == 2:
+            target = ctypes.cast(self.source, ctypes.POINTER(ctypes.c_ushort))
+        elif self.itemsize == 3:
+            # TODO
+            raise NotImplementedError("unsupported bpp")
+        elif self.itemsize == 4:
+            target = ctypes.cast(self.source, ctypes.POINTER(ctypes.c_uint))
+        value = prepare_color(value, self._surface)
+        self.source[start] = value
+
+    def __del__(self):
+        if self._surface is not None:
+            if sdlsurface.SDL_MUSTLOCK(self._surface):
+                sdlsurface.unlock_surface(self._surface)

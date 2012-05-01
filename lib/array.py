@@ -151,10 +151,32 @@ class CTypesView(object):
 
 
 class MemoryView(object):
-    """Simple n-dimensional access to buffers"""
+    """Simple n-dimensional access to buffers.
+
+    The MemoryView provides a read-write access to arbitrary data
+    objects, which can be indexed.
+
+    NOTE: The MemoryView is a pure Python-based implementation and makes
+    heavy use of recursion for multi-dimensional access. If you aim for
+    speed on accessing a n-dimensional object, you want to consider
+    using a specialised library such as numpy. If you need n-dimensional
+    access support, where such a library is not supported, or if you
+    need to provide access to objects, which do not fulfill the
+    requirements of that particular libray, MemoryView can act as solid
+    fallback solution.
+    """
     def __init__(self, source, itemsize, strides, getfunc=None, setfunc=None,
                  srcsize=None):
-        """Creates a new MemoryView from a source."""
+        """Creates a new MemoryView from a source.
+
+        itemsize denotes the size of a single item. strides defines the
+        dimensions and the length (n items * itemsize) for each
+        dimneion. getfunc and setfunc are optional parameters to provide
+        specialised read and write access to the underlying
+        source. srcsize can be used to provide the correct source size,
+        if len(source) does not return the absolute size of the source
+        object in all dimensions.
+        """
         self._source = source
         self._itemsize = itemsize
         self._strides = strides
@@ -179,6 +201,9 @@ class MemoryView(object):
         self._source[start:end] = value
 
     def __len__(self):
+        """The length of the MemoryView over the current dimension
+        (amount of items for the current dimension).
+        """
         return self.strides[0]
 
     def __repr__(self):
@@ -190,6 +215,7 @@ class MemoryView(object):
         return retval
 
     def __getitem__(self, index):
+        """Returns the item at the specified index."""
         if type(index) is slice:
             raise IndexError("slicing is not supported")
         else:
@@ -210,6 +236,7 @@ class MemoryView(object):
                 return view
 
     def __setitem__(self, index, value):
+        """Sets the item at index to the specified value."""
         if type(index) is slice:
             raise IndexError("slicing is not supported")
         else:

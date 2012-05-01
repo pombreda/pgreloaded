@@ -296,9 +296,60 @@ class ArrayTest(unittest.TestCase):
                 (otype, len(seq) * factor, shared)
             self.assertEqual(text, repr(buf))
 
-    @unittest.skip("not implemented")
     def test_MemoryView(self):
-        pass
+        self.assertRaises(TypeError, pgarray.MemoryView, 5, 1, (1,))
+        self.assertRaises(TypeError, pgarray.MemoryView, None, 1, (1,))
+
+        source = "Example buffer"
+        view = pgarray.MemoryView(source, 1, (len(source),))
+        for index, val in enumerate(view):
+            self.assertEqual(val, source[index])
+
+        view = pgarray.MemoryView(source, 1, (2, 7))
+        word1 = view[0]  # "Example"
+        word2 = view[1]  # " buffer"
+        self.assertEqual(len(view), 2)
+        self.assertEqual(len(word1), 7)
+        self.assertEqual(len(word2), 7)
+        for index, val in enumerate(word1):
+            self.assertEqual(val, source[index])
+        for index, val in enumerate(word2):
+            self.assertEqual(val, source[index + 7])
+        # TODO: more tests
+
+    def test_MemoryView_ndim_strides(self):
+        source = "Example buffer"
+        view = pgarray.MemoryView(source, 1, (len(source),))
+        self.assertEqual(view.ndim, 1)
+        self.assertEqual(view.strides, (len(source),))
+        view = pgarray.MemoryView(source, 1, (2, 7))
+        self.assertEqual(view.ndim, 2)
+        self.assertEqual(view.strides, (2, 7))
+        view = pgarray.MemoryView(source, 1, (7, 2))
+        self.assertEqual(view.ndim, 2)
+        self.assertEqual(view.strides, (7, 2))
+        view = pgarray.MemoryView(source, 1, (2, 2, 2))
+        self.assertEqual(view.ndim, 3)
+        self.assertEqual(view.strides, (2, 2, 2))
+
+    def test_MemoryView_itemsize(self):
+        source = "Example buffer"
+        view = pgarray.MemoryView(source, 1, (len(source),))
+        self.assertEqual(view.itemsize, 1)
+        view = pgarray.MemoryView(source, 7, (1, 7))
+        self.assertEqual(view.itemsize, 7)
+
+    def test_MemoryView_size(self):
+        source = "Example buffer"
+        view = pgarray.MemoryView(source, 1, (len(source),))
+        self.assertEqual(view.size, len(source))
+        view = pgarray.MemoryView(source, 7, (1,7))
+        self.assertEqual(view.size, len(source))
+
+    def test_MemoryView_source(self):
+        source = "Example buffer"
+        view = pgarray.MemoryView(source, 1, (len(source),))
+        self.assertEqual(view.source, source)
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

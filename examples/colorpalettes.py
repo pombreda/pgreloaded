@@ -1,4 +1,4 @@
-"""A simple example for filing rectangular areas."""
+"""A simple example for filling rectangular areas."""
 import sys
 
 # Import the pre-defined color palettes

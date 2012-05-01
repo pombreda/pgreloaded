@@ -1,14 +1,12 @@
 """Sprite, texture and pixel surface routines."""
 import os
-import ctypes
-from pygame2.array import MemoryView
 from pygame2.ebs import Component, System
 import pygame2.sdl.surface as sdlsurface
 import pygame2.sdl.rect as rect
 import pygame2.sdl.video as video
 import pygame2.sdl.rwops as rwops
 
-__all__ = ["SpriteRenderer", "Sprite", "PixelView"]
+__all__ = ["SpriteRenderer", "Sprite"]
 
 
 class SpriteRenderer(System):
@@ -84,53 +82,3 @@ class Sprite(Component):
     def size(self):
         """The size of the Sprite as tuple."""
         return self.surface.size
-
-
-class PixelView(MemoryView):
-    """2D memory view for Sprite and surface pixel access."""
-    def __init__(self, source):
-        """Creates a new PixelView from a Sprite or SDL_Surface.
-
-        If necessary, the surface will be locked for accessing its pixel data.
-        The lock will be removed once the PixelView is garbage-collected or
-        deleted.
-        """
-        target = None
-        if isinstance(source, Sprite):
-            target = source.surface
-        elif isinstance(source, sdlsurface.SDL_Surface):
-            target = source
-        else:
-            raise TypeError("source must be a Sprite or SDL_Surface")
-        self._surface = target
-        if sdlsurface.SDL_MUSTLOCK(self._surface):
-            sdlsurface.lock_surface(self._surface)
-
-        pxbuf = self._surface.pixels
-        itemsize = self._surface.format.BytesPerPixel
-        strides = self._surface.size
-        srcsize = self._surface.size[1] * self._surface.pitch
-        super(PixelView, self).__init__(pxbuf, itemsize, strides,
-                                        getfunc=self._getitem,
-                                        srcsize=srcsize)
-
-    def _getitem(self, start, end):
-        if self.itemsize == 1:
-            # byte-wise access
-            return self.source[start:end]
-        # move the pointer to the correct location
-        src = ctypes.byref(self.source.contents, start)
-        casttype = ctypes.c_ubyte
-        if self.itemsize == 2:
-            casttype = ctypes.c_ushort
-        elif self.itemsize == 3:
-            # return byte-wise
-            return self.source[start:end]
-        elif self.itemsize == 4:
-            casttype = ctypes.c_uint
-        return ctypes.cast(src, ctypes.POINTER(casttype)).contents.value
-
-    def __del__(self):
-        if self._surface is not None:
-            if sdlsurface.SDL_MUSTLOCK(self._surface):
-                sdlsurface.unlock_surface(self._surface)

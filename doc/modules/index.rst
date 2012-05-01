@@ -15,6 +15,7 @@ class, method or function, use the :ref:`genindex` or :ref:`search`.
    colorpalettes.rst
    dll.rst
    ebs.rst
+   events.rst
    openal.rst
    resources.rst
    sdl.rst

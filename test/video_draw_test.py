@@ -1,6 +1,7 @@
 import os
 import sys
 import unittest
+from pygame2.color import Color
 import pygame2.array as array
 import pygame2.sdl.surface as surface
 import pygame2.sdl.pixels as pixels
@@ -18,7 +19,10 @@ class VideoDrawTest(unittest.TestCase):
     def tearDown(self):
         video.quit()
 
+    @unittest.skipIf(hasattr(sys, "pypy_version_info"),
+                     "PyPy's ctypes can't do byref(value, offset)")
     def test_fill(self):
+        # TODO: add exceptions and more bounding tests.
         rects = ((0, 0, 3, 2),
                  (2, 3, 4, 2),
                  (5, -1, 2, 2),
@@ -45,6 +49,20 @@ class VideoDrawTest(unittest.TestCase):
 
     @unittest.skip("not implemented")
     def test_prepare_color(self):
+        colors = (Color(0, 0, 0, 0),
+                  Color(255, 255, 255, 255),
+                  Color(8, 55, 110, 220),
+                  0x00000000,
+                  0xFFFFFFFF,
+                  0xAABBCCDD,
+                  "#000",
+                  "#FFF",
+                  "#AABBCCDD",
+                  )
+        pass
+
+    @unittest.skip("not implemented")
+    def test_PixelView(self):
         pass
 
 if __name__ == '__main__':
