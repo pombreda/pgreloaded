@@ -6,7 +6,7 @@ import pygame2.sdl.video as video
 import pygame2.sdl.surface as surface
 import pygame2.sdl.rect as rect
 import pygame2.sdl.pixels as pixels
-
+import pygame2.video as pvid
 
 # TODO: mostly positive tests, improve this!
 class SDLRenderTest(unittest.TestCase):
@@ -89,10 +89,9 @@ class SDLRenderTest(unittest.TestCase):
     def test_create_software_renderer(self):
         sf = surface.create_rgb_surface(100, 100, 32, 0xFF000000, 0x00FF0000,
                                         0x0000FF00, 0x000000FF)
-        for i in range(render.get_num_render_drivers()):
-            renderer = render.create_software_renderer(sf)
-            self.assertIsInstance(renderer, render.SDL_Renderer)
-            render.destroy_renderer(renderer)
+        renderer = render.create_software_renderer(sf)
+        self.assertIsInstance(renderer, render.SDL_Renderer)
+        render.destroy_renderer(renderer)
         surface.free_surface(sf)
 
         self.assertRaises(TypeError, render.create_software_renderer, None)
@@ -498,9 +497,40 @@ seems to fail on creating the second renderer of the window, if any""")
         self.assertRaises(TypeError, render.render_clear, "Test")
         self.assertRaises(TypeError, render.render_clear, 123456)
 
-    @unittest.skip("not implemented")
+    @unittest.skipIf(hasattr(sys, "pypy_version_info"),
+                     "PyPy's ctypes can't do byref(value, offset)")
     def test_render_draw_point(self):
-        pass
+        points = ((-4, -3), (-4, 3), (4, -3),
+                  (0, 0), (1, 1), (10, 10), (99, 99),
+                  (4, 22), (57, 88), (45, 15),
+                  (100, 100)
+                  )
+        r, g, b, a = 0xAA, 0xBB, 0xCC, 0xDD
+        w, h = 100, 100
+        sf = surface.create_rgb_surface(w, h, 32, 0xFF000000, 0x00FF0000,
+                                        0x0000FF00, 0x000000FF)
+        color = pixels.map_rgba(sf.format, r, g, b, a)
+        renderer = render.create_software_renderer(sf)
+        render.set_render_draw_color(renderer, r, g, b, a)
+        for x, y in points:
+            render.render_draw_point(renderer, x, y)
+        render.render_present(renderer)
+        view = pvid.PixelView(sf)
+        for x, y in points:
+            npx = max(x + 1, w)
+            npy = max(y + 1, h)
+            ppx = max(x - 1, 0)
+            ppy = max(y - 1, 0)
+            if x < 0 or x >= w or y < 0 or y >= h:
+                continue
+            self.assertEqual(hex(view[y][x]), hex(color))
+            if (npx, npy) not in points:
+                self.assertNotEqual(hex(view[npy][npx]), hex(color))
+            if (ppx, ppy) not in points:
+                self.assertNotEqual(hex(view[ppy][ppx]), hex(color))
+        render.destroy_renderer(renderer)
+        del view
+        surface.free_surface(sf)
 
     @unittest.skip("not implemented")
     def test_render_draw_points(self):

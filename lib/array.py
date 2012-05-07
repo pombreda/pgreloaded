@@ -220,7 +220,8 @@ class MemoryView(object):
             raise IndexError("slicing is not supported")
         else:
             if index >= len(self):
-                raise IndexError("index is out of bounds")
+                raise IndexError("index '%d'is out of bounds for '%d'" %
+                                 (index, len(self)))
             if self.ndim == 1:
                 offset = self._offset + index * self.itemsize
                 return self._getfunc(offset, offset + self.itemsize)
@@ -241,7 +242,8 @@ class MemoryView(object):
             raise IndexError("slicing is not supported")
         else:
             if index >= len(self):
-                raise IndexError("index is out of bounds")
+                raise IndexError("index '%d'is out of bounds for '%d'" %
+                                 (index, len(self)))
             offset = self._offset + index * self.itemsize
             if self.ndim == 1:
                 self._setfunc(offset, offset + self.itemsize, value)

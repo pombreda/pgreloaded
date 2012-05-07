@@ -43,6 +43,8 @@ def fill(target, color, area=None):
         rtarget = target
     elif isinstance(target, sprite.Sprite):
         rtarget = target.surface
+    else:
+        raise TypeError("unsupported target type")
 
     varea = None
     if area is not None and isiterable(area):
@@ -87,7 +89,7 @@ class PixelView(MemoryView):
 
         pxbuf = self._surface.pixels
         itemsize = self._surface.format.BytesPerPixel
-        strides = self._surface.size
+        strides = (self._surface.size[1], self._surface.size[0])
         srcsize = self._surface.size[1] * self._surface.pitch
         super(PixelView, self).__init__(pxbuf, itemsize, strides,
                                         getfunc=self._getitem,
@@ -122,7 +124,7 @@ class PixelView(MemoryView):
         elif self.itemsize == 4:
             target = ctypes.cast(self.source, ctypes.POINTER(ctypes.c_uint))
         value = prepare_color(value, self._surface)
-        self.source[start] = value
+        target[start // self.itemsize] = value
 
     def __del__(self):
         if self._surface is not None:

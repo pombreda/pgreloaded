@@ -61,9 +61,20 @@ class VideoDrawTest(unittest.TestCase):
                   )
         pass
 
-    @unittest.skip("not implemented")
+    @unittest.skipIf(hasattr(sys, "pypy_version_info"),
+                     "PyPy's ctypes can't do byref(value, offset)")
     def test_PixelView(self):
-        pass
+        sprite = video.Sprite(size=(10, 10), bpp=32)
+        view = video.PixelView(sprite)
+        view[1] = (0xAABBCCDD, ) * 10
+        rcolor = video.prepare_color(0xAABBCCDD, sprite)
+        for index, row in enumerate(view):
+            if index == 1:
+                for col in row:
+                    self.assertEqual(col, rcolor)
+            else:
+                for col in row:
+                    self.assertEqual(col, 0x0)
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

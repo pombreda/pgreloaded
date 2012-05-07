@@ -152,6 +152,8 @@ class SDLPixelsTest(unittest.TestCase):
         self.assertEqual(pixels.get_pixelformat_name(99999),
                          "SDL_PIXELFORMAT_UNKNOWN")
 
+    @unittest.skipIf(sys.platform == "cli",
+                     "IronPython's ctypes can't handle long values correctly")
     def test_masks_to_pixelformat_enum(self):
         if sys.byteorder == "little":
             val = pixels.masks_to_pixelformat_enum(32,
@@ -357,6 +359,8 @@ class SDLPixelsTest(unittest.TestCase):
             # TODO
             pixels.free_format(pformat)
 
+    @unittest.skipIf(sys.platform == "cli",
+                     "IronPython's ctypes can't handle long values correctly")
     def test_map_rgb(self):
         pformat = pixels.alloc_format(pixels.SDL_PIXELFORMAT_RGBA8888)
         self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
@@ -369,6 +373,8 @@ class SDLPixelsTest(unittest.TestCase):
         val = pixels.map_rgb(pformat, 0xFF, 0xAA, 0x88)
         self.assertEqual(val, 0x0)
 
+    @unittest.skipIf(sys.platform == "cli",
+                     "IronPython's ctypes can't handle long values correctly")
     def test_map_rgba(self):
         pformat = pixels.alloc_format(pixels.SDL_PIXELFORMAT_RGBA8888)
         self.assertIsInstance(pformat, pixels.SDL_PixelFormat)

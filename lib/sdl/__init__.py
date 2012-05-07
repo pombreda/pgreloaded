@@ -16,7 +16,8 @@ __all__ = ["init", "init_subsystem", "quit", "quit_subsystem", "was_init",
 
 _LIBNAME = None
 if sys.platform in ("win32", "cli"):
-    if sys.maxsize > 2 ** 32:
+    if sys.maxsize > 2 ** 32 or \
+            (sys.plattform == "cli" and sys.executable.endswith("ipy64.exe")):
         # 64bit platform
         _LIBNAME = "SDL2.dll"
     else:
