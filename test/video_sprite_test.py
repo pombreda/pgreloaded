@@ -34,5 +34,13 @@ class VideoSpriteTest(unittest.TestCase):
     def test_Sprite_position(self):
         pass
 
+    @unittest.skip("not implemented")
+    def test_Sprite_size(self):
+        pass
+
+    @unittest.skip("not implemented")
+    def test_Sprite_area(self):
+        pass
+
 if __name__ == '__main__':
     sys.exit(unittest.main())

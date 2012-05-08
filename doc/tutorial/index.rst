@@ -13,4 +13,4 @@ Pygame2, but instead show you the most noteworthy features.
 .. toctree::
   :maxdepth: 2
 
-  helloworld
+  helloworld.rst

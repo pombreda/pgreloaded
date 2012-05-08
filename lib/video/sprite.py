@@ -21,6 +21,7 @@ class SpriteRenderer(System):
         """Creates a new SpriteRenderer for a specific Window."""
         self.window = window
         self.surface = video.get_window_surface(window.window)
+        self.componenttypes = (Sprite, )
 
     def render(self, sprite):
         """Draws the passed sprite on the Window's surface."""
@@ -47,8 +48,8 @@ class Sprite(Component):
         readable buffer object or file path to load the pixel data from.
         The size and bpp will be ignored in those cases.
 
-        If no source is provided a size tuple, containing the width and
-        height of the sprite, and a bpp value, indicating the bits per
+        If no source is provided, a size tuple containing the width and
+        height of the sprite and a bpp value, indicating the bits per
         pixel to be used, need to be provided.
         """
         if source is not None:
@@ -82,3 +83,9 @@ class Sprite(Component):
     def size(self):
         """The size of the Sprite as tuple."""
         return self.surface.size
+
+    @property
+    def area(self):
+        """The rectangular area occupied by the Sprite."""
+        w, h = self.surface.size
+        return (self.x, self.y, self.x + w, self.y + h)

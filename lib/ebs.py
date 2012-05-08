@@ -136,6 +136,16 @@ class World(object):
             componentset.pop(eid, None)
         self.entities.discard(entity)
 
+    def get_components(self, componenttype):
+        """Gets all existing components for a sepcific component type.
+
+        If no components could be found for the passed component types, an
+        empty list is returned.
+        """
+        if componenttype in self.components:
+            return components[ctype].values()
+        return []
+
     def add_system(self, system):
         """Adds a processing system to the world.
 

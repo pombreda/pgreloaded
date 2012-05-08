@@ -133,7 +133,7 @@ def run():
 
         # We received a mouse button press event. As you can see from the type,
         # the user pressed the mouse button, but did not necesarily release
-        # it. As such, it is not a typical click, but onl 50% of it, which
+        # it. As such, it is not a typical click, but only 50% of it, which
         # is sufficient for our case here.
         if event.type == sdlevents.SDL_MOUSEBUTTONDOWN:
             # If the user pressed the button, we want to draw the next palette

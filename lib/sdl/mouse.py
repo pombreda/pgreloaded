@@ -120,7 +120,7 @@ def get_mouse_state():
     return(state.value, x.value, y.value)
 
 
-@sdltype("SDL_GetRelativeMouseMode", None, c_types.c_int)
+@sdltype("SDL_GetRelativeMouseMode", None, ctypes.c_int)
 def get_relative_mouse_mode():
     """Checks, whether the relative mouse mode is enabled or not."""
     return dll.SDL_GetRelativeMouseMode() == SDL_TRUE
@@ -128,7 +128,7 @@ def get_relative_mouse_mode():
 
 @sdltype("SDL_GetRelativeMouseState", [ctypes.POINTER(ctypes.c_int),
                                        ctypes.POINTER(ctypes.c_int)],
-         c_types.c_ubyte)
+         ctypes.c_ubyte)
 def get_relative_mouse_state():
     """Retrieves the relative state of the mouse.
 
@@ -142,7 +142,7 @@ def get_relative_mouse_state():
     return(state.value, x.value, y.value)
 
 
-@sdltype("SDL_SetRelativeMouseMode", [ctypes.c_int], c_types.c_int)
+@sdltype("SDL_SetRelativeMouseMode", [ctypes.c_int], ctypes.c_int)
 def set_relative_mouse_mode(enabled):
     """Enables or disables the relative mouse mode.
 

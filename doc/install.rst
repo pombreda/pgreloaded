@@ -13,7 +13,7 @@ provide you full access to all of its features.
 You must have at least one of the following Python versions installed:
 
 * Python 2.7, 3.1, 3.2 (http://www.python.org)
-* PyPy 1.8.0           (http://www.pypy.org)
+* PyPy 1.8.0+          (http://www.pypy.org)
 
 Other Python versions or Python implementations might work, but are
 (currently) not officially tested or supported by the Pygame2
@@ -42,10 +42,8 @@ OpenAL  >= 1.1   :mod:`pygame2.openal` http://www.openal.org
    not want the shipped DLLs to be used, you can replace them with your
    own DLLs.
    
-   The shipped DLLs are 64-bit builds, thus your Python installation
-   needs to be a 64-bit build, too, if you want to use them. If you
-   want or need a 32-bit Python installation, you have to exchange the
-   DLLs with matching 32-bit versions.
+   The shipped DLLs come as 64-bit and 32-bit builds and Pygame2 tries to
+   auto-detect, which of those should be used. 
 
 Installation
 ------------

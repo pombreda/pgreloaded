@@ -69,11 +69,12 @@ Pygame Reloaded are available in the examples/ directory.
 
 3. License
 ----------
-This library is distributed under the Public Domain, except for the code
-below sdl/ (package pygame2.sdl), which is licensed under the zlib
-license stated in the COPYING file.
+This library is distributed under the Public Domain. Parts of the library
+might use a different license. In that case, the specific files contain the
+license information. If there is not license information in the file, it is
+distributed under the Public Domain.
 
 This basically means you can use Pygame Reloaded in any project and in
-any way you want.  In cases, where specific laws do not recognize the
+any way you want. In cases where specific laws do not recognize the
 Public Domain, this library uses the zlib license. Please see the
 COPYING.txt file for further information.
