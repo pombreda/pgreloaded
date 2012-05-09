@@ -52,6 +52,7 @@ class UnsupportedError(Exception):
         If a message is passed in msg, it will be printed instead of the
         default message.
         """
+        super(UnsupportedError, self).__init__()
         self.obj = obj
         self.msg = msg
 

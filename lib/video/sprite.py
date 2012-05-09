@@ -19,6 +19,7 @@ class SpriteRenderer(System):
     """
     def __init__(self, window):
         """Creates a new SpriteRenderer for a specific Window."""
+        super(SpriteRenderer, self).__init__()
         self.window = window
         self.surface = video.get_window_surface(window.window)
         self.componenttypes = (Sprite, )
@@ -52,6 +53,7 @@ class Sprite(Component):
         height of the sprite and a bpp value, indicating the bits per
         pixel to be used, need to be provided.
         """
+        super(Sprite, self).__init__()
         if source is not None:
             if type(source) is str:
                 if os.path.exists(source):

@@ -2,8 +2,6 @@
 Wrapper methods around the SDL 2 endian routines.
 """
 import sys
-import ctypes
-from pygame2.sdl import sdltype, dll
 
 __all__ = ["SDL_BYTEORDER", "SDL_LIL_ENDIAN", "SDL_BIG_ENDIAN", "swap16",
            "swap32", "swap64", "swap_float", "swap_le_16", "swap_le_32",

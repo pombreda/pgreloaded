@@ -1,4 +1,5 @@
 """Font and text rendering routines."""
+import os
 import pygame2.sdl.surface as sdlsurface
 from . import sprite
 
@@ -105,7 +106,7 @@ class BitmapFont(object):
 
         target = None
         if isinstance(surface, sprite.Sprite):
-            target = sprite.surface
+            target = surface.surface
         elif isinstance(surface, sdlsurface.SDL_Surface):
             target = surface
         else:

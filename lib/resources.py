@@ -304,4 +304,4 @@ class Resources(object):
             if match and match(pdir) is not None:
                 continue
             for fname in filenames:
-                self.add(join(pdir, fname))
+                add(join(pdir, fname))

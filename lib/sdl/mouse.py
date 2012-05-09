@@ -32,6 +32,7 @@ SDL_BUTTON_X2MASK = SDL_BUTTON(SDL_BUTTON_X2)
 
 
 class SDL_Cursor(ctypes.Structure):
+    """TODO"""
     pass
 
 

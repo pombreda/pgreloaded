@@ -1,3 +1,4 @@
+
 """
 Pygame2 is a cross-platform multimedia framework for the excellent
 Python programming language. Its purpose is to make writing multimedia
@@ -14,9 +15,9 @@ __all__ = ["set_dll_path", "get_dll_path", "version_info"]
 # Manipulate the PATH environment, so that the DLLs are loaded correctly.
 _DLLPATH = None
 if sys.platform in ("win32", "cli"):
-    _path = os.path.dirname(os.path.abspath(__file__))
-    os.environ['PATH'] += ";%s;%s" % (_path, os.path.join(_path, "dll"))
-    _DLLPATH = os.path.join(_path, "dll")
+    _PATH = os.path.dirname(os.path.abspath(__file__))
+    os.environ['PATH'] += ";%s;%s" % (_PATH, os.path.join(_PATH, "dll"))
+    _DLLPATH = os.path.join(_PATH, "dll")
 
 
 def set_dll_path(path):

@@ -348,7 +348,7 @@ SDL_EventFilter = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.py_object,
 
 
 @sdltype("SDL_AddEventWatch", [SDL_EventFilter, ctypes.py_object], None)
-def add_event_watch(filter, userdata=None):
+def add_event_watch(efilter, userdata=None):
     """Adds a filter callback function to the event system.
 
     The filter will be called everytime a new event is pushed to the
@@ -358,16 +358,16 @@ def add_event_watch(filter, userdata=None):
     userdata values. Each filter function will be invoked with the data
     passed at the time of addition.
     """
-    if not hasattr(filter, "_userdata"):
-        filter._userdata = []
+    if not hasattr(efilter, "_userdata"):
+        efilter._userdata = []
     val = ctypes.py_object(userdata)
     # Preserve the userdata, so it does not get GC'd
-    filter._userdata.append(val)
-    dll.SDL_AddEventWatch(filter, val)
+    efilter._userdata.append(val)
+    dll.SDL_AddEventWatch(efilter, val)
 
 
 @sdltype("SDL_DelEventWatch", [SDL_EventFilter, ctypes.py_object], None)
-def del_event_watch(filter, userdata=None):
+def del_event_watch(efilter, userdata=None):
     """Removes a filter callback function from the event system.
 
     If the same filter function was added multiple times with different
@@ -375,17 +375,17 @@ def del_event_watch(filter, userdata=None):
     occurance of it) will be removed.
     """
     # Resembles SDL2's implementation for checking for the userdata.
-    if not hasattr(filter, "_userdata"):
+    if not hasattr(efilter, "_userdata"):
         return
-    for val in filter._userdata:
+    for val in efilter._userdata:
         if val.value == userdata:
-            filter._userdata.remove(val)
-            dll.SDL_DelEventWatch(filter, val)
+            efilter._userdata.remove(val)
+            dll.SDL_DelEventWatch(efilter, val)
             break
 
 
 @sdltype("SDL_EventState", [ctypes.c_uint, ctypes.c_int], ctypes.c_ubyte)
-def event_state(type, state):
+def event_state(etype, state):
     """Influences the processing behaviour for certain events.
 
     If state is set to SDL_IGNORE, events with the specific type will be
@@ -398,22 +398,22 @@ def event_state(type, state):
     If state is set to SDL_QUERY, the current processing state for the
     specific event type will be returned.
     """
-    ret = dll.SDL_EventState(type, state)
+    ret = dll.SDL_EventState(etype, state)
     if get_error() != "":
         raise SDLError()
     return ret
 
 
-def get_event_state(type):
+def get_event_state(etype):
     """Queries the processing behaviour for a specific event type.
 
     This is a shortcut handler for event_state(type, SDL_QUERY).
     """
-    return event_state(type, SDL_QUERY)
+    return event_state(etype, SDL_QUERY)
 
 
 @sdltype("SDL_FilterEvents", [SDL_EventFilter, ctypes.py_object], None)
-def filter_events(filter, userdata=None):
+def filter_events(efilter, userdata=None):
     """Executes the passed filter callback on the current event queue.
 
     Every event, for which the filter returns 0, will be removed from
@@ -421,14 +421,14 @@ def filter_events(filter, userdata=None):
     """
     ptr = ctypes.py_object(userdata)
     # Preserve the pointer for multi-threaded event queues
-    filter._userdata = ptr
-    dll.SDL_FilterEvents(filter, ptr)
+    efilter._userdata = ptr
+    dll.SDL_FilterEvents(efilter, ptr)
 
 
 @sdltype("SDL_FlushEvent", [ctypes.c_uint], None)
-def flush_event(type):
+def flush_event(etype):
     """Removes all events of the specific type from the event queue."""
-    dll.SDL_FlushEvent(type)
+    dll.SDL_FlushEvent(etype)
 
 
 @sdltype("SDL_FlushEvents", [ctypes.c_uint, ctypes.c_uint], None)
@@ -445,23 +445,22 @@ def flush_events(mintype, maxtype):
 def get_event_filter():
     """Retrieves the currently set event filter callback and its user data.
     """
-    filter = SDL_EventFilter()
+    efilter = SDL_EventFilter()
     data = ctypes.py_object()
-    ret = dll.SDL_GetEventFilter(ctypes.byref(filter), ctypes.byref(data))
+    ret = dll.SDL_GetEventFilter(ctypes.byref(efilter), ctypes.byref(data))
     if ret.value == SDL_FALSE:
         if get_error() != "":
             raise SDLError()
         return None, None
     if bool(data):
-        return filter, data
-    return filter, None
+        return efilter, data
+    return efilter, None
 
 
 @sdltype("SDL_SetEventFilter", [SDL_EventFilter, ctypes.py_object], None)
-def set_event_filter(filter, userdata=None):
+def set_event_filter(efilter, userdata=None):
     """Sets up a filter callback to process all events before they are put
     into the event queue.
-
 
     If the filter returns 1, the event will be added to the queue. If it
     returns 0, the event will be dropped from the queue.
@@ -481,15 +480,15 @@ def set_event_filter(filter, userdata=None):
     """
     ptr = ctypes.py_object(userdata)
     # Preserve the pointer for multi-threaded event queues
-    filter._userdata = ptr
-    dll.SDL_SetEventFilter(filter, ptr)
+    efilter._userdata = ptr
+    dll.SDL_SetEventFilter(efilter, ptr)
 
 
 @sdltype("SDL_HasEvent", [ctypes.c_uint], ctypes.c_int)
-def has_event(type):
+def has_event(etype):
     """Checks, if there are any events of the specific type in the event queue.
     """
-    return dll.SDL_HasEvent(type) == SDL_TRUE
+    return dll.SDL_HasEvent(etype) == SDL_TRUE
 
 
 @sdltype("SDL_HasEvents", [ctypes.c_uint, ctypes.c_uint], None)
@@ -610,7 +609,6 @@ def wait_event_timeout(timeout):
     """Waits until the specified timeout(in milliseconds) for the next event.
     """
     event = SDL_Event()
-
     ret = dll.SDL_WaitEventTimeout(ctypes.byref(event), timeout)
     if ret == 0:
         raise SDLError()

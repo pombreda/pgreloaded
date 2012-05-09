@@ -28,7 +28,6 @@ class Button(Sprite):
         pixel to be used, need to be provided.
         """
         super(Button, self).__init__(source, size, bpp)
-
         self.state = RELEASED
         self.motion = EventHandler(self)
         self.pressed = EventHandler(self)
@@ -42,10 +41,11 @@ class Button(Sprite):
 
 
 class UIProcessor(System):
-    """
+    """TODO
     """
     def __init__(self):
         """Creates a new UIProcessor."""
+        super(UIProcessor, self).__init__()
         self.componenttypes = (Button, )
         self.handlers = {
             events.SDL_MOUSEMOTION: self.mousemotion,
@@ -146,7 +146,7 @@ class UIProcessor(System):
 
         if isinstance(obj, World):
             for ctype in self.componenttypes:
-                items = world.get_components(ctype)
+                items = obj.get_components(ctype)
                 items = [(v, e) for v in items for e in (event,)
                          if e.type in v.events]
                 map(handler, items)

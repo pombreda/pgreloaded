@@ -113,7 +113,7 @@ AL_EXPONENT_DISTANCE =         0xD005
 AL_EXPONENT_DISTANCE_CLAMPED = 0xD006
 
 
-_errmap = {
+_ERRMAP = {
     AL_NO_ERROR: "No Error",
     AL_INVALID_NAME: "Invalid name",
     AL_INVALID_ENUM: "Invalid enum",
@@ -137,11 +137,12 @@ class OpenALError(Exception):
         If no msg is provided, the message will be set a mapped value of
         get_error().
         """
+        super(OpenALError, self).__init__(self)
         self.msg = msg
         if msg is None:
             errcode = get_error()
-            if errcode in _errmap:
-                self.msg = _errmap[errcode]
+            if errcode in _ERRMAP:
+                self.msg = _ERRMAP[errcode]
             else:
                 self.msg = "Error code [%d]" % errcode
 

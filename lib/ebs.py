@@ -118,6 +118,9 @@ class World(object):
         self._componenttypes = {}
 
     def _add_system_information(self, system):
+        """Adds the component type information, the system deal with, to
+        the internal lookup tables.
+        """
         if not isinstance(system, System):
             raise TypeError("system must be a  System")
         for classtype in system.componenttypes:
@@ -143,7 +146,7 @@ class World(object):
         empty list is returned.
         """
         if componenttype in self.components:
-            return components[ctype].values()
+            return self.components[componenttype].values()
         return []
 
     def add_system(self, system):
@@ -172,7 +175,6 @@ class World(object):
     def process(self):
         """Processes all components within their corresponding systems."""
         components = self.components
-        systems = self._systems
         for system in self._systems:
             s_process = system.process
             for ctype in system.componenttypes:

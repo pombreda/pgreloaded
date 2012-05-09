@@ -78,11 +78,11 @@ def SDL_FOURCC(a, b, c, d):
 SDL_DEFINE_PIXELFOURCC = SDL_FOURCC
 
 
-def SDL_DEFINE_PIXELFORMAT(type, order, layout, bits, bytes):
+def SDL_DEFINE_PIXELFORMAT(ptype, order, layout, bits, pbytes):
     """Calculates a unique pixel format identifier based on the passed values.
     """
-    return ((1 << 31) | ((type) << 24) | ((order) << 20) | ((layout) << 16) |
-            ((bits) << 8) | ((bytes) << 0))
+    return ((1 << 31) | ((ptype) << 24) | ((order) << 20) | ((layout) << 16) |
+            ((bits) << 8) | ((pbytes) << 0))
 
 
 def SDL_PIXELTYPE(x):
@@ -466,7 +466,7 @@ def calculate_gamma_ramp(gamma):
     """
     if type(gamma) not in(float, int):
         raise TypeError("gamma must be a float")
-    gamme = float(gamma)
+    gamma = float(gamma)
     if gamma < 0.0 or gamma > 1.0:
         raise ValueError("gamma must be in the range [0.0; 1.0]")
     result = (ctypes.c_ushort * 256)()

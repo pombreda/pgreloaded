@@ -5,7 +5,7 @@ import ctypes
 from pygame2.compat import *
 from pygame2.sdl import sdltype, dll, SDLError
 import pygame2.sdl.keycode as keycode
-import pygame2.sdl.scancode as scancode
+import pygame2.sdl.scancode as sdlscancode
 from pygame2.sdl.video import SDL_Window
 from pygame2.sdl.rect import SDL_Rect
 
@@ -92,7 +92,7 @@ def get_key_from_scancode(code):
     """
     if type(code) is not int:
         raise TypeError("scancode must be an int")
-    if code < 0 or code >= scancode.SDL_NUM_SCANCODES:
+    if code < 0 or code >= sdlscancode.SDL_NUM_SCANCODES:
         raise ValueError("invalid scancode value")
     return dll.SDL_GetKeyFromScancode(code)
 
@@ -141,7 +141,7 @@ def get_scancode_name(code):
     """
     if type(code) is not int:
         raise TypeError("scancode must be an int")
-    if code < 0 or code >= scancode.SDL_NUM_SCANCODES:
+    if code < 0 or code >= sdlscancode.SDL_NUM_SCANCODES:
         raise ValueError("invalid scancode value")
     retval = dll.SDL_GetScancodeName(code)
     return stringify(retval, "utf-8")

@@ -21,7 +21,7 @@ SDL_LOG_CATEGORY_RENDER      = 5
 SDL_LOG_CATEGORY_INPUT       = 6
 # 10 reserved ones
 SDL_LOG_CATEGORY_CUSTOM      = 17
-_allowed_categories = (
+_ALLOWED_CATEGORIES = (
     SDL_LOG_CATEGORY_APPLICATION,
     SDL_LOG_CATEGORY_ERROR,
     SDL_LOG_CATEGORY_SYSTEM,
@@ -38,7 +38,7 @@ SDL_LOG_PRIORITY_INFO     = 3
 SDL_LOG_PRIORITY_WARN     = 4
 SDL_LOG_PRIORITY_ERROR    = 5
 SDL_LOG_PRIORITY_CRITICAL = 6
-_allowed_priorities = (
+_ALLOWED_PRIORITIES = (
     SDL_LOG_PRIORITY_VERBOSE,
     SDL_LOG_PRIORITY_DEBUG,
     SDL_LOG_PRIORITY_INFO,
@@ -62,7 +62,7 @@ def log_critical(category, text):
     """
     if type(category) is not int:
         raise TypeError("category must be a valid SDL_LOG_CATEGORY value")
-    if category not in _allowed_categories:
+    if category not in _ALLOWED_CATEGORIES:
         raise ValueError("category must be a valid SDL_LOG_CATEGORY value")
     dll.SDL_LogCritical(category, byteify(str(text), "utf-8"))
 
@@ -72,7 +72,7 @@ def log_debug(category, text):
     """Logs a message with the chosen category and SDL_LOG_PRIORITY_DEBUG."""
     if type(category) is not int:
         raise TypeError("category must be a valid SDL_LOG_CATEGORY value")
-    if category not in _allowed_categories:
+    if category not in _ALLOWED_CATEGORIES:
         raise ValueError("category must be a valid SDL_LOG_CATEGORY value")
     dll.SDL_LogDebug(category, byteify(str(text), "utf-8"))
 
@@ -82,7 +82,7 @@ def log_error(category, text):
     """Logs a message with the chosen category and SDL_LOG_PRIORITY_ERROR."""
     if type(category) is not int:
         raise TypeError("category must be a valid SDL_LOG_CATEGORY value")
-    if category not in _allowed_categories:
+    if category not in _ALLOWED_CATEGORIES:
         raise ValueError("category must be a valid SDL_LOG_CATEGORY value")
     dll.SDL_LogError(category, byteify(str(text), "utf-8"))
 
@@ -92,7 +92,7 @@ def log_info(category, text):
     """Logs a message with the chosen category and SDL_LOG_PRIORITY_INFO."""
     if type(category) is not int:
         raise TypeError("category must be a valid SDL_LOG_CATEGORY value")
-    if category not in _allowed_categories:
+    if category not in _ALLOWED_CATEGORIES:
         raise ValueError("category must be a valid SDL_LOG_CATEGORY value")
     dll.SDL_LogInfo(category, byteify(str(text), "utf-8"))
 
@@ -103,7 +103,7 @@ def log_verbose(category, text):
     """
     if type(category) is not int:
         raise TypeError("category must be a valid SDL_LOG_CATEGORY value")
-    if category not in _allowed_categories:
+    if category not in _ALLOWED_CATEGORIES:
         raise ValueError("category must be a valid SDL_LOG_CATEGORY value")
     dll.SDL_LogVerbose(category, byteify(str(text), "utf-8"))
 
@@ -113,7 +113,7 @@ def log_warn(category, text):
     """Logs a message with the chosen category and SDL_LOG_PRIORITY_WARN."""
     if type(category) is not int:
         raise TypeError("category must be a valid SDL_LOG_CATEGORY value")
-    if category not in _allowed_categories:
+    if category not in _ALLOWED_CATEGORIES:
         raise ValueError("category must be a valid SDL_LOG_CATEGORY value")
     dll.SDL_LogWarn(category, byteify(str(text), "utf-8"))
 
@@ -123,11 +123,11 @@ def log_message(category, priority, text):
     """Logs a message with the chosen category and priority."""
     if type(category) is not int:
         raise TypeError("category must be a valid SDL_LOG_CATEGORY value")
-    if category not in _allowed_categories:
+    if category not in _ALLOWED_CATEGORIES:
         raise ValueError("category must be a valid SDL_LOG_CATEGORY value")
     if type(priority) is not int:
         raise TypeError("priority must be a valid SDL_LOG_PRIORITY value")
-    if priority not in _allowed_priorities:
+    if priority not in _ALLOWED_PRIORITIES:
         raise ValueError("priority must be a valid SDL_LOG_PRIORITY value")
     dll.SDL_LogMessage(category, priority, byteify(str(text), "utf-8"))
 
@@ -143,7 +143,7 @@ def log_set_all_priority(priority):
     """Sets the priority of all categories to the passed value."""
     if type(priority) is not int:
         raise TypeError("priority must be a valid SDL_LOG_PRIORITY value")
-    if priority not in _allowed_priorities:
+    if priority not in _ALLOWED_PRIORITIES:
         raise ValueError("priority must be a valid SDL_LOG_PRIORITY value")
     dll.SDL_LogSetAllPriority(priority)
 
@@ -153,7 +153,7 @@ def log_get_priority(category):
     """Gets the SDL_LOG_PRIORITY_* value for a specific category."""
     if type(category) is not int:
         raise TypeError("category must be a valid SDL_LOG_CATEGORY value")
-    if category not in _allowed_categories:
+    if category not in _ALLOWED_CATEGORIES:
         raise ValueError("category must be a valid SDL_LOG_CATEGORY value")
     return dll.SDL_LogGetPriority(category)
 
@@ -163,11 +163,11 @@ def log_set_priority(category, priority):
     """Sets the priority value for a specific category."""
     if type(category) is not int:
         raise TypeError("category must be a valid SDL_LOG_CATEGORY value")
-    if category not in _allowed_categories:
+    if category not in _ALLOWED_CATEGORIES:
         raise ValueError("category must be a valid SDL_LOG_CATEGORY value")
     if type(priority) is not int:
         raise TypeError("priority must be a valid SDL_LOG_PRIORITY value")
-    if priority not in _allowed_priorities:
+    if priority not in _ALLOWED_PRIORITIES:
         raise ValueError("priority must be a valid SDL_LOG_PRIORITY value")
     dll.SDL_LogSetPriority(category, priority)
 

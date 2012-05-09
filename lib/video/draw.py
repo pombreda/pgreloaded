@@ -1,7 +1,6 @@
 """Drawing routines."""
 import ctypes
 from pygame2.compat import *
-import pygame2.color as color
 from pygame2.array import MemoryView
 from pygame2.color import convert_to_color
 import pygame2.sdl.surface as sdlsurface

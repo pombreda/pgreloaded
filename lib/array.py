@@ -1,7 +1,6 @@
 """
 Conversion routines for sequences.
 """
-import struct
 import ctypes
 from pygame2.compat import *
 
@@ -9,7 +8,7 @@ __all__ = ["CTypesView", "to_ctypes", "MemoryView"]
 
 
 # Hack around an import error using relative import paths in Python 2.7
-_array = __import__("array")
+_ARRAY = __import__("array")
 
 
 def to_ctypes(dataseq, dtype):
@@ -59,6 +58,7 @@ class CTypesView(object):
         self._create_view(itemsize, bool(docopy), objsize)
 
     def _create_view(self, itemsize, docopy, objsize):
+        """Creates the view on the specified object."""
         self._isshared = not docopy
         bsize = 0
         if objsize is None:
@@ -79,21 +79,22 @@ class CTypesView(object):
             if not docopy:
                 # Try to determine the itemsize again for array
                 # instances, just in case the user assumed it to work.
-                if isinstance(self._obj, _array.array):
+                if isinstance(self._obj, _ARRAY.array):
                     itemsize = self._obj.itemsize
                     bsize = len(self._obj) * itemsize
                 self._obj = self._create_copy(self._obj, itemsize)
             self._view = (ctypes.c_ubyte * bsize)(*bytearray(self._obj))
 
     def _create_copy(self, obj, itemsize):
+        """Creates an array.array based copy of the object."""
         if itemsize == 1:
-            return _array.array("B", obj)
+            return _ARRAY.array("B", obj)
         elif itemsize == 2:
-            return _array.array("H", obj)
+            return _ARRAY.array("H", obj)
         elif itemsize == 4:
-            return _array.array("I", obj)
+            return _ARRAY.array("I", obj)
         elif itemsize == 8:
-            return _array.array("d", obj)
+            return _ARRAY.array("d", obj)
         else:
             raise TypeError("unsupported data type")
 
@@ -195,9 +196,13 @@ class MemoryView(object):
             raise ValueError("itemsize exceeds the accessible stride length")
 
     def _getbytes(self, start, end):
+        """Gets the bytes within the range of start:end."""
         return self._source[start:end]
 
     def _setbytes(self, start, end, value):
+        """Gets the bytes within the range of start:end to the passed
+        value.
+        """
         self._source[start:end] = value
 
     def __len__(self):

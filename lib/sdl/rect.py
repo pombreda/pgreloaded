@@ -16,6 +16,7 @@ class SDL_Point(ctypes.Structure):
     _fields_ = [("x", ctypes.c_int), ("y", ctypes.c_int)]
 
     def __init__(self, x=0, y=0):
+        super(SDL_Point, self).__init__()
         self.x = x
         self.y = y
 
@@ -41,6 +42,7 @@ class SDL_Rect(ctypes.Structure):
                 ("w", ctypes.c_int), ("h", ctypes.c_int)]
 
     def __init__(self, x=0, y=0, w=0, h=0):
+        super(SDL_Rect, self).__init__()
         self.x = x
         self.y = y
         self.w = w

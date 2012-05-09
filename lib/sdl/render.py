@@ -37,7 +37,7 @@ SDL_RENDERER_TARGETTEXTURE = 0x00000008
 SDL_TEXTUREACCESS_STATIC    = 0
 SDL_TEXTUREACCESS_STREAMING = 1
 SDL_TEXTUREACCESS_TARGET    = 2
-_allowed_access = (SDL_TEXTUREACCESS_STATIC, SDL_TEXTUREACCESS_STREAMING,
+_ALLOWED_ACCESS = (SDL_TEXTUREACCESS_STATIC, SDL_TEXTUREACCESS_STREAMING,
                    SDL_TEXTUREACCESS_TARGET)
 
 SDL_TEXTUREMODULATE_NONE  = 0x00000000
@@ -46,6 +46,7 @@ SDL_TEXTUREMODULATE_ALPHA = 0x00000002
 
 
 class SDL_RendererInfo(ctypes.Structure):
+    """TODO"""
     _fields_ = [("_name", ctypes.c_char_p),
                 ("flags", ctypes.c_uint),
                 ("num_texture_formats", ctypes.c_uint),
@@ -67,10 +68,12 @@ max_texture_width=%d, max_texture_height=%d)
 
 
 class SDL_Renderer(ctypes.Structure):
+    """TODO"""
     pass
 
 
 class SDL_Texture(ctypes.Structure):
+    """TODO"""
     pass
 
 
@@ -261,7 +264,7 @@ def create_texture(renderer, format_, access, w, h):
         raise TypeError("format must be a valid SDL_PIXELFORMAT value")
     if format_ < 0:
         raise ValueError("format must be a valid SDL_PIXELFORMAT value")
-    if access not in _allowed_access:
+    if access not in _ALLOWED_ACCESS:
         raise ValueError("access must be a valid SDL_TEXTUREACCESS value")
 
     retval = dll.SDL_CreateTexture(ctypes.byref(renderer), format_, access,

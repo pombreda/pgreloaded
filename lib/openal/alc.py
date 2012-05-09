@@ -51,14 +51,16 @@ ALC_CAPTURE_SAMPLES =                  0x312
 
 
 class ALCdevice(ctypes.Structure):
+    """TODO"""
     pass
 
 
 class ALCcontext(ctypes.Structure):
+    """TODO"""
     pass
 
 
-_errmap = {
+_ERRMAP = {
     ALC_NO_ERROR: "No Error",
     ALC_INVALID_DEVICE: "Invalid device",
     ALC_INVALID_CONTEXT: "Invalid context",
@@ -66,7 +68,7 @@ _errmap = {
     ALC_INVALID_VALUE: "Invalid value",
     ALC_OUT_OF_MEMORY: "Out of memory"
     }
-_fasterror = lambda dev: _errmap[dll.alcGetError(ctypes.byref(dev))]
+_FASTERROR = lambda dev: _ERRMAP[dll.alcGetError(ctypes.byref(dev))]
 
 
 @openaltype("alcGetError", [ctypes.POINTER(ALCdevice)], ctypes.c_int)
@@ -90,7 +92,7 @@ def create_context(device, attrs=None):
         ptr = ctypes.cast(arr, ctypes.POINTER(ctypes.c_int))
     retval = dll.alcCreateContext(ctypes.byref(device), ptr)
     if retval is None or not bool(retval):
-        raise OpenALError(_fasterror(device))
+        raise OpenALError(_FASTERROR(device))
     return retval.contents
 
 
@@ -144,7 +146,7 @@ def get_context_device(context):
         raise TypeError("context must be a ALCcontext")
     retval = dll.alcGetContextsDevice(ctypes.byref(context))
     if retval is None or not bool(retval):
-        raise OpenALError(_fasterror(device))
+        raise OpenALError()
     return retval.contents
 
 
@@ -284,5 +286,5 @@ def capture_samples(device, amount, itemsize):
     bsize = amount * itemsize
     buf = (ctypes.c_ubyte * bsize)()
     ptr = ctypes.cast(buf, ctypes.POINTER(ctypes.c_ubyte))
-    dll.alcCaptureSamples(ctypes.byref(device), buf, bsize)
+    dll.alcCaptureSamples(ctypes.byref(device), ptr, bsize)
     return buf
