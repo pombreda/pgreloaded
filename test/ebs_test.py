@@ -14,6 +14,10 @@ class PositionEntity(Entity):
         self.position = Position(x, y)
 
 
+class PosEntity(Entity):
+    def __init__(self, world, x=0, y=0):
+        self.pos = Position(x, y)
+
 class PositionSystem(System):
     def __init__(self):
         self.componenttypes = (Position,)
@@ -77,9 +81,6 @@ class EBSTest(unittest.TestCase):
     def test_Entity__inheritance(self):
         world = World()
 
-        # No bound system, so this should raise an error.
-        self.assertRaises(KeyError, PositionEntity, world)
-
         world.add_system(PositionSystem())
         pos1 = PositionEntity(world)
         pos2 = PositionEntity(world, 10, 10)
@@ -88,6 +89,19 @@ class EBSTest(unittest.TestCase):
             self.assertIsInstance(p, Entity)
             self.assertIsInstance(p.position, Position)
             self.assertIsInstance(p.position, Component)
+
+    def test_Entity__access(self):
+        world = World()
+        world.add_system(PositionSystem())
+        pos1 = PositionEntity(world)
+        pos2 = PosEntity(world)
+
+        pos1.position.x = 10
+
+        # Components are _always_ identified by a lower-case class name.
+        def sx(p, v):
+            p.pos.x = v
+        self.assertRaises(KeyError, sx, pos2, 10)
 
     def test_World(self):
         w = World()

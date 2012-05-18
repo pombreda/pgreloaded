@@ -3,6 +3,7 @@ Wrapper methods around the SDL2 event routines.
 """
 import ctypes
 from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE, get_error, SDLError
+from pygame2.sdl.keyboard import SDL_Keysym
 
 __all__ = ["SDL_WindowEvent", "SDL_KeyboardEvent", "SDL_TextEditingEvent",
            "SDL_TextInputEvent", "SDL_MouseMotionEvent",
@@ -129,7 +130,7 @@ class SDL_KeyboardEvent(ctypes.Structure):
                 ("repeat", ctypes.c_ubyte),
                 ("_padding2", ctypes.c_ubyte),
                 ("_padding3", ctypes.c_ubyte),
-                ("keysym", ctypes.c_int),
+                ("keysym", SDL_Keysym),
                 ]
 
 

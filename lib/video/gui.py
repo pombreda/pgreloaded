@@ -149,11 +149,13 @@ class UIProcessor(System):
                 items = obj.get_components(ctype)
                 items = [(v, e) for v in items for e in (event,)
                          if e.type in v.events]
-                map(handler, items)
+                arg1, arg2 = zip(*items)
+                map(handler, arg1, arg2)
         elif isiterable(obj):
             items = [(v, e) for v in obj for e in (event,)
                      if e.type in v.events]
-            map(handler, items)
+            arg1, arg2 = zip(*items)
+            map(handler, arg1, arg2)
         elif event.type in obj.events:
             handler(obj, event)
 

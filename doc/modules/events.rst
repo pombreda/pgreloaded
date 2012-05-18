@@ -6,7 +6,7 @@
 
 .. todo::
 
-   Add a describtion.
+   Add a description.
 
 .. class:: EventHandler(sender)
 
@@ -14,15 +14,15 @@
    executed.
 
    .. attribute:: callbacks
-   
+
       A list of callbacks currently bound to the :class:`EventHandler`.
-   
+
    .. attribute:: sender
-   
+
       The responsible object that executes the :class:`EventHandler`.
-   
+
    .. method:: add(callback : Callable)
-   
+
       Adds a callback to the :class:`EventHandler`.
 
    .. method:: remove(callback : Callable)
@@ -37,7 +37,7 @@
       them.
 
    .. method:: process()
-   
+
       Processes all :class:`Component` items within their corresponding
       :class:`System` instances.
 

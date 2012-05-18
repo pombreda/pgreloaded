@@ -8,7 +8,7 @@ import pygame2.sdl.pixels as sdlpixels
 import pygame2.sdl.rect as rect
 from . import sprite
 
-__all__ = ["prepare_color", "fill"]
+__all__ = ["prepare_color", "fill", "PixelView"]
 
 
 def prepare_color(color, target):

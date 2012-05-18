@@ -74,7 +74,17 @@ class Entity(object):
         else:
             if not isinstance(value, Component):
                 raise TypeError("only Component items can be bound")
-            self._world.components[type(value)][self._id] = value
+            # If the value is a compound component (e.g. a Button
+            # inheriting from a Sprite), it needs to be added to all
+            # supported component type instances.
+            mro = value.__class__.mro()
+            stop = mro.index(Component)
+            mro = mro[0:stop]
+            wctypes = self._world.componenttypes
+            for clstype in mro:
+                if clstype not in wctypes:
+                    self._world.add_componenttype(clstype)
+                self._world.components[clstype][self._id] = value
 
     def __delattr__(self, name):
         """Deletes the component data related to the Entity."""
@@ -124,11 +134,17 @@ class World(object):
         if not isinstance(system, System):
             raise TypeError("system must be a  System")
         for classtype in system.componenttypes:
-            if Component not in classtype.__mro__:
+            if Component not in classtype.mro():
                 raise TypeError("'%s' must be a  Component")
             if classtype not in self.components:
-                self.components[classtype] = {}
-                self._componenttypes[classtype.__name__.lower()] = classtype
+                self.add_componenttype(classtype)
+
+    def add_componenttype(self, classtype):
+        """Adds a supported component type to the World."""
+        if classtype in self._componenttypes.values():
+            return
+        self.components[classtype] = {}
+        self._componenttypes[classtype.__name__.lower()] = classtype
 
     def delete_entity(self, entity):
         """Removes an Entity from the World, including all its data."""
@@ -185,6 +201,10 @@ class World(object):
         """Gets the systems bound to the world."""
         return tuple(self._systems)
 
+    @property
+    def componenttypes(self):
+        """Gets the supported component types of the world."""
+        return self._componenttypes.values()
 
 class System(object):
     """A processing system for component data.
