@@ -22,22 +22,43 @@ class SpriteRenderer(System):
         super(SpriteRenderer, self).__init__()
         self.window = window
         self.surface = video.get_window_surface(window.window)
+        self._sortfunc = lambda e1, e2: cmp(e1.depth, e2.depth)
         self.componenttypes = (Sprite, )
 
-    def render(self, sprite):
+    def render(self, sprite, x=None, y=None):
         """Draws the passed sprite on the Window's surface."""
-        r = rect.SDL_Rect(sprite.x, sprite.y, 0, 0)
+        if x is None or y is None:
+            x = sprite.x
+            y = sprite.y
+        r = rect.SDL_Rect(x, y, 0, 0)
         sdlsurface.blit_surface(sprite.surface, None, self.surface, r)
         video.update_window_surface(self.window.window)
 
     def process(self, world, components):
         """Draws the passed Sprite objects on the Window's surface."""
         r = rect.SDL_Rect(0, 0, 0, 0)
+        components = sorted(components, self._sortfunc)
         for sprite in components:
             r.x = sprite.x
             r.y = sprite.y
             sdlsurface.blit_surface(sprite.surface, None, self.surface, r)
         video.update_window_surface(self.window.window)
+
+    @property
+    def sortfunc(self):
+        """Sort function for the component processing order.
+
+        The default sort order is based on the depth attribute of every
+        sprite. Lower depth values will cause sprites to be drawn below
+        sprites with higher depth values.
+        """
+        return self._sortfunc
+
+    @sortfunc.setter
+    def sortfunc(self, value):
+        if not iscallable(value):
+            raise TypeError("sortfunc must be callable")
+        self._sortfunc = value
 
 
 class Sprite(Component):
@@ -68,8 +89,14 @@ class Sprite(Component):
         else:
             self.surface = sdlsurface.create_rgb_surface(size[0], size[1],
                                                          bpp)
+        self.depth = 0
         self.x = 0
         self.y = 0
+
+    @property
+    def size(self):
+        """The size of the Sprite as tuple."""
+        return self.surface.size
 
     @property
     def position(self):

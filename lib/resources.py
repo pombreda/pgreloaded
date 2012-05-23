@@ -10,10 +10,8 @@ import io
 
 __all__ = ["open_zipfile", "open_tarfile", "open_url", "Resources"]
 
-_ISPYTHON3 = sys.version_info[0] >= 3
-
 # Python 3.x workarounds for the changed urllib modules.
-if _ISPYTHON3:
+if sys.version_info[0] >= 3:
     import urllib.parse as urlparse
     import urllib.request as urllib2
 else:

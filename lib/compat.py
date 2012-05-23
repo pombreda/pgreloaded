@@ -5,12 +5,16 @@ import sys
 import collections
 import warnings
 
-__all__ = ["stringify", "byteify", "isiterable"]
+__all__ = ["stringify", "byteify", "isiterable", "ISPYTHON2", "ISPYTHON3"]
+
+ISPYTHON2 = False
+ISPYTHON3 = False
 
 if sys.version_info[0] < 3:
     # Wrapper around bytes() and decode() for Python 2.x
     byteify = lambda x, enc: x.encode(enc)
     stringify = lambda x, enc: str(x)
+    ISPYTHON2 = True
 else:
     __all__ += ["long", "unichr", "callable"]
     byteify = bytes
@@ -18,6 +22,7 @@ else:
     long = int
     unichr = chr
     callable = lambda x: isinstance(x, collections.Callable)
+    ISPYTHON3 = True
 
 isiterable = lambda x: isinstance(x, collections.Iterable)
 

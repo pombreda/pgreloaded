@@ -12,7 +12,7 @@ environment.
 from uuid import uuid4
 from pygame2.compat import *
 
-__all__ = ["Entity", "World", "System", "Component"]
+__all__ = ["Entity", "World", "System", "Applicator", "Component"]
 
 
 class Component(object):
@@ -127,12 +127,19 @@ class World(object):
         self.components = {}
         self._componenttypes = {}
 
+    def _applicator_components(self, ctypes):
+        """A generator view on combined sets of Component items."""
+        comps = self.components
+        keysets = [set(comps[ctype]) for ctype in ctypes]
+        valsets = [comps[ctype] for ctype in ctypes]
+        entities = keysets[0].intersection(*keysets[1:])
+        for ekey in entities:
+            yield tuple(component[ekey] for component in valsets)
+
     def _add_system_information(self, system):
         """Adds the component type information, the system deal with, to
         the internal lookup tables.
         """
-        if not isinstance(system, System):
-            raise TypeError("system must be a  System")
         for classtype in system.componenttypes:
             if Component not in classtype.mro():
                 raise TypeError("'%s' must be a  Component")
@@ -170,6 +177,8 @@ class World(object):
 
         The system will be added as last item in the processing order.
         """
+        if not isinstance(system, System):
+            raise TypeError("system must be a System")
         self._add_system_information(system)
         self._systems.append(system)
 
@@ -179,6 +188,8 @@ class World(object):
         The system will be added at the specific position of the
         processing order.
         """
+        if not isinstance(system, System):
+            raise TypeError("system must be a System")
         self._add_system_information(system)
         self._systems.insert(index, system)
 
@@ -193,8 +204,16 @@ class World(object):
         components = self.components
         for system in self._systems:
             s_process = system.process
-            for ctype in system.componenttypes:
-                s_process(self, components[ctype].values())
+            if isinstance(system, Applicator):
+                comps = self._applicator_components(system.componenttypes)
+                s_process(self, comps)
+            else:
+                if ISPYTHON2:
+                    for ctype in system.componenttypes:
+                        s_process(self, components[ctype].viewvalues())
+                else:
+                    for ctype in system.componenttypes:
+                        s_process(self, components[ctype].values())
 
     @property
     def systems(self):
@@ -205,6 +224,7 @@ class World(object):
     def componenttypes(self):
         """Gets the supported component types of the world."""
         return self._componenttypes.values()
+
 
 class System(object):
     """A processing system for component data.
@@ -228,3 +248,8 @@ class System(object):
         This must be implemented by inheriting classes.
         """
         raise NotImplementedError()
+
+
+class Applicator(System):
+    """A processing system for combined data sets."""
+    pass

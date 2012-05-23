@@ -9,14 +9,27 @@ class Position(Component):
         self.y = y
 
 
+class Movement(Component):
+    def __init__(self, vx=0, vy=0):
+        self.vx = vx
+        self.vy = vy
+
+
 class PositionEntity(Entity):
     def __init__(self, world, x=0, y=0):
         self.position = Position(x, y)
 
 
+class MovingEntity(Entity):
+    def __init__(self, world, x=0, y=0, vx=0, vy=0):
+        self.position = Position(x, y)
+        self.movement = Movement(vx, vy)
+
+
 class PosEntity(Entity):
     def __init__(self, world, x=0, y=0):
         self.pos = Position(x, y)
+
 
 class PositionSystem(System):
     def __init__(self):
@@ -26,6 +39,16 @@ class PositionSystem(System):
         for c in components:
             c.x += 1
             c.y += 1
+
+
+class MovementApplicator(Applicator):
+    def __init__(self):
+        self.componenttypes = (Position, Movement)
+
+    def process(self, world, componentsets):
+        for p, m in componentsets:
+            p.x += m.vx
+            p.y += m.vy
 
 
 class EBSTest(unittest.TestCase):
@@ -197,6 +220,52 @@ class EBSTest(unittest.TestCase):
         for x in range(10):
             PositionEntity(world2)
         self.assertTrue(psystem in world2.systems)
+        world2.process()
+        for c in world2.components[Position].values():
+            self.assertEqual(c.x, 1)
+            self.assertEqual(c.y, 1)
+        world2.process()
+        for c in world2.components[Position].values():
+            self.assertEqual(c.x, 2)
+            self.assertEqual(c.y, 2)
+
+
+    def test_Applicator(self):
+        world = World()
+
+        class ErrornousApplicator(Applicator):
+            def __init__(self):
+                pass
+
+        eapplicator = ErrornousApplicator()
+        # No component types defined.
+        self.assertRaises(TypeError, world.add_system, eapplicator)
+        self.assertEqual(len(world.systems), 0)
+
+        mapplicator = MovementApplicator()
+        world.add_system(mapplicator)
+        self.assertTrue(mapplicator in world.systems)
+
+    def test_Applicator_process(self):
+        world = World()
+
+        class ErrornousApplicator(Applicator):
+            def __init__(self):
+                self.componenttypes = (Position, Movement)
+
+        eapplicator = ErrornousApplicator()
+        world.add_system(eapplicator)
+        for x in range(10):
+            MovingEntity(world)
+        self.assertTrue(eapplicator in world.systems)
+        self.assertRaises(NotImplementedError, world.process)
+
+        world2 = World()
+        mapplicator = MovementApplicator()
+        world2.add_system(mapplicator)
+        for x in range(10):
+            MovingEntity(world2, vx=1, vy=1)
+        self.assertTrue(mapplicator in world2.systems)
         world2.process()
         for c in world2.components[Position].values():
             self.assertEqual(c.x, 1)
