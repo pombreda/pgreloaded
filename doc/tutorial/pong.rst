@@ -1,0 +1,590 @@
+The Pong Game
+=============
+The following tutorial will show you some capabilities of the
+component-based approach, Pygame2 features. We will create the basics
+of a simple Pong game implementation here.
+
+Getting started
+---------------
+We start with creating the basic window and add a small event loop, so
+we are able to close the window and game. ::
+
+    import sys
+
+    try:
+        import pygame2.video as video
+        import pygame2.sdl.events as sdlevents
+    except ImportError:
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
+
+    def run():
+        video.init()
+        window = video.Window("The Pong Game", size=(800, 600))
+        window.show()
+
+        while True:
+            event = sdlevents.poll_event(True)
+            if event is None:
+                continue
+            if event.type == sdlevents.SDL_QUIT:
+                break
+            window.refresh()
+        return 0
+
+    if __name__ == "__main__":
+        sys.exit(run())
+
+The import statements, video initialisation and window creation were
+discussed previously in the :ref:`hello_world` tutorial. Instead of some
+integrated event processor, a new code fragment is introduced, though. ::
+
+    while True:
+        event = sdlevents.poll_event(True)
+        if event is None:
+            continue
+        if event.type == sdlevents.SDL_QUIT:
+            break
+         window.refresh()
+
+The while loop above is the main event loop of our application. It deals
+with all kinds of input events that can occur when working with the
+window, such as mouse movements, key strokes, resizing operation and so
+on. SDL handles a lot for us when it comes to events, so all we need to
+do is to check, if there are any events, retrieve each event. one by
+one, and handle it, if necessary. For now, we will just handle the
+``SDL_QUIT`` event, which is raised, if the window is closed.
+
+In any other case, we will just refresh the Window's graphics buffer, so
+it is updated and visible on-screen.
+
+Adding the game world
+---------------------
+
+The window is around and basically working. Now let's take care of
+creating the game world, which will manage the player paddles, ball,
+visible elements and anything else. We are going to use an
+implementation layout loosely based on a COP pattern, which separates
+data structures and functionality from each other. This allows us to
+change or enhance functional parts easily without having to refactor all
+classes we are implementing.
+
+We start with creating the two player paddles and the rendering engine
+that will dislay them on the window. ::
+
+    [...]
+
+    from pygame2.color import Color
+    from pygame2.ebs import *
+
+    [...]
+
+    class Renderer(video.SpriteRenderer):
+        def __init__(self, window):
+            super(Renderer, self).__init__(window)
+
+        def process(self, world, componentsets):
+            video.fill(self.surface, Color(0, 0, 0))
+            super(Renderer, self).process(world, componentsets)
+
+
+    class Player(Entity):
+        def __init__(self, world, posx=0, posy=0):
+            self.sprite = video.Sprite(size=(20, 100), bpp=32)
+            video.fill(self.sprite, Color(255, 255, 255))
+            self.sprite.position = posx, posy
+
+
+    def run():
+        ...
+
+        world = World()
+
+        renderer = Renderer(window)
+        world.add_system(renderer)
+
+        player1 = Player(world, 0, 250)
+        player2 = Player(world, 780, 250)
+
+        while True:
+            event = sdlevents.poll_event(True)
+            if event is not None:
+                if event.type == sdlevents.SDL_QUIT:
+                    break
+            world.process()
+
+    if __name__ == "__main__":
+        sys.exit(run())
+
+We start by enhancing the :class:`pygame2.video.SpriteRenderer` so that
+it will paint the whole window sceeen black on every drawing cycle,
+before drawing all sprites on the window.
+
+Afterwards, the player paddles will be implemented, based on a
+:class:`pygame2.ebs.Entity` data container. The player paddles are
+simple rectangular sprites that can be positioned anywhere on the
+window.
+
+In the main program function, we now put those things together by
+creating a :class:`pygame2.ebs.World`, in which the player paddles and
+the renderer can live and operate.
+
+Within the main event loop, we allow the world to process all attached
+systems, which causes it to invoke the ``process()`` methods for all
+:class:`pygame2.ebs.System` instances added to the world.
+
+Moving the ball
+---------------
+
+We now have two static paddles centered vertically on the left and right
+of our window. Now we are going to add a ball that can move around
+within the window boundaries. ::
+
+    [...]
+    class MovementSystem(Applicator):
+        def __init__(self, minx, miny, maxx, maxy):
+            super(MovementSystem, self).__init__()
+            self.componenttypes = (Velocity, video.Sprite)
+            self.minx = minx
+            self.miny = miny
+            self.maxx = maxx
+            self.maxy = maxy
+
+        def process(self, world, componentsets):
+            for velocity, sprite in componentsets:
+                swidth, sheight = sprite.size
+                sprite.x += velocity.vx
+                sprite.y += velocity.vy
+
+                sprite.x = max(self.minx, sprite.x)
+                sprite.y = max(self.miny, sprite.y)
+
+                pmaxx = sprite.x + swidth
+                pmaxy = sprite.y + sheight
+                if pmaxx > self.maxx:
+                    sprite.x = self.maxx - swidth
+                if pmaxy > self.maxy:
+                    sprite.y = self.maxy - sheight
+
+
+    class Velocity(Component):
+        def __init__(self):
+            super(Velocity, self).__init__()
+            self.vx = 0
+            self.vy = 0
+
+
+    class Player(Entity):
+        def __init__(self, world, posx=0, posy=0):
+            [...]
+            self.velocity = Velocity()
+
+
+    class Ball(Entity):
+        def __init__(self, world, posx=0, posy=0):
+            self.sprite = video.Sprite(size=(20, 20), bpp=32)
+            video.fill(self.sprite, WHITE)
+            self.sprite.position = posx, posy
+            self.velocity = Velocity()
+
+
+    def run():
+        [...]
+        movement = MovementSystem(0, 0, 800, 600)
+        renderer = Renderer(window)
+
+        world.add_system(movement)
+        world.add_system(renderer)
+
+        [...]
+
+        ball = Ball(world, 390, 290)
+        ball.velocity.vx = -3
+
+        [...]
+
+We introduce two new things here, a ``Velocity`` and ``MovementSystem``
+class. The ``Velocity`` class is a simple data bag, which inherits from
+:class:`pygame2.ebs.Component`. It does not contain any application
+logic, but consists of the relvant information to represent the movement
+in a certain direction. This allows us to mark certain in-game items as
+being able to move around or not.
+
+The ``MovementSystem`` on the other hand actually takes care of moving
+the in-game items around by applying the velocity to their current
+position. Thus, we can simply enable any ``Player`` instance to be
+movable or not by adding or removing a velocity attribute to them, which
+is a ``Velocity`` component instance.
+
+.. note::
+
+   The naming is important here. The :mod:`pygame2.ebs` implementation
+   requires every in-application or in-game item attribute bound to a
+   :class:`pygame2.ebs.Entity` to be the lowercase class name of its
+   related :class:`pygame2.ebs.Component`. ::
+
+     Player.vel = Velocity(10, 10)
+
+   for example would raise an Exception, since the system expects
+   ``Player.vel`` to be an instance of a ``Vel`` component.
+
+The ``MovementSystem`` is a specialised :class:`pygame2.ebs.System`, a
+:class:`pygame2.ebs.Applicator`, which can operate on combined sets of
+data. When the :meth:`pygame2.ebs.Applicator.process()` method is
+called, the passed ``componentsets`` iterable will contain tuples of
+:class:`pygame2.ebs.Component` instances that belong to an instance.
+The ``MovementSystem``'s ``process()`` implementation hence will loop
+over sets of ``Velocity`` and ``Sprite`` instances that belong to the
+same :class:`pygame2.ebs.Entity`. Since we have a ball and two players
+currently available, it typically would loop over three tuples, two for
+the individual players and one for the ball.
+
+The :class:`pygame2.ebs.Applicator` thus enables us process combined
+data of our in-game items, without creating complex data structures.
+
+.. note::
+
+   Only entities that contain *all* attributes (components) are taken
+   into account. If e.g. the ``Ball`` class would not contain a
+   ``Velocity`` component, it would not be processed by the
+   ``MovementSystem``.
+
+Why do we use this approach after all? The :class:`pygame2.video.Sprite`
+objects carry a position around, which defines the location at which
+they should be rendered, when processed by our ``Renderer``. If they
+should move around (a change in the position), we need to apply the
+velocity to them.
+
+We also define some more things within the ``MovementSystem``, such as a
+simple boundary check, so that the players and ball cannot leave the
+visible window area on moving around.
+
+Bouncing
+--------
+
+We now have a ball that can move around as well as the game logic for
+moving things around. In contrast to a classic OO approach we do not
+need to implement the movement logic within the ``Ball`` and ``Player``
+class individually, since the basic movement is the same for all.
+
+The ball now moves and stays within the bounds, but once it hits the
+left side, it stay there. To make it *bouncy*, we need to add a simple
+collision system, which causes the ball to change its direction on
+colliding with the walls or the player paddles. ::
+
+    [...]
+    try:
+        import pygame2.video as video
+        import pygame2.sdl.events as sdlevents
+        import pygame2.sdl.timer as sdltimer
+    except ImportError:
+        [...]
+
+    class CollisionSystem(Applicator):
+        def __init__(self, minx, miny, maxx, maxy):
+            super(CollisionSystem, self).__init__()
+            self.componenttypes = (Velocity, video.Sprite)
+            self.ball = None
+            self.minx = minx
+            self.miny = miny
+            self.maxx = maxx
+            self.maxy = maxy
+
+        def _overlap(self, item):
+            pos, sprite = item[0], item[2]
+            if sprite == self.ball.sprite:
+                return False
+
+            left, top, right, bottom = sprite.area
+            bleft, btop, bright, bbottom = self.ball.sprite.area
+
+            return bleft < right and bright > left and \
+                btop < bottom and bbottom > top
+
+        def process(self, world, componentsets):
+            collitems = filter(self._overlap, componentsets)
+            if len(collitems) != 0:
+                self.ball.velocity.vx = -self.ball.velocity.vx
+
+
+    def run():
+        [...]
+        world = World()
+
+        movement = MovementSystem(0, 0, 800, 600)
+        collision = CollisionSystem(0, 0, 800, 600)
+        renderer = Renderer(window)
+
+        world.add_system(movement)
+        world.add_system(collision)
+        world.add_system(renderer)
+
+        [...]
+        collision.ball = ball
+
+        while True:
+            event = sdlevents.poll_event(True)
+            if event is not None:
+                if event.type == sdlevents.SDL_QUIT:
+                    break
+            sdltimer.delay(10)
+            world.process()
+
+    if __name__ == "__main__":
+        sys.exit(run())
+
+The ``CollisionSystem`` only needs to take care of the ball and objects
+it collides with, since it is the only unpredictable object within our
+game world. The player paddles will only be able to move up and down
+within the visible window area and we already dealt with that within the
+``MovementSystem`` code.
+
+Whenever the ball collides with one of the paddles, its movement
+direction (velocity) should be inverted, so that it *bounces* back.
+
+Additionally, we won't run at the full processor speed anymore in the
+main loop, but instead add a short delay, using the
+:mod:`pygame2.sdl.timer` module. This reduces the overall load on the
+CPU and lets the game be a bit slower (with a maximum of 60 frames per
+second).
+
+
+Reacting on player input
+------------------------
+
+We have a moving ball that bounces from side to side. The next step
+would be to allow moving one of the paddles around, if the player
+presses a key. As stated in the beginning, the :mod:`pygame2.sdl.events`
+module allows us to deal with a huge variety of user and system events
+that could occur for our application.
+
+Right now we are only interested in key strokes for the Up and Down keys
+to move one of the player paddles up or down. ::
+
+    [...]
+    try:
+        import pygame2.video as video
+        import pygame2.sdl.events as sdlevents
+        import pygame2.sdl.timer as sdltimer
+        import pygame2.sdl.keycode as sdlkc
+    except ImportError:
+        [...]
+
+    def run():
+        [...]
+        while True:
+            event = sdlevents.poll_event(True)
+            if event is not None:
+                if event.type == sdlevents.SDL_QUIT:
+                    break
+                if event.type == sdlevents.SDL_KEYDOWN:
+                    if event.key.keysym.sym == sdlkc.SDLK_UP:
+                        player1.velocity.vy = -3
+                    elif event.key.keysym.sym == sdlkc.SDLK_DOWN:
+                        player1.velocity.vy = 3
+                elif event.type == sdlevents.SDL_KEYUP:
+                    if event.key.keysym.sym in (sdlkc.SDLK_UP, sdlkc.SDLK_DOWN):
+                        player1.velocity.vy = 0
+            sdltimer.delay(10)
+            world.process()
+
+    if __name__ == "__main__":
+        sys.exit(run())
+
+Every event that can occur and that is supported by SDL2 can be
+identified by a static event type code. This allows us to check for
+e.g. a key stroke. First, we have to check for ``SDL_KEYDOWN`` and ``SDL_KEYUP``
+events, so we can start and stop the paddle movement on demand.
+Once we identified such events, we need to check, whether the pressed
+or released key is actually the Up or Down key, so that we do not start
+or stop moving the paddle, if the user presses R or G or whatever.
+
+Whenever the Up or Down key are pressed down, we allow the left player
+paddle to move by changing its velocity information for the vertical
+direction. Likewise, if either of those keys is released, we stop moving
+the paddle.
+
+Improved bouncing
+-----------------
+
+We have moving paddles and we have a ball that moves from one side to
+another, which makes the game quite boring. If you played Pong before,
+you know that most variations of it will cause the ball to bounce in a
+certain angle, if it collides with a paddle. Most of those
+implementations achieve this by implementing the paddle collision as if
+the ball collides with a rounded surface. If it collides with the center
+of the paddle, it will bounce back straight, if it hits the paddle near
+the center, it will bounce back with a pointed angle and on the corners
+of the paddle it will bounce back with some angle close to 90 degrees to
+its initial movement direction. ::
+
+    class CollisionSystem(Applicator):
+        [...]
+
+        def process(self, world, componentsets):
+            collitems = filter(self._overlap, componentsets)
+            if len(collitems) != 0:
+                self.ball.velocity.vx = -self.ball.velocity.vx
+
+                sprite = collitems[0][1]
+                ballcentery = self.ball.sprite.y + self.ball.sprite.size[1] // 2
+                halfheight = sprite.size[1] // 2
+                stepsize = halfheight // 10
+                degrees = 0.7
+                paddlecentery = sprite.y + halfheight
+                if ballcentery < paddlecentery:
+                    factor = (paddlecentery - ballcentery) // stepsize
+                    self.ball.velocity.vy = -int(round(factor * degrees))
+                elif ballcentery > paddlecentery:
+                    factor = (ballcentery - paddlecentery) // stepsize
+                    self.ball.velocity.vy = int(round(factor * degrees))
+                else:
+                    self.ball.velocity.vy = - self.ball.velocity.vy
+
+The reworked processing code above simulates a curved paddle by
+creating segmented areas, which cause the ball to be reflected in
+different angles. Instead of doing some complex trigonometry to
+calculate an accurate angle and transform it ona x/y plane, we simply
+check, where the ball collided with the paddle and adjust the vertical
+velocity.
+
+If the ball now hits a paddle, it can be reflected in different angles,
+hitting the top and bottom window boundaries... and stays there. If it
+hits the window boundaries, it should be reflected, too, but not with a
+varying angle, but with the exact angle, it hit the boundary with.
+This means that we just need to invert the vertical velocity, once the
+ball hits the top or bottom. ::
+
+    if self.ball.sprite.y <= self.miny or \
+            self.ball.sprite.y + self.ball.sprite.size[1] >= self.maxy:
+        self.ball.velocity.vy = - self.ball.velocity.vy
+
+    if self.ball.sprite.x <= self.minx or \
+            self.ball.sprite.x + self.ball.sprite.size[0] >= self.maxx:
+        self.ball.velocity.vx = - self.ball.velocity.vx
+
+Creating an enemy
+-----------------
+
+Now that we can shoot back the ball in different ways, it would be nice
+to have an opponent to play against. We could enhance the main event
+loop to recognise two different keys and manipulate the second paddle's
+velocity for two people playing against each other. We also could
+create a simple computer-controlled player that tries to hit the ball
+back to us, which sounds more interesting. ::
+
+    class TrackingAIController(Applicator):
+        def __init__(self, miny, maxy):
+            super(TrackingAIController, self).__init__()
+            self.componenttypes = (PlayerData, Velocity, video.Sprite)
+            self.miny = miny
+            self.maxy = maxy
+            self.ball = None
+
+        def process(self, world, componentsets):
+            for pdata, vel, sprite in componentsets:
+                if not pdata.ai:
+                    continue
+
+                centery = sprite.y + sprite.size[1] // 2
+                if self.ball.velocity.vx < 0:
+                    # ball is moving away from the AI
+                    if centery < self.maxy // 2:
+                        vel.vy = 3
+                    elif centery > self.maxy // 2:
+                        vel.vy = -3
+                    else:
+                        vel.vy = 0
+                else:
+                    bcentery = self.ball.sprite.y + self.ball.sprite.size[1] // 2
+                    if bcentery < centery:
+                        vel.vy = -3
+                    elif bcentery > centery:
+                        vel.vy = 3
+                    else:
+                        vel.vy = 0
+
+
+    class PlayerData(Component):
+        def __init__(self):
+            super(PlayerData, self).__init__()
+            self.ai = False
+
+
+    class Player(Entity):
+        def __init__(self, world, posx=0, posy=0, ai=False):
+            self.sprite = video.Sprite(size=(20, 100), bpp=32)
+            video.fill(self.sprite, WHITE)
+            self.sprite.position = posx, posy
+            self.velocity = Velocity()
+            self.playerdata = PlayerData()
+            self.playerdata.ai = ai
+
+
+    def run():
+        [...]
+        aicontroller = TrackingAIController(0, 600)
+
+        world.add_system(aicontroller)
+        world.add_system(movement)
+        world.add_system(collision)
+        world.add_system(renderer)
+
+        player1 = Player(world, 0, 250)
+        player2 = Player(world, 780, 250, True)
+        [...]
+        aicontroller.ball = ball
+
+        [...]
+
+We start by creating a component ``PlayerData`` that flags a player as
+being AI controlled or not. Afterwards, an ``AITrackingController`` is
+implemented, which, depending on the information of the ``PlayerData``
+component, will move the specific player paddle around by manipulating
+its velocity information.
+
+The AI is pretty simple, just following the ball's vertical movement,
+trying to hit it at its center, if the ball moves into the direction of
+the AI-controlled paddle. As soon as the ball moves away from the
+paddle, the paddle will move back to the vertical center.
+
+Next steps
+----------
+
+We created the basics of a Pong game, which can be found in the
+examples folder. However, there are some more things to do, such as
+
+  * resetting the ball to the center with a random vertical velocity, if
+    it hits either the left or right window bounds
+
+  * adding the ability to track the points made by either player, if the
+    ball hit the left or right side
+
+  * drawing a dashed line in the middle to make the game field look
+    nicer
+
+  * displaying the points made by each player
+
+It is your turn now tom implement these features. Go ahead, it is not as
+complex as it sounds.
+
+  * you can reset the ball's position in the ``CollisionSystem`` code,
+    by changing the code for the ``minx`` and ``maxx`` test
+
+  * you could enhance the ``CollisionSystem`` to process
+    ``PlayerData`` components and add the functionality to add points
+    there (or write a small processor that keeps track of the ball only
+    and processes only the ``PlayerData`` and ``video.Sprite`` objects
+    of each player for adding points)
+
+  * write an own Renderer, based on :class:`pygame2.ebs.Applicator`,
+    which takes care of position and sprite sets ::
+
+       StaticRepeatingSprite(Entity):
+           ...
+           self.positions = Positions((400, 0), (400, 60), (400, 120), ...)
+           self.sprite = video.Sprite(size=(10, 40)
+
+  * draw some simple images for 0-9 and render them as sprites,
+    depending on the points a player made.

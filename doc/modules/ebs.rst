@@ -42,17 +42,28 @@ environment.
 
       The :class:`World` the entity reside in.
 
+.. class:: Applicator()
+
+   A processing system for combined data sets. The :class:`Applicator`
+   is an enhanced :class:`System` that receives combined data sets based
+   on its set :attr:`System.componenttypes`
+
 .. class:: System()
 
    A processing system within an application world consumes the
    components of all entities, for which it was set up. At time of
    processing, the system does not know about any other component type
    that might be bound to any entity.
-   
+
    Also, the processing system does not know about any specific entity,
    but only is aware of the data carried by all entities.
 
-   .. method:: process(world : World, components)
+   .. attribute:: componenttypes
+
+      A tuple of :class:`Component` based class identifiers that shall
+      be processed by the :class:`System`
+
+   .. method:: process(world : World, components : iterable)
 
       Processes :class:`Component` items.
 
@@ -64,13 +75,13 @@ environment.
    An application world defines the combination of application data and
    processing logic and how the data will be processed. As such, it is a
    container object in which the application is defined.
-   
+
    The application world maintains a set of entities and their related
    components as well as a set of systems that process the data of the
    entities. Each processing system within the application world only
    operates on a certain set of components, but not all components of an
    entity at once.
-   
+
    The order in which data is processed depends on the order of the
    added systems.
 
@@ -79,7 +90,7 @@ environment.
       The :class:`System` objects bound to the world.
 
    .. method:: add_system(system : System)
-   
+
       Adds a processing :class:`System` to the world. The system will be
       added as last item in the processing order.
 
@@ -94,7 +105,7 @@ environment.
       added at the specified position in the processing order.
 
    .. method:: process()
-   
+
       Processes all :class:`Component` items within their corresponding
       :class:`System` instances.
 

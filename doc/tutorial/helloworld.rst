@@ -1,3 +1,5 @@
+.. _hello_world:
+
 Hello World
 ===========
 Ahhh, the great tradition of saying "Hello World" in a programming
@@ -57,7 +59,7 @@ First, we initialize the :mod:`pygame2.video` internals, so we can
 have access to the screen and create windows on top of it. Afterwards,
 we get an image from the :mod:`pygame2.examples` package and create a
 :class:`pygame2.video.Sprite` from it, which can be easily shown later on.
- 
+
 Once done with that, :class:`pygame2.video.Window` will create the
 window for us and we supply a title to be shown on the window's border along
 with its initial size. Since :class:`pygame2.video.Window` instances are not
@@ -78,15 +80,15 @@ earlier.
    top-left corner of the :class:`pygame2.video.Window`. You can change the
    position of where to draw it by changing its
    :attr:`pygame2.video.Sprite.position` value. ::
-   
+
         # will cause the renderer to draw the sprite 10px to the right and
         # 20 px to the bottom
         sprite.position = 10, 20
-        
+
         # will cause the renderer to draw the sprite 55px to the right and
         # 10 px to the bottom
         sprite.position = 55, 10
-   
+
    Experiment with different values to see their effect. Do not forget to do
    this *before* ``renderer.render(sprite)`` is called.
 
@@ -126,5 +128,5 @@ it will exit from the event loop. Once it exits, we definitely should clean up
 the video internals, we initialized at the beginning. Thus, a final call to ::
 
     video.quit()
-    
+
 should definitely be made.

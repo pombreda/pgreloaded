@@ -14,3 +14,5 @@ Pygame2, but instead show you the most noteworthy features.
   :maxdepth: 2
 
   helloworld.rst
+  pong.rst
+
