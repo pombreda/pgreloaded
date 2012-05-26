@@ -213,9 +213,10 @@ class MemoryView(object):
 
     def __repr__(self):
         retval = "["
-        for dim in range(self.strides[0]):
+        slen = self.strides[0]
+        for dim in range(slen - 1):
             retval += "%s, " % self[dim]
-        retval = retval.rstrip(", ")
+        retval += str(self[slen - 1])
         retval += "]"
         return retval
 

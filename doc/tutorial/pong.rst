@@ -184,7 +184,7 @@ within the window boundaries. ::
     class Ball(Entity):
         def __init__(self, world, posx=0, posy=0):
             self.sprite = video.Sprite(size=(20, 20), bpp=32)
-            video.fill(self.sprite, WHITE)
+            video.fill(self.sprite, Color(255, 255, 255))
             self.sprite.position = posx, posy
             self.velocity = Velocity()
 
@@ -515,7 +515,7 @@ back to us, which sounds more interesting. ::
     class Player(Entity):
         def __init__(self, world, posx=0, posy=0, ai=False):
             self.sprite = video.Sprite(size=(20, 100), bpp=32)
-            video.fill(self.sprite, WHITE)
+            video.fill(self.sprite, Color(255, 255, 255))
             self.sprite.position = posx, posy
             self.velocity = Velocity()
             self.playerdata = PlayerData()
