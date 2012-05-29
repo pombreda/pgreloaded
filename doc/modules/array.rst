@@ -144,8 +144,9 @@ to the image graphics. ::
     [[sX, me,  1, Xb, yt], [eX, gr, ap, Xi, cs]]
 
 
-pygame2.array API
------------------
+
+Array API
+---------
 
 .. class:: CTypesView(obj : iterable[, itemsize=1[, docopy=False]])
 

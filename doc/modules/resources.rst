@@ -4,6 +4,69 @@
 :mod:`pygame2.resources` - Resource management
 ==============================================
 
+Every application usually ships with various resources, such as image and data
+files, configuration files and so on. Accessing those files in the folder
+hierarchy or in a bundled format for various platforms can become a comple
+task, for which the :mod:`resources` module can provide ideal supportive
+application components.
+
+The :class:`Resources` class allows you to manage different application data
+in a certain directory, providing a dictionary-style access functionality for
+your in-application resources.
+
+Let's assume, your application has the following installation layout ::
+
+    Application Directory
+        Application.exe
+        Application.conf
+        data/
+            background.jpg
+            button1.jpg
+            button2.jpg
+            info.dat
+
+Within the ``Application.exe`` code, you can - completely system-agnostic -
+define a new resource that keeps track of all ``data`` items. ::
+
+    apppath = os.path.dirname(os.path.abspath(__file__))
+    appresources = Resources(os.path.join(apppath, "data"))
+    # Access some images
+    bgimage = appresources.get("background.jpg")
+    btn1image = appresources.get("button1.jpg")
+    ...
+
+To access individual files, you do not need to concat paths the whole time and
+regardless of the current directory, your application operates on, you can
+access your resource files at any time through the :class:`Resources` instance,
+you created initially.
+
+The :class:`Resources` class is also able to scan an index archived files,
+compressed via ZIP or TAR (gzip or bzip2 compression).
+
+    Application Directory
+        Application.exe
+        Application.conf
+        data/
+            background.jpg
+            button1.jpg
+            button2.jpg
+            graphics.zip
+                [tileset1.bmp
+                 tileset2.bmp
+                 tileset3.bmp
+                 ]
+            info.dat
+
+    tilesimage = appresources.get("tileset1.bmp")
+
+If you request a an indexed file via :meth:`Resources.get`, you will receive
+a :class:`BytesIO` stream, containing the file data, for further processing.
+
+.. todo::
+   
+   more examples
+
+
 .. class:: Resources([path=None[, excludepattern=None]])
 
    The Resources class manages a set of file resources and eases
@@ -33,7 +96,7 @@
       passed file and do not scan an archive or check the file for
       availability.
 
-   .. method:: get(filename : string) -> StringIO
+   .. method:: get(filename : string) -> BytesIO
 
       Gets a specific file from the resource container.
 
@@ -43,7 +106,7 @@
 
       Similar to :meth:`get()`, but tries to return the original file
       handle, if possible. If the found file is only available within an
-      archive, a :class:`StringIO` instance will be returned.
+      archive, a :class:`BytesIO` instance will be returned.
 
       Raises a :exc:`KeyError`, if the ``filename`` could not be found.
 
@@ -65,10 +128,10 @@
       which match the pattern.
 
 .. function:: open_tarfile(archive : string, filename : string \
-                           [, directory=None[, ftype=None]]) -> StringIO
+                           [, directory=None[, ftype=None]]) -> BytesIO
 
    Opens and reads a certain file from a TAR archive. The result is
-   returned as :class:`StringIO` stream. ``filename`` can be a relative
+   returned as :class:`BytesIO` stream. ``filename`` can be a relative
    or absolute path within the TAR archive. The optional ``directory``
    argument can be used to supply a relative directory path, under which
    ``filename`` will be searched.
@@ -99,10 +162,10 @@
     ``basepath`` can be used to supply an additional location prefix.
 
 .. function:: open_zipfile(archive : string, filename : string \
-                           [, directory : string]) -> StringIO
+                           [, directory : string]) -> BytesIO
 
    Opens and reads a certain file from a ZIP archive. The result is
-   returned as :class:`StringIO` stream. ``filename`` can be a relative
+   returned as :class:`BytesIO` stream. ``filename`` can be a relative
    or absolute path within the ZIP archive. The optional ``directory``
    argument can be used to supply a relative directory path, under which
    ``filename`` will be searched.
