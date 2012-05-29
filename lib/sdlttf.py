@@ -28,7 +28,7 @@ __all__ = ["init", "quit", "open_font", "open_font_index", "open_font_rw",
            ]
 
 
-dll = DLL("SDL2_ttf", ["SDL2_ttf"])
+dll = DLL("SDL2_ttf", ["SDL2_ttf", "SDL2_ttf-2.0"])
 sdlttftype = dll.get_decorator()
 
 SDL_Surface_p = ctypes.POINTER(SDL_Surface)

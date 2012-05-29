@@ -11,11 +11,18 @@ from pygame2.sdl.render import SDL_Renderer, SDL_Texture
 
 __all__ = ["init", "quit", "load", "load_rw", "load_typed_rw",
            "load_texture", "load_texture_rw", "load_texture_typed_rw",
-           "IMG_INIT_JPG", "IMG_INIT_PNG", "IMG_INIT_TIF", "IMG_INIT_WEBP",
+           "is_ico", "is_cur", "is_bmp", "is_gif", "is_jpg", "is_lbm",
+           "is_pcx", "is_pnm", "is_png", "is_pnm", "is_tif", "is_webp",
+           "is_xcf", "is_xpm", "is_xv", "load_bmp_rw", "load_cur_rw",
+           "load_gif_rw", "load_ico_rw", "load_jpg_rw", "load_lbm_rw",
+           "load_pcx_rw", "load_pnm_rw", "load_png_rw", "load_tga_rw",
+           "load_tif_rw", "load_webp_rw", "load_xcf_rw", "load_xpm_rw",
+           "load_xv_rw", "IMG_INIT_JPG", "IMG_INIT_PNG", "IMG_INIT_TIF",
+           "IMG_INIT_WEBP",
            ]
 
 
-dll = DLL("SDL2_image", ["SDL2_image"])
+dll = DLL("SDL2_image", ["SDL2_image", "SDL2_image-1.2"])
 sdlimgtype = dll.get_decorator()
 
 SDL_Surface_p = ctypes.POINTER(SDL_Surface)
@@ -178,7 +185,7 @@ def load_texture_typed_rw(renderer, src, freesrc, itype):
                                               itype))
 
 
-@sdlimgtype("IMG_isICO", [SDL_RWops_p], ctypes.c_int]
+@sdlimgtype("IMG_isICO", [SDL_RWops_p], ctypes.c_int)
 def is_ico(src):
     """Checks, if the passed data stream represents ICO image data."""
     if not isinstance(src, rwops.SDL_RWops):
@@ -186,7 +193,7 @@ def is_ico(src):
     return dll.IMG_isICO(ctypes.byref(src)) == 1
 
 
-@sdlimgtype("IMG_isCUR", [SDL_RWops_p], ctypes.c_int]
+@sdlimgtype("IMG_isCUR", [SDL_RWops_p], ctypes.c_int)
 def is_cur(src):
     """Checks, if the passed data stream represents CUR image data."""
     if not isinstance(src, rwops.SDL_RWops):
@@ -194,7 +201,7 @@ def is_cur(src):
     return dll.IMG_isCUR(ctypes.byref(src)) == 1
 
 
-@sdlimgtype("IMG_isBMP", [SDL_RWops_p], ctypes.c_int]
+@sdlimgtype("IMG_isBMP", [SDL_RWops_p], ctypes.c_int)
 def is_bmp(src):
     """Checks, if the passed data stream represents BMP image data."""
     if not isinstance(src, rwops.SDL_RWops):
@@ -202,87 +209,87 @@ def is_bmp(src):
     return dll.IMG_isBMP(ctypes.byref(src)) == 1
 
 
-@sdlimgtype("IMG_isGIF", [SDL_RWops_p], ctypes.c_int]
-def is_ico(src):
+@sdlimgtype("IMG_isGIF", [SDL_RWops_p], ctypes.c_int)
+def is_gif(src):
     """Checks, if the passed data stream represents GIF image data."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
     return dll.IMG_isGIF(ctypes.byref(src)) == 1
 
 
-@sdlimgtype("IMG_isJPG", [SDL_RWops_p], ctypes.c_int]
-def is_ico(src):
+@sdlimgtype("IMG_isJPG", [SDL_RWops_p], ctypes.c_int)
+def is_jpg(src):
     """Checks, if the passed data stream represents JPG image data."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
     return dll.IMG_isJPG(ctypes.byref(src)) == 1
 
 @sdlimgtype("IMG_isLBM", [SDL_RWops_p], ctypes.c_int)
-def is_ico(src):
+def is_lbm(src):
     """Checks, if the passed data stream represents LBM image data."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
     return dll.IMG_isLBM(ctypes.byref(src)) == 1
 
 
-@sdlimgtype("IMG_isPCX", [SDL_RWops_p], ctypes.c_int]
-def is_ico(src):
+@sdlimgtype("IMG_isPCX", [SDL_RWops_p], ctypes.c_int)
+def is_pcx(src):
     """Checks, if the passed data stream represents PCX image data."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
     return dll.IMG_isPCX(ctypes.byref(src)) == 1
 
 
-@sdlimgtype("IMG_isPNG", [SDL_RWops_p], ctypes.c_int]
-def is_ico(src):
+@sdlimgtype("IMG_isPNG", [SDL_RWops_p], ctypes.c_int)
+def is_png(src):
     """Checks, if the passed data stream represents PNG image data."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
     return dll.IMG_isPNG(ctypes.byref(src)) == 1
 
 
-@sdlimgtype("IMG_isPNM", [SDL_RWops_p], ctypes.c_int]
-def is_ico(src):
+@sdlimgtype("IMG_isPNM", [SDL_RWops_p], ctypes.c_int)
+def is_pnm(src):
     """Checks, if the passed data stream represents PNM image data."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
     return dll.IMG_isPNM(ctypes.byref(src)) == 1
 
 
-@sdlimgtype("IMG_isTIF", [SDL_RWops_p], ctypes.c_int]
-def is_ico(src):
+@sdlimgtype("IMG_isTIF", [SDL_RWops_p], ctypes.c_int)
+def is_tif(src):
     """Checks, if the passed data stream represents TIF image data."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
     return dll.IMG_isTIF(ctypes.byref(src)) == 1
 
 
-@sdlimgtype("IMG_isXCF", [SDL_RWops_p], ctypes.c_int]
-def is_ico(src):
+@sdlimgtype("IMG_isXCF", [SDL_RWops_p], ctypes.c_int)
+def is_xcf(src):
     """Checks, if the passed data stream represents XCF image data."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
     return dll.IMG_isXCF(ctypes.byref(src)) == 1
 
 
-@sdlimgtype("IMG_isXPM", [SDL_RWops_p], ctypes.c_int]
-def is_ico(src):
+@sdlimgtype("IMG_isXPM", [SDL_RWops_p], ctypes.c_int)
+def is_xpm(src):
     """Checks, if the passed data stream represents XPM image data."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
     return dll.IMG_isXPM(ctypes.byref(src)) == 1
 
 
-@sdlimgtype("IMG_isXV", [SDL_RWops_p], ctypes.c_int]
-def is_ico(src):
+@sdlimgtype("IMG_isXV", [SDL_RWops_p], ctypes.c_int)
+def is_xv(src):
     """Checks, if the passed data stream represents XVimage data."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
     return dll.IMG_isXV(ctypes.byref(src)) == 1
 
 
-@sdlimgtype("IMG_isWEBP", [SDL_RWops_p], ctypes.c_int]
-def is_ico(src):
+@sdlimgtype("IMG_isWEBP", [SDL_RWops_p], ctypes.c_int)
+def is_webp(src):
     """Checks, if the passed data stream represents WEBP image data."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
@@ -298,7 +305,7 @@ def load_ico_rw(src):
 
 
 @sdlimgtype("IMG_LoadCUR_RW", [SDL_RWops_p], SDL_Surface_p)
-def load_ico_rw(src):
+def load_cur_rw(src):
     """Loads a SDL_Surface from a CUR data stream."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
@@ -306,7 +313,7 @@ def load_ico_rw(src):
 
 
 @sdlimgtype("IMG_LoadBMP_RW", [SDL_RWops_p], SDL_Surface_p)
-def load_ico_rw(src):
+def load_bmp_rw(src):
     """Loads a SDL_Surface from a BMP data stream."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
@@ -314,7 +321,7 @@ def load_ico_rw(src):
 
 
 @sdlimgtype("IMG_LoadGIF_RW", [SDL_RWops_p], SDL_Surface_p)
-def load_ico_rw(src):
+def load_gif_rw(src):
     """Loads a SDL_Surface from a GIF data stream."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
@@ -322,7 +329,7 @@ def load_ico_rw(src):
 
 
 @sdlimgtype("IMG_LoadJPG_RW", [SDL_RWops_p], SDL_Surface_p)
-def load_ico_rw(src):
+def load_jpg_rw(src):
     """Loads a SDL_Surface from a JPG data stream."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
@@ -330,7 +337,7 @@ def load_ico_rw(src):
 
 
 @sdlimgtype("IMG_LoadLBM_RW", [SDL_RWops_p], SDL_Surface_p)
-def load_ico_rw(src):
+def load_lbm_rw(src):
     """Loads a SDL_Surface from a LBM data stream."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
@@ -338,7 +345,7 @@ def load_ico_rw(src):
 
 
 @sdlimgtype("IMG_LoadPCX_RW", [SDL_RWops_p], SDL_Surface_p)
-def load_ico_rw(src):
+def load_pcx_rw(src):
     """Loads a SDL_Surface from a PCX data stream."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
@@ -346,7 +353,7 @@ def load_ico_rw(src):
 
 
 @sdlimgtype("IMG_LoadPNG_RW", [SDL_RWops_p], SDL_Surface_p)
-def load_ico_rw(src):
+def load_png_rw(src):
     """Loads a SDL_Surface from a PNG data stream."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
@@ -354,7 +361,7 @@ def load_ico_rw(src):
 
 
 @sdlimgtype("IMG_LoadPNM_RW", [SDL_RWops_p], SDL_Surface_p)
-def load_ico_rw(src):
+def load_pnm_rw(src):
     """Loads a SDL_Surface from a PNM data stream."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
@@ -362,7 +369,7 @@ def load_ico_rw(src):
 
 
 @sdlimgtype("IMG_LoadTGA_RW", [SDL_RWops_p], SDL_Surface_p)
-def load_ico_rw(src):
+def load_tga_rw(src):
     """Loads a SDL_Surface from a TGA data stream."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
@@ -370,7 +377,7 @@ def load_ico_rw(src):
 
 
 @sdlimgtype("IMG_LoadTIF_RW", [SDL_RWops_p], SDL_Surface_p)
-def load_ico_rw(src):
+def load_tif_rw(src):
     """Loads a SDL_Surface from a TIF data stream."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
@@ -378,7 +385,7 @@ def load_ico_rw(src):
 
 
 @sdlimgtype("IMG_LoadXCF_RW", [SDL_RWops_p], SDL_Surface_p)
-def load_ico_rw(src):
+def load_xcf_rw(src):
     """Loads a SDL_Surface from a XCF data stream."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
@@ -386,7 +393,7 @@ def load_ico_rw(src):
 
 
 @sdlimgtype("IMG_LoadXPM_RW", [SDL_RWops_p], SDL_Surface_p)
-def load_ico_rw(src):
+def load_xpm_rw(src):
     """Loads a SDL_Surface from a XPM data stream."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
@@ -394,7 +401,7 @@ def load_ico_rw(src):
 
 
 @sdlimgtype("IMG_LoadXV_RW", [SDL_RWops_p], SDL_Surface_p)
-def load_ico_rw(src):
+def load_xv_rw(src):
     """Loads a SDL_Surface from a XV data stream."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
@@ -402,7 +409,7 @@ def load_ico_rw(src):
 
 
 @sdlimgtype("IMG_LoadWEBP_RW", [SDL_RWops_p], SDL_Surface_p)
-def load_ico_rw(src):
+def load_webp_rw(src):
     """Loads a SDL_Surface from a WEBP data stream."""
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
