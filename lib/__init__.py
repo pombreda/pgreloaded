@@ -8,6 +8,7 @@ providing the developer a reliable and extensible programming interface.
 
 import os
 import sys
+from . import compat
 
 __all__ = ["set_dll_path", "get_dll_path", "version_info"]
 
@@ -16,8 +17,12 @@ __all__ = ["set_dll_path", "get_dll_path", "version_info"]
 _DLLPATH = None
 if sys.platform in ("win32", "cli"):
     _PATH = os.path.dirname(os.path.abspath(__file__))
-    os.environ['PATH'] += ";%s;%s" % (_PATH, os.path.join(_PATH, "dll"))
-    _DLLPATH = os.path.join(_PATH, "dll")
+    if compat.platform_is_64bit():
+        _DPATH = os.path.join("dll", "64bit")
+    else:
+        _DPATH = os.path.join("dll", "32bit")
+    os.environ['PATH'] += ";%s" % (os.path.join(_PATH, _DPATH))
+    _DLLPATH = os.path.join(_PATH, _DPATH)
 
 
 def set_dll_path(path):

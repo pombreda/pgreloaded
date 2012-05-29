@@ -17,8 +17,8 @@ else:
     _LIBNAME = "openal"
 
 dll = None
-try:
-    dll = DLL(_LIBNAME)
-except:
-    dll = DLL(_FALLBACK)
+dll = DLL("OpenAL", {"win32" : ["OpenAL", "OpenAL32", "soft_oal"],
+                     "darwin" : ["OpenAL"],
+                     "DEFAULT" : ["openal"]}
+          )
 openaltype = dll.get_decorator()

@@ -25,15 +25,17 @@ distribution.
    are some known regressions as listed in the TODOS.txt file.
 
 Additionally, you will need the following packages and libraries to be
-installed:
+installed to use *all* features of Pygame2:
 
-======= ======== ===================== =======================================
-Package Version  Required for          Package URL
-======= ======== ===================== =======================================
-SDL     >= 2.0.0 :mod:`pygame2.sdl`    http://www.libsdl.org
-OpenAL  >= 1.1   :mod:`pygame2.openal` http://www.openal.org
-                                       http://kcat.strangesoft.net/openal.html
-======= ======== ===================== =======================================
+========= ========= ======================= =========================================
+Package   Version   Required for            Package URL
+========= ========= ======================= =========================================
+SDL       >= 2.0.0  :mod:`pygame2.sdl`      http://www.libsdl.org
+SDL_image >= 1.2.13 :mod:`pygame2.sdlimage` http://www.libsdl.org/projects/SDL_image/
+SDL_ttf   >= 2.0.12 :mod:`pygame2.sdlttf`   http://www.libsdl.org/projects/SDL_ttf/
+OpenAL    >= 1.1    :mod:`pygame2.openal`   http://www.openal.org
+                                            http://kcat.strangesoft.net/openal.html
+========= ========= ======================= =========================================
 
 .. note::
    The Pygame2 distribution ships with a set of pre-built DLLs for

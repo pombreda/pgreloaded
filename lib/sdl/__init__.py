@@ -14,22 +14,7 @@ __all__ = ["init", "init_subsystem", "quit", "quit_subsystem", "was_init",
            ]
 
 
-_LIBNAME = None
-if sys.platform in ("win32", "cli"):
-    if sys.maxsize > 2 ** 32 or \
-            (sys.platform == "cli" and sys.executable.endswith("ipy64.exe")):
-        # 64bit platform
-        _LIBNAME = "SDL2.dll"
-    else:
-        _LIBNAME = "SDL2_32bit.dll"
-else:
-    _LIBNAME = "SDL2"
-
-dll = None
-try:
-    dll = DLL(_LIBNAME)
-except:
-    dll = DLL("SDL2-2.0")
+dll = DLL("SDL 2", ["SDL2", "SDL2-2.0"])
 sdltype = dll.get_decorator()
 
 SDL_INIT_TIMER =       0x00000001

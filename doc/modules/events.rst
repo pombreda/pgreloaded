@@ -4,14 +4,27 @@
 :mod:`pygame2.events` - General purpose event handling routines
 ===============================================================
 
-.. todo::
-
-   Add a description.
-
 .. class:: EventHandler(sender)
 
    A simple event handling class, which manages callbacks to be
    executed.
+
+   The EventHandler does not need to be kept as separate instance, but
+   is mainly intended to be used as attribute in event-aware class
+   objects. ::
+
+       >>> def myfunc(sender):
+       ...     print("event triggered by %s" % sender)
+       ...
+       >>> class MyClass(object):
+       ...     def __init__(self):
+       ...         self.anevent = EventHandler(self)
+       ...
+       >>> myobj = MyClass()
+       >>> myobj.anevent += myfunc
+       >>> myobj.anevent()
+       event triggered by <__main__.MyClass object at 0x801864e50>
+
 
    .. attribute:: callbacks
 

@@ -2,6 +2,7 @@
 DLL loading helpers.
 """
 import os
+import sys
 import ctypes
 from ctypes.util import find_library
 from pygame2 import get_dll_path
@@ -9,24 +10,60 @@ from pygame2 import get_dll_path
 __all__ = ["DLL"]
 
 
+def _findlib(path, libnames):
+    """."""
+    platform = sys.platform
+    if platform in ("win32", "cli"):
+        suffix = ".dll"
+    elif platform == "darwin":
+        suffix = ".dylib"
+    else:
+        suffix = ".so"
+
+    searchfor = libnames
+    if type(libnames) is dict:
+        # different library names for the platforms
+        if platform == "cli" and platform not in libnames:
+            # if not explicitly specified, use the Win32 libs for IronPython
+            platform = "win32"
+        if platform not in libnames:
+            platform = "DEFAULT"
+        searchfor = libnames[platform]
+
+    results = []
+    if not path:
+        # No explicit path provided, use find_library().
+        for libname in searchfor:
+            dll = find_library(libname)
+            if dll:
+                results.append(dll)
+    else:
+        for libname in searchfor:
+            dll = os.path.join(path, "%s%s" % (libname, suffix))
+            if os.path.exists(dll):
+                results.append(dll)
+    return results
+
+
 class DLL(object):
     """Function wrapper around the different DLL functions. Do not use or
     instantiate this one directly from your user code.
     """
-    def __init__(self, libname):
+    def __init__(self, libinfo, libnames):
         self._dll = None
-        lib = None
-        path = get_dll_path()
-        if path:
-            # Explicit path provided by the user or Win32
-            lib = os.path.join(path, libname)
-            if not os.path.exists(lib):
-                lib = find_library(libname)
-        else:
-            lib = find_library(libname)
-        if lib is None:
-            raise RuntimeError("could not find libary %s" % libname)
-        self._dll = ctypes.CDLL(lib)
+        foundlibs = _findlib(get_dll_path(), libnames)
+        if len(foundlibs) == 0:
+            raise RuntimeError("could not find any libary for %s" % libinfo)
+        for libfile in foundlibs:
+            try:
+                self._dll = ctypes.CDLL(libfile)
+                break
+            except Exception as exc:
+                # Could not load it, silently ignore that issue and move
+                # to the next one.
+                print(exc)
+        if self._dll is None:
+            raise RuntimeError("could not load any libary for %s" % libinfo)
 
     def has_dll_function(self, name):
         """Checks, if a function identified by name exists in the bound

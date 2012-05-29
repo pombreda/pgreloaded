@@ -413,7 +413,7 @@ class SDLVideoTest(unittest.TestCase):
             self.assertIsNone(retval)
             video.set_window_data(window, k, v)
             retval = video.get_window_data(window, k)
-            self.assertEquals(retval, v)
+            self.assertEqual(retval, v)
         video.destroy_window(window)
 
     def test_get_set_window_position(self):

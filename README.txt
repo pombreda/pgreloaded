@@ -51,6 +51,8 @@ TODOS.txt file.
 Optional dependencies:
 
 * SDL >= 2.0.0                      (http://www.libsdl.org)
+* SDL_image >= 1.2.13               (http://www.libsdl.org/projects/SDL_image/)
+* SDL_ttf >= 2.0.12                 (http://www.libsdl.org/projects/SDL_ttf/)
 * OpenAL >= 1.1                     (http://www.openal.org
                                      http://kcat.strangesoft.net/openal.html)
 
@@ -71,7 +73,7 @@ Pygame Reloaded are available in the examples/ directory.
 ----------
 This library is distributed under the Public Domain. Parts of the library
 might use a different license. In that case, the specific files contain the
-license information. If there is not license information in the file, it is
+license information. If there is no license information in the file, it is
 distributed under the Public Domain.
 
 This basically means you can use Pygame Reloaded in any project and in

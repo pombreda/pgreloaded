@@ -11,25 +11,25 @@
    transparency, so that the values range from 0 to 255. It allows basic
    arithmetic operations, e.g. color addition or subtraction and
    conversions to other color spaces such as HSV or CMY.
-   
+
    .. attribute:: r
-   
+
       The red channel value of the Color.
 
    .. attribute:: g
-   
+
       The green channel value of the Color.
 
    .. attribute:: b
-   
+
       The blue channel value of the Color.
 
    .. attribute:: a
-   
+
       The alpha channel value of the Color.
 
    .. attribute:: cmy
-   
+
       The CMY representation of the Color. The CMY components are in the
       ranges C = [0, 1], M = [0, 1], Y = [0, 1]. Note that this will not
       return the absolutely exact CMY values for the set RGB values in
@@ -38,7 +38,7 @@
       slightly from what you might expect.
 
    .. attribute:: hsla
-   
+
       The HSLA representation of the Color. The HSLA components are in
       the ranges H = [0, 360], S = [0, 100], L = [0, 100], A = [0,
       100]. Note that this will not return the absolutely exact HSL
@@ -48,7 +48,7 @@
       might expect.
 
    .. attribute:: hsva
-   
+
       The HSVA representation of the Color. The HSVA components are in
       the ranges H = [0, 360], S = [0, 100], V = [0, 100], A = [0,
       100]. Note that this will not return the absolutely exact HSV
@@ -67,7 +67,7 @@
       I1I2I3 values to differ slightly from what you might expect.
 
    .. method:: normalize() -> (float, float, float, float)
-   
+
       Returns the normalized RGBA values of the Color as floating point
       values in the range [0, 1].
 
@@ -100,7 +100,7 @@
 
    Checks, if the passed value is an item that could be converted to a
    RGB color.
-    
+
 .. function:: is_rgba_color(v : object) -> bool
 
    Checks, if the passed value is an item that could be converted to a
@@ -110,7 +110,7 @@
 
    Converts a hex color string or color name to a Color value. Supported
    hex values are:
-        
+
    * #RGB
    * #RGBA
    * #RRGGBB

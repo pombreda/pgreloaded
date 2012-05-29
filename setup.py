@@ -17,6 +17,8 @@ if __name__ == "__main__":
     packages = [ "pygame2",
                  "pygame2.openal",
                  "pygame2.dll",
+                 "pygame2.dll.32bit",
+                 "pygame2.dll.64bit",
                  "pygame2.examples",
                  "pygame2.sdl",
                  "pygame2.test",
@@ -31,7 +33,8 @@ if __name__ == "__main__":
 
     package_data = { "pygame2.test" : ["resources/*.*"],
                      "pygame2.examples" : ["resources/*.*"],
-                     "pygame2.dll" : ["*.dll"],
+                     "pygame2.dll.32bit" : ["*.dll"],
+                     "pygame2.dll.64bit" : ["*.dll"],
                      }
                     
     setupdata = {
