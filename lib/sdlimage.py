@@ -5,6 +5,7 @@ import sys
 import ctypes
 from pygame2.dll import DLL
 from pygame2.compat import byteify, stringify
+from pygame2.sdl.version import SDL_version
 from pygame2.sdl.surface import SDL_Surface
 from pygame2.sdl.rwops import SDL_RWops
 from pygame2.sdl.render import SDL_Renderer, SDL_Texture
@@ -73,6 +74,12 @@ def quit():
     dragons, so do not do it.
     """
     dll.IMG_Quit()
+
+
+@sdlimgtype("IMG_Linked_Version", None, ctypes.POINTER(SDL_version))
+def linked_version():
+    """Gets the version of the loaded SDL2_image library."""
+    return _check(dll.IMG_Linked_Version())
 
 
 @sdlimgtype("IMG_Load", [ctypes.c_char_p], SDL_Surface_p)
@@ -223,6 +230,7 @@ def is_jpg(src):
     if not isinstance(src, rwops.SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
     return dll.IMG_isJPG(ctypes.byref(src)) == 1
+
 
 @sdlimgtype("IMG_isLBM", [SDL_RWops_p], ctypes.c_int)
 def is_lbm(src):

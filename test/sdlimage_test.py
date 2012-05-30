@@ -1,6 +1,7 @@
 import sys
 import unittest
 import pygame2.sdl as sdl
+import pygame2.sdl.version as version
 import pygame2.sdlimage as sdlimage
 
 
@@ -18,6 +19,13 @@ class SDLImageTest(unittest.TestCase):
     @unittest.skip("not implemented")
     def test_init_quit(self):
         pass
+
+    def test_linked_version(self):
+        v = sdlimage.linked_version()
+        self.assertEqual(type(v), version.SDL_version)
+        self.assertEqual(v.major, 1)
+        self.assertEqual(v.minor, 2)
+        self.assertGreaterEqual(v.patch, 13)
 
     @unittest.skip("not implemented")
     def test_load(self):
