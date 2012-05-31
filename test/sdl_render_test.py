@@ -8,6 +8,7 @@ import pygame2.sdl.rect as rect
 import pygame2.sdl.pixels as pixels
 import pygame2.video as pvid
 
+
 # TODO: mostly positive tests, improve this!
 class SDLRenderTest(unittest.TestCase):
     __tags__ = ["sdl"]
@@ -55,7 +56,7 @@ class SDLRenderTest(unittest.TestCase):
 
     def test_create_window_and_renderer(self):
         window, renderer = render.create_window_and_renderer \
-           (10, 10, video.SDL_WINDOW_HIDDEN)
+            (10, 10, video.SDL_WINDOW_HIDDEN)
         self.assertIsInstance(window, video.SDL_Window)
         self.assertIsInstance(renderer, render.SDL_Renderer)
 

@@ -229,7 +229,6 @@ class EBSTest(unittest.TestCase):
             self.assertEqual(c.x, 2)
             self.assertEqual(c.y, 2)
 
-
     def test_Applicator(self):
         world = World()
 

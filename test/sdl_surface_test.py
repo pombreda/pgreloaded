@@ -29,7 +29,7 @@ rgba_pixelations_16x16 = (
     )
 
 blitsizes = (
-    (2, 2), #(5, 5), (10, 10), (20, 20), (2, 4), (5, 3), (8, 12), (27, 9),
+    (2, 2),  # (5, 5), (10, 10), (20, 20), (2, 4), (5, 3), (8, 12), (27, 9),
     )
 
 blitpositions = (
@@ -451,7 +451,8 @@ class SDLSurfaceTest(unittest.TestCase):
         sf = surface.create_rgb_surface(10, 10, 16)
 
         self.assertRaises(TypeError, surface.set_surface_palette, None, None)
-        self.assertRaises(TypeError, surface.set_surface_palette, None, palette)
+        self.assertRaises(TypeError, surface.set_surface_palette, None,
+                          palette)
         self.assertIsNone(sf.format.palette)
         surface.set_surface_palette(sf, palette)
         self.assertIsNotNone(sf.format.palette)

@@ -343,7 +343,7 @@ class ArrayTest(unittest.TestCase):
         source = "Example buffer"
         view = pgarray.MemoryView(source, 1, (len(source),))
         self.assertEqual(view.size, len(source))
-        view = pgarray.MemoryView(source, 7, (1,7))
+        view = pgarray.MemoryView(source, 7, (1, 7))
         self.assertEqual(view.size, len(source))
 
     def test_MemoryView_source(self):

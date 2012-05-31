@@ -402,10 +402,10 @@ class SDLVideoTest(unittest.TestCase):
     def test_get_set_window_data(self):
         window = video.create_window("Test", 10, 10, 10, 10, 0)
         self.assertIsInstance(window, video.SDL_Window)
-        values = {"text" : "Teststring",
-                  "object" : self,
-                  "list" : [1, 2, 3, 4],
-                  "tuple" : ("a", 1, self)
+        values = {"text": "Teststring",
+                  "object": self,
+                  "list": [1, 2, 3, 4],
+                  "tuple": ("a", 1, self)
                   }
 
         for k, v in values.items():
