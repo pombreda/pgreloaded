@@ -408,9 +408,9 @@ def save_bmp_rw(surface, dst, freedst):
     if not isinstance(dst, rwops.SDL_RWops):
         raise TypeError("dst must be a SDL_RWops")
     if bool(freedst):
-        retval = dll.SDL_LoadBMP_RW(ctypes.byref(src), 1)
+        retval = dll.SDL_SaveBMP_RW(ctypes.byref(surface), ctypes.byref(dst), 1)
     else:
-        retval = dll.SDL_LoadBMP_RW(ctypes.byref(src), 0)
+        retval = dll.SDL_SaveBMP_RW(ctypes.byref(surface), ctypes.byref(dst), 0)
     if retval == -1:
         raise SDLError()
 

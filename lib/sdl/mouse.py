@@ -118,7 +118,7 @@ def get_mouse_state():
     x = ctypes.c_int(0)
     y = ctypes.c_int(0)
     state = dll.SDL_GetMouseState(ctypes.byref(x), ctypes.byref(y))
-    return(state.value, x.value, y.value)
+    return(state, x.value, y.value)
 
 
 @sdltype("SDL_GetRelativeMouseMode", None, ctypes.c_int)
@@ -140,7 +140,7 @@ def get_relative_mouse_state():
     x = ctypes.c_int(0)
     y = ctypes.c_int(0)
     state = dll.SDL_GetRelativeMouseState(ctypes.byref(x), ctypes.byref(y))
-    return(state.value, x.value, y.value)
+    return(state, x.value, y.value)
 
 
 @sdltype("SDL_SetRelativeMouseMode", [ctypes.c_int], ctypes.c_int)
