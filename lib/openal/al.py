@@ -571,7 +571,7 @@ def source_queue_buffers(sid, bids):
 
     All buffers attached to a source will be played in sequence and the
     number of buffers played can be retrieved using a source_i() call to
-    retrieve AL_BUFFERS_PRCESSED.
+    retrieve AL_BUFFERS_PROCESSED.
     """
     bufs, size = array.to_ctypes(bids, ctypes.c_uint)
     dll.alSourceQueueBuffers(sid, size, bufs)

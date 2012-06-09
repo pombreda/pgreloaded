@@ -9,6 +9,7 @@ SUBDIRS = \
 	$(top_srcdir)/test/resources \
 	$(top_srcdir)/test/util \
 	$(top_srcdir)/lib \
+	$(top_srcdir)/lib/audio \
 	$(top_srcdir)/lib/dll \
 	$(top_srcdir)/lib/dll/32bit \
 	$(top_srcdir)/lib/dll/64bit \

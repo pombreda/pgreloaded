@@ -4,11 +4,21 @@ Conversion routines for sequences.
 import ctypes
 from pygame2.compat import *
 
-__all__ = ["CTypesView", "to_ctypes", "MemoryView"]
+__all__ = ["CTypesView", "to_ctypes", "to_list", "to_tuple", "MemoryView"]
 
 
 # Hack around an import error using relative import paths in Python 2.7
 _ARRAY = __import__("array")
+
+
+def to_tuple(dataseq):
+    """Converts a ctypes array to a tuple."""
+    return tuple(*dataseq)
+
+
+def to_list(dataseq):
+    """Converts a ctypes array to a list."""
+    return list(*dataseq)
 
 
 def to_ctypes(dataseq, dtype):

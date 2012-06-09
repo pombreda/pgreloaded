@@ -15,6 +15,8 @@ if __name__ == "__main__":
 
 
     packages = [ "pygame2",
+                 "pygame2.audio",
+                 "pygame2.ogg",
                  "pygame2.openal",
                  "pygame2.dll",
                  "pygame2.dll.32bit",
@@ -36,7 +38,7 @@ if __name__ == "__main__":
                      "pygame2.dll.32bit" : ["*.dll"],
                      "pygame2.dll.64bit" : ["*.dll"],
                      }
-                    
+
     setupdata = {
         "name" :  "pygame2",
         "version" : VERSION,

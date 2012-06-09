@@ -351,5 +351,14 @@ class ArrayTest(unittest.TestCase):
         view = pgarray.MemoryView(source, 1, (len(source),))
         self.assertEqual(view.source, source)
 
+    @unittest.skip("not implemented")
+    def test_to_tuple(self):
+        pass
+
+    @unittest.skip("not implemented")
+    def test_to_list(self):
+        pass
+
+
 if __name__ == '__main__':
     sys.exit(unittest.main())
