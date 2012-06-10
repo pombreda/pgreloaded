@@ -32,6 +32,15 @@ SOURCE_STOP =   0x04
 SOURCE_REWIND = 0x09
 
 
+class SoundListener(Component):
+    """A simple sound listener."""
+    def __init__(self):
+        super(SoundListener, self).__init__()
+        self.position = (0, 0, 0)
+        self.velocity = (0, 0, 0)
+        self.orientation = (0, 0, 1, 0, 1, 0)
+
+
 class SoundData(Component):
     """A buffered audio object."""
     def __init__(self):
@@ -74,7 +83,7 @@ class SoundSource(Component):
         """Appends a SoundData to the playback queue for the source."""
         if not isinstance(sounddata, SoundData):
             raise TypeError("sounddata must be a SoundData")
-        self._buffers.append(sounddata.bufid)
+        self._buffers.append(sounddata)
 
 
 class SoundSink(System):
@@ -84,17 +93,15 @@ class SoundSink(System):
     audio output device and manages the source settings, their buffer queues
     and the playback of them.
     """
-    def __init__(self, device=None, minsources=5):
+    def __init__(self, device=None):
         """Creates a new SoundSink for a specific audio output device."""
-        super(SoundSink, self).__init__(self)
+        super(SoundSink, self).__init__()
         self.componenttypes = (SoundSource, )
         self.device = alc.open_device(device)
         self.context = alc.create_context(self.device)
+        self.activate()
         self._sources = {}
-        if minsources > 0:
-            ssids = al.gen_sources(minsources)
-            for ssid in ssids:
-                self._sources[ssid] = None
+        self._buffers = {}
 
     def _create_source(self, source):
         """Creates a new OpenAL source from the the passed SoundSource."""
@@ -107,58 +114,110 @@ class SoundSink(System):
         if ssid is not None:
             source._ssid = ssid
             self._sources[ssid] = source
-            return
         else:
             # No free source
             ssid = al.gen_sources(1)[0]
             self._sources[ssid] = source
             source._ssid = ssid
-            al.source_f(ssid, al.AL_GAIN, source.gain)
-            al.source_f(ssid, al.AL_PITCH, source.pitch)
-            al.source_fv(ssid, al.AL_POSITION, source.position)
-            al.source_fv(ssid, al.AL_VELOCITY, source.velocity)
+        al.source_f(ssid, al.AL_GAIN, source.gain)
+        al.source_f(ssid, al.AL_PITCH, source.pitch)
+        al.source_fv(ssid, al.AL_POSITION, source.position)
+        al.source_fv(ssid, al.AL_VELOCITY, source.velocity)
         return ssid
+
+    def _create_buffers(self, source):
+        """Creates a new set of OpenAL buffers from the passed
+        SoundSource."""
+        queue = []
+        for snddata in source._buffers:
+            if snddata._bufid is None:
+                bufid = None
+                for kbufid, kdata in self._buffers.items():
+                    if kdata is None:
+                        # free buffer found
+                        bufid = kbufid
+                        break
+                if bufid is not None:
+                    snddata._bufid = bufid
+                    self._buffers[bufid] = snddata
+                else:
+                    # No free buffer id, create a new one
+                    bufid = al.gen_buffers(1)[0]
+                    self._buffers[bufid] = snddata
+                    snddata._bufid = bufid
+            # Buffer id assigned, now buffer the data.
+            al.buffer_data(snddata._bufid, snddata.format, snddata.data,
+                           snddata.frequency)
+            queue.append(snddata._bufid)
+        al.source_queue_buffers(source._ssid, queue)
 
     def __del__(self):
         """Deletes the SoundSink and also destroys the associated
         context and closes the bound audio output device."""
         if self.context:
+            for ssid, source in self._sources.items():
+                querystate = al.get_source_i(ssid, al.AL_SOURCE_STATE)
+                if querystate != al.AL_STOPPED:
+                    al.source_stop(ssid)
+                al.delete_sources([ssid])
+                source._ssid = None
+            self._sources = {}
+            al.delete_buffers(self._buffers.keys())
+            self._buffers = {}
             alc.destroy_context(self.context)
             alc.close_device(self.device)
             self.context = None
             self.device = None
 
+    def activate(self):
+        """TODO"""
+        alc.make_context_current(self.context)
+
+    def set_listener(self, listener):
+        """TODO"""
+        if not isinstance(listener, SoundListener):
+            raise TypeError("listener must be a SoundListener")
+        al.listener_fv(al.AL_POSITION, listener.position)
+        al.listener_fv(al.AL_VELOCITY, listener.velocity)
+        al.listener_fv(al.AL_ORIENTATION, listener.orientation)
+
+    def process_source(self, source):
+        """Processes a SoundSource."""
+        ssid = source._ssid
+        if ssid is None:
+            ssid = self._create_source(source)
+        # TODO: if the properties of the source changed, they must be
+        # updated.
+        self._create_buffers(source)
+        querystate = al.get_source_i(ssid, al.AL_SOURCE_STATE)
+        if source.request == SOURCE_NONE:
+            # if no change is to be made, nothing will be done.
+            pass
+        elif source.request == SOURCE_REWIND:
+            al.source_rewind(ssid)
+            source.request = SOURCE_NONE
+        elif source.request == SOURCE_PLAY:
+            if querystate != al.AL_PLAYING:
+                al.source_play(ssid)
+            source.request = SOURCE_NONE
+        elif source.request == SOURCE_STOP:
+            if querystate != al.AL_STOPPED:
+                al.source_stop(ssid)
+            source.request = SOURCE_NONE
+        elif source.request == SOURCE_PAUSE:
+            if querystate != al.AL_PAUSED:
+                al.source_pause(ssid)
+            source.request = SOURCE_NONE
+        else:
+            raise ValueError("invalid request state on source")
+
     def process(self, world, components):
         """Processes SoundSource components, playing their attached
         buffers."""
+        process_source = self.process_source
+        self.activate()
         for source in components:
-            ssid = source._ssid or self._create_source(source)
-            # TODO: if the properties of the source changed, they must be
-            # updated.
-            for bufid in source.buffers:
-                al.source_queue_buffers(ssid, bufid)
-            querystate = al.get_source_f(ssid, al.AL_SOURCE_STATE)
-            if source.requeststate == SOURCE_NONE:
-                # if no change is to be made, nothing will be done.
-                pass
-            elif source.requeststate == SOURCE_REWIND:
-                al.source_rewind(ssid)
-                source.requeststate = SOURCE_NONE
-            elif source.requeststate == SOURCE_PLAY:
-                if querystate != al.AL_PLAYING:
-                    al.source_play(ssid)
-                source.requeststate = SOURCE_NONE
-            elif source.requeststate == SOURCE_STOP:
-                if querystate != al.AL_STOPPED:
-                    al.source_stop(ssid)
-                source.requeststate = SOURCE_NONE
-            elif source.requeststate == SOURCE_PAUSE:
-                if querystate != al.AL_PAUSED:
-                    al.source_pause(ssid)
-                source.requeststate = SOURCE_NONE
-            else:
-                raise ValueError("invalid request state on source")
-
+            process_source(source)
 
 
 def load_wav_file(fname):
@@ -174,7 +233,6 @@ def load_wav_file(fname):
     data.size = len(data.data)
     data.frequency = samplerate
     return data
-
 
 # supported extensions
 _EXTENSIONS = {".wav": load_wav_file,
