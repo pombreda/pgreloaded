@@ -79,6 +79,11 @@ class OggVorbis_File(ctypes.Structure):
     pass
 
 
+def get_dll_file():
+    """Gets the file name of the loaded Vorbisfile library."""
+    return dll.libfile
+
+    
 @vfiletype("ov_clear", [ctypes.POINTER(OggVorbis_File)], ctypes.c_int)
 def clear(ovfilep):
     """x"""
@@ -128,7 +133,7 @@ def pcm_total(ovfilep, bstream=-1):
                        ctypes.POINTER(ctypes.c_char), ctypes.c_int,
                        ctypes.c_int, ctypes.c_int, ctypes.c_int,
                        ctypes.POINTER(ctypes.c_int)], ctypes.c_int)
-def read(ovfilep, length, bigendian, word, signed, outbuf=None):
+def read(ovfilep, length, outbuf=None, bigendian=False, word=2, signed=True):
     """x"""
     if not isinstance(ovfilep, OggVorbis_File):
         raise TypeError("ovfilep must be an OggVorbis_File")

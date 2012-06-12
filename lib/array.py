@@ -21,7 +21,7 @@ def to_list(dataseq):
     return list(*dataseq)
 
 
-def to_ctypes(dataseq, dtype):
+def to_ctypes(dataseq, dtype, mcount=0):
     """Converts an arbitrary sequence to a ctypes array of the specified
     type and returns the ctypes array and amount of items as two-value
     tuple.
@@ -29,7 +29,10 @@ def to_ctypes(dataseq, dtype):
     Raises a TypeError, if one or more elements in the passed sequence
     do not match the passed type.
     """
-    count = len(dataseq)
+    if mcount > 0:
+        count = mcount
+    else:
+        count = len(dataseq)
     if isinstance(dataseq, CTypesView):
         itemsize = ctypes.sizeof(dtype)
         if itemsize == 1:

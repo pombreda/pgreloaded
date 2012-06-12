@@ -24,7 +24,7 @@ command using the Makefile.
 
 Simply type
 
-    python setup.py install 
+    python setup.py install
 
 for the traditional python way or
 
@@ -32,7 +32,7 @@ for the traditional python way or
 
 for using the Makefile. This will try to perform a default installation with
 as many features as possible.
-    
+
 1.1 Dependencies
 ----------------
 Pygame Reloaded is designed to run in as many environments as
@@ -42,11 +42,12 @@ want to enable certain features of Pygame Reloaded.
 
 * Python 2.7, 3.1, 3.2 supported    (http://www.python.org)
 * PyPy 1.8.0+ supported             (http://www.pypy.org)
+* IronPython 2.7.2.1 supported      (http://www.ironpython.net)
 
-Please note, that some parts of PyPy's ctypes implementation currently
-do not support everything, Python's ctypes implementation
-supports. There are some regressions, which are described in the
-TODOS.txt file.
+Please note, that some parts of PyPy's and IronPython's ctypes implementations
+currently do not support everything, CPython's ctypes implementation
+supports. There are some regressions, which are described in the TODOS.txt
+file.
 
 Optional dependencies:
 
@@ -55,6 +56,7 @@ Optional dependencies:
 * SDL_ttf >= 2.0.12                 (http://www.libsdl.org/projects/SDL_ttf/)
 * OpenAL >= 1.1                     (http://www.openal.org
                                      http://kcat.strangesoft.net/openal.html)
+* libvorbis >= 1.3.3                (http://www.xiph.org)
 
 1.2 Notes on Mercurial usage
 ----------------------------

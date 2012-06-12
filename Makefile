@@ -13,6 +13,7 @@ SUBDIRS = \
 	$(top_srcdir)/lib/dll \
 	$(top_srcdir)/lib/dll/32bit \
 	$(top_srcdir)/lib/dll/64bit \
+	$(top_srcdir)/lib/ogg \
 	$(top_srcdir)/lib/openal \
 	$(top_srcdir)/lib/sdl \
 	$(top_srcdir)/lib/video \

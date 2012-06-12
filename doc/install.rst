@@ -35,6 +35,7 @@ SDL_image >= 1.2.13 :mod:`pygame2.sdlimage` http://www.libsdl.org/projects/SDL_i
 SDL_ttf   >= 2.0.12 :mod:`pygame2.sdlttf`   http://www.libsdl.org/projects/SDL_ttf/
 OpenAL    >= 1.1    :mod:`pygame2.openal`   http://www.openal.org
                                             http://kcat.strangesoft.net/openal.html
+libvorbis >= 1.3.3  :mod:`pygame2.ogg`      http://www.xiph.org
 ========= ========= ======================= =========================================
 
 .. note::
@@ -43,9 +44,9 @@ OpenAL    >= 1.1    :mod:`pygame2.openal`   http://www.openal.org
    and will be installed under :mod:`pygame2.dll` by default. If you do
    not want the shipped DLLs to be used, you can replace them with your
    own DLLs.
-   
+
    The shipped DLLs come as 64-bit and 32-bit builds and Pygame2 tries to
-   auto-detect, which of those should be used. 
+   auto-detect, which of those should be used.
 
 Installation
 ------------
@@ -57,10 +58,10 @@ or BSD, or the make.bat batch file on Windows platforms.
 Simply type ::
 
   python setup.py install
-  
+
 for the traditional python way or ::
 
   make install
-  
+
 for using the Makefile or make.bat. Both will try to perform a default
 installation with as many features as possible.

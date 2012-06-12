@@ -41,7 +41,7 @@ access your resource files at any time through the :class:`Resources` instance,
 you created initially.
 
 The :class:`Resources` class is also able to scan an index archived files,
-compressed via ZIP or TAR (gzip or bzip2 compression).
+compressed via ZIP or TAR (gzip or bzip2 compression). ::
 
     Application Directory
         Application.exe
@@ -63,7 +63,7 @@ If you request a an indexed file via :meth:`Resources.get`, you will receive
 a :class:`BytesIO` stream, containing the file data, for further processing.
 
 .. todo::
-   
+
    more examples
 
 
@@ -78,7 +78,7 @@ a :class:`BytesIO` stream, containing the file data, for further processing.
       Improve the class documentation
 
    .. method:: add(filename : string)
-   
+
       Adds a file to the resource container. Depending on the
       file type (determined by the file suffix or name) the file will be
       automatically scanned (if it is an archive) or checked for
@@ -148,7 +148,7 @@ a :class:`BytesIO` stream, containing the file data, for further processing.
    if ``ftype`` is not a valid value of ("gz", "bz2").
 
    .. note::
-   
+
       If ``ftype`` is supplied, the compression mode will be enforced for
       opening and reading.
 

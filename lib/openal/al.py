@@ -122,6 +122,7 @@ _ERRMAP = {
     AL_OUT_OF_MEMORY: "Out of memory"
     }
 
+
 def _clear_error():
     get_error()
 
@@ -190,6 +191,7 @@ def get_string(param):
     retval = dll.alGetString(param)
     _raise_error_or_continue()
     return retval
+
 
 @openaltype("alGetBooleanv", [ctypes.c_int, ctypes.POINTER(ctypes.c_byte)],
             None)

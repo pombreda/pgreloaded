@@ -57,7 +57,15 @@ def run():
     source.request = audio.SOURCE_PLAY
     sink.process_source(source)
 
-    i = 0
+    # The main loop. In contrast to other exampes, we are checking the
+    # status of our previously created source directly. Once it is done
+    # playing, we exit from the loop to finish the program execution.
+    #
+    # The OpenAL sound system uses its own threads to play sounds and
+    # music so that we do not not handle it explicitly, if we do not
+    # need to perform more complex or synchronised operations. Hence,
+    # once a SoundSource was requested to play something and got
+    # processed, there is not much more left to do.
     while True:
         state = al.get_source_i(source.ssid, al.AL_SOURCE_STATE)
         if state == al.AL_PLAYING:

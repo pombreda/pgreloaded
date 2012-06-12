@@ -14,18 +14,18 @@ Pygame2.
    instantiate this one directly from your user code.
 
    .. method:: add_function(name : string, func : function)
-   
+
       Adds the passed ``function`` to the DLL instance. The function
       will be identified by the passed ``name``, so that a invocation of
       ``mydll.name (...)`` will invoke the bound function.
 
    .. method:: get_decorator() -> decorator class instance
-      
+
       Gets a  decorator binding for the DLL. The decorator can be used
       to bind module level functions to their corresponding DLL
       function. ::
-      
-        mydll = DLL("mylibrary")
+
+        mydll = DLL("mylibrary", ["libmylib", "mylib"])
         mydecorator = mydll.get_decorator()
 
         @mydecorator("LibraryFunction", [ctypes.c_int], ctypes.c_int)

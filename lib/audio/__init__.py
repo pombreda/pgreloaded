@@ -170,19 +170,32 @@ class SoundSink(System):
             self.device = None
 
     def activate(self):
-        """TODO"""
+        """Marks the SoundSink as the currently active one.
+
+        Subsequent OpenAL operations are done in the context of the
+        SoundSink's bindings.
+        """
         alc.make_context_current(self.context)
 
     def set_listener(self, listener):
-        """TODO"""
+        """Sets the listener position for the SoundSink.
+
+        Note: this implicitly activates the SoundSink.
+        """
         if not isinstance(listener, SoundListener):
             raise TypeError("listener must be a SoundListener")
+        self.activate()
         al.listener_fv(al.AL_POSITION, listener.position)
         al.listener_fv(al.AL_VELOCITY, listener.velocity)
         al.listener_fv(al.AL_ORIENTATION, listener.orientation)
 
     def process_source(self, source):
-        """Processes a SoundSource."""
+        """Processes a SoundSource.
+
+        Note: this does NOT activate the SoundSink. If another SoundSink
+        is active, chances are good that the source is processed in that
+        SoundSink.
+        """
         ssid = source._ssid
         if ssid is None:
             ssid = self._create_source(source)
@@ -213,7 +226,10 @@ class SoundSink(System):
 
     def process(self, world, components):
         """Processes SoundSource components, playing their attached
-        buffers."""
+        buffers.
+
+        Note: this implicitly activates the SoundSink.
+        """
         process_source = self.process_source
         self.activate()
         for source in components:
@@ -234,10 +250,12 @@ def load_wav_file(fname):
     data.frequency = samplerate
     return data
 
+
 # supported extensions
 _EXTENSIONS = {".wav": load_wav_file,
                #".ogg": load_ogg_file,
                }
+
 
 def load_file(fname):
     """Loads an audio file into a SoundData object."""

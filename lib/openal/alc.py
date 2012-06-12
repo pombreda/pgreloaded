@@ -88,7 +88,8 @@ def create_context(device, attrs=None):
         raise TypeError("device must be a ALCdevice")
     ptr = None
     if attrs is not None:
-        arr, size = array.to_ctypes(attrs, ctypes.c_int)
+        arr, size = array.to_ctypes(attrs, ctypes.c_int, len(attrs) + 1)
+        arr[-1] = 0
         ptr = ctypes.cast(arr, ctypes.POINTER(ctypes.c_int))
     retval = dll.alcCreateContext(ctypes.byref(device), ptr)
     if retval is None or not bool(retval):

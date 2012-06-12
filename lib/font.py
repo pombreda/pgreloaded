@@ -29,6 +29,7 @@ STYLE_ITALIC = 0x02
 
 
 def _add_font(family, name, styles, fonttype, filename):
+    """Adds a font to the internal font cache."""
     global __FONTCACHE
 
     if family not in __FONTCACHE:
@@ -37,6 +38,7 @@ def _add_font(family, name, styles, fonttype, filename):
 
 
 def _cache_fonts_win32():
+    """Caches fonts on a Win32 platform."""
     key = "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
     regfonts = []
     try:
@@ -82,10 +84,12 @@ def _cache_fonts_win32():
 
 
 def _cache_fonts_darwin():
+    """Caches fonts on Mac OS."""
     raise NotImplementedError("Mac OS X support is not given yet")
 
 
 def _cache_fonts_fontconfig():
+    """Caches font on POSIX-alike platforms."""
     try:
         command = "fc-list : file family style fullname fullnamelang"
         proc = Popen(command, stdout=PIPE, shell=True, stderr=PIPE)

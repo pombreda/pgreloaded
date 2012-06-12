@@ -1,4 +1,3 @@
-
 """
 Pygame2 is a cross-platform multimedia framework for the excellent
 Python programming language. Its purpose is to make writing multimedia

@@ -264,3 +264,11 @@ Array API
 
    Raises a :exc:`TypeError`, if one or more elements in the passed
    sequence do not match the passed type.
+
+.. function:: to_list(dataseq : iterable) -> list
+
+   Converts a ctypes array to a list.
+
+.. function:: to_tuple(dataseq : iterable) -> tuple
+
+   Converts a ctypes array to a tuple.

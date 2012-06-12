@@ -57,6 +57,7 @@ class DLL(object):
         for libfile in foundlibs:
             try:
                 self._dll = ctypes.CDLL(libfile)
+                self._libfile = libfile
                 break
             except Exception as exc:
                 # Could not load it, silently ignore that issue and move
@@ -105,3 +106,8 @@ class DLL(object):
                 return func
         dlltype.dll = self
         return dlltype
+
+    @property
+    def libfile(self):
+        """Gets the filename of the loaded library."""
+        return self._libfile

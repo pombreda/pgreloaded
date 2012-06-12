@@ -13,6 +13,12 @@
   caused by a futex(... FUTEX_WAIT_PRIVATE ...) call never returning...
 
 - PyPy 1.8 can't do
-       val = "This is a value"
-       pyobj = ctypes.py_object(val)
+        val = "This is a value"
+        pyobj = ctypes.py_object(val)
   at the moment, which breaks the unit tests for pygame2.sdl.log and others
+
+- IronPython can't
+        - handle function pointers correctly
+        - deal with nested union assignemnts correctly (pygame2.sdl.events)
+        - handle long/longlong conversions and ranges correctly (pixel access methods)
+  at the moment, which breaks several unit tests
