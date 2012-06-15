@@ -17,6 +17,7 @@ except ImportError:
     sys.exit(1)
 
 WHITE = Color(255, 255, 255)
+GREY = Color(200, 200, 200)
 
 
 def onmotion(button, event):
@@ -25,6 +26,16 @@ def onmotion(button, event):
 
 def onclick(button, event):
     print("Button was clicked!")
+
+
+def oninput(entry, event):
+    print("Input received with text '%s'" % event.text.text)
+    print("Text on the entry now is '%s'" % entry.text)
+
+
+def onedit(entry, event):
+    print("Edit received with text '%s', start '%d', length '%d'" %
+          (event.text.text, event.text.start, event.text.length))
 
 
 def run():
@@ -42,6 +53,10 @@ def run():
     video.fill(button, WHITE)
     button.position = 50, 50
 
+    entry = video.TextEntry(size=(100, 100))
+    video.fill(entry, GREY)
+    entry.position = 50, 200
+
     # Bind some actions to the button's event handlers. Whenever a click
     # (combination of a mouse button press and mouse button release), the
     # onclick() function will be called.
@@ -53,10 +68,14 @@ def run():
     button.click += onclick
     button.motion += onmotion
 
+    entry.input += oninput
+    entry.editing += onedit
+
     # Since buttons are sprites, we can use the SpriteRenderer class, we
     # learned about in helloworld.py, to draw the button on the Window
     renderer = video.SpriteRenderer(window)
     renderer.render(button)
+    renderer.render(entry)
 
     #
     #
@@ -68,7 +87,7 @@ def run():
             continue
         if event.type == sdlevents.SDL_QUIT:
             break
-        uiprocessor.dispatch(button, event)
+        uiprocessor.dispatch([button, entry], event)
         window.refresh()
 
     video.quit()

@@ -12,13 +12,13 @@ from pygame2.video.sprite import Sprite, SpriteRenderer
 from pygame2.video.window import Window
 from pygame2.video.draw import prepare_color, fill, PixelView
 from pygame2.video.font import BitmapFont
-from pygame2.video.gui import UIProcessor, Button
+from pygame2.video.gui import UIProcessor, Button, TextEntry
 
 __all__ = ["Window", "Sprite", "SpriteRenderer",
            "TestEventProcessor", "init", "quit",
            "prepare_color", "fill", "PixelView",
            "BitmapFont",
-           "UIProcessor", "Button"]
+           "UIProcessor", "Button", "TextEntry"]
 
 
 def init():

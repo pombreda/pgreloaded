@@ -3,10 +3,12 @@ from pygame2.compat import *
 from pygame2.ebs import Component, System, World
 from pygame2.events import EventHandler
 from pygame2.video import Sprite
+from pygame2.sdl.rect import SDL_Rect
 import pygame2.sdl.events as events
 import pygame2.sdl.mouse as mouse
+import pygame2.sdl.keyboard as keyboard
 
-__all__ = ["Button", "UIProcessor"]
+__all__ = ["Button", "TextEntry", "UIProcessor"]
 
 
 RELEASED = 0x0000
@@ -40,24 +42,87 @@ class Button(Sprite):
             }
 
 
+class TextEntry(Sprite):
+    """A Sprite object that can react on text input."""
+    def __init__(self, source=None, size=(0, 0), bpp=32):
+        """Creates a new TextEntry.
+
+        If a source is provided, the constructor assumes it to be a
+        readable buffer object or file path to load the pixel data from.
+        The size and bpp will be ignored in those cases.
+
+        If no source is provided, a size tuple containing the width and
+        height of the button and a bpp value, indicating the bits per
+        pixel to be used, need to be provided.
+        """
+        super(TextEntry, self).__init__(source, size, bpp)
+        self.text = ""
+        self.motion = EventHandler(self)
+        self.pressed = EventHandler(self)
+        self.released = EventHandler(self)
+        self.keydown = EventHandler(self)
+        self.keyup = EventHandler(self)
+        self.input = EventHandler(self)
+        self.editing = EventHandler(self)
+        self.events = {
+            events.SDL_MOUSEMOTION: self.motion,
+            events.SDL_MOUSEBUTTONDOWN: self.pressed,
+            events.SDL_MOUSEBUTTONUP: self.released,
+            events.SDL_TEXTEDITING: self.editing,
+            events.SDL_TEXTINPUT: self.input,
+            events.SDL_KEYDOWN: self.keydown,
+            events.SDL_KEYUP: self.keyup
+            }
+
+
 class UIProcessor(System):
     """TODO
     """
     def __init__(self):
         """Creates a new UIProcessor."""
         super(UIProcessor, self).__init__()
-        self.componenttypes = (Button, )
+        self.componenttypes = (Button, TextEntry)
+        self._nextactive = None
+        self._activecomponent = None
         self.handlers = {
             events.SDL_MOUSEMOTION: self.mousemotion,
             events.SDL_MOUSEBUTTONDOWN: self.mousedown,
             events.SDL_MOUSEBUTTONUP: self.mouseup,
+            events.SDL_TEXTINPUT: self.textinput
             }
+
+    def activate(self, component):
+        """Activates a control to receive input."""
+        if self._activecomponent != component:
+            self.deactivate(self._activecomponent)
+
+        if isinstance(component, TextEntry):
+            area = SDL_Rect(component.x, component.y,
+                            component.size[0], component.size[1])
+            keyboard.set_text_input_rect(area)
+            keyboard.start_text_input()
+        self._activecomponent = component
+
+    def deactivate(self, component):
+        """Deactivates the currently active control."""
+        if component == self._activecomponent:
+            if isinstance(self._activecomponent, TextEntry):
+                keyboard.stop_text_input()
+            self._activecomponent = None
 
     def passevent(self, component, event):
         """Passes the event to a component without any additional checks
         or restrictions.
         """
         component.events[event.type](event)
+
+    def textinput(self, component, event):
+        """Checks, if an active component is available and matches the
+        passed component and passes the event on to that component."""
+        if self._activecomponent == component:
+            if isinstance(component, TextEntry):
+                component.text += event.text.text
+            component.events[event.type](event)
 
     def mousemotion(self, component, event):
         """Checks, if the event's motion position is on the component
@@ -96,6 +161,11 @@ class UIProcessor(System):
             component.events[event.type](event)
             if isinstance(component, Button):
                 component.state = PRESSED | HOVERED
+            elif isinstance(component, TextEntry):
+                if event.button.button == mouse.SDL_BUTTON_LEFT:
+                    # Since we loop over all components, and might deactivate
+                    # some, store it temporarily for later activation.
+                    self._nextactive = component
         elif isinstance(component, Button):
             component.state &= ~PRESSED
 
@@ -137,13 +207,8 @@ class UIProcessor(System):
         """
         if event is None:
             return
-        if event.type not in self.handlers:
-            return  # TODO - better warn or fail?
 
-        handler = self.passevent
-        if event.type in self.handlers:
-            handler = self.handlers[event.type]
-
+        handler = self.handlers.get(event.type, self.passevent)
         if isinstance(obj, World):
             for ctype in self.componenttypes:
                 items = obj.get_components(ctype)
@@ -160,6 +225,9 @@ class UIProcessor(System):
                 map(handler, arg1, arg2)
         elif event.type in obj.events:
             handler(obj, event)
+        if self._nextactive is not None:
+            self.activate(self._nextactive)
+            self._nextactive = None
 
     def process(self, world, components):
         """The UIProcessor class does not implement the process() method
