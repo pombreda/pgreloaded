@@ -113,6 +113,7 @@ class SDLAudioTest(unittest.TestCase):
         self.assertEqual(spec.format, reqspec.format)
         self.assertEqual(spec.freq, reqspec.freq)
         self.assertEqual(spec.channels, reqspec.channels)
+        audio.close_audio()
         sdl.quit_subsystem(sdl.SDL_INIT_AUDIO)
 
     def test_get_num_audio_devices(self):
@@ -124,9 +125,23 @@ class SDLAudioTest(unittest.TestCase):
         self.assertGreaterEqual(innum, 0)
         sdl.quit_subsystem(sdl.SDL_INIT_AUDIO)
 
-    @unittest.skip("not implemented")
     def test_get_audio_device_name(self):
-        pass
+        os.environ["SDL_AUDIODRIVER"] = "dummy"
+        sdl.init_subsystem(sdl.SDL_INIT_AUDIO)
+        outnum = audio.get_num_audio_devices()
+        for x in range(outnum):
+            name = audio.get_audio_device_name(outnum)
+            self.assertIsNotNone(name)
+        innum = audio.get_num_audio_devices(True)
+        for x in range(innum):
+            name = audio.get_audio_device_name(innum, True)
+            self.assertIsNotNone(name)
+        self.assertRaises(sdl.SDLError, audio.get_audio_device_name, -1)
+        self.assertRaises(sdl.SDLError, audio.get_audio_device_name, -1, True)
+        sdl.quit_subsystem(sdl.SDL_INIT_AUDIO)
+        
+        self.assertRaises(sdl.SDLError, audio.get_audio_device_name, 0)
+        self.assertRaises(sdl.SDLError, audio.get_audio_device_name, 0, True)
 
     @unittest.skip("not implemented")
     def test_open_audio_device(self):

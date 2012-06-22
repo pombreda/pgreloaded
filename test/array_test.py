@@ -351,13 +351,23 @@ class ArrayTest(unittest.TestCase):
         view = pgarray.MemoryView(source, 1, (len(source),))
         self.assertEqual(view.source, source)
 
-    @unittest.skip("not implemented")
     def test_to_tuple(self):
-        pass
+        ar = (ctypes.c_int * 20)()
+        for i in range(20):
+            ar[i] = i
+        vtuple = pgarray.to_tuple(ar)
+        self.assertIsInstance(vtuple, tuple)
+        for index, value in enumerate(vtuple):
+            self.assertEqual(value, ar[index])
 
-    @unittest.skip("not implemented")
     def test_to_list(self):
-        pass
+        ar = (ctypes.c_int * 20)()
+        for i in range(20):
+            ar[i] = i
+        vlist = pgarray.to_list(ar)
+        self.assertIsInstance(vlist, list)
+        for index, value in enumerate(vlist):
+            self.assertEqual(value, ar[index])
 
 
 if __name__ == '__main__':

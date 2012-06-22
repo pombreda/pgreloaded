@@ -1,6 +1,7 @@
 import sys
 import unittest
 import pygame2.sdl as sdl
+import pygame2.sdl.rect as rect
 import pygame2.sdl.keyboard as keyboard
 import pygame2.sdl.scancode as scancode
 import pygame2.sdl.keycode as keycode
@@ -173,9 +174,13 @@ class SDLKeyboardTest(unittest.TestCase):
         self.assertRaises(TypeError, keyboard.get_scancode_from_key, "Test")
         self.assertRaises(TypeError, keyboard.get_scancode_from_key, self)
 
-    @unittest.skip("not implemented")
     def test_set_text_input_rect(self):
-        pass
+        # TODO: this test is a bit pointless
+        coords = [(0, 0, 0, 0), (-10, -70, 3, 6), (10, 10, 10, 10)]
+        for x, y, w, h in coords:
+            r = rect.SDL_Rect(x, y, w, h)
+            keyboard.set_text_input_rect(r)
+        keyboard.set_text_input_rect(rect.SDL_Rect())
 
     @unittest.skip("not implemented")
     def test_start_text_input(self):

@@ -28,6 +28,7 @@ SDL_INIT_EVERYTHING =  0x0000FFFF
 SDL_FALSE = 0
 SDL_TRUE = 1
 
+
 def get_dll_file():
     """Gets the file name of the loaded SDL2 library."""
     return dll.libfile

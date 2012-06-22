@@ -1,6 +1,11 @@
 import os
 import sys
 import unittest
+import urllib
+if sys.version_info[0] < 3:
+    import urllib2
+else:
+    import urllib.request as urllib2
 import pygame2.resources as resources
 
 
@@ -75,10 +80,23 @@ class ResourcesTest(unittest.TestCase):
         self.assertRaises(ValueError, resources.open_tarfile, None,
                           "rwopstest.txt", "resources")
 
-    @unittest.skip("not implemented")
     def test_open_url(self):
-        pass
+        if sys.version_info[0] < 3:
+            p2url = urllib.pathname2url
+        else:
+            p2url = urllib2.pathname2url
 
+        fpath = os.path.join(os.path.dirname(__file__), "resources")
+        fpath = os.path.abspath(fpath)
+        tfile = os.path.join(fpath, "rwopstest.txt")
+        urlpath = "file:%s" % p2url(tfile)
+        resfile = resources.open_url(urlpath)
+        self.assertIsNotNone(resfile)
+
+        tfile = os.path.join(fpath, "invalid")
+        urlpath = "file:%s" % p2url(tfile)
+        self.assertRaises(urllib2.URLError, resources.open_url, urlpath)
+        
     def test_Resources(self):
         self.assertRaises(ValueError, resources.Resources, "invalid")
 

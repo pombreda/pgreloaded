@@ -74,6 +74,10 @@ class vorbis_info(ctypes.Structure):
                 ("codec_setup, ", ctypes.c_void_p)
                 ]
 
+    def __repr__(self):
+        return "vorbis_info(version=%d, channels=%d, rate=%d)" % \
+            (self.version, self.channels, self.rate)
+
 
 class OggVorbis_File(ctypes.Structure):
     pass
@@ -83,7 +87,7 @@ def get_dll_file():
     """Gets the file name of the loaded Vorbisfile library."""
     return dll.libfile
 
-    
+
 @vfiletype("ov_clear", [ctypes.POINTER(OggVorbis_File)], ctypes.c_int)
 def clear(ovfilep):
     """x"""
@@ -139,7 +143,7 @@ def read(ovfilep, length, outbuf=None, bigendian=False, word=2, signed=True):
         raise TypeError("ovfilep must be an OggVorbis_File")
     if word not in (1, 2):
         raise ValueError("word must be 1 (8-bit) or 2 (16-bit samples)")
-    cursection = ctypes.c_int()
+    cursection = ctypes.c_int(0)
     if not bigendian:
         bigendian = 0
     else:
@@ -150,8 +154,9 @@ def read(ovfilep, length, outbuf=None, bigendian=False, word=2, signed=True):
         signed = 1
     if outbuf is None:
         outbuf = (ctypes.c_char * length)()
-    retval = dll.ov_read(ctypes.byref(ovfilep), ctypes.byref(outbuf), length,
-                         bigendian, word, signed, ctypes.byref(cursection))
+    ptr = ctypes.cast(outbuf, ctypes.POINTER(ctypes.c_char))
+    retval = dll.ov_read(ctypes.byref(ovfilep), ptr, length, bigendian,
+                         word, signed, ctypes.byref(cursection))
     if retval == 0:
         return None
     if retval < 0:

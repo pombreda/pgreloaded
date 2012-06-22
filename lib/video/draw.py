@@ -78,11 +78,14 @@ class PixelView(MemoryView):
         target = None
         if isinstance(source, sprite.Sprite):
             target = source.surface
+             # keep a reference, so the Sprite's not GC'd
+            self._sprite = source
         elif isinstance(source, sdlsurface.SDL_Surface):
             target = source
         else:
             raise TypeError("source must be a Sprite or SDL_Surface")
         self._surface = target
+
         if sdlsurface.SDL_MUSTLOCK(self._surface):
             sdlsurface.lock_surface(self._surface)
 

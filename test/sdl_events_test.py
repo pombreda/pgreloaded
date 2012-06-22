@@ -3,6 +3,17 @@ import unittest
 import pygame2.sdl as sdl
 import pygame2.sdl.events as events
 
+if hasattr(sys, "pypy_version_info"):
+    print("")
+    print("    *** PyPy's ctypes can't encapsule str in py_object() ***")
+    print("    *** Using a class as workaround                      ***")
+    class pypycapsule(object):
+        def __init__(self, data):
+            self.data = data
+        def __repr__(self):
+            return repr(self.data)
+else:
+    pypycapsule = str
 
 class SDLEventsTest(unittest.TestCase):
     __tags__ = ["sdl"]
@@ -97,8 +108,6 @@ class SDLEventsTest(unittest.TestCase):
         event = events.SDL_Event()
         self.assertIsInstance(event, events.SDL_Event)
 
-    @unittest.skipIf(hasattr(sys, "pypy_version_info"),
-                     "PyPy's ctypes can't encapsule str in py_object()")
     @unittest.skipIf(sys.platform == "cli",
                      "IronPython's ctypes can't handle Union types correctly")
     def test_add_del_event_watch(self):
@@ -108,8 +117,7 @@ class SDLEventsTest(unittest.TestCase):
             eventwatch.append((event.contents, data,))
             return 0
         efilter = events.SDL_EventFilter(watch)
-
-        udata = "Something random"
+        udata = pypycapsule("Something random")
         events.add_event_watch(efilter, udata)
         ev = events.SDL_Event()
         ev.type = events.SDL_USEREVENT

@@ -11,6 +11,7 @@ import pygame2.sdl.rwops as rwops
 import pygame2.sdl.pixels as pixels
 import pygame2.sdl.video as video
 import pygame2.array as pgarray
+from pygame2.video import PixelView
 
 alldepths = (1, 4, 8, 12, 15, 16, 24, 32)
 indexdepths = (1, 4, 8)
@@ -29,20 +30,20 @@ rgba_pixelations_16x16 = (
     )
 
 blitsizes = (
-    (2, 2),  # (5, 5), (10, 10), (20, 20), (2, 4), (5, 3), (8, 12), (27, 9),
+    (2, 2), (5, 5), (10, 10), (20, 20), (2, 4), (5, 3), (8, 12), (27, 9),
     )
 
 blitpositions = (
-    #rect.SDL_Rect(0, 0),
-    #rect.SDL_Rect(4, 4),
-    #rect.SDL_Rect(10, 10),
-    #rect.SDL_Rect(15, 15),
+    rect.SDL_Rect(0, 0),
+    rect.SDL_Rect(4, 4),
+    rect.SDL_Rect(10, 10),
+    rect.SDL_Rect(15, 15),
     rect.SDL_Rect(-2, 1),
-    #rect.SDL_Rect(3, -4),
-    #rect.SDL_Rect(0, 3),
-    #rect.SDL_Rect(4, 0),
-    #rect.SDL_Rect(12, 6),
-    #rect.SDL_Rect(13, 22),
+    rect.SDL_Rect(3, -4),
+    rect.SDL_Rect(0, 3),
+    rect.SDL_Rect(4, 0),
+    rect.SDL_Rect(12, 6),
+    rect.SDL_Rect(13, 22),
     )
 
 
@@ -389,20 +390,7 @@ class SDLSurfaceTest(unittest.TestCase):
                 self.assertFalse(sf.locked)
             surface.free_surface(sf)
 
-    @unittest.skip("not implemented")
     def test_lower_blit(self):
-        pass
-
-    @unittest.skip("not implemented")
-    def test_lower_blit_scaled(self):
-        pass
-
-    @unittest.skip("not implemented")
-    def test_upper_blit(self):
-        pass
-
-    @unittest.skip("not implemented")
-    def test_blit_surface(self):
         bpp = 32
         w, h = 10, 10
         # no alpha to prevent blending
@@ -410,7 +398,7 @@ class SDLSurfaceTest(unittest.TestCase):
         dest = surface.create_rgb_surface(w, h, bpp, masks[0], masks[1],
                                           masks[2], masks[3])
         pixelsize = h * dest.pitch
-        rowlen = dest.pitch / 4
+        rowlen = dest.pitch // 4
 
         sources = []
         for width, height in blitsizes:
@@ -421,21 +409,125 @@ class SDLSurfaceTest(unittest.TestCase):
 
         for src in sources:
             for pos in blitpositions:
-                surface.fill_rect(dest, None, 0x00000000)  # fill with black
-                surface.blit_surface(src, None, dest, pos)
+                drect = pos.__copy__()
+                surface.fill_rect(dest, None, 0x0)  # fill with black
+                surface.lower_blit(src, src.clip_rect, dest, drect) 
                 buf = ctypes.cast(dest.pixels,
                                   ctypes.POINTER(ctypes.c_ubyte * pixelsize))
                 pbuf = pgarray.CTypesView(buf.contents, itemsize=1,
                                           objsize=pixelsize)
                 iview = pbuf.to_uint32()
+                pw = drect.x + drect.w
+                ph = drect.y + drect.h
+                for y in range(dest.size[1]):
+                    for x in range(dest.size[0]):
+                        col = iview[y * rowlen + x]
+                        if y >= drect.y and y < ph and \
+                                x >= drect.x and x < pw:
+                            self.assertEqual(col, 0xFFFFFFFF, msg="""color
+mismatch at %d,%d for %s: %d != %d""" % (y, x, pos, col, 0xFFFFFFFF))
+                        else:
+                            self.assertEqual(col, 0x0, msg="""color mismatch
+at %d,%d for %s: %d != %d""" % (y, x, pos, col, 0x0))
+        
+        while len(sources) > 0:
+            sf = sources.pop()
+            surface.free_surface(sf)
+        surface.free_surface(dest)
 
-                for px in range(pos.x, pos.x + src.size[0]):
-                    if px < 0 or px >= w:
-                        continue  # skip out of bounds pixels
-                    for py in range(pos.y, pos.y + src.size[1]):
-                        if py < 0 or py >= h:
-                            continue  # skip out of bounds pixels
-                        self.assertEqual(iview[py * rowlen + px], 0xFFFFFFFF)
+    @unittest.skip("not implemented")
+    def test_lower_blit_scaled(self):
+        pass
+
+    def test_upper_blit(self):
+        bpp = 32
+        w, h = 10, 10
+        # no alpha to prevent blending
+        masks = (0xFF000000, 0x00FF0000, 0x0000FF00, 0x00000000)
+        dest = surface.create_rgb_surface(w, h, bpp, masks[0], masks[1],
+                                          masks[2], masks[3])
+        pixelsize = h * dest.pitch
+        rowlen = dest.pitch // 4
+
+        sources = []
+        for width, height in blitsizes:
+            src = surface.create_rgb_surface(width, height, bpp, masks[0],
+                                             masks[1], masks[2], masks[3])
+            surface.fill_rect(src, None, 0xFFFFFFFF)  # fill with white
+            sources.append(src)
+
+        for src in sources:
+            for pos in blitpositions:
+                drect = pos.__copy__()
+                surface.fill_rect(dest, None, 0x0)  # fill with black
+                surface.upper_blit(src, None, dest, drect)
+                buf = ctypes.cast(dest.pixels,
+                                  ctypes.POINTER(ctypes.c_ubyte * pixelsize))
+                pbuf = pgarray.CTypesView(buf.contents, itemsize=1,
+                                          objsize=pixelsize)
+                iview = pbuf.to_uint32()
+                pw = drect.x + drect.w
+                ph = drect.y + drect.h
+                for y in range(dest.size[1]):
+                    for x in range(dest.size[0]):
+                        col = iview[y * rowlen + x]
+                        if y >= drect.y and y < ph and \
+                                x >= drect.x and x < pw:
+                            self.assertEqual(col, 0xFFFFFFFF, msg="""color
+mismatch at %d,%d for %s: %d != %d""" % (x, y, pos, col, 0xFFFFFFFF))
+                        else:
+                            self.assertEqual(col, 0x0, msg="""color mismatch
+at %d,%d for %s: %d != %d""" % (x, y, pos, col, 0x0))
+        
+        while len(sources) > 0:
+            sf = sources.pop()
+            surface.free_surface(sf)
+        surface.free_surface(dest)
+
+    def test_blit_surface(self):
+        bpp = 32
+        w, h = 10, 10
+        # no alpha to prevent blending
+        masks = (0xFF000000, 0x00FF0000, 0x0000FF00, 0x00000000)
+        dest = surface.create_rgb_surface(w, h, bpp, masks[0], masks[1],
+                                          masks[2], masks[3])
+        pixelsize = h * dest.pitch
+        rowlen = dest.pitch // 4
+
+        sources = []
+        for width, height in blitsizes:
+            src = surface.create_rgb_surface(width, height, bpp, masks[0],
+                                             masks[1], masks[2], masks[3])
+            surface.fill_rect(src, None, 0xFFFFFFFF)  # fill with white
+            sources.append(src)
+
+        for src in sources:
+            for pos in blitpositions:
+                drect = pos.__copy__()
+                surface.fill_rect(dest, None, 0x0)  # fill with black
+                surface.blit_surface(src, None, dest, drect)
+                buf = ctypes.cast(dest.pixels,
+                                  ctypes.POINTER(ctypes.c_ubyte * pixelsize))
+                pbuf = pgarray.CTypesView(buf.contents, itemsize=1,
+                                          objsize=pixelsize)
+                iview = pbuf.to_uint32()
+                pw = drect.x + drect.w
+                ph = drect.y + drect.h
+                for y in range(dest.size[1]):
+                    for x in range(dest.size[0]):
+                        col = iview[y * rowlen + x]
+                        if y >= drect.y and y < ph and \
+                                x >= drect.x and x < pw:
+                            self.assertEqual(col, 0xFFFFFFFF, msg="""color
+mismatch at %d,%d for %s: %d != %d""" % (y, x, pos, col, 0xFFFFFFFF))
+                        else:
+                            self.assertEqual(col, 0x0, msg="""color mismatch
+at %d,%d for %s: %d != %d""" % (y, x, pos, col, 0x0))
+
+        while len(sources) > 0:
+            sf = sources.pop()
+            surface.free_surface(sf)
+        surface.free_surface(dest)
 
     @unittest.skip("not implemented")
     def test_upper_blit_scaled(self):

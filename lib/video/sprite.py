@@ -75,8 +75,12 @@ class Sprite(Component):
         pixel to be used, need to be provided.
         """
         super(Sprite, self).__init__()
+        self._createdsf = True
         if source is not None:
-            if type(source) is str:
+            if isinstance(source, video.SDL_Surface):
+                self.surface = source
+                self._createdsf = False
+            elif type(source) is str:
                 if os.path.exists(source):
                     # Load from file
                     self.surface = sdlsurface.load_bmp(source)
@@ -92,6 +96,11 @@ class Sprite(Component):
         self.depth = 0
         self.x = 0
         self.y = 0
+
+    def __del__(self):
+        """Releases the bound SDL_Surface, if it was created by the Sprite."""
+        sdlsurface.free_surface(self.surface)
+        self.surface = None
 
     @property
     def size(self):
@@ -109,12 +118,7 @@ class Sprite(Component):
         self.y = value[1]
 
     @property
-    def size(self):
-        """The size of the Sprite as tuple."""
-        return self.surface.size
-
-    @property
     def area(self):
         """The rectangular area occupied by the Sprite."""
-        w, h = self.surface.size
+        w, h = self.size
         return (self.x, self.y, self.x + w, self.y + h)

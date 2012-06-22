@@ -9,6 +9,7 @@ import wave
 from pygame2.ebs import System, Component
 import pygame2.openal.alc as alc
 import pygame2.openal.al as al
+import pygame2.ogg.vorbisfile as vorbis
 
 
 __all__ = ["SoundData", "SoundSource", "SoundSink", "load_file", "load_stream",
@@ -97,7 +98,12 @@ class SoundSink(System):
         """Creates a new SoundSink for a specific audio output device."""
         super(SoundSink, self).__init__()
         self.componenttypes = (SoundSource, )
-        self.device = alc.open_device(device)
+        if isinstance(device, alc.ALCdevice):
+            self._hasopened = False
+            self.device = device
+        else:
+            self.device = alc.open_device(device)
+            self._hasopened = True
         self.context = alc.create_context(self.device)
         self.activate()
         self._sources = {}
@@ -165,7 +171,8 @@ class SoundSink(System):
             al.delete_buffers(self._buffers.keys())
             self._buffers = {}
             alc.destroy_context(self.context)
-            alc.close_device(self.device)
+            if self._hasopened:
+                alc.close_device(self.device)
             self.context = None
             self.device = None
 
@@ -251,9 +258,22 @@ def load_wav_file(fname):
     return data
 
 
+def load_ogg_file(fname):
+    """Loads an Ogg-Vorbis encoded audio file into a SoundData object."""
+    fp = vorbis.fopen(fname)
+    finfo = vorbis.info(fp)
+    length = vorbis.pcm_total(fp)
+
+    data = SoundData()
+    data.format = _FORMATMAP[(finfo.channels, 16)]
+    data.data = vorbis.read(fp, length, word=2)[0]
+    data.size = length
+    data.frequency = finfo.rate
+
+
 # supported extensions
 _EXTENSIONS = {".wav": load_wav_file,
-               #".ogg": load_ogg_file,
+               ".ogg": load_ogg_file,
                }
 
 

@@ -22,10 +22,12 @@ class SDLCPUInfoTest(unittest.TestCase):
         ret = cpuinfo.get_cpu_cache_line_size()
         self.assertIsInstance(ret, int)
 
-    @unittest.skipIf(not _HASMP, "no multiprocessing module found")
     def test_get_cpu_count(self):
-        self.assertEqual(multiprocessing.cpu_count(),
-                         cpuinfo.get_cpu_count())
+        if _HASMP:
+            self.assertEqual(multiprocessing.cpu_count(),
+                             cpuinfo.get_cpu_count())
+        else:
+            self.assertGreaterEqual(cpuinfo.get_cpu_count(), 1)
 
     def test_has_3dnow(self):
         ret = cpuinfo.has_3dnow()

@@ -1,2 +1,5 @@
-include lib/dll *.dll
-include test *.txt
+graft doc
+include *.bat Makefile
+include *.txt
+include test
+

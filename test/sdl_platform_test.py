@@ -9,7 +9,7 @@ class SDLPlatformTest(unittest.TestCase):
 
     def test_get_platform(self):
         retval = platform.get_platform()
-        if sys.platform in ("win32", "cygwin"):
+        if sys.platform in ("win32", "cygwin", "cli"):
             self.assertEqual(retval, "Windows")
         elif sys.platform.startswith("linux"):
             self.assertEqual(retval, "Linux")

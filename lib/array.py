@@ -13,12 +13,12 @@ _ARRAY = __import__("array")
 
 def to_tuple(dataseq):
     """Converts a ctypes array to a tuple."""
-    return tuple(*dataseq)
+    return tuple(dataseq)
 
 
 def to_list(dataseq):
     """Converts a ctypes array to a list."""
-    return list(*dataseq)
+    return list(dataseq)
 
 
 def to_ctypes(dataseq, dtype, mcount=0):
@@ -185,7 +185,7 @@ class MemoryView(object):
 
         itemsize denotes the size of a single item. strides defines the
         dimensions and the length (n items * itemsize) for each
-        dimneion. getfunc and setfunc are optional parameters to provide
+        dimension. getfunc and setfunc are optional parameters to provide
         specialised read and write access to the underlying
         source. srcsize can be used to provide the correct source size,
         if len(source) does not return the absolute size of the source
@@ -205,8 +205,8 @@ class MemoryView(object):
             tsum *= v
         if tsum > self._srcsize:
             raise ValueError("strides exceed the accesible source size")
-        if itemsize > strides[-1]:
-            raise ValueError("itemsize exceeds the accessible stride length")
+        #if itemsize > strides[-1]:
+        #    raise ValueError("itemsize exceeds the accessible stride length")
 
     def _getbytes(self, start, end):
         """Gets the bytes within the range of start:end."""

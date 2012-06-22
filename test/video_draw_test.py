@@ -59,7 +59,6 @@ class VideoDrawTest(unittest.TestCase):
                   "#FFF",
                   "#AABBCCDD",
                   )
-        pass
 
     @unittest.skipIf(hasattr(sys, "pypy_version_info"),
                      "PyPy's ctypes can't do byref(value, offset)")

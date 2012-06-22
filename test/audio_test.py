@@ -11,7 +11,6 @@ class AudioTest(unittest.TestCase):
         if sys.version.startswith("3.1"):
             self.assertIsInstance = \
                 lambda x, t: self.assertTrue(isinstance(x, t))
-        pass
 
     def tearDown(self):
         pass
@@ -25,6 +24,13 @@ class AudioTest(unittest.TestCase):
         self.assertIsNone(data.size)
         self.assertIsNone(data.frequency)
 
+    def test_SoundListener(self):
+        listener = audio.SoundListener()
+        self.assertIsInstance(listener, audio.SoundListener)
+        self.assertEqual(listener.position, (0, 0, 0))
+        self.assertEqual(listener.velocity, (0, 0, 0))
+        self.assertEqual(listener.orientation, (0, 0, 1, 0, 1, 0))
+
     def test_SoundSource(self):
         source = audio.SoundSource()
         self.assertIsInstance(source, audio.SoundSource)
@@ -37,13 +43,21 @@ class AudioTest(unittest.TestCase):
         self.assertEqual(source.velocity, (0, 0, 0))
         self.assertEqual(source.request, audio.SOURCE_NONE)
 
-    @unittest.skip("not implemented")
     def test_SoundSource_queue(self):
-        pass
+        source = audio.SoundSource()
+        self.assertIsInstance(source, audio.SoundSource)
+        self.assertRaises(TypeError, source.queue, None)
+        self.assertRaises(TypeError, source.queue, "Test")
+        self.assertRaises(TypeError, source.queue, 123456)
+        
+        data = audio.SoundData()
+        source.queue(data)
 
     @unittest.skip("not implemented")
     def test_SoundSink(self):
-        pass
+        sink = audio.SoundSink()
+        self.assertIsInstance(sink, audio.SoundSink)
+        
 
     @unittest.skip("not implemented")
     def test_SoundSink_process(self):
@@ -60,13 +74,19 @@ class AudioTest(unittest.TestCase):
 
     def test_load_wav_file(self):
         wavfile = RESOURCES.get_path("hey.wav")
-        snddata = audio.load_file(wavfile)
+        snddata = audio.load_wav_file(wavfile)
 
         self.assertIsNone(snddata._bufid)
         self.assertEqual(snddata.format, al.AL_FORMAT_MONO16)
         self.assertEqual(snddata.frequency, 44100)
         self.assertEqual(snddata.size, 122880)
 
+    @unittest.skip("not implemented")
+    def test_load_ogg_file(self):
+        oggfile = RESOURCES.get_path("hey.ogg")
+        snddata = audio.load_ogg_file(oggfile)
+        
+        
     @unittest.skip("not implemented")
     def test_load_stream(self):
         pass

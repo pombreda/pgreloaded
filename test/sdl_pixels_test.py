@@ -366,12 +366,14 @@ class SDLPixelsTest(unittest.TestCase):
         self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
         val = pixels.map_rgb(pformat, 0xFF, 0xAA, 0x88)
         self.assertEqual(val, 0xFFAA88FF)
+        pixels.free_format(pformat)
 
         pformat = pixels.alloc_format(pixels.SDL_PIXELFORMAT_UNKNOWN)
         self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
         self.assertEqual(pformat.format, pixels.SDL_PIXELFORMAT_UNKNOWN)
         val = pixels.map_rgb(pformat, 0xFF, 0xAA, 0x88)
         self.assertEqual(val, 0x0)
+        pixels.free_format(pformat)
 
     @unittest.skipIf(sys.platform == "cli",
                      "IronPython's ctypes can't handle long values correctly")
@@ -380,12 +382,14 @@ class SDLPixelsTest(unittest.TestCase):
         self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
         val = pixels.map_rgba(pformat, 0xFF, 0xAA, 0x88, 0x11)
         self.assertEqual(val, 0xFFAA8811)
+        pixels.free_format(pformat)
 
         pformat = pixels.alloc_format(pixels.SDL_PIXELFORMAT_UNKNOWN)
         self.assertIsInstance(pformat, pixels.SDL_PixelFormat)
         self.assertEqual(pformat.format, pixels.SDL_PIXELFORMAT_UNKNOWN)
         val = pixels.map_rgba(pformat, 0xFF, 0xAA, 0x88, 0x11)
         self.assertEqual(val, 0x0)
+        pixels.free_format(pformat)
 
     def test_set_palette_colors(self):
         colors = []

@@ -1,14 +1,40 @@
 import sys
 import unittest
+from pygame2.test import RESOURCES
 import pygame2.sdl as sdl
+import pygame2.sdl.rwops as rwops
+import pygame2.sdl.surface as surface
 import pygame2.sdl.version as version
 import pygame2.sdlimage as sdlimage
+
+formats = ("bmp",
+           "cur",
+           "gif",
+           "ico",
+           "jpg",
+#           "lbm",
+           "pbm",
+           "pcx",
+           "pgm",
+           "png",
+           "pnm",
+           "ppm",
+           "tga",
+           "tif",
+           "webp",
+           "xcf",
+           "xpm",
+#           "xv",
+           )
 
 
 class SDLImageTest(unittest.TestCase):
     __tags__ = ["sdl", "sdlimage"]
 
     def setUp(self):
+        if sys.version.startswith("3.1"):
+            self.assertIsInstance = \
+                lambda x, t: self.assertTrue(isinstance(x, t))
         sdl.init(0)
         sdlimage.init()
 
@@ -27,13 +53,28 @@ class SDLImageTest(unittest.TestCase):
         self.assertEqual(v.minor, 2)
         self.assertGreaterEqual(v.patch, 13)
 
-    @unittest.skip("not implemented")
     def test_load(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            filename = RESOURCES.get_path(fname % fmt)
+            sf = sdlimage.load(filename)
+            self.assertIsInstance(sf, surface.SDL_Surface)
+            surface.free_surface(sf)
+        self.assertRaises(sdl.SDLError, sdlimage.load,
+                          RESOURCES.get_path("rwopstest.txt"))
+        self.assertRaises(TypeError, sdlimage.load, None)
+        self.assertRaises(TypeError, sdlimage.load, 1234)
 
-    @unittest.skip("not implemented")
     def test_load_rw(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            if fmt == "tga":
+                # SDL_image does not support loading TGA via IMG_Load_RW()
+                continue
+            fp = RESOURCES.get(fname % fmt)
+            sf = sdlimage.load_rw(rwops.rw_from_object(fp), False)
+            self.assertIsInstance(sf, surface.SDL_Surface)
+            surface.free_surface(sf)
 
     @unittest.skip("not implemented")
     def test_load_texture(self):
@@ -47,125 +88,235 @@ class SDLImageTest(unittest.TestCase):
     def test_texture_typed_rw(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_load_typed_rw(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            fp = RESOURCES.get(fname % fmt)
+            sf = sdlimage.load_typed_rw(rwops.rw_from_object(fp), False,
+                                        fmt.upper())
+            self.assertIsInstance(sf, surface.SDL_Surface)
 
-    @unittest.skip("not implemented")
     def test_load_bmp_rw(self):
-        pass
+        fp = RESOURCES.get("surfacetest.bmp")
+        sf = sdlimage.load_bmp_rw(rwops.rw_from_object(fp))
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
-    @unittest.skip("not implemented")
     def test_load_cur_rw(self):
+        fp = RESOURCES.get("surfacetest.cur")
+        sf = sdlimage.load_cur_rw(rwops.rw_from_object(fp))
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
         pass
 
-    @unittest.skip("not implemented")
     def test_load_gif_rw(self):
-        pass
+        fp = RESOURCES.get("surfacetest.gif")
+        sf = sdlimage.load_gif_rw(rwops.rw_from_object(fp))
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
-    @unittest.skip("not implemented")
     def test_load_ico_rw(self):
-        pass
+        fp = RESOURCES.get("surfacetest.ico")
+        sf = sdlimage.load_ico_rw(rwops.rw_from_object(fp))
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
-    @unittest.skip("not implemented")
     def test_load_jpg_rw(self):
-        pass
+        fp = RESOURCES.get("surfacetest.jpg")
+        sf = sdlimage.load_jpg_rw(rwops.rw_from_object(fp))
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
     @unittest.skip("not implemented")
     def test_load_lbm_rw(self):
-        pass
+        fp = RESOURCES.get("surfacetest.lbm")
+        sf = sdlimage.load_lbm_rw(rwops.rw_from_object(fp))
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
-    @unittest.skip("not implemented")
     def test_load_pcx_rw(self):
-        pass
+        fp = RESOURCES.get("surfacetest.pcx")
+        sf = sdlimage.load_pcx_rw(rwops.rw_from_object(fp))
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
-    @unittest.skip("not implemented")
     def test_load_png_rw(self):
-        pass
+        fp = RESOURCES.get("surfacetest.png")
+        sf = sdlimage.load_png_rw(rwops.rw_from_object(fp))
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
-    @unittest.skip("not implemented")
     def test_load_pnm_rw(self):
-        pass
+        fp = RESOURCES.get("surfacetest.pnm")
+        sf = sdlimage.load_pnm_rw(rwops.rw_from_object(fp))
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
-    @unittest.skip("not implemented")
     def test_load_tga_rw(self):
-        pass
+        fp = RESOURCES.get("surfacetest.tga")
+        sf = sdlimage.load_tga_rw(rwops.rw_from_object(fp))
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
-    @unittest.skip("not implemented")
     def test_load_tif_rw(self):
-        pass
+        fp = RESOURCES.get("surfacetest.tif")
+        sf = sdlimage.load_tif_rw(rwops.rw_from_object(fp))
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
-    @unittest.skip("not implemented")
     def test_load_webp_rw(self):
-        pass
+        fp = RESOURCES.get("surfacetest.webp")
+        sf = sdlimage.load_webp_rw(rwops.rw_from_object(fp))
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
-    @unittest.skip("not implemented")
     def test_load_xcf_rw(self):
-        pass
+        fp = RESOURCES.get("surfacetest.xcf")
+        sf = sdlimage.load_xcf_rw(rwops.rw_from_object(fp))
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
-    @unittest.skip("not implemented")
     def test_load_xpm_rw(self):
-        pass
+        fp = RESOURCES.get("surfacetest.xpm")
+        sf = sdlimage.load_xpm_rw(rwops.rw_from_object(fp))
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
     @unittest.skip("not implemented")
     def test_load_xv_rw(self):
-        pass
+        fp = RESOURCES.get("surfacetest.xv")
+        sf = sdlimage.load_xpm_rw(rwops.rw_from_object(fp))
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
-    @unittest.skip("not implemented")
     def test_is_bmp(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            imgrw = rwops.rw_from_object(RESOURCES.get(fname % fmt))
+            if fmt == "bmp":
+                self.assertTrue(sdlimage.is_bmp(imgrw))
+            else:
+                self.assertFalse(sdlimage.is_bmp(imgrw))
 
-    @unittest.skip("not implemented")
     def test_is_cur(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            imgrw = rwops.rw_from_object(RESOURCES.get(fname % fmt))
+            if fmt == "cur":
+                self.assertTrue(sdlimage.is_cur(imgrw))
+            else:
+                self.assertFalse(sdlimage.is_cur(imgrw))
 
-    @unittest.skip("not implemented")
     def test_is_gif(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            imgrw = rwops.rw_from_object(RESOURCES.get(fname % fmt))
+            if fmt == "gif":
+                self.assertTrue(sdlimage.is_gif(imgrw))
+            else:
+                self.assertFalse(sdlimage.is_gif(imgrw))
 
-    @unittest.skip("not implemented")
     def test_is_ico(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            imgrw = rwops.rw_from_object(RESOURCES.get(fname % fmt))
+            if fmt == "ico":
+                self.assertTrue(sdlimage.is_ico(imgrw))
+            else:
+                self.assertFalse(sdlimage.is_ico(imgrw))
 
-    @unittest.skip("not implemented")
     def test_is_jpg(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            imgrw = rwops.rw_from_object(RESOURCES.get(fname % fmt))
+            if fmt == "jpg":
+                self.assertTrue(sdlimage.is_jpg(imgrw))
+            else:
+                self.assertFalse(sdlimage.is_jpg(imgrw))
 
     @unittest.skip("not implemented")
     def test_is_lbm(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            imgrw = rwops.rw_from_object(RESOURCES.get(fname % fmt))
+            if fmt == "lbm":
+                self.assertTrue(sdlimage.is_lbm(imgrw))
+            else:
+                self.assertFalse(sdlimage.is_lbm(imgrw))
 
-    @unittest.skip("not implemented")
     def test_is_pcx(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            imgrw = rwops.rw_from_object(RESOURCES.get(fname % fmt))
+            if fmt == "pcx":
+                self.assertTrue(sdlimage.is_pcx(imgrw))
+            else:
+                self.assertFalse(sdlimage.is_pcx(imgrw))
 
-    @unittest.skip("not implemented")
     def test_is_png(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            imgrw = rwops.rw_from_object(RESOURCES.get(fname % fmt))
+            if fmt == "png":
+                self.assertTrue(sdlimage.is_png(imgrw))
+            else:
+                self.assertFalse(sdlimage.is_png(imgrw))
 
-    @unittest.skip("not implemented")
     def test_is_pnm(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            imgrw = rwops.rw_from_object(RESOURCES.get(fname % fmt))
+            if fmt in ("pnm", "pbm", "ppm", "pgm"):
+                self.assertTrue(sdlimage.is_pnm(imgrw))
+            else:
+                self.assertFalse(sdlimage.is_pnm(imgrw))
 
-    @unittest.skip("not implemented")
     def test_is_tif(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            imgrw = rwops.rw_from_object(RESOURCES.get(fname % fmt))
+            if fmt == "tif":
+                self.assertTrue(sdlimage.is_tif(imgrw))
+            else:
+                self.assertFalse(sdlimage.is_tif(imgrw))
 
-    @unittest.skip("not implemented")
     def test_is_webp(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            imgrw = rwops.rw_from_object(RESOURCES.get(fname % fmt))
+            if fmt == "webp":
+                self.assertTrue(sdlimage.is_webp(imgrw))
+            else:
+                self.assertFalse(sdlimage.is_webp(imgrw))
 
-    @unittest.skip("not implemented")
     def test_is_xcf(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            imgrw = rwops.rw_from_object(RESOURCES.get(fname % fmt))
+            if fmt == "xcf":
+                self.assertTrue(sdlimage.is_xcf(imgrw))
+            else:
+                self.assertFalse(sdlimage.is_xcf(imgrw))
 
-    @unittest.skip("not implemented")
     def test_is_xpm(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            imgrw = rwops.rw_from_object(RESOURCES.get(fname % fmt))
+            if fmt == "xpm":
+                self.assertTrue(sdlimage.is_xpm(imgrw))
+            else:
+                self.assertFalse(sdlimage.is_xpm(imgrw))
 
     @unittest.skip("not implemented")
     def test_is_xv(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            imgrw = rwops.rw_from_object(RESOURCES.get(fname % fmt))
+            if fmt == "xv":
+                self.assertTrue(sdlimage.is_xv(imgrw))
+            else:
+                self.assertFalse(sdlimage.is_xv(imgrw))
+
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

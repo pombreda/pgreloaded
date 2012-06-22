@@ -190,6 +190,9 @@ def rw_from_object(obj):
 
         Note: The write() method is optional and only necessary, if the passed
         object should be able to write data.
+
+    The returned SDL_RWops is a pure Python object and must not be freed via
+    free_rw().
     """
     if not hasattr(obj, "read"):
         raise TypeError("obj must have a read(len) -> data method")
@@ -216,7 +219,7 @@ def rw_from_object(obj):
             data = obj.read(size * maxnum)
             num = len(data)
             ctypes.memmove(ptr, data, num)
-            return num
+            return num // size
         except Exception as e:
             #print(e)
             return 0

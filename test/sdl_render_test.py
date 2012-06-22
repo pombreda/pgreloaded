@@ -69,10 +69,9 @@ class SDLRenderTest(unittest.TestCase):
         #self.assertIsInstance(window, video.SDL_Window)
         #self.assertIsInstance(renderer, render.SDL_Renderer)
 
-    @unittest.skipIf(sys.platform in ("win32", "cli"), "crashes randomly")
     def test_create_destroy_renderer(self):
         window = video.create_window("Test", 10, 10, 10, 10,
-                                     video.SDL_WINDOW_HIDDEN)
+                                     video.SDL_WINDOW_SHOWN)
         self.assertIsInstance(window, video.SDL_Window)
 
         for i in range(render.get_num_render_drivers()):
@@ -81,7 +80,9 @@ class SDLRenderTest(unittest.TestCase):
             self.assertIsInstance(renderer, render.SDL_Renderer)
             render.destroy_renderer(renderer)
 
-            renderer = render.create_renderer(window, -1,
+            # TODO: using -1 as index for the call below leads to random
+            # access violations on Win32
+            renderer = render.create_renderer(window, i,
                                               render.SDL_RENDERER_SOFTWARE)
             self.assertIsInstance(renderer, render.SDL_Renderer)
             render.destroy_renderer(renderer)

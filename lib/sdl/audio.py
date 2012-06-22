@@ -7,7 +7,19 @@ from pygame2.sdl import sdltype, dll, SDLError
 from pygame2.sdl.rwops import SDL_RWops, rw_from_file
 from pygame2.sdl.endian import SDL_BYTEORDER, SDL_LIL_ENDIAN
 
-__all__ = [""]
+__all__ = ["SDL_AUDIO_BITSIZE", "SDL_AUDIO_ISFLOAT", "SDL_AUDIO_ISBIGENDIAN",
+           "SDL_AUDIO_ISSIGNED", "SDL_AUDIO_ISINT", "SDL_AUDIO_ISLITTLEENDIAN",
+           "SDL_AUDIO_ISUNSIGNED", "SDL_AudioCallback", "SDL_AudioSpec",
+           "SDL_AudioCVT", "SDL_AudioFilter", "get_num_audio_drivers",
+           "get_audio_driver", "audio_init", "audio_quit",
+           "get_current_audio_driver", "open_audio", "get_num_audio_devices",
+           "get_audio_device_name", "open_audio_device", "get_audio_status",
+           "get_audio_device_status", "pause_audio", "pause_audio_device",
+           "load_wav_rw", "load_wav", "free_wav", "build_audio_cvt",
+           "convert_audio", "mix_audio", "mix_audio_format", "lock_audio",
+           "lock_audio_device", "unlock_audio", "unlock_audio_device",
+           "close_audio", "close_audio_device",
+          ]
 
 
 SDL_AUDIO_MASK_BITSIZE = 0xFF
@@ -246,10 +258,16 @@ def get_num_audio_devices(iscapture=False):
 
 @sdltype("SDL_GetAudioDeviceName", [ctypes.c_int, ctypes.c_int],
          ctypes.c_char_p)
-def get_audio_device_name(index, iscapture):
+def get_audio_device_name(index, iscapture=False):
+    """Gets the name of an audio device.
+
+    If iscapture is True, only input (capture) devices are queried,
+    otherwise only output devices are queried.
     """
-    """
-    retval = dll.SDL_GetAudioDeviceName(index, iscapture)
+    if bool(iscapture):
+        retval = dll.SDL_GetAudioDeviceName(index, 1)
+    else:
+        retval = dll.SDL_GetAudioDeviceName(index, 0)
     if retval is None or not bool(retval):
         raise SDLError()
     return stringify(retval, "utf-8")

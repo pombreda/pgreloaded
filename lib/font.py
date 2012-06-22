@@ -24,7 +24,7 @@ __FONTCACHE = None
 
 
 STYLE_NORMAL = 0x00
-STYLE_BOLD   = 0x01
+STYLE_BOLD =   0x01
 STYLE_ITALIC = 0x02
 
 
@@ -204,8 +204,6 @@ def get_font(name, style=STYLE_NORMAL, ftype=None):
     """Retrieves the best matching font file for the given name and
     criteria.
     """
-    if __FONTCACHE is None:
-        return None
     retvals = get_fonts(name, style, ftype)
     if len(retvals) > 0:
         return retvals[0]
