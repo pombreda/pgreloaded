@@ -17,7 +17,8 @@ class SDLTTFTest(unittest.TestCase):
 
     @unittest.skip("not implemented")
     def test_TTF_Font(self):
-        pass
+        font = sdlttf.TTF_Font()
+        self.assertIsInstance(font, sdlttf.TTF_Font)
 
     @unittest.skip("not implemented")
     def test_init_quit(self):

@@ -41,3 +41,6 @@ The DLLs within the lib/dll folder are licensed as follows:
     SDL2_ttf.dll:       see doc/licenses/sdl_ttf.txt
     soft_oal.dll:       see doc/licenses/openal-soft.txt
     zlib1.dll:          see doc/licenses/zlib.txt
+
+The distributed tuffy font files are under the Public Domain as stated
+in doc/licenses/tuffy_font.txt.

@@ -2,6 +2,7 @@ import sys
 import unittest
 from pygame2.test import RESOURCES
 import pygame2.sdl as sdl
+import pygame2.sdl.render as render
 import pygame2.sdl.rwops as rwops
 import pygame2.sdl.surface as surface
 import pygame2.sdl.version as version
@@ -76,17 +77,63 @@ class SDLImageTest(unittest.TestCase):
             self.assertIsInstance(sf, surface.SDL_Surface)
             surface.free_surface(sf)
 
-    @unittest.skip("not implemented")
     def test_load_texture(self):
-        pass
+        sf = surface.create_rgb_surface(10, 10, 32)
+        rd = render.create_software_renderer(sf)
 
-    @unittest.skip("not implemented")
-    def test_texture_rw(self):
-        pass
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            filename = RESOURCES.get_path(fname % fmt)
+            tex = sdlimage.load_texture(rd, filename)
+            self.assertIsInstance(tex, render.SDL_Texture)
+            render.destroy_texture(tex)
 
-    @unittest.skip("not implemented")
-    def test_texture_typed_rw(self):
-        pass
+        self.assertRaises(sdl.SDLError, sdlimage.load_texture, rd,
+                          RESOURCES.get_path("rwopstest.txt"))
+
+        self.assertRaises(TypeError, sdlimage.load_texture, rd, None)
+        self.assertRaises(TypeError, sdlimage.load_texture, rd, 1234)
+        self.assertRaises(TypeError, sdlimage.load_texture, None,
+                          RESOURCES.get_path("surfacetest.bmp"))
+        self.assertRaises(TypeError, sdlimage.load_texture, "Test",
+                          RESOURCES.get_path("surfacetest.bmp"))
+        self.assertRaises(TypeError, sdlimage.load_texture, 1234,
+                          RESOURCES.get_path("surfacetest.bmp"))
+
+        render.destroy_renderer(rd)
+        surface.free_surface(sf)
+
+    def test_load_texture_rw(self):
+        sf = surface.create_rgb_surface(10, 10, 32)
+        rd = render.create_software_renderer(sf)
+
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            if fmt == "tga":
+                # SDL_image does not support loading TGA via
+                # IMG_LoadTexture_RW()
+                continue
+            fp = RESOURCES.get(fname % fmt)
+            tex = sdlimage.load_texture_rw(rd, rwops.rw_from_object(fp), False)
+            self.assertIsInstance(tex, render.SDL_Texture)
+            render.destroy_texture(tex)
+
+        render.destroy_renderer(rd)
+        surface.free_surface(sf)
+
+    def test_load_texture_typed_rw(self):
+        sf = surface.create_rgb_surface(10, 10, 32)
+        rd = render.create_software_renderer(sf)
+
+        fname = "surfacetest.%s"
+        for fmt in formats:
+            fp = RESOURCES.get(fname % fmt)
+            tex = sdlimage.load_texture_typed_rw(rd, rwops.rw_from_object(fp),
+                                                 False, fmt.upper())
+            self.assertIsInstance(tex, render.SDL_Texture)
+            render.destroy_texture(tex)
+        render.destroy_renderer(rd)
+        surface.free_surface(sf)
 
     def test_load_typed_rw(self):
         fname = "surfacetest.%s"
@@ -95,6 +142,7 @@ class SDLImageTest(unittest.TestCase):
             sf = sdlimage.load_typed_rw(rwops.rw_from_object(fp), False,
                                         fmt.upper())
             self.assertIsInstance(sf, surface.SDL_Surface)
+            surface.free_surface(sf)
 
     def test_load_bmp_rw(self):
         fp = RESOURCES.get("surfacetest.bmp")
@@ -316,6 +364,23 @@ class SDLImageTest(unittest.TestCase):
                 self.assertTrue(sdlimage.is_xv(imgrw))
             else:
                 self.assertFalse(sdlimage.is_xv(imgrw))
+
+    @unittest.skipIf(hasattr(sys, "pypy_version_info"),
+                     "PyPy's ctypes fails to pass a correct string array")
+    def test_read_xpm_from_array(self):
+        fp = RESOURCES.get("surfacetest.xpm")
+        xpm = b""
+        fp.readline()  # /* XPM */
+        fp.readline()  # static char * surfacetest_xpm[] = {
+        lbuf = fp.readlines()
+        for line in lbuf:
+            if line.endswith(b"};"):
+                xpm += line[1:-4]
+            else:
+                xpm += line[1:-3]
+        sf = sdlimage.read_xpm_from_array(xpm)
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
 
 if __name__ == '__main__':

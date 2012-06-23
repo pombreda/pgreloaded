@@ -140,6 +140,9 @@ def load_texture(renderer, fname):
 
     Raises a SDLError, if the file could not be loaded.
     """
+    if type(fname) is not str:
+        raise TypeError("fname must be a string")
+    fname = byteify(fname, "utf-8")
     if not isinstance(renderer, SDL_Renderer):
         raise TypeError("renderer must be a SDL_Renderer")
     return _check(dll.IMG_LoadTexture(ctypes.byref(renderer), fname))
@@ -160,11 +163,11 @@ def load_texture_rw(renderer, src, freesrc):
     if not isinstance(src, SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
     if bool(freesrc):
-        freesrc = 1
+        return _check(dll.IMG_LoadTexture_RW(ctypes.byref(renderer),
+                                             ctypes.byref(src), 1))
     else:
-        freesrc = 0
-    return _check(dll.IMG_LoadTexture_RW(ctypes.byref(renderer),
-                                         ctypes.byref(src), freesrc))
+        return _check(dll.IMG_LoadTexture_RW(ctypes.byref(renderer),
+                                             ctypes.byref(src), 0))
 
 
 @sdlimgtype("IMG_LoadTextureTyped_RW", [SDL_Renderer_p, SDL_RWops_p,
@@ -185,13 +188,13 @@ def load_texture_typed_rw(renderer, src, freesrc, itype):
         raise TypeError("renderer must be a SDL_Renderer")
     if not isinstance(src, SDL_RWops):
         raise TypeError("src must be a SDL_RWops")
+    itype = byteify(itype, "utf-8")
     if bool(freesrc):
-        freesrc = 1
+        return _check(dll.IMG_LoadTextureTyped_RW(ctypes.byref(renderer),
+                                                  ctypes.byref(src), 1, itype))
     else:
-        freesrc = 0
-    return _check(dll.IMG_LoadTextureTyped_RW(ctypes.byref(renderer),
-                                              ctypes.byref(src), freesrc,
-                                              itype))
+        return _check(dll.IMG_LoadTextureTyped_RW(ctypes.byref(renderer),
+                                                  ctypes.byref(src), 0, itype))
 
 
 @sdlimgtype("IMG_isICO", [SDL_RWops_p], ctypes.c_int)
@@ -430,6 +433,9 @@ def load_webp_rw(src):
             SDL_Surface_p)
 def read_xpm_from_array(xpm):
     """Loads a SDL_Surface from a XPM character buffer."""
-    if type(xpm) is not str:
-        raise TypeError("xpm must be a string")
-    return _check(dll.IMG_ReadXPMFromArray(ctypes.byref(xpm)))
+    if type(xpm) is str:
+        xpm = byteify(xpm, "utf-8")
+    elif type(xpm) is not bytes:
+        raise TypeError("xpm must be a string or bytes")
+    pxpm = ctypes.c_char_p(xpm)
+    return _check(dll.IMG_ReadXPMFromArray(ctypes.byref(pxpm)))
