@@ -56,7 +56,7 @@ class SpriteRenderer(System):
 
     @sortfunc.setter
     def sortfunc(self, value):
-        if not iscallable(value):
+        if not callable(value):
             raise TypeError("sortfunc must be callable")
         self._sortfunc = value
 

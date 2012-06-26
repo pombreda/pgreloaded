@@ -755,7 +755,7 @@ class ColorTest(unittest.TestCase):
         for index, val in enumerate(hex_combos()):
             assertEqual(COLOR(val), cvals[index], "Failed for '%s'" % val)
 
-        for index, val in enumerate(rgba_combos()):
+        for index, val in enumerate(argb_combos()):
             assertEqual(COLOR(val), cvals[index], "Failed for '0x%.8x'" % val)
 
         for index, val in enumerate(color_combos()):

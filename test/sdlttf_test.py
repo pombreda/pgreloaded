@@ -2,7 +2,9 @@ import sys
 import unittest
 from pygame2.test import RESOURCES
 import pygame2.sdl as sdl
+from pygame2.sdl.pixels import SDL_Color
 import pygame2.sdl.rwops as rwops
+import pygame2.sdl.surface as surface
 import pygame2.sdlttf as sdlttf
 
 
@@ -271,9 +273,13 @@ class SDLTTFTest(unittest.TestCase):
     def test_render_shaded(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_render_blended(self):
-        pass
+        filename = RESOURCES.get_path("tuffy.ttf")
+        font = sdlttf.open_font(filename, 10)
+        color = SDL_Color(0, 0, 0)
+        sf = sdlttf.render_blended(font, "Example", color)
+        self.assertIsInstance(sf, surface.SDL_Surface)
+        surface.free_surface(sf)
 
     @unittest.skip("not implemented")
     def test_get_kerning_size(self):

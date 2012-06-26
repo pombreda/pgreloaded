@@ -535,14 +535,17 @@ def string_to_color(s):
 
 
 def convert_to_color(v):
-    """Tries to convert the passed value to a Color object."""
+    """Tries to convert the passed value to a Color object.
+    
+    If the color is an integer value, it is assumed to be in ARGB layout.
+    """
     if isinstance(v, Color):
         return v
 
     if type(v) is str:
         return string_to_color(v)
     if type(v) in (int, long):
-        return rgba_to_color(v)
+        return argb_to_color(v)
 
     r, g, b, a = 0, 0, 0, 0
     if hasattr(v, "r") and hasattr(v, "g") and hasattr(v, "b"):

@@ -409,7 +409,7 @@ def render_shaded(font, s, fg, bg):
 @sdlttftype("TTF_RenderUTF8_Blended", [TTF_Font_p, ctypes.c_char_p, SDL_Color],
             SDL_Surface_p)
 def render_blended(font, s, color):
-    """ /* Create a 32-bit ARGB surface and render the given text at
+    """Create a 32-bit ARGB surface and render the given text at
            high quality, using alpha blending to dither the font with
            the given color.  This function returns the new surface, or
            NULL if there was an error.  */ extern DECLSPEC SDL_Surface *
@@ -420,8 +420,8 @@ def render_blended(font, s, color):
         raise TypeError("font must be a TTF_Font")
     if not isinstance(color, SDL_Color):
         raise TypeError("color must be a SDL_Color")
-    return _check_ptr(dll.TTF_RenderUTF8_Blended(ctypes.byref(font),
-                                                 s.encode("utf-8"), color))
+    s = s.encode("utf-8")
+    return _check_ptr(dll.TTF_RenderUTF8_Blended(ctypes.byref(font), s, color))
 
 
 @sdlttftype("TTF_GetFontKerningSize", [TTF_Font_p, ctypes.c_int, ctypes.c_int],
