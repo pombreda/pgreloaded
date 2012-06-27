@@ -13,44 +13,43 @@ if __name__ == "__main__":
         VERSION = VERSION.replace("-alpha", "a")
         VERSION = VERSION.replace("-rc", "r")
 
+    packages = ["pygame2",
+                "pygame2.audio",
+                "pygame2.ogg",
+                "pygame2.openal",
+                "pygame2.dll",
+                "pygame2.dll.32bit",
+                "pygame2.dll.64bit",
+                "pygame2.examples",
+                "pygame2.sdl",
+                "pygame2.test",
+                "pygame2.test.util",
+                "pygame2.video",
+                ]
+    package_dir = {"pygame2": "lib",
+                   "pygame2.dll": "lib/dll",
+                   "pygame2.test": "test",
+                   "pygame2.examples": "examples",
+                   }
 
-    packages = [ "pygame2",
-                 "pygame2.audio",
-                 "pygame2.ogg",
-                 "pygame2.openal",
-                 "pygame2.dll",
-                 "pygame2.dll.32bit",
-                 "pygame2.dll.64bit",
-                 "pygame2.examples",
-                 "pygame2.sdl",
-                 "pygame2.test",
-                 "pygame2.test.util",
-                 "pygame2.video",
-                 ]
-    package_dir = { "pygame2" : "lib",
-                    "pygame2.dll" : "lib/dll",
-                    "pygame2.test" : "test",
-                    "pygame2.examples" : "examples",
+    package_data = {"pygame2.test": ["resources/*.*"],
+                    "pygame2.examples": ["resources/*.*"],
+                    "pygame2.dll.32bit": ["*.dll"],
+                    "pygame2.dll.64bit": ["*.dll"],
                     }
 
-    package_data = { "pygame2.test" : ["resources/*.*"],
-                     "pygame2.examples" : ["resources/*.*"],
-                     "pygame2.dll.32bit" : ["*.dll"],
-                     "pygame2.dll.64bit" : ["*.dll"],
-                     }
-
     setupdata = {
-        "name" :  "pygame2",
-        "version" : VERSION,
-        "description" : "Python Multimedia Development Library",
-        "author" : "Marcus von Appen",
-        "author_email" : "marcus@sysfault.org",
-        "license" : "Public Domain / zlib",
-        "url" : "http://code.google.com/p/pgreloaded",
-        "packages" : packages,
-        "package_dir" : package_dir,
-        "package_data" : package_data,
-        "classifiers" : [
+        "name":  "pygame2",
+        "version": VERSION,
+        "description": "Python Multimedia Development Library",
+        "author": "Marcus von Appen",
+        "author_email": "marcus@sysfault.org",
+        "license": "Public Domain / zlib",
+        "url": "http://code.google.com/p/pgreloaded",
+        "packages": packages,
+        "package_dir": package_dir,
+        "package_data": package_data,
+        "classifiers": [
             "Development Status :: 4 - Beta",
             "Intended Audience :: Developers",
             "License :: Public Domain",
@@ -68,4 +67,4 @@ if __name__ == "__main__":
             "Topic :: Software Development :: Libraries :: Python Modules",
             ],
         }
-    setup (**setupdata)
+    setup(**setupdata)
