@@ -362,8 +362,9 @@ def size(font, s):
         raise TypeError("font must be a TTF_Font")
     w = ctypes.c_int(0)
     h = ctypes.c_int(0)
-    _check_int(dll.TTF_SizeUTF8(ctypes.byref(font), s.encode('utf-8'),
-                                ctypes.byref(w), ctypes.byref(h)))
+    s = s.encode('utf-8')
+    _check_int(dll.TTF_SizeUTF8(ctypes.byref(font), s, ctypes.byref(w),
+                                ctypes.byref(h)))
     return (w.value, h.value)
 
 
@@ -381,8 +382,8 @@ def render_solid(font, s, color):
         raise TypeError("font must be a TTF_Font")
     if not isinstance(color, SDL_Color):
         raise TypeError("color must be a SDL_Color")
-    return _check_ptr(dll.TTF_RenderUTF8_Solid(ctypes.byref(font),
-                                               s.encode("utf-8"), color))
+    s = s.encode("utf-8")
+    return _check_ptr(dll.TTF_RenderUTF8_Solid(ctypes.byref(font), s, color))
 
 
 @sdlttftype("TTF_RenderUTF8_Shaded", [TTF_Font_p, ctypes.c_char_p, SDL_Color,
@@ -402,8 +403,8 @@ def render_shaded(font, s, fg, bg):
         raise TypeError("fg must be a SDL_Color")
     if not isinstance(bg, SDL_Color):
         raise TypeError("bg must be a SDL_Color")
-    return _check_ptr(dll.TTF_RenderUTF8_Shaded(ctypes.byref(font),
-                                                s.encode("utf-8"), fg, bg))
+    s = s.encode("utf-8")
+    return _check_ptr(dll.TTF_RenderUTF8_Shaded(ctypes.byref(font), s, fg, bg))
 
 
 @sdlttftype("TTF_RenderUTF8_Blended", [TTF_Font_p, ctypes.c_char_p, SDL_Color],

@@ -18,7 +18,7 @@ PRESSED =  0x0002
 
 class Button(Sprite):
     """A Sprite object that can react on mouse events."""
-    def __init__(self, source=None, size=(0, 0), bpp=32):
+    def __init__(self, source=None, size=(0, 0), bpp=32, freesf=False):
         """Creates a new Button.
 
         If a source is provided, the constructor assumes it to be a
@@ -29,7 +29,7 @@ class Button(Sprite):
         height of the button and a bpp value, indicating the bits per
         pixel to be used, need to be provided.
         """
-        super(Button, self).__init__(source, size, bpp)
+        super(Button, self).__init__(source, size, bpp, freesf)
         self.state = RELEASED
         self.motion = EventHandler(self)
         self.pressed = EventHandler(self)
@@ -44,7 +44,7 @@ class Button(Sprite):
 
 class TextEntry(Sprite):
     """A Sprite object that can react on text input."""
-    def __init__(self, source=None, size=(0, 0), bpp=32):
+    def __init__(self, source=None, size=(0, 0), bpp=32, freesf=False):
         """Creates a new TextEntry.
 
         If a source is provided, the constructor assumes it to be a
@@ -55,7 +55,7 @@ class TextEntry(Sprite):
         height of the button and a bpp value, indicating the bits per
         pixel to be used, need to be provided.
         """
-        super(TextEntry, self).__init__(source, size, bpp)
+        super(TextEntry, self).__init__(source, size, bpp, freesf)
         self.text = ""
         self.motion = EventHandler(self)
         self.pressed = EventHandler(self)

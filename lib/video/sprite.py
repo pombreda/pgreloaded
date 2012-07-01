@@ -63,7 +63,7 @@ class SpriteRenderer(System):
 
 class Sprite(Component):
     """A simple, visible, pixel-based 2D object."""
-    def __init__(self, source=None, size=(0, 0), bpp=32):
+    def __init__(self, source=None, size=(0, 0), bpp=32, freesf=False):
         """Creates a new Sprite.
 
         If a source is provided, the constructor assumes it to be a
@@ -75,11 +75,11 @@ class Sprite(Component):
         pixel to be used, need to be provided.
         """
         super(Sprite, self).__init__()
-        self._createdsf = True
+        self._freesf = True
         if source is not None:
             if isinstance(source, video.SDL_Surface):
                 self.surface = source
-                self._createdsf = False
+                self._freesf = freesf
             elif type(source) is str:
                 if os.path.exists(source):
                     # Load from file
@@ -99,7 +99,8 @@ class Sprite(Component):
 
     def __del__(self):
         """Releases the bound SDL_Surface, if it was created by the Sprite."""
-        sdlsurface.free_surface(self.surface)
+        if self._freesf:
+            sdlsurface.free_surface(self.surface)
         self.surface = None
 
     @property
