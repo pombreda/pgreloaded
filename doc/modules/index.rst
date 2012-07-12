@@ -23,5 +23,6 @@ class, method or function, use the :ref:`genindex` or :ref:`search`.
    openal.rst
    resources.rst
    sdl.rst
+   sdlimage.rst
    video.rst
 
