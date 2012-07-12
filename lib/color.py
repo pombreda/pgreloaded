@@ -27,7 +27,7 @@ class Color(object):
         self._a = int(a)
 
     def __repr__(self):
-        return "Color (r=%d, g=%d, b=%d, a=%d)" % \
+        return "Color(r=%d, g=%d, b=%d, a=%d)" % \
             (self.r, self.g, self.b, self.a)
 
     def __copy__(self):

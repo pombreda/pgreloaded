@@ -35,10 +35,10 @@ define a new resource that keeps track of all ``data`` items. ::
     btn1image = appresources.get("button1.jpg")
     ...
 
-To access individual files, you do not need to concat paths the whole time and
-regardless of the current directory, your application operates on, you can
-access your resource files at any time through the :class:`Resources` instance,
-you created initially.
+To access individual files, you do not need to concat paths the whole
+time and regardless of the current directory, your application operates
+on, you can access your resource files at any time through the
+:class:`Resources` instance, you created initially.
 
 The :class:`Resources` class is also able to scan an index archived files,
 compressed via ZIP or TAR (gzip or bzip2 compression). ::

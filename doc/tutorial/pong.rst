@@ -50,19 +50,19 @@ integrated event processor, a new code fragment is introduced, though. ::
 
 The while loop above is the main event loop of our application. It deals
 with all kinds of input events that can occur when working with the
-window, such as mouse movements, key strokes, resizing operation and so
+window, such as mouse movements, key strokes, resizing operations and so
 on. SDL handles a lot for us when it comes to events, so all we need to
-do is to check, if there are any events, retrieve each event. one by
+do is to check, if there are any events, retrieve each event one by
 one, and handle it, if necessary. For now, we will just handle the
-``SDL_QUIT`` event, which is raised, if the window is closed.
+``SDL_QUIT`` event, which is raised when the window is closed.
 
-In any other case, we will just refresh the Window's graphics buffer, so
+In any other case we will just refresh the window's graphics buffer, so
 it is updated and visible on-screen.
 
 Adding the game world
 ---------------------
 
-The window is around and basically working. Now let's take care of
+The window is available and basically working. Now let's take care of
 creating the game world, which will manage the player paddles, ball,
 visible elements and anything else. We are going to use an
 implementation layout loosely based on a COP pattern, which separates
@@ -71,7 +71,7 @@ change or enhance functional parts easily without having to refactor all
 classes we are implementing.
 
 We start with creating the two player paddles and the rendering engine
-that will dislay them on the window. ::
+that will display them. ::
 
     [...]
 
@@ -117,11 +117,11 @@ that will dislay them on the window. ::
     if __name__ == "__main__":
         sys.exit(run())
 
-We start by enhancing the :class:`pygame2.video.SpriteRenderer` so that
-it will paint the whole window sceeen black on every drawing cycle,
+The first thing to do is to enhance the :class:`pygame2.video.SpriteRenderer`
+so that it will paint the whole window sceeen black on every drawing cycle,
 before drawing all sprites on the window.
 
-Afterwards, the player paddles will be implemented, based on a
+Afterwards, the player paddles will be implemented, based on an
 :class:`pygame2.ebs.Entity` data container. The player paddles are
 simple rectangular sprites that can be positioned anywhere on the
 window.
@@ -132,7 +132,7 @@ the renderer can live and operate.
 
 Within the main event loop, we allow the world to process all attached
 systems, which causes it to invoke the ``process()`` methods for all
-:class:`pygame2.ebs.System` instances added to the world.
+:class:`pygame2.ebs.System` instances added to it.
 
 Moving the ball
 ---------------
@@ -204,18 +204,17 @@ within the window boundaries. ::
 
         [...]
 
-We introduce two new things here, a ``Velocity`` and ``MovementSystem``
-class. The ``Velocity`` class is a simple data bag, which inherits from
+Two new classes are introduced here, ``Velocity`` and ``MovementSystem``.
+The ``Velocity`` class is a simple data bag, which inherits from
 :class:`pygame2.ebs.Component`. It does not contain any application
 logic, but consists of the relvant information to represent the movement
-in a certain direction. This allows us to mark certain in-game items as
-being able to move around or not.
+in a certain direction. This allows us to mark in-game items as being able to
+move around.
 
-The ``MovementSystem`` on the other hand actually takes care of moving
-the in-game items around by applying the velocity to their current
-position. Thus, we can simply enable any ``Player`` instance to be
-movable or not by adding or removing a velocity attribute to them, which
-is a ``Velocity`` component instance.
+The ``MovementSystem`` in turn takes care of moving the in-game items around
+by applying the velocity to their current position. Thus, we can simply enable
+any ``Player`` instance to be movable or not by adding or removing a
+velocity attribute to them, which is a ``Velocity`` component instance.
 
 .. note::
 
@@ -240,7 +239,7 @@ same :class:`pygame2.ebs.Entity`. Since we have a ball and two players
 currently available, it typically would loop over three tuples, two for
 the individual players and one for the ball.
 
-The :class:`pygame2.ebs.Applicator` thus enables us process combined
+The :class:`pygame2.ebs.Applicator` thus enables us to process combined
 data of our in-game items, without creating complex data structures.
 
 .. note::
@@ -250,10 +249,10 @@ data of our in-game items, without creating complex data structures.
    ``Velocity`` component, it would not be processed by the
    ``MovementSystem``.
 
-Why do we use this approach after all? The :class:`pygame2.video.Sprite`
-objects carry a position around, which defines the location at which
-they should be rendered, when processed by our ``Renderer``. If they
-should move around (a change in the position), we need to apply the
+Why do we use this approach? The :class:`pygame2.video.Sprite`
+objects carry a position, which defines the location at which
+they should be rendered, when processed by the ``Renderer``. If they
+should move around (which is a change in the position), we need to apply the
 velocity to them.
 
 We also define some more things within the ``MovementSystem``, such as a
@@ -269,9 +268,9 @@ need to implement the movement logic within the ``Ball`` and ``Player``
 class individually, since the basic movement is the same for all.
 
 The ball now moves and stays within the bounds, but once it hits the
-left side, it stay there. To make it *bouncy*, we need to add a simple
-collision system, which causes the ball to change its direction on
-colliding with the walls or the player paddles. ::
+left side, it will stay there. To make it *bouncy*, we need to add a
+simple collision system, which causes the ball to change its direction
+on colliding with the walls or the player paddles. ::
 
     [...]
     try:
@@ -335,7 +334,7 @@ colliding with the walls or the player paddles. ::
         sys.exit(run())
 
 The ``CollisionSystem`` only needs to take care of the ball and objects
-it collides with, since it is the only unpredictable object within our
+it collides with, since the ball is the only unpredictable object within our
 game world. The player paddles will only be able to move up and down
 within the visible window area and we already dealt with that within the
 ``MovementSystem`` code.
@@ -348,7 +347,6 @@ main loop, but instead add a short delay, using the
 :mod:`pygame2.sdl.timer` module. This reduces the overall load on the
 CPU and lets the game be a bit slower (with a maximum of 60 frames per
 second).
-
 
 Reacting on player input
 ------------------------
@@ -408,7 +406,7 @@ the paddle.
 Improved bouncing
 -----------------
 
-We have moving paddles and we have a ball that moves from one side to
+We have a moving paddle and we have a ball that bounces from one side to
 another, which makes the game quite boring. If you played Pong before,
 you know that most variations of it will cause the ball to bounce in a
 certain angle, if it collides with a paddle. Most of those
@@ -449,8 +447,8 @@ calculate an accurate angle and transform it ona x/y plane, we simply
 check, where the ball collided with the paddle and adjust the vertical
 velocity.
 
-If the ball now hits a paddle, it can be reflected in different angles,
-hitting the top and bottom window boundaries... and stays there. If it
+If the ball now hits a paddle, it can be reflected at different angles,
+hitting the top and bottom window boundaries... and will stay there. If it
 hits the window boundaries, it should be reflected, too, but not with a
 varying angle, but with the exact angle, it hit the boundary with.
 This means that we just need to invert the vertical velocity, once the
@@ -566,7 +564,7 @@ examples folder. However, there are some more things to do, such as
 
   * displaying the points made by each player
 
-It is your turn now tom implement these features. Go ahead, it is not as
+It is your turn now to implement these features. Go ahead, it is not as
 complex as it sounds.
 
   * you can reset the ball's position in the ``CollisionSystem`` code,
@@ -577,6 +575,9 @@ complex as it sounds.
     there (or write a small processor that keeps track of the ball only
     and processes only the ``PlayerData`` and ``video.Sprite`` objects
     of each player for adding points)
+    Alternatively, you could use the :class:`pygame2.event.EventHandler` class
+    to raise a score count function within the ``CollisionSystem``, if the
+    ball collides with one of the paddles.
 
   * write an own Renderer, based on :class:`pygame2.ebs.Applicator`,
     which takes care of position and sprite sets ::

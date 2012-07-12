@@ -1,6 +1,8 @@
 """General purpose event handling routines"""
 from pygame2.compat import *
 
+__all__ = ["EventHandler"]
+
 # _HASMP = True
 # try:
 #     from multiprocessing import Pool

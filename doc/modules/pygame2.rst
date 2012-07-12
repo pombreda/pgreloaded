@@ -32,7 +32,7 @@ explicit location, from which the DLLs to be used should be loaded.
    If a DLL could not be found in the set DLL path, pygame2 will
    use :func:`ctypes.util.find_library` to find the required library.
 
-.. function:: get_dll_path() -> str
+.. function:: get_dll_path() -> string
 
    Returns the path to the DLLs to be used. The path does not include
    any DLL but points to the location at which the DLLs are expected to

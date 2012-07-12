@@ -76,7 +76,7 @@ widths. ::
 Accessing data over multiple dimensions
 ---------------------------------------
 
-The second class, :class:`MemoryView` provides a interface to access
+The second class, :class:`MemoryView` provides an interface to access
 data over multiple dimensions. You hence can layout and access a simple
 byte stream over e.g. two or more axes, providing a greater flexibility
 for functional operations and complex data.
@@ -148,7 +148,7 @@ to the image graphics. ::
 Array API
 ---------
 
-.. class:: CTypesView(obj : iterable[, itemsize=1[, docopy=False]])
+.. class:: CTypesView(obj : iterable[, itemsize=1[, docopy=False[, objsize=None]]])
 
    A proxy class for byte-wise accessible data types to be used in
    ctypes bindings. The CTypesView provides a read-write access to
@@ -161,7 +161,9 @@ Array API
 
    Depending on the item type stored in the iterable object, you might
    need to provide a certain ``itemsize``, which denotes the size per
-   item in bytes.
+   item in bytes. The ``objsize`` argument might be necessary of iterables,
+   for which len() does not return the correct amount of objects or is not
+   implemented.
 
    .. attribute:: bytesize
 
@@ -255,15 +257,6 @@ Array API
 
       A tuple defining the length in bytes for accessing all
       elements in each dimension of the :class:`MemoryView`.
-
-.. function:: to_bytes(dataseq : iterable, dtype) -> data, int
-
-   Converts an arbitrary sequence to a ctypes array of the specified
-   type and returns the ctypes array and amount of items as two-value
-   tuple.
-
-   Raises a :exc:`TypeError`, if one or more elements in the passed
-   sequence do not match the passed type.
 
 .. function:: to_list(dataseq : iterable) -> list
 

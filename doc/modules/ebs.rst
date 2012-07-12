@@ -12,6 +12,11 @@ are separately stored. For each individual component type a processing
 system will take care of all necessary updates for the World
 environment.
 
+Component-based patterns
+------------------------
+
+TODO
+
 .. class:: Component()
 
    Data object for entities.
@@ -52,32 +57,32 @@ environment.
 
       A tuple of :class:`Component` based class identifiers that shall
       be processed by the :class:`Applicator`.
-      
+
    .. process(world : World, componentsets : iterable)
-   
+
       Processes tuples of :class:`Component` items. ``componentsets`` will
       contain :class:`Component` tuples, that match the :attr:`componenttypes`
       of the :class:`Applicator`. If, for example, the :class:`Applicator`
       is defined as ::
-      
+
         class MyApplicator(Applicator):
             def __init__(self):
                 self.componenttypes = (Foo, Bar)
 
       its process method will receive ``(Foo, Bar)`` tuples ::
-      
+
             def process(self, world, componentsets):
                 for foo_item, bar_item in componentsets:
                     ...
-   
+
       Additionally, the :class:`Applicator` will not process all possible
       combinations of valid components, but only those, which are associated
       with the same :class:`Entity`. That said, an :class:`Entity` *must*
       contain a ``Foo`` as well as a ``Bar`` :class:`Component` in order to
       have them both processed by the :class:`Applicator` (while a
-      :class:`System` with the same ``componenttypes`` would pick either of 
+      :class:`System` with the same ``componenttypes`` would pick either of
       them, depending on their availability).
-      
+
 .. class:: System()
 
    A processing system within an application world consumes the

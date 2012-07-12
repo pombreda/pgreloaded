@@ -170,15 +170,13 @@ SDL_AudioCVT._fields_ = [("_needed", ctypes.c_int),
 
 @sdltype("SDL_GetNumAudioDrivers", None, ctypes.c_int)
 def get_num_audio_drivers():
-    """Gets the numver of built in audio drivers.
-    """
+    """Gets the number of built in audio drivers."""
     return dll.SDL_GetNumAudioDrivers()
 
 
 @sdltype("SDL_GetAudioDriver", [ctypes.c_int], ctypes.c_char_p)
 def get_audio_driver(index):
-    """Gets the name of a specific audio driver.
-    """
+    """Gets the name of a specific audio driver."""
     if type(index) is not int:
         raise TypeError("index must be an int")
     retval = dll.SDL_GetAudioDriver(index)
@@ -189,9 +187,9 @@ def get_audio_driver(index):
 
 @sdltype("SDL_AudioInit", [ctypes.c_char_p], ctypes.c_int)
 def audio_init(drivername):
-    """Initializes the SDL audio subsystem  with the passed driver.
+    """Initializes the SDL audio subsystem with the passed driver.
 
-    NOTE: Do not use init() - those might lead to SIGSEGV crashes - use
+    NOTE: Do not use audio_init() - this might lead to SIGSEGV crashes - use
     the SDL_AUDIODRIVER environment variable before calling
     pygame2.sdl.init_subsystem() instead.
     """
@@ -205,7 +203,7 @@ def audio_init(drivername):
 def audio_quit():
     """Quits the SDL audio subsystem.
 
-    NOTE: Do not use quit() - this might lead to inconsistent internal
+    NOTE: Do not use audio_quit() - this might lead to inconsistent internal
     SDL2 states - use pygame2.sdl.quit_subsystem() instead.
     """
     dll.SDL_AudioQuit()
@@ -213,8 +211,7 @@ def audio_quit():
 
 @sdltype("SDL_GetCurrentAudioDriver", None, ctypes.c_char_p)
 def get_current_audio_driver():
-    """Gets the currently used audio driver.
-    """
+    """Gets the currently used audio driver."""
     retval = dll.SDL_GetCurrentAudioDriver()
     if retval is None or not bool(retval):
         return None

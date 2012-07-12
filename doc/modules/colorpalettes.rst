@@ -1,11 +1,11 @@
+.. module:: pygame2.colorpalettes
+   :synopsis: Predefined sets of colors.
+
 :mod:`pygame2.colorpalettes` - predefined sets of colors
 ========================================================
 
 Indexed color palettes. Each palette is a tuple of
-:class:`pygame2.color.Color`.
-
-.. module:: pygame2.colorpalettes
-   :synopsis: Predefined sets of colors.
+:class:`pygame2.color.Color` objects.
 
 The following palettes are currently available:
 

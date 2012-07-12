@@ -11,11 +11,15 @@ class, method or function, use the :ref:`genindex` or :ref:`search`.
 
    pygame2.rst
    array.rst
+   audio.rst
    color.rst
    colorpalettes.rst
+   compat.rst
+   components.rst
    dll.rst
    ebs.rst
    events.rst
+   font.rst
    openal.rst
    resources.rst
    sdl.rst

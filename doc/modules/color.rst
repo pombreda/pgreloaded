@@ -90,6 +90,8 @@
    returned to the caller. If none succeeds, a :exc:`ValueError` will be
    raised.
 
+   If the color is an integer value, it is assumed to be in ARGB layout.
+
 .. function:: rgba_to_color(v : int) -> Color
               RGBA(v : int) -> Color
 

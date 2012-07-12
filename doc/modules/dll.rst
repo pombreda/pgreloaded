@@ -8,10 +8,14 @@ The :mod:`pygame2.dll` module is not intended for consumers of
 Pygame2. It is a helper module for loading the 3rd party libraries used by
 Pygame2.
 
-.. class:: DLL(libname : string)
+.. class:: DLL(libinfo : string, libnames : string or dict)
 
    Function wrapper around the different DLL functions. Do not use or
    instantiate this one directly from your user code.
+
+   .. attribute:: libfile
+
+      Gets the filename of the loaded library.
 
    .. method:: add_function(name : string, func : function)
 
