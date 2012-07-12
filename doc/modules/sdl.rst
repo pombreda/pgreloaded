@@ -120,7 +120,7 @@ SDL2 API
 
    This wraps :c:func:`SDL_ClearError()`.
 
-.. class:: SDLError(msg=None)
+.. exception:: SDLError(msg=None)
 
    A SDL specific exception class. If no msg is provided, the message
    will be set to the value of :func:`get_error()`.

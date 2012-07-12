@@ -73,7 +73,9 @@ _FASTERROR = lambda dev: _ERRMAP[dll.alcGetError(ctypes.byref(dev))]
 
 @openaltype("alcGetError", [ctypes.POINTER(ALCdevice)], ctypes.c_int)
 def get_error(device):
-    """Gets the most recent error generated within the AL system."""
+    """Gets the most recent error generated within the AL system for the
+    specific device.
+    """
     if not isinstance(device, ALCdevice):
         raise TypeError("device must be a ALCdevice")
     return dll.alcGetError(ctypes.byref(device))
@@ -103,7 +105,7 @@ def make_context_current(context):
     """Makes the specified context the current context."""
     if not isinstance(context, ALCcontext):
         raise TypeError("context must be a ALCcontext")
-    return dll.alcMakeContextCurrent(ctypes.byref(context))
+    return dll.alcMakeContextCurrent(ctypes.byref(context)) == ALC_TRUE
 
 
 @openaltype("alcProcessContext", [ctypes.POINTER(ALCcontext)], None)
@@ -271,7 +273,7 @@ def capture_start(device):
 
 @openaltype("alcCaptureStop", [ctypes.POINTER(ALCdevice)], None)
 def capture_stop(device):
-    """Stops a capturing operation"""
+    """Stops a capturing operation."""
     if not isinstance(device, ALCdevice):
         raise TypeError("device must be a ALCdevice")
     dll.alcCaptureStop(ctypes.byref(device))

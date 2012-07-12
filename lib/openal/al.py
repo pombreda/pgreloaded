@@ -238,7 +238,7 @@ def get_boolean(param):
     """Returns an OpenAL boolean state."""
     val = dll.alGetBoolean(param)
     _raise_error_or_continue()
-    return val
+    return val == AL_TRUE
 
 
 @openaltype("alGetInteger", [ctypes.c_int], ctypes.c_int)
@@ -506,7 +506,7 @@ def get_source_f(sid, param):
                               ctypes.POINTER(ctypes.c_float)], None)
 def get_source_3f(sid, param):
     """Gets a floating point property of a source and returns it as
-    tuple.  """
+    tuple."""
     val1 = ctypes.c_float(0)
     val2 = ctypes.c_float(0)
     val3 = ctypes.c_float(0)
@@ -574,7 +574,7 @@ def source_play_v(sids):
 @openaltype("alSourceStopv", [ctypes.c_int, ctypes.POINTER(ctypes.c_uint)],
             None)
 def source_stop_v(sids):
-    """Stops a set of sources.O"""
+    """Stops a set of sources."""
     sids, size = array.to_ctypes(sids)
     ptr = ctypes.cast(sids, ctypes.POINTER(ctypes.c_uint))
     dll.alSourceStopv(size, ptr)
@@ -646,7 +646,7 @@ def source_queue_buffers(sid, bids):
 @openaltype("alSourceUnqueueBuffers", [ctypes.c_uint, ctypes.c_int,
                                        ctypes.POINTER(ctypes.c_uint)], None)
 def source_unqueue_buffers(sid, bids):
-    """Unqueues a set off buffers attached to a source."""
+    """Unqueues a set of buffers attached to a source."""
     bufs, size = array.to_ctypes(bids, ctypes.c_uint)
     dll.alSourceUnqueueBuffers(sid, size, bufs)
     _raise_error_or_continue()
@@ -683,9 +683,9 @@ def is_buffer(bid):
                              ctypes.POINTER(ctypes.c_ubyte), ctypes.c_int,
                              ctypes.c_int], None)
 def buffer_data(bid, bformat, data, freq):
-    """Fille a buffer with audio data.
+    """Fill a buffer with audio data.
 
-    The predefined formats expect tha data to be valid PCM data,
+    The predefined formats expect the data to be valid PCM data,
     extension functions might load other data types as well."""
     datap = data
     size = len(data)
@@ -831,13 +831,13 @@ def doppler_velocity(value):
     """Sets the speed of sound to be used in Doppler calculations.
 
     NOTE: this is a legacy function from OpenAL 1.0 and should not be
-    used anymore. Use speed_of_source() instead.
+    used anymore. Use speed_of_sound() instead.
     """
     dll.alDopplerVelocity(value)
 
 
 @openaltype("alSpeedOfSound", [ctypes.c_float], None)
-def speed_of_source(value):
+def speed_of_sound(value):
     """Sets the speed of sound to be used in Doppler calculuations."""
     dll.alSpeedOfSound(value)
 

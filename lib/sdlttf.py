@@ -71,7 +71,7 @@ TTF_HINTING_NONE   = 3
 
 @sdlttftype("TTF_Init", None, ctypes.c_int)
 def init():
-    """ Initializes the SDL2_ttf library. """
+    """Initializes the SDL2_ttf library."""
     return _check_int(dll.TTF_Init())
 
 

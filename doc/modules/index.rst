@@ -20,9 +20,10 @@ class, method or function, use the :ref:`genindex` or :ref:`search`.
    ebs.rst
    events.rst
    font.rst
+   ogg.rst
    openal.rst
    resources.rst
    sdl.rst
    sdlimage.rst
+   sdlttf.rst
    video.rst
-
