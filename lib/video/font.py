@@ -3,6 +3,7 @@ import os
 import pygame2.sdl.surface as sdlsurface
 from . import sprite
 
+__all__ = ["BitmapFont"]
 
 class BitmapFont(object):
     """A bitmap graphics to character mapping.

@@ -34,7 +34,7 @@ def fill(target, color, area=None):
     the passed color. If an iterable item is provided as area (such as a list
     or tuple), it will be first checked, if the item denotes a single
     rectangular area (4 integer values) before assuming it to be a sequence
-    of rectangular areas
+    of rectangular areas.
     """
     color = prepare_color(color, target)
     rtarget = None

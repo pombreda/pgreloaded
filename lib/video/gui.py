@@ -8,7 +8,9 @@ import pygame2.sdl.events as events
 import pygame2.sdl.mouse as mouse
 import pygame2.sdl.keyboard as keyboard
 
-__all__ = ["Button", "TextEntry", "UIProcessor"]
+__all__ = ["RELEASED", "HOVERED", "PRESSED", "Button", "TextEntry",
+           "UIControl", "UIProcessor"
+           ]
 
 
 RELEASED = 0x0000
@@ -17,7 +19,7 @@ PRESSED =  0x0002
 
 
 class Button(Sprite):
-    """A Sprite object that can react on mouse events."""
+    """An Sprite object that can react on mouse events."""
     def __init__(self, source=None, size=(0, 0), bpp=32, freesf=False):
         """Creates a new Button.
 
@@ -43,7 +45,7 @@ class Button(Sprite):
 
 
 class TextEntry(Sprite):
-    """A Sprite object that can react on text input."""
+    """An Sprite object that can react on text input."""
     def __init__(self, source=None, size=(0, 0), bpp=32, freesf=False):
         """Creates a new TextEntry.
 
@@ -152,7 +154,9 @@ class UIProcessor(System):
         If the button press position is not within the area of the
         component, nothing will be done. In case the component is a
         Button, its state will be adjusted to reflect, if it is
-        currently pressed or not.
+        currently pressed or not. In case the component is a TextEntry and
+        the pressed button is the primary mouse button, the component will
+        be marked as the next control to activate for text input.
         """
         x1, y1, x2, y2 = component.area
         if event.button.x >= x1 and event.button.x < x2 and \

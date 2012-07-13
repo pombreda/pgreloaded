@@ -61,8 +61,7 @@ SDL2 API
    * ``SDL_INIT_JOYSTICK`` - Initializes the joystick module
    * ``SDL_INIT_HAPTIC`` - Initializes force-feedback support for joysticks
    * ``SDL_INIT_EVERYTHING`` - Initializes all modules from above
-   * ``SDL_INIT_NOPARACHUTE`` - Deactivates the interrupt wrappers (e.g. for
-      SIGINT, SIGSEGV, etc.)
+   * ``SDL_INIT_NOPARACHUTE`` - Deactivates the interrupt wrappers (e.g. for SIGINT, SIGSEGV, etc.)
 
    This wraps :c:func:`SDL_Init()`.
 
