@@ -30,7 +30,7 @@ Device handling
 To actually play back sound or to stream sound to a third-party system (e.g.
 a sound server or file), an audio output device needs to be opened. It usually
 allows the software to access the audio hardware via the operating system, so
-that audio data can be recorded or played back.
+that audio data can be recorded or played back. ::
 
    >>> sink = SoundSink()        # Open the default audio output device
    >>> sink = SoundSink("oss")   # Open the OSS audio output device
@@ -43,10 +43,67 @@ that audio data can be recorded or played back.
    have, one might use a specific audio output device to be passed as argument
    to the :class:`SoundSink` constructor.
 
+It is possible to create multiple :class:`SoundSink` instances for the same
+device. OpenAL specifies an additional device-dependent execution context,
+so that multiple contexts (with e.g. different settings) can be used on one
+device. Likewise, multiple :class:`SoundSink` objects can use the same device,
+while each of them uses its own execution context.
+
+.. note::
+
+   Several OpenAL functions perform context-specific operations. If you mix
+   function calls from :mod:`pygame2.openal` with the :mod:`pygame2.audio`
+   module, you should ensure that the correct :class:`SoundSink` is activated
+   via :meth:`SoundSink.activate()`.
+
 Placing the listener
 --------------------
 
-OpenAL only knows about a single listener at each time.
+OpenAL only knows about a single listener at each time. Each
+:class:`SoundSink` can manage its own listener, which represents the user or
+in-application avatar. As such, it represents the 'pick-up' point of sounds.
+
+Placing and moving the listener (as well as sound sources in OpenAL) is done
+in a RHS coordinate system. That said, the horizontal extent of your monitor
+represents the x-axis, the vertical the y-axis and the visual line between
+your eyes and the monitor surface reprensents the z-axis.
+
+.. image:: images/coordinate_rhs.png
+
+It is crucial to understand how placing and moving sound sources and the
+listener will influence the audio experience. By default, the listener
+for each individual :class:`SoundSink` is placed at the center of the
+coordinate system, ``(0, 0, 0)``. It does not move and looks along the
+z-axis "into" the monitor (most likely the same direction you are
+looking at right now).  ::
+
+   >>> listener = SoundListener()
+   >>> listener.position = (0, 0, 0)
+   >>> listener.velocity = (0, 0, 0)
+   >>> listener.orientation = (0, 0, -1, 0, 1, 0)
+   ...
+
+.. image:: images/listener_default.png
+
+While the :attr:`SoundListener.position` and
+:attr:`SoundListener.velocity` are quite obvious in their doing, namely
+giving the listener a (initial) position and movement,
+:attr:`SoundListener.orientation` denotes the direction the listener
+"looks at". The orientation consists of two components, the general
+direction the listener is headed at and rotation. Both are expressed as
+3-value tuples for the x-, y- and z-axis of the coordinate system.
+
+   >>> listener.orientation = (0, 0, -1, 0, 1, 0)
+   >>> #                       ^^^^^^^^  ^^^^^^^
+   >>> #                       direction rotation
+
+Changing the first 3 values will influence the direction, the listener
+looks at.
+
+   >>> listener.orientation = (1, 0, 1, 0, 1, 0)
+
+.. image:: images/listener_xz.png
+
 
 
 Creating sound sources
@@ -129,7 +186,9 @@ Audio API
    .. attribute:: orientation
 
       The forward (in which direction does the listener look) orientation of
-      the listener as 4-value tuple within a x-y-z coordinate system.
+      the listener as 6-value tuple within a x-y-z coordinate system. The first
+      three values denote the forward vector of the listener, vlaue four to six
+      denote the upper orientation vector.
 
 
 .. class:: SoundSource()

@@ -35,11 +35,12 @@ SOURCE_REWIND = 0x09
 
 class SoundListener(Component):
     """A simple sound listener."""
-    def __init__(self):
+    def __init__(self, position=(0,0,0), velocity=(0,0,0),
+                 orientation=(0, 0, -1, 0, 1, 0)):
         super(SoundListener, self).__init__()
-        self.position = (0, 0, 0)
-        self.velocity = (0, 0, 0)
-        self.orientation = (0, 0, 1, 0, 1, 0)
+        self.position = position
+        self.velocity = velocity
+        self.orientation = orientation
 
 
 class SoundData(Component):
