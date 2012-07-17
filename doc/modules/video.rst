@@ -5,10 +5,14 @@
 ==================================================
 
 The :mod:`pygame2.video` module contains various classes and methods
-for developing 
+for creating, processing and manipulating on-screen graphics.
+
 
 Submodules
 ----------
+
+All classes and methods of the modules below are directly included in
+the :mod:`pygame2.video` module.
 
 .. toctree::
    :maxdepth: 1
@@ -24,7 +28,7 @@ Video API
 
 .. function:: init() -> None
 
-   Initializes the underlying SDL2 video subsystem. Raises a 
+   Initializes the underlying SDL2 video subsystem. Raises a
    :exc:`pygame2.sdl.SDLError`, if the SDL2 video subsystem could not be
    initialised.
 
@@ -36,9 +40,9 @@ Video API
 .. class:: TestEventProcessor()
 
    A simple event processor for testing purposes.
-   
+
    .. method:: run(window : Window) -> None
-   
+
       Starts an event loop without actually processing any event. The method
       will run endlessly until a ``SDL_QUIT`` event occurs.
-     
+

@@ -57,6 +57,10 @@ def run():
     video.fill(entry, GREY)
     entry.position = 50, 200
 
+    checkbutton = video.CheckButton(size=(100, 100))
+    video.fill(checkbutton, WHITE)
+    checkbutton.position = 200, 50
+
     # Bind some actions to the button's event handlers. Whenever a click
     # (combination of a mouse button press and mouse button release), the
     # onclick() function will be called.
@@ -74,8 +78,6 @@ def run():
     # Since buttons are sprites, we can use the SpriteRenderer class, we
     # learned about in helloworld.py, to draw the button on the Window
     renderer = video.SpriteRenderer(window)
-    renderer.render(button)
-    renderer.render(entry)
 
     #
     #
@@ -87,7 +89,14 @@ def run():
             continue
         if event.type == sdlevents.SDL_QUIT:
             break
-        uiprocessor.dispatch([button, entry], event)
+        if checkbutton.checked:
+            video.fill(checkbutton, GREY)
+        else:
+            video.fill(checkbutton, WHITE)
+        uiprocessor.dispatch([button, checkbutton, entry], event)
+        renderer.render(button)
+        renderer.render(entry)
+        renderer.render(checkbutton)
         window.refresh()
 
     video.quit()

@@ -23,10 +23,11 @@ Version information
 Setting the DLL path
 --------------------
 
-Various :mod:`pygame2` modules, such as TODO utilise :mod:`ctypes` to
-interact with specific 3rd party libraries. Since system configurations
-and distribution policies can vary, it might be necessary to provide an
-explicit location, from which the DLLs to be used should be loaded.
+Various :mod:`pygame2` modules, such as :mod:`pygame2.sdl` utilise
+:mod:`ctypes` to interact with specific 3rd party libraries. Since
+system configurations and distribution policies can vary, it might be
+necessary to provide an explicit location, from which the DLLs to be
+used should be loaded.
 
 .. note::
    If a DLL could not be found in the set DLL path, pygame2 will
@@ -43,7 +44,7 @@ explicit location, from which the DLLs to be used should be loaded.
       systems will be installed by default. The DLLs are mostly standard
       builds of the open-source libraries, which are used by pygame2 and
       not optimised in any way.
-      
+
       On Win32 platforms the DLL path is automatically set to the
       **dll** folder of pygame2, so that the DLLs within that folder are
       used ina first place. If you want to ship your own DLLs or rely on
@@ -53,7 +54,7 @@ explicit location, from which the DLLs to be used should be loaded.
         *before* loading any other package or module *or*
       * remove the DLLs from the **dll** folder before distributing your
         application
-      
+
 .. function:: set_dll_path(path) -> None
 
    Sets the path to the DLLs to be used.

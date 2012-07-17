@@ -126,7 +126,7 @@ element. ::
     <type 'bytearray'>
 
 A :class:`MemoryView` features, similar to Python's builtin
-:class:`memoryview` dimensions and strides, accessible via the
+:class:`memoryview`, dimensions and strides, accessible via the
 :attr:`MemoryView.ndim` and :attr:`MemoryView.strides` attributes.
 
     >>> view.ndim
@@ -144,7 +144,6 @@ to the image graphics. ::
     [[sX, me,  1, Xb, yt], [eX, gr, ap, Xi, cs]]
 
 
-
 Array API
 ---------
 
@@ -160,8 +159,8 @@ Array API
    operations have been performed.
 
    Depending on the item type stored in the iterable object, you might
-   need to provide a certain ``itemsize``, which denotes the size per
-   item in bytes. The ``objsize`` argument might be necessary of iterables,
+   need to provide a certain *itemsize*, which denotes the size per
+   item in bytes. The *objsize* argument might be necessary of iterables,
    for which len() does not return the correct amount of objects or is not
    implemented.
 
@@ -218,11 +217,11 @@ Array API
    The :class:`MemoryView` provides a read-write access to arbitrary
    data objects, which can be indexed.
 
-   ``itemsize`` denotes the size of a single item. ``strides`` defines
-   the dimensions and the length (n items * ``itemsize``) for each
-   dimension. ``getfunc`` and ``setfunc`` are optional parameters to
+   *itemsize* denotes the size of a single item. *strides* defines
+   the dimensions and the length (n items * *itemsize*) for each
+   dimension. *getfunc* and *setfunc* are optional parameters to
    provide specialised read and write access to the underlying
-   ``source``. ``srcsize`` can be used to provide the correct source
+   *source*. *srcsize* can be used to provide the correct source
    size, if ``len(source)`` does not return the absolute size of the
    source object in all dimensions.
 

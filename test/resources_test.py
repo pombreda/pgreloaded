@@ -96,7 +96,7 @@ class ResourcesTest(unittest.TestCase):
         tfile = os.path.join(fpath, "invalid")
         urlpath = "file:%s" % p2url(tfile)
         self.assertRaises(urllib2.URLError, resources.open_url, urlpath)
-        
+
     def test_Resources(self):
         self.assertRaises(ValueError, resources.Resources, "invalid")
 
@@ -108,6 +108,14 @@ class ResourcesTest(unittest.TestCase):
         res = resources.Resources(fpath)
         self.assertIsNotNone(res.get("rwopstest.txt"))
         self.assertIsNotNone(res.get("surfacetest.bmp"))
+
+        res2 = resources.Resources(__file__)
+        self.assertIsNotNone(res2.get("rwopstest.txt"))
+        self.assertIsNotNone(res2.get("surfacetest.bmp"))
+
+        res3 = resources.Resources(__file__, "resources")
+        self.assertIsNotNone(res3.get("rwopstest.txt"))
+        self.assertIsNotNone(res3.get("surfacetest.bmp"))
 
     def test_Resources_add(self):
         fpath = os.path.join(os.path.dirname(__file__), "resources")
@@ -228,8 +236,14 @@ class ResourcesTest(unittest.TestCase):
         self.assertIsNotNone(res.get("surfacetest.bmp"))
 
         self.assertRaises(ValueError, res.scan, "invalid")
+        self.assertRaises(ValueError, res.scan, fpath, "invalid")
         self.assertRaises(Exception, res.scan, None)
         self.assertRaises(Exception, res.scan, 12345)
+
+        res = resources.Resources()
+        res.scan(fpath, "resources")
+        self.assertIsNotNone(res.get("rwopstest.txt"))
+        self.assertIsNotNone(res.get("surfacetest.bmp"))
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

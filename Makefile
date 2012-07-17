@@ -44,7 +44,7 @@ clean:
 	@echo "Cleaning up in $(top_srcdir)/ ..."
 	@rm -f *.cache *.core *~ MANIFEST *.pyc *.orig
 	@rm -rf __pycache__
-	@rm -rf build dist
+	@rm -rf build dist doc/html
 
 	@for dir in $(SUBDIRS); do \
 		if test -f $$dir/Makefile; then \
@@ -105,5 +105,5 @@ purge_installs:
 	rm -rf /usr/local/lib/python2.7/site-packages/pygame2*
 	rm -rf /usr/local/lib/python3.1/site-packages/pygame2*
 	rm -rf /usr/local/lib/python3.2/site-packages/pygame2*
-	rm -rf /usr/local/pypy-1.9/site-packages/pygame2*
+	rm -rf /usr/local/lib/pypy-1.9/site-packages/pygame2*
 

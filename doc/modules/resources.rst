@@ -67,7 +67,7 @@ a :class:`BytesIO` stream, containing the file data, for further processing.
    more examples
 
 
-.. class:: Resources([path=None[, excludepattern=None]])
+.. class:: Resources([path=None[, subdir=None[, excludepattern=None]]])
 
    The Resources class manages a set of file resources and eases
    accessing them by using relative paths, scanning archives
@@ -118,14 +118,20 @@ a :class:`BytesIO` stream, containing the file data, for further processing.
 
       Raises a :exc:`KeyError`, if the ``filename`` could not be found.
 
-   .. method:: scan(path : string[, excludepattern=None])
+   .. method:: scan(path : string[, subdir=None[, excludepattern=None])
 
       Scans a path and adds all found files to the resource
       container. If a file within the path is a supported archive (ZIP
       or TAR), its contents will be indexed aut added automatically.
 
-      ``excludepattern`` can be a regular expression to skip directories,
-      which match the pattern.
+      The method will consider the directory part (``os.path.dirname``)
+      of the provided *path* as path to scan, if the path is not a
+      directory. If *subdir* is provided, it will be appended to the
+      path and used as starting point for adding files to the resource
+      container.
+
+      ``excludepattern`` can be a regular expression to skip
+      directories, which match the pattern.
 
 .. function:: open_tarfile(archive : string, filename : string \
                            [, directory=None[, ftype=None]]) -> BytesIO

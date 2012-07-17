@@ -8,8 +8,9 @@ import pygame2.sdl.events as events
 import pygame2.sdl.mouse as mouse
 import pygame2.sdl.keyboard as keyboard
 
-__all__ = ["RELEASED", "HOVERED", "PRESSED", "Button", "TextEntry",
-           "UIControl", "UIProcessor"
+__all__ = ["RELEASED", "HOVERED", "PRESSED",
+           "CheckButton", "Button", "TextEntry",
+           "UIProcessor"
            ]
 
 
@@ -19,7 +20,7 @@ PRESSED =  0x0002
 
 
 class Button(Sprite):
-    """An Sprite object that can react on mouse events."""
+    """A Sprite object that can react on mouse events."""
     def __init__(self, source=None, size=(0, 0), bpp=32, freesf=False):
         """Creates a new Button.
 
@@ -44,8 +45,25 @@ class Button(Sprite):
             }
 
 
+class CheckButton(Button):
+    """A specialised Button that retains its state."""
+    def __init__(self, source=None, size=(0, 0), bpp=32, freesf=False):
+        """Creates a new CheckButton.
+
+        If a source is provided, the constructor assumes it to be a
+        readable buffer object or file path to load the pixel data from.
+        The size and bpp will be ignored in those cases.
+
+        If no source is provided, a size tuple containing the width and
+        height of the button and a bpp value, indicating the bits per
+        pixel to be used, need to be provided.
+        """
+        super(CheckButton, self).__init__(source, size, bpp, freesf)
+        self.checked = False
+
+
 class TextEntry(Sprite):
-    """An Sprite object that can react on text input."""
+    """A Sprite object that can react on text input."""
     def __init__(self, source=None, size=(0, 0), bpp=32, freesf=False):
         """Creates a new TextEntry.
 
@@ -165,6 +183,9 @@ class UIProcessor(System):
             component.events[event.type](event)
             if isinstance(component, Button):
                 component.state = PRESSED | HOVERED
+                if isinstance(component, CheckButton):
+                    if event.button.button == mouse.SDL_BUTTON_LEFT:
+                        component.checked = not component.checked
             elif isinstance(component, TextEntry):
                 if event.button.button == mouse.SDL_BUTTON_LEFT:
                     # Since we loop over all components, and might deactivate

@@ -127,15 +127,16 @@ class Resources(object):
     accessing them by using relative paths, scanning archives
     automatically and so on.
     """
-    def __init__(self, path=None, excludepattern=None):
+    def __init__(self, path=None, subdir=None, excludepattern=None):
         """Creates a new resource container instance.
 
-        If path is provided, the resource container will scan the path and add
-        all found files to itself by invokding scan(path, excludepattern).
+        If path is provided, the resource container will scan the path
+        and add all found files to itself by invoking
+        scan(path, subdir, excludepattern).
         """
         self.files = {}
         if path:
-            self.scan(path, excludepattern)
+            self.scan(path, subdir, excludepattern)
 
     def _scanzip(self, filename):
         """Scans the passed ZIP archive and indexes all the files
@@ -279,13 +280,19 @@ class Resources(object):
             return '%s@%s' % (pathname, archive)
         return pathname
 
-    def scan(self, path, excludepattern=None):
-        """Scans a path and adds all found files to the Resource
+    def scan(self, path, subdir=None, excludepattern=None):
+        """Scans a path and adds all found files to the Resources
         container.
 
-        Scans a path and adds all found files to the Resource
+        Scans a path and adds all found files to the Resources
         container. If a file is a supported (ZIP or TAR) archive, its
         contents will be indexed and added automatically.
+
+        The method will consider the directory part (os.path.dirname) of
+        the provided path as path to scan, if the path is not a
+        directory. If subdir is provided, it will be appended to the
+        path and used as starting point for adding files to the
+        Resources container.
 
         excludepattern can be a regular expression to skip directories, which
         match the pattern.
@@ -296,7 +303,11 @@ class Resources(object):
         join = os.path.join
         add = self.add
         abspath = os.path.abspath(path)
-        if not os.path.exists(path) or not os.path.isdir(path):
+        if not os.path.isdir(abspath):
+            abspath = os.path.dirname(abspath)
+        if subdir is not None:
+            abspath = os.path.join(abspath, subdir)
+        if not os.path.exists(abspath):
             raise ValueError("invalid path")
         for (pdir, dirnames, filenames) in os.walk(abspath):
             if match and match(pdir) is not None:

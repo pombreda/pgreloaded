@@ -1,5 +1,6 @@
 .. module:: pygame2.video.draw
    :synopsis: 2D drawing routines
+.. currentmodule:: pygame2.video
 
 :mod:`pygame2.video.draw` - 2D drawing routines
 ===============================================
@@ -11,8 +12,8 @@
    :func:`pygame2.color.convert_to_color()`. *target* can be any
    :class:`pygame2.sdl.pixels.SDL_PixelFormat`,
    :class:`pygame2.sdl.surface.SDL_Surface` or
-   :class:`pygame2.video.sprite.Sprite` instance.
-   
+   :class:`Sprite` instance.
+
    The returned integer will be a color value matching the target's pixel
    format.
 
@@ -28,10 +29,10 @@
 .. class:: PixelView(source : object)
 
    2D :class:`pygame2.array.MemoryView` for
-   :class:`pygame2.video.sprite.Sprite` and surface pixel access.
-   
-   .. note:: 
-      
+   :class:`Sprite` and surface pixel access.
+
+   .. note::
+
       If necessary, the *source* surrface will be locked for accessing its
       pixel data. The lock will be removed once the :class:`PixelView` is
       garbage-collected or deleted.

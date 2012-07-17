@@ -1,5 +1,6 @@
 .. module:: pygame2.video.font
    :synopsis: text rendering routines
+.. currentmodule:: pygame2.video
 
 :mod:`pygame2.video.font` - text rendering routines
 ===================================================

@@ -18,7 +18,11 @@ The OpenAL standard supports 3D positional audio, so that a source of sound
 can be placed anywhere relative to the listener (the user of the application
 or some in-application avatar).
 
-TODO: insert graphics
+.. image:: images/openalaudio.png
+
+The image above shows a listener surrounded by three sources of
+sound. Two are in front of them, while one is behind the listener,
+moving from left to right.
 
 Device handling
 ---------------
@@ -42,7 +46,7 @@ that audio data can be recorded or played back.
 Placing the listener
 --------------------
 
-TODO
+OpenAL only knows about a single listener at each time.
 
 
 Creating sound sources
