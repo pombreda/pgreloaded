@@ -41,12 +41,15 @@ on, you can access your resource files at any time through the
 :class:`Resources` instance, you created initially.
 
 The :class:`Resources` class is also able to scan an index archived files,
-compressed via ZIP or TAR (gzip or bzip2 compression). ::
+compressed via ZIP or TAR (gzip or bzip2 compression), and subdiectories
+automatically. ::
 
     Application Directory
         Application.exe
         Application.conf
         data/
+            audio/
+                example.wav
             background.jpg
             button1.jpg
             button2.jpg
@@ -58,24 +61,26 @@ compressed via ZIP or TAR (gzip or bzip2 compression). ::
             info.dat
 
     tilesimage = appresources.get("tileset1.bmp")
+    audiofile = appresources.get("example.wav")
 
 If you request a an indexed file via :meth:`Resources.get`, you will receive
-a :class:`BytesIO` stream, containing the file data, for further processing.
+a :class:`io.BytesIO` stream, containing the file data, for further processing.
 
-.. todo::
+.. note::
 
-   more examples
+   The scanned files act as keys within the :class:`Resources`
+   class. This means that two files, that have the same name, but
+   different location will not be indexed. Only one of them will be
+   accessible through the :class:`Resources` class.
 
+Resource management API
+-----------------------
 
 .. class:: Resources([path=None[, subdir=None[, excludepattern=None]]])
 
    The Resources class manages a set of file resources and eases
    accessing them by using relative paths, scanning archives
    automatically and so on.
-
-   .. todo::
-
-      Improve the class documentation
 
    .. method:: add(filename : string)
 
@@ -100,23 +105,23 @@ a :class:`BytesIO` stream, containing the file data, for further processing.
 
       Gets a specific file from the resource container.
 
-      Raises a :exc:`KeyError`, if the ``filename`` could not be found.
+      Raises a :exc:`KeyError`, if the *filename* could not be found.
 
    .. method:: get_filelike(filename : string) -> file object
 
       Similar to :meth:`get()`, but tries to return the original file
       handle, if possible. If the found file is only available within an
-      archive, a :class:`BytesIO` instance will be returned.
+      archive, a :class:`io.BytesIO` instance will be returned.
 
-      Raises a :exc:`KeyError`, if the ``filename`` could not be found.
+      Raises a :exc:`KeyError`, if the *filename* could not be found.
 
    .. method:: get_path(filename : string) -> string
 
-      Gets the path of the passed ``filename``. If ``filename`` is only
+      Gets the path of the passed *filename*. If *filename* is only
       available within an archive, a string in the form
       ``filename@archivename`` will be returned.
 
-      Raises a :exc:`KeyError`, if the ``filename`` could not be found.
+      Raises a :exc:`KeyError`, if the *filename* could not be found.
 
    .. method:: scan(path : string[, subdir=None[, excludepattern=None])
 
@@ -130,19 +135,19 @@ a :class:`BytesIO` stream, containing the file data, for further processing.
       path and used as starting point for adding files to the resource
       container.
 
-      ``excludepattern`` can be a regular expression to skip
+      *excludepattern* can be a regular expression to skip
       directories, which match the pattern.
 
 .. function:: open_tarfile(archive : string, filename : string \
                            [, directory=None[, ftype=None]]) -> BytesIO
 
    Opens and reads a certain file from a TAR archive. The result is
-   returned as :class:`BytesIO` stream. ``filename`` can be a relative
-   or absolute path within the TAR archive. The optional ``directory``
+   returned as :class:`BytesIO` stream. *filename* can be a relative
+   or absolute path within the TAR archive. The optional *directory*
    argument can be used to supply a relative directory path, under which
-   ``filename`` will be searched.
+   *filename* will be searched.
 
-   ``ftype`` is used to supply additional compression information, in
+   *ftype* is used to supply additional compression information, in
    case the system cannot determine the compression type itself, and can
    be either **"gz"** for gzip compression or **"bz2"** for bzip2
    compression.
@@ -150,12 +155,12 @@ a :class:`BytesIO` stream, containing the file data, for further processing.
    If the filename could not be found or an error occured on reading it,
    ``None`` will be returned.
 
-   Raises a :exc:`TypeError`, if ``archive`` is not a valid TAR archive or
-   if ``ftype`` is not a valid value of ("gz", "bz2").
+   Raises a :exc:`TypeError`, if *archive* is not a valid TAR archive or
+   if *ftype* is not a valid value of ("gz", "bz2").
 
    .. note::
 
-      If ``ftype`` is supplied, the compression mode will be enforced for
+      If *ftype* is supplied, the compression mode will be enforced for
       opening and reading.
 
 .. function:: open_url(filename : string[, basepath=None]) -> file object
@@ -165,16 +170,16 @@ a :class:`BytesIO` stream, containing the file data, for further processing.
     :mod:`urllib` for Python 3.x, which means that it is restricted to
     the types of remote locations supported by the module.
 
-    ``basepath`` can be used to supply an additional location prefix.
+    *basepath* can be used to supply an additional location prefix.
 
 .. function:: open_zipfile(archive : string, filename : string \
                            [, directory : string]) -> BytesIO
 
    Opens and reads a certain file from a ZIP archive. The result is
-   returned as :class:`BytesIO` stream. ``filename`` can be a relative
-   or absolute path within the ZIP archive. The optional ``directory``
+   returned as :class:`BytesIO` stream. *filename* can be a relative
+   or absolute path within the ZIP archive. The optional *directory*
    argument can be used to supply a relative directory path, under which
-   ``filename`` will be searched.
+   *filename* will be searched.
 
    If the filename could not be found, a :exc:`KeyError` will be raised.
-   Raises a :exc:`TypeError`, if ``archive`` is not a valid ZIP archive.
+   Raises a :exc:`TypeError`, if *archive* is not a valid ZIP archive.
