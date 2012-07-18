@@ -104,18 +104,85 @@ looks at.
 
 .. image:: images/listener_xz.png
 
+Changing the last 3 values will influence the rotation of the looking
+direction.
 
+.. image:: images/listener_xyz.png
+
+The orientation defines a orthogonal listening direction, so that any sounds
+the user (or avatar) hears, are processed correctly. If you imagine a car
+driving by on your right side, while you are looking straight ahead (parallel
+to the car's driving direction), you will hear the car on your right side
+(with your right ear receiving the most noise). If you look on the street,
+following the car with your eyes and head, the listening experience will
+differ (since both ears of you receive the noise in nearly the same way).
+
+.. note::
+
+   Setting the orientation in OpenAL is somehat similar ot OpenGL's
+   ``gluLookAt`` function, which adjusts the view direction. You might want
+   to take a look at http://www.glprogramming.com/red/chapter03.html#name2 for
+   further details about that.
 
 Creating sound sources
 ----------------------
 
-As said earlier, a :class:`SoundSource` represents an object that can emit
-sounds. TODO
+A :class:`SoundSource` represents an object that can emit sounds. It can be any
+kind of object and allows you to play any sound, you put into it. In an
+application you can enable objects to emit sounds, by binding a
+:class:`SoundSource` to them.
 
+   >>> source = SoundSource()
 
-Creating sounds
----------------
+.. todo::
 
+   more details
+
+Creating and playing sounds
+---------------------------
+
+To create and play sounds you use :class:`SoundData` objects, which contain
+the raw PCM data to be played. To play the sound, the :class:`SoundData` needs
+to be queued on a :class:`SoundSource`, which provides all the necessary
+information about the volume, the position relative to the listener and so
+on. ::
+
+   >>> wavsound = load_wav_file("vroom.wav")
+
+There are some helper functions, which create :class:`SoundData` objects from
+audio files. If you have a raw PCM data buffer, simply assign it to the
+:attr:`SoundData.data` attribute. ::
+
+   >>> rawsound = SoundData()
+   ...
+   >>> rawsound.data = pcmbuf
+   ...
+
+Queueing the loaded sound is done via the :meth:`SoundSource.queue()` method,
+which appends the sound to the source for processing and playback.
+
+   >>> wavsound = load_wav_file("vroom.wav")
+   >>> source.queue(wavsound)
+   >>> source.request = SOURCE_PLAY
+
+The :class:`SoundSink`, which processes the :class:`SoundSource`, will act
+accordingly to the :attr:`SoundSource.request` attribute value.
+
+============= ===================================================
+Request Type  Description
+============= ===================================================
+SOURCE_NONE   Do not perform any specific action with the
+              :class:`SoundSource`. Do not change any currently
+              active operation on it, too.
+SOURCE_PLAY   Process the queued :class:`SoundData` of the
+              :class:`SoundSource` and play them.
+SOURCE_PAUSE  Pause processing and playback for the
+              :class:`SoundSource`.
+SOURCE_STOP   Stop processing and playback for the
+              :class:`SoundSource`.
+SOURCE_REWIND Rewind the queued :class:`SoundData`buffers for the
+              :class:`SoundSource`.
+============= ===================================================
 
 Audio API
 ---------
@@ -142,8 +209,7 @@ Audio API
     Indicates that the :class:`SoundSource` shall rewind to the start of the
     currently processed :class:`SoundData` buffer.
 
-
-.. class:: SoundData()
+.. class:: SoundData([format=None[, data=None[, size=None[, frequency=None]]]])
 
    Buffered audio data.
 
@@ -169,7 +235,8 @@ Audio API
       The frequency of the audio data.
 
 
-.. class:: SoundListener()
+.. class:: SoundListener([position=(0, 0, 0)[, velocity=(0, 0, 0)[, \
+                         orientation=(0, 0, -1, 0, 1, 0)]]])
 
    Listener position information for the 3D audio environment.
 
@@ -191,7 +258,8 @@ Audio API
       denote the upper orientation vector.
 
 
-.. class:: SoundSource()
+.. class:: SoundSource([gain=1.0[, pitch=1.0[, position=(0, 0, 0)[, \
+                       velocity=(0, 0, 0)]]]])
 
    xxx
 

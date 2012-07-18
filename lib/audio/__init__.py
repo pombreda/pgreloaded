@@ -35,7 +35,7 @@ SOURCE_REWIND = 0x09
 
 class SoundListener(Component):
     """A simple sound listener."""
-    def __init__(self, position=(0,0,0), velocity=(0,0,0),
+    def __init__(self, position=(0, 0, 0), velocity=(0, 0, 0),
                  orientation=(0, 0, -1, 0, 1, 0)):
         super(SoundListener, self).__init__()
         self.position = position
@@ -45,13 +45,13 @@ class SoundListener(Component):
 
 class SoundData(Component):
     """A buffered audio object."""
-    def __init__(self):
+    def __init__(self, format=None, data=None, size=None, frequency=None):
         super(SoundData, self).__init__()
         self._bufid = None
-        self.format = None
-        self.data = None
-        self.size = None
-        self.frequency = None
+        self.format = format
+        self.data = data
+        self.size = size
+        self.frequency = frequency
 
     @property
     def bufid(self):
@@ -65,15 +65,16 @@ class SoundSource(Component):
     The SoundSource is an object within the application world, that can emit
     sounds.
     """
-    def __init__(self):
+    def __init__(self, gain=1.0, pitch=1.0, position=(0, 0, 0),
+                 velocity=(0, 0, 0)):
         """Creates a new SoundSource."""
         super(SoundSource, self).__init__()
         self._ssid = None
         self._buffers = []
-        self.gain = 1.0
-        self.pitch = 1.0
-        self.position = (0, 0, 0)
-        self.velocity = (0, 0, 0)
+        self.gain = gain
+        self.pitch = pitch
+        self.position = position
+        self.velocity = velocity
         self.request = SOURCE_NONE
 
     @property

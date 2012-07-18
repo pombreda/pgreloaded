@@ -1,3 +1,5 @@
+.. _pong-tutorial:
+
 The Pong Game
 =============
 The following tutorial will show you some capabilities of the

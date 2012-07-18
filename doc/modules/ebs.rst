@@ -15,7 +15,206 @@ environment.
 Component-based patterns
 ------------------------
 
-TODO
+Component-based means that - instead of a traditional OOP approach, object
+information are split up into separate data bags for reusability and that those
+data bags are separated from any application logic.
+
+Behavioural design
+^^^^^^^^^^^^^^^^^^
+
+Imagine a car game class in traditional OOP, which might look like ::
+
+    class Car:
+        def __init__(self):
+            self.color = "red"
+            self.position = 0, 0
+            self.velocity = 0, 0
+            self.sprite = get_some_car_image()
+            ...
+        def drive(self, timedelta):
+            self.position[0] = self.velocity[0] * timedelta
+            self.position[1] = self.velocity[1] * timedelta
+            ...
+        def stop(self):
+            self.velocity = 0, 0
+            ...
+        def render(self, screen):
+            screen.display(self.sprite)
+
+    mycar = new Car()
+    mycar.color = "green"
+    mycar.velocity = 10, 0
+
+The car features information stored in attributes (``color``, ``position``,
+...) and behaviour (application logic, ``drive()``, ``stop()`` ...).
+
+A component-based approach aims to split and reduce the car to a set of
+information and external systems providing the application logic. ::
+
+    class Car:
+        def __init__(self):
+            self.color = "red"
+            self.position = 0, 0
+            self.velocity = 0, 0
+            self.sprite = get_some_car_image()
+
+    class CarMovement:
+        def drive(self, car, timedelta):
+            car.position[0] = car.velocity[0] * timedelta
+            car.position[1] = car.velocity[1] * timedelta
+            ...
+        def stop(self):
+            car.velocity = 0, 0
+
+    class CarRenderer:
+        def render(self, car, screen):
+            screen.display(car.sprite)
+
+At this point of time, there is no notable difference between both approaches,
+except that the latter one adds additional overhead.
+
+The benefit comes in, when you
+
+* use subclassing in your OOP design
+* want to change behavioural patterns on a global scale or based on states
+* want to refactor code logic in central locations
+* want to cascade application behaviours
+
+The initial ``Car`` class from above defines, how it should be displayed
+on the screen. If you now want to add a feature for rescaling the screen
+size after the user activates the magnifier mode, you need to refactor
+the ``Car`` and all other classes that render things on the screen, have
+to consider all subclasses that override the method and so on.
+Refactoring the ``CarRenderer`` code by adding a check for the magnifier
+mode sounds quite simple in contrast to that, not?
+
+The same applies to the movement logic - inverting the movement logic
+requires you to refactor all your classes instead of a single piece of
+application code.
+
+Information design
+^^^^^^^^^^^^^^^^^^
+
+Subclassing with traditional OOP for behavioural changes also might
+bloat your classes with unnecessary information, causing the memory
+footprint for your application to rise without any need. Let's assume
+you have a ``Truck`` class that inherits from ``Car``. Let's further
+assume that all trucks in your application look the same. Why should any
+of those carry a ``sprite`` or ``color`` attribute? You would need to
+refactor your ``Car`` class to get rid of those superfluous information,
+adding another level of subclassing. If at a later point of time you
+decide to give your trucks different colors, you need to refactor
+everything again.
+
+Wouldn't it be easier to deal with colors, if they are available on the
+truck and leave them out, if they are not? We initially stated that the
+component-based approach aims to separate data (information) from code
+logic.  That said, if the truck has a color, we can handle it easily, if
+it has not, we will do as usual.
+
+Also, checking for the color of an object (regardless, if it is a truck,
+car, airplane or death star) allows us to apply the same or similar
+behaviour for every object. If the information is available, we will
+process it, if it is not, we will not do anything.
+
+All in all
+^^^^^^^^^^
+
+Once we split up the previously OOP-style classes into pure data containers and
+some separate processing code for the behaviour, we are talking about components
+and (processing) systems. A component is a data container, ideally grouping
+related information on a granular level, so that it is easy to (re)use.
+When you combin different components to build your in-application objects and
+instantiate those, we are talking about entities.
+
+.. image:: images/ebs.png
+
+*Component*
+   provides information (data bag)
+
+*Entity*
+   In-application instance that consists of *Component* items
+
+*System*
+   Application logic for working with *Entity* items and their
+   *Component* data
+
+*World*
+   The environment that contains the different *System* instances and
+   all *Entity* items with their *Component* data
+
+Within a strict COP design, the application logic (ideally) only knows about
+data to process. It does not know anything about entities or complex classes
+and only operates on the data.
+
+.. image:: images/copprocessing.png
+
+To keep things simple, modular and easy to maintain and change, you usually
+create small processing systems, which perform the necessary operations on the
+data they shall handle. That said, a ``MovementSystem`` for our car entity would
+only operate on the position and velocity component of the car entity. It does
+not know anything about the the car's sprite or sounds that the car makes,
+since *this is nothing it has to deal with*.
+
+To display the car on the screen, a ``RenderSystem`` might pick up the sprite
+component of the car, maybe along with the position information (so it know,
+where to place the sprite) and render it on the screen.
+
+If you want the car to play sounds, you would add an audio playback system,
+that can perform the task. Afterwards you can add the necessary audio
+information via a sound component to the car and it will make noise.
+
+Component-based design with :mod:`pygame2.ebs`
+----------------------------------------------
+
+.. note::
+
+   This section will deal with the specialities of COP patterns and
+   :class:`pygame2.ebs` and provide the bare minimum of information.
+   If you are just starting with such a design, it is recommended to
+   read through the :ref:`pong-tutorial` tutorial.
+
+:mod:`pygame2.ebs` provides a :class:`World` class in which all other objects
+will reside. The :class:`World` will maintain both, :class:`Entity` and
+:class:`Component` items, and allows you to set up the processing logic via
+the :class:`System` and :class:`Applicator` classes. ::
+
+   >>> appworld = World()
+
+The :class:`Component` represents a data bag of information and ideally should
+avoid any application logic (except from getter and setter properties).
+
+   >>> class Position2D(Component):
+   >>>     def __init__(self, x=0, y=0):
+   >>>         self.x = x
+   >>>         self.y = y
+
+:class:`Entity` objects define the in-application objects and only consist of
+:class:`Component`-based attributes. They also require a :class:`World` at
+object instantiation time.
+
+   >>> class CarEntity(Entity):
+   >>>     def __init__(self, world, x=0, y=0):
+   >>>         self.position2d = Position2D(x, y)
+
+.. note::
+
+   The *world* argument in ``__init__()`` is necesary. It will be passed to the
+   internal ``__new__()`` constructor of the :class:`Entity` and stores a
+   reference to the :class:`World` and also allows the :class:`Entity` to store
+   its information in the :class:`World`.
+
+The :class:`Entity` also requries its attributes to be named exactly as their
+:class:`Component` class name, but in lowercase letters. If you name a
+component ``MyAbsolutelyAwesomeDataContainer``, an :class:`Entity` will force
+you to write the following: ::
+
+   >>> class SomeEntity(Entity):
+   >>>     def __init__(self, world):
+   >>>         self.myabsolutelyawesomedatacontainer = MyAbsolutelyAwesomeDataContainer()
+
+EBS API
+-------
 
 .. class:: Component()
 
