@@ -180,7 +180,7 @@ SOURCE_PAUSE  Pause processing and playback for the
               :class:`SoundSource`.
 SOURCE_STOP   Stop processing and playback for the
               :class:`SoundSource`.
-SOURCE_REWIND Rewind the queued :class:`SoundData`buffers for the
+SOURCE_REWIND Rewind the queued :class:`SoundData` buffers for the
               :class:`SoundSource`.
 ============= ===================================================
 

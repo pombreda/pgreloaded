@@ -4,9 +4,6 @@
 :mod:`pygame2.sdl.audio` - SDL2 Audio  wrapper
 ==============================================
 
-SDL2 Audio API
---------------
-
 .. function:: SDL_AUDIO_BITSIZE(x : int) -> bool
 
    Gets the bitsize of an audio format.

@@ -9,9 +9,10 @@ the SDL2 library. It wraps nearly all publicly accessible structures and
 functions of the SDL2 library to be accessible from Python code.
 
 A detailled documentation about the behaviour of the different functions
-can found within the SDL2 documentation. The API documentation of
-:mod:`pygame2.sdl` will focus on a brief description and outlines
-noteworthy specialities or - where necessary - differences for Python.
+can found within the `SDL2 documentation <http://wiki.libsdl.org/moin.cgi/CategoryAPI>`_.
+The API documentation of :mod:`pygame2.sdl` will focus on a brief description
+and outlines noteworthy specialities or - where necessary - differences for
+Python.
 
 
 Submodules

@@ -22,7 +22,7 @@ Submodules
    :maxdepth: 1
 
    oggvorbisfile.rst
-   
+
 Ogg API
 -------
 

@@ -5,7 +5,13 @@ from ctypes import c_char_p, c_int, c_uint
 from pygame2.compat import *
 from pygame2.sdl import sdltype, dll
 
-__all__ = ["clear_hints", "get_hint", "set_hint", "set_hint_with_priority"]
+__all__ = ["clear_hints", "get_hint", "set_hint", "set_hint_with_priority",
+           "SDL_HINT_DEFAULT", "SDL_HINT_NORMAL", "SDL_HINT_OVERRIDE",
+           "SDL_HINT_FRAMEBUFFER_ACCELERATION", "SDL_HINT_IDLE_TIMER_DISABLED",
+           "SDL_HINT_ORIENTATIONS", "SDL_HINT_RENDER_DRIVER",
+           "SDL_HINT_RENDER_OPENGL_SHADERS", "SDL_HINT_RENDER_SCALE_QUALITY",
+           "SDL_HINT_RENDER_VSYNC",
+           ]
 
 
 SDL_HINT_DEFAULT  = 0
@@ -51,7 +57,13 @@ def set_hint(name, value):
 
 @sdltype("SDL_SetHintWithPriority", [c_char_p, c_char_p, c_uint], c_int)
 def set_hint_with_priority(name, value, priority):
-    """Sets the value of a specific hint using a priority override."""
+    """Sets the value of a specific hint using a priority override.
+    
+    The hint priority can be one of
+    * SDL_HINT_DEFAULT
+    * SDL_HINT_NORMAL
+    * SDL_HINT_OVERRIDE
+    """
     if type(name) is not str:
         raise TypeError("name must be a string")
     if type(value) is not str:

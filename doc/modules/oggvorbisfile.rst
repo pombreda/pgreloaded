@@ -16,13 +16,13 @@ Vorbisfile API
 .. class:: vorbis_file()
 
    TODO
-   
+
    This wraps :c:func:`vorbis_info`.
-   
+
 .. function:: get_dll_file() -> str
 
    Gets the name of the loaded vorbisfile dll file.
-   
+
 .. function:: clear(ovfilep : OggVorbis_File) -> None
 
    TODO

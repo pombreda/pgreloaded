@@ -4,9 +4,6 @@
 :mod:`pygame2.sdl.clipboard` - SDL2 Clipboard wrapper
 =====================================================
 
-SDL2 Clipboard API
-------------------
-
 .. function:: get_clipboard_text() -> string
 
    Retrieves text from the OS clipboard, if available.

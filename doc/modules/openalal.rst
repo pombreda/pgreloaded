@@ -4,9 +4,6 @@
 :mod:`pygame2.openal.al` - OpenAL AL wrapper
 ============================================
 
-OpenAL AL API
--------------
-
 .. function:: get_error() -> int
 
    Gets the most recent error generated within the AL system.

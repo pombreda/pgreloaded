@@ -385,7 +385,7 @@ def get_pixelformat_name(pformat):
 def pixelformat_enum_to_masks(pformat):
     """Gets the pixel masks for a specific pixel format value.
 
-    The returned tuple consists of(bpp, red mask, green mask, blue mask,
+    The returned tuple consists of (bpp, red mask, green mask, blue mask,
     alpha mask).
     """
     bpp = ctypes.c_int()
@@ -398,7 +398,7 @@ def pixelformat_enum_to_masks(pformat):
                                       ctypes.byref(gmask),
                                       ctypes.byref(bmask),
                                       ctypes.byref(amask)) == SDL_TRUE:
-        return(bpp.value, rmask.value, gmask.value, bmask.value, amask.value)
+        return (bpp.value, rmask.value, gmask.value, bmask.value, amask.value)
     raise SDLError()
 
 

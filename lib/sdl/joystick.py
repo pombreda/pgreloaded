@@ -47,7 +47,7 @@ class SDL_Joystick(ctypes.Structure):
 
 @sdltype("SDL_JoystickOpen", [ctypes.c_int], ctypes.POINTER(SDL_Joystick))
 def joystick_open(index):
-    """Opens the Joystick specified by the passed index.
+    """Opens the joystick specified by the passed index.
 
     If index is not an integer, a TypeError is raised. If the index is
     not in the range of joystick_num_joysticks(), a SDLError is raised.

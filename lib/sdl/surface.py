@@ -521,7 +521,7 @@ def upper_blit(src, srcrect, dst, dstrect):
 blit_surface = upper_blit
 
 
-@sdltype("SDL_LowerBlitScaled", [ctypes.POINTER(SDL_Surface),
+@sdltype("SDL_UpperBlitScaled", [ctypes.POINTER(SDL_Surface),
                                  ctypes.POINTER(SDL_Rect),
                                  ctypes.POINTER(SDL_Surface),
                                  ctypes.POINTER(SDL_Rect)], ctypes.c_int)

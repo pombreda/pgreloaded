@@ -1,11 +1,8 @@
-﻿.. module:: pygame2.sdl.cpuinfo
-   :synopsis: SDL2 CPU info wrapper
+﻿.. module:: pygame2.sdl.endian
+   :synopsis: SDL2 endian wrapper
 
-:mod:`pygame2.sdl.cpuinfo` - SDL2 CPU info wrapper
-==================================================
-
-SDL2 CPU info API
------------------
+:mod:`pygame2.sdl.endian` - SDL2 endian wrapper
+===============================================
 
 .. data:: SDL_BYTEORDER
 

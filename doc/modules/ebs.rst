@@ -24,26 +24,26 @@ Behavioural design
 
 Imagine a car game class in traditional OOP, which might look like ::
 
-    class Car:
-        def __init__(self):
-            self.color = "red"
-            self.position = 0, 0
-            self.velocity = 0, 0
-            self.sprite = get_some_car_image()
-            ...
-        def drive(self, timedelta):
-            self.position[0] = self.velocity[0] * timedelta
-            self.position[1] = self.velocity[1] * timedelta
-            ...
-        def stop(self):
-            self.velocity = 0, 0
-            ...
-        def render(self, screen):
-            screen.display(self.sprite)
+   class Car:
+       def __init__(self):
+           self.color = "red"
+           self.position = 0, 0
+           self.velocity = 0, 0
+           self.sprite = get_some_car_image()
+           ...
+       def drive(self, timedelta):
+           self.position[0] = self.velocity[0] * timedelta
+           self.position[1] = self.velocity[1] * timedelta
+           ...
+       def stop(self):
+           self.velocity = 0, 0
+           ...
+       def render(self, screen):
+           screen.display(self.sprite)
 
-    mycar = new Car()
-    mycar.color = "green"
-    mycar.velocity = 10, 0
+   mycar = new Car()
+   mycar.color = "green"
+   mycar.velocity = 10, 0
 
 The car features information stored in attributes (``color``, ``position``,
 ...) and behaviour (application logic, ``drive()``, ``stop()`` ...).
@@ -51,24 +51,24 @@ The car features information stored in attributes (``color``, ``position``,
 A component-based approach aims to split and reduce the car to a set of
 information and external systems providing the application logic. ::
 
-    class Car:
-        def __init__(self):
-            self.color = "red"
-            self.position = 0, 0
-            self.velocity = 0, 0
-            self.sprite = get_some_car_image()
+   class Car:
+       def __init__(self):
+           self.color = "red"
+           self.position = 0, 0
+           self.velocity = 0, 0
+           self.sprite = get_some_car_image()
 
-    class CarMovement:
-        def drive(self, car, timedelta):
-            car.position[0] = car.velocity[0] * timedelta
-            car.position[1] = car.velocity[1] * timedelta
-            ...
-        def stop(self):
-            car.velocity = 0, 0
+   class CarMovement:
+       def drive(self, car, timedelta):
+           car.position[0] = car.velocity[0] * timedelta
+           car.position[1] = car.velocity[1] * timedelta
+           ...
+       def stop(self):
+           car.velocity = 0, 0
 
-    class CarRenderer:
-        def render(self, car, screen):
-            screen.display(car.sprite)
+   class CarRenderer:
+       def render(self, car, screen):
+           screen.display(car.sprite)
 
 At this point of time, there is no notable difference between both approaches,
 except that the latter one adds additional overhead.
@@ -182,20 +182,20 @@ the :class:`System` and :class:`Applicator` classes. ::
    >>> appworld = World()
 
 The :class:`Component` represents a data bag of information and ideally should
-avoid any application logic (except from getter and setter properties).
+avoid any application logic (except from getter and setter properties). ::
 
-   >>> class Position2D(Component):
-   >>>     def __init__(self, x=0, y=0):
-   >>>         self.x = x
-   >>>         self.y = y
+   class Position2D(Component):
+       def __init__(self, x=0, y=0):
+           self.x = x
+           self.y = y
 
 :class:`Entity` objects define the in-application objects and only consist of
 :class:`Component`-based attributes. They also require a :class:`World` at
-object instantiation time.
+object instantiation time. ::
 
-   >>> class CarEntity(Entity):
-   >>>     def __init__(self, world, x=0, y=0):
-   >>>         self.position2d = Position2D(x, y)
+   class CarEntity(Entity):
+       def __init__(self, world, x=0, y=0):
+           self.position2d = Position2D(x, y)
 
 .. note::
 
@@ -209,9 +209,9 @@ The :class:`Entity` also requries its attributes to be named exactly as their
 component ``MyAbsolutelyAwesomeDataContainer``, an :class:`Entity` will force
 you to write the following: ::
 
-   >>> class SomeEntity(Entity):
-   >>>     def __init__(self, world):
-   >>>         self.myabsolutelyawesomedatacontainer = MyAbsolutelyAwesomeDataContainer()
+   class SomeEntity(Entity):
+       def __init__(self, world):
+           self.myabsolutelyawesomedatacontainer = MyAbsolutelyAwesomeDataContainer()
 
 EBS API
 -------

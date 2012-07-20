@@ -4,9 +4,6 @@
 :mod:`pygame2.sdl.events` - SDL2 system events wrapper
 ======================================================
 
-SDL2 system evens API
----------------------
-
 .. class:: SDL_WindowEvent()
 
    .. attribute:: type

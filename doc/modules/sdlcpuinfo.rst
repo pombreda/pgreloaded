@@ -4,9 +4,6 @@
 :mod:`pygame2.sdl.cpuinfo` - SDL2 CPU info wrapper
 ==================================================
 
-SDL2 CPU info API
------------------
-
 .. function:: get_cpu_cache_line_size() -> int
 
    Gets the L1 cache line size.

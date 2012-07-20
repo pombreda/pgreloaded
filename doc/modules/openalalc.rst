@@ -4,13 +4,10 @@
 :mod:`pygame2.openal.alc` - OpenAL ALC wrapper
 ==============================================
 
-OpenAL ALC API
---------------
-
 .. class:: ALCdevice
 
    TODO
-   
+
 .. class:: ALCcontext
 
    TODO

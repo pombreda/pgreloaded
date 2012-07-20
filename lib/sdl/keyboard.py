@@ -167,13 +167,15 @@ def set_text_input_rect(rect):
 
 @sdltype("SDL_StartTextInput", None, None)
 def start_text_input():
-    """start_text_input() -> None
+    """Causes the event system to raise SDL_TEXTINPUT events on keyboard
+    presses.
     """
     dll.SDL_StartTextInput()
 
 
 @sdltype("SDL_StopTextInput", None, None)
 def stop_text_input():
-    """stop_text_input() -> None
+    """Causes the event system to stop raising SDL_TEXTINPUT events on keyboard
+    presses.
     """
     dll.SDL_StopTextInput()

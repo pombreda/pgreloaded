@@ -10,9 +10,10 @@ structures and functions of the SDL2_image library to be accessible from
 Python code.
 
 A detailled documentation about the behaviour of the different functions
-can found within the SDL2_image documentation. The API documentation of
-:mod:`pygame2.sdlimage` will focus on a brief description and outlines
-noteworthy specialities or - where necessary - differences for Python.
+can found within the `SDL2_image documentation <http://www.libsdl.org>`_.
+The API documentation of :mod:`pygame2.sdlimage` will focus on a brief
+description and outlines noteworthy specialities or - where necessary -
+differences for Python.
 
 SDL2_image API
 --------------

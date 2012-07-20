@@ -54,7 +54,7 @@ def log(text):
     SDL_LOG_PRIORITY_INFO.
     """
     dll.SDL_Log(byteify(str(text), "utf-8"))
-
+SDL_log = log
 
 @sdltype("SDL_LogCritical", [ctypes.c_int, ctypes.c_char_p], None)
 def log_critical(category, text):

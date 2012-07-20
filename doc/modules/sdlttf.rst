@@ -6,13 +6,14 @@
 
 The :mod:`pygame2.sdlttf` module is a :mod:`ctypes`-based wrapper
 around the SDL2_image library. It wraps nearly all publicly accessible
-structures and functions of the SDL2_image library to be accessible from
+structures and functions of the SDL2_ttf library to be accessible from
 Python code.
 
 A detailled documentation about the behaviour of the different functions
-can found within the SDL2_image documentation. The API documentation of
-:mod:`pygame2.sdlimage` will focus on a brief description and outlines
-noteworthy specialities or - where necessary - differences for Python.
+can found within the `SDL2_ttf documentation <http://www.libsdl.org>`_.
+The API documentation of :mod:`pygame2.ttf` will focus on a brief
+description and outlines noteworthy specialities or - where necessary -
+differences for Python.
 
 SDL2_ttf API
 ------------
@@ -24,7 +25,7 @@ SDL2_ttf API
 .. function:: init() -> int
 
    Initializes the SDL2_ttf library.
-   
+
    This wraps :c:func:`TTF_Init`.
 
 .. function:: quit() -> None
@@ -32,7 +33,7 @@ SDL2_ttf API
    Shuts down the SDL2_ttf library and releases all resources held by it.
    Calling SDL2_ttf related methods after quit() will wake the dragons, so
    do not do it.
-   
+
    This wraps :c:func:`TTF_Quit`.
 
 .. function:: open_font(fname : string, ptsize : int) -> TTF_Font
@@ -212,7 +213,7 @@ SDL2_ttf API
 .. function:: render_blended(font : TTF_Font, s : string, \
                              color : SDL_Color) -> SDL_Surface
 
-   
+
 
    This wraps :c:func:`TTF_RenderUTF8_Blended`.
 

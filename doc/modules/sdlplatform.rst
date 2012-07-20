@@ -4,7 +4,9 @@
 :mod:`pygame2.sdl.platform` - SDL2 platform information wrapper
 ===============================================================
 
-SDL2 platform information API
------------------------------
+.. function:: get_platform() -> string
 
-TODO
+   Gets the platform, the used SDL2 library was built on.
+
+   This wraps `SDL_GetPlatform`.
+
