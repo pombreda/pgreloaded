@@ -29,7 +29,7 @@ class AudioTest(unittest.TestCase):
         self.assertIsInstance(listener, audio.SoundListener)
         self.assertEqual(listener.position, (0, 0, 0))
         self.assertEqual(listener.velocity, (0, 0, 0))
-        self.assertEqual(listener.orientation, (0, 0, 1, 0, 1, 0))
+        self.assertEqual(listener.orientation, (0, 0, -1, 0, 1, 0))
 
     def test_SoundSource(self):
         source = audio.SoundSource()

@@ -303,12 +303,14 @@ class Resources(object):
         join = os.path.join
         add = self.add
         abspath = os.path.abspath(path)
+        if not os.path.exists(abspath):
+            raise ValueError("invalid path '%s'" % path)
         if not os.path.isdir(abspath):
             abspath = os.path.dirname(abspath)
         if subdir is not None:
             abspath = os.path.join(abspath, subdir)
         if not os.path.exists(abspath):
-            raise ValueError("invalid path")
+            raise ValueError("invalid path '%s'" % path)
         for (pdir, dirnames, filenames) in os.walk(abspath):
             if match and match(pdir) is not None:
                 continue
