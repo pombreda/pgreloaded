@@ -3,9 +3,11 @@ import os
 import sys
 import time
 import wave
-from pygame2.examples import RESOURCES
+from pygame2.resources import Resources
 import pygame2.openal.al as al
 import pygame2.openal.alc as alc
+
+RESOURCES = Resources(__file__, "resources")
 
 def run():
     if len (sys.argv) < 2:

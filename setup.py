@@ -26,10 +26,9 @@ if __name__ == "__main__":
                 "pygame2.test.util",
                 "pygame2.video",
                 ]
-    package_dir = {"pygame2": "lib",
-                   "pygame2.dll": "lib/dll",
-                   "pygame2.test": "test",
+    package_dir = {"pygame2": "pygame2",
                    "pygame2.examples": "examples",
+                   "pygame2.test": "test",
                    }
 
     package_data = {"pygame2.test": ["resources/*.*"],

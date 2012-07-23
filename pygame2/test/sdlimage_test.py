@@ -1,12 +1,14 @@
 import sys
 import unittest
-from pygame2.test import RESOURCES
+from pygame2.resources import Resources
 import pygame2.sdl as sdl
 import pygame2.sdl.render as render
 import pygame2.sdl.rwops as rwops
 import pygame2.sdl.surface as surface
 import pygame2.sdl.version as version
 import pygame2.sdlimage as sdlimage
+
+RESOURCES = Resources(__file__, "resources")
 
 formats = ("bmp",
            "cur",

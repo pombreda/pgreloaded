@@ -5,18 +5,18 @@ SUBDIRS = \
 	$(top_srcdir)/doc \
 	$(top_srcdir)/examples \
 	$(top_srcdir)/examples/resources \
-	$(top_srcdir)/test \
-	$(top_srcdir)/test/resources \
-	$(top_srcdir)/test/util \
-	$(top_srcdir)/lib \
-	$(top_srcdir)/lib/audio \
-	$(top_srcdir)/lib/dll \
-	$(top_srcdir)/lib/dll/32bit \
-	$(top_srcdir)/lib/dll/64bit \
-	$(top_srcdir)/lib/ogg \
-	$(top_srcdir)/lib/openal \
-	$(top_srcdir)/lib/sdl \
-	$(top_srcdir)/lib/video \
+	$(top_srcdir)/pygame2/test \
+	$(top_srcdir)/pygame2/test/resources \
+	$(top_srcdir)/pygame2/test/util \
+	$(top_srcdir)/pygame2 \
+	$(top_srcdir)/pygame2/audio \
+	$(top_srcdir)/pygame2/dll \
+	$(top_srcdir)/pygame2/dll/32bit \
+	$(top_srcdir)/pygame2/dll/64bit \
+	$(top_srcdir)/pygame2/ogg \
+	$(top_srcdir)/pygame2/openal \
+	$(top_srcdir)/pygame2/sdl \
+	$(top_srcdir)/pygame2/video \
 	$(top_srcdir)/util
 
 all: clean build
@@ -67,7 +67,7 @@ docs:
 
 release: dist
 runtest:
-	@$(PYTHON) test/util/runtests.py
+	@$(PYTHON) pygame2/test/util/runtests.py
 
 # Do not run these in production environments! They are for testing
 # purposes only!
@@ -86,16 +86,16 @@ installall:
 	@pypy1.9 setup.py install
 
 testall:
-	@-python2.7 test/util/runtests.py
+	@-python2.7 pygame2/test/util/runtests.py
 	@rm -rf test/*.pyc
-	@-python3.1 test/util/runtests.py
+	@-python3.1 pygame2/test/util/runtests.py
 	@rm -rf test/*.pyc
-	@-python3.2 test/util/runtests.py
+	@-python3.2 pygame2/test/util/runtests.py
 	@rm -rf test/*.pyc
-	@-pypy1.9 test/util/runtests.py
+	@-pypy1.9 pygame2/test/util/runtests.py
 	@rm -rf test/*.pyc
 
-testall2:
+testpackage:
 	@python2.7 -c "import pygame2.test; pygame2.test.run ()"
 	@python3.1 -c "import pygame2.test; pygame2.test.run ()"
 	@python3.2 -c "import pygame2.test; pygame2.test.run ()"

@@ -2,7 +2,9 @@ import sys
 import unittest
 import pygame2.openal.al as al
 import pygame2.audio as audio
-from pygame2.test import RESOURCES
+from pygame2.resources import Resources
+
+RESOURCES = Resources(__file__, "resources")
 
 class AudioTest(unittest.TestCase):
     __tags__ = ["openal"]

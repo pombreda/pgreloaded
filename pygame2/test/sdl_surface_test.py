@@ -3,7 +3,7 @@ import sys
 import array
 import unittest
 import ctypes
-from pygame2.test import RESOURCES
+from pygame2.resources import Resources
 import pygame2.sdl as sdl
 import pygame2.sdl.surface as surface
 import pygame2.sdl.rect as rect
@@ -12,6 +12,8 @@ import pygame2.sdl.pixels as pixels
 import pygame2.sdl.video as video
 import pygame2.array as pgarray
 from pygame2.video import PixelView
+
+RESOURCES = Resources(__file__, "resources")
 
 alldepths = (1, 4, 8, 12, 15, 16, 24, 32)
 indexdepths = (1, 4, 8)

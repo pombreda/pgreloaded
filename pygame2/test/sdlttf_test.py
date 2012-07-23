@@ -1,11 +1,13 @@
 import sys
 import unittest
-from pygame2.test import RESOURCES
+from pygame2.resources import Resources
 import pygame2.sdl as sdl
 from pygame2.sdl.pixels import SDL_Color
 import pygame2.sdl.rwops as rwops
 import pygame2.sdl.surface as surface
 import pygame2.sdlttf as sdlttf
+
+RESOURCES = Resources(__file__, "resources")
 
 
 class SDLTTFTest(unittest.TestCase):

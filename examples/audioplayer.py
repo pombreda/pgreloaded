@@ -4,7 +4,8 @@ import time
 
 # Import the example resources, so that we can use one of the shipped
 # WAV files.
-from pygame2.examples import RESOURCES
+from pygame2.resources import Resources
+RESOURCES = Resources(__file__, "resources")
 
 # Try to import the audio system and OpenAL bindings, so that we are
 # able to play sounds through OpenAL. the al import is only necessary,

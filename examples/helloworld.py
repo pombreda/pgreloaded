@@ -2,10 +2,12 @@
 # We'll use sys to properly exit with an error code.
 import sys
 
-# RESOURCES is only used to retrieve an example image to display, not
-# more not less. You usually do not need pygame2.examples.RESOURCES in
-# your own project :-).
-from pygame2.examples import RESOURCES
+# Create a resource container, so that we can easily access all
+# resource, we bundle with our application. We are using the current
+# file's location and define the "resources" subdirectory as the
+# location, in which we keep all data.
+from pygame2.resources import Resources
+RESOURCES = Resources(__file__, "resources")
 
 # Try to import the video system. Since pygame2.video makes use of
 # pygame2.sdl, the import might fail, if the SDL DLL could not be
