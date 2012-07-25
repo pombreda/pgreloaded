@@ -237,7 +237,6 @@ class ResourcesTest(unittest.TestCase):
 
         self.assertRaises(ValueError, res.scan, "invalid")
         self.assertRaises(ValueError, res.scan, fpath, "invalid")
-        self.assertRaises(Exception, res.scan, None)
         self.assertRaises(Exception, res.scan, 12345)
 
         res = resources.Resources()

@@ -65,3 +65,23 @@ for the traditional python way or ::
 
 for using the Makefile or make.bat. Both will try to perform a default
 installation with as many features as possible.
+
+Trying out
+^^^^^^^^^^
+
+You also can test out Pygame2 without actually installing it. You just need
+to set up your ``PYTHONPATH`` to point to the location of the source
+distribution package. On Windows-based platforms, you might use something like
+
+   set PYTHONPATH=C:\path\to\pgreloaded\:$PYTHONPATH
+   
+to define the ``PYTHONPATH`` on a command shell. On Linux/Unix, use ::
+
+   export PYTHONPATH=/path/to/pgreloaded:$PYTHONPATH
+   
+For bourne shell compatibles or
+
+   setenv PYTHONPATH /path/to/pgreloaded:$PYTHONPATH
+
+for C shell compatibles. You can omit the `:$PYTHONPATH``, if you did not use
+it so far and if your environment settings do not define it.

@@ -74,7 +74,7 @@
 :clean
 @RMDIR /S /Q build
 @RMDIR /S /Q dist
-@RMDIR /S /Q test\__pycache__
+@RMDIR /S /Q pygame2\test\__pycache__
 @DEL /Q MANIFEST
 @GOTO :eof
 
@@ -88,7 +88,7 @@
 @GOTO :eof
 
 :runtest
-@%PYTHON% test\util\runtests.py
+@%PYTHON% pygame2\test\util\runtests.py
 @GOTO :eof
 
 @REM Do not run these in production environments. They are for testing purposes
@@ -139,28 +139,29 @@
 @GOTO :eof
 
 :testall
-@%PYTHON27_X86% test\util\runtests.py
-@DEL /Q test\*.pyc
-@%PYTHON27_X64% test\util\runtests.py
-@DEL /Q test\*.pyc
-@%PYTHON31_X86% test\util\runtests.py
-@DEL /Q test\*.pyc
-@RMDIR /S /Q test\__pycache__
-@%PYTHON31_X64% test\util\runtests.py
-@DEL /Q test\*.pyc
-@RMDIR /S /Q test\__pycache__
-@%PYTHON32_X86% test\util\runtests.py
-@DEL /Q test\*.pyc
-@RMDIR /S /Q test\__pycache__
-@%PYTHON32_X64% test\util\runtests.py
-@DEL /Q test\*.pyc
-@RMDIR /S /Q test\__pycache__
-@%PYPY18% test\util\runtests.py
-@DEL /Q test\*.pyc
-@%PYPY19% test\util\runtests.py
-@DEL /Q test\*.pyc
-@%IRONPYTHON27% test\util\runtests.py
-@DEL /Q test\*.pyc
+@FOR /F "tokens=1 delims=" %%A in ('CHDIR') do @SET PYTHONPATH=%%A
+@%PYTHON27_X86% pygame2\test\util\runtests.py
+@DEL /Q pygame2\test\*.pyc
+@%PYTHON27_X64% pygame2\test\util\runtests.py
+@DEL /Q pygame2\test\*.pyc
+@%PYTHON31_X86% pygame2\test\util\runtests.py
+@DEL /Q pygame2\test\*.pyc
+@RMDIR /S /Q pygame2\test\__pycache__
+@%PYTHON31_X64% pygame2\test\util\runtests.py
+@DEL /Q pygame2\test\*.pyc
+@RMDIR /S /Q pygame2\test\__pycache__
+@%PYTHON32_X86% pygame2\test\util\runtests.py
+@DEL /Q pygame2\test\*.pyc
+@RMDIR /S /Q pygame2\test\__pycache__
+@%PYTHON32_X64% pygame2\test\util\runtests.py
+@DEL /Q pygame2\test\*.pyc
+@RMDIR /S /Q pygame2\test\__pycache__
+@%PYPY18% pygame2\test\util\runtests.py
+@DEL /Q pygame2\test\*.pyc
+@%PYPY19% pygame2\test\util\runtests.py
+@DEL /Q pygame2\test\*.pyc
+@%IRONPYTHON27% pygame2\test\util\runtests.py
+@DEL /Q pygame2\test\*.pyc
 @GOTO :eof
 
 :testall2
