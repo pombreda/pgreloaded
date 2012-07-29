@@ -48,9 +48,9 @@ value, *I* to something else. ::
     >>> print(text)
     aello,Te am a simple ASCII string!"
 
-If the encapusled object does not provide a (writeable) :func:`buffer`
+If the encapsuled object does not provide a (writeable) :func:`buffer`
 interface, but is iterable, the :class:`CTypesView` will create an
-internal copy of the object data using the :mod:`array` module and
+internal copy of the object data using Python's :mod:`array` module and
 perform all operations on that copy. ::
 
     >>> mylist = [18, 52, 86, 120, 154, 188, 222, 240]
@@ -77,16 +77,16 @@ Accessing data over multiple dimensions
 ---------------------------------------
 
 The second class, :class:`MemoryView` provides an interface to access
-data over multiple dimensions. You hence can layout and access a simple
+data over multiple dimensions. You can layout and access a simple
 byte stream over e.g. two or more axes, providing a greater flexibility
 for functional operations and complex data.
 
-Let's assume, we are reading iamge data from a file stream into some buffer
-object and want to access and manipulate the image data now. Images
-feature two axes, one being the width, the other being the height,
-defining a rectangular graphics area.
+Let's assume, we are reading image data from a file stream into some buffer
+object and want to access and manipulate the image data. Images feature two
+axes, one being the width, the other being the height, defining a rectangular
+graphics area.
 
-When we read all data from the file, we have one-dimensional view of the
+When we read all data from the file, we have an one-dimensional view of the
 image graphics. The :class:`MemoryView` allows us to define a
 two-dimensional view over the image graphics, so that we can operate on
 both, rows and columns of the image. ::
@@ -135,7 +135,7 @@ A :class:`MemoryView` features, similar to Python's builtin
     (5, 5)
 
 The :attr:`MemoryView.strides`, which have to be passed on creating a
-new :class:`MemoryView` define the layout of the data over different
+new :class:`MemoryView`, define the layout of the data over different
 dimensions. In the example above, we created a 5x5 two-dimensional view
 to the image graphics. ::
 

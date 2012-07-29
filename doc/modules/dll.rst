@@ -6,7 +6,8 @@
 
 The :mod:`pygame2.dll` module is not intended for consumers of
 Pygame2. It is a helper module for loading the 3rd party libraries used by
-Pygame2.
+Pygame2. As for :mod:`pygame2.compat` there is no API compatibility guarantee
+between releases or different platforms.
 
 .. class:: DLL(libinfo : string, libnames : string or dict)
 
@@ -19,8 +20,8 @@ Pygame2.
 
    .. method:: add_function(name : string, func : function)
 
-      Adds the passed ``function`` to the DLL instance. The function
-      will be identified by the passed ``name``, so that a invocation of
+      Adds the passed *function* to the DLL instance. The function
+      will be identified by the passed *name*, so that a invocation of
       ``mydll.name (...)`` will invoke the bound function.
 
    .. method:: get_decorator() -> decorator class instance

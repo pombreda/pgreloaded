@@ -1,6 +1,6 @@
-PYTHON = python
-EXPERIMENTAL = 1
-top_srcdir = `pwd`
+PYTHON ?= python
+top_srcdir != pwd
+PYTHONPATH ?= $(top_srcdir)
 SUBDIRS = \
 	$(top_srcdir)/doc \
 	$(top_srcdir)/examples \
@@ -67,7 +67,7 @@ docs:
 
 release: dist
 runtest:
-	@$(PYTHON) pygame2/test/util/runtests.py
+	@PYTHONPATH=$(PYTHONPATH) $(PYTHON) pygame2/test/util/runtests.py
 
 # Do not run these in production environments! They are for testing
 # purposes only!
@@ -86,20 +86,20 @@ installall:
 	@pypy1.9 setup.py install
 
 testall:
-	@-python2.7 pygame2/test/util/runtests.py
+	@-PYTHONPATH=$(PYTHONPATH) python2.7 pygame2/test/util/runtests.py
 	@rm -rf test/*.pyc
-	@-python3.1 pygame2/test/util/runtests.py
+	@-PYTHONPATH=$(PYTHONPATH) python3.1 pygame2/test/util/runtests.py
 	@rm -rf test/*.pyc
-	@-python3.2 pygame2/test/util/runtests.py
+	@-PYTHONPATH=$(PYTHONPATH) python3.2 pygame2/test/util/runtests.py
 	@rm -rf test/*.pyc
-	@-pypy1.9 pygame2/test/util/runtests.py
+	@-PYTHONPATH=$(PYTHONPATH) pypy1.9 pygame2/test/util/runtests.py
 	@rm -rf test/*.pyc
 
 testpackage:
-	@python2.7 -c "import pygame2.test; pygame2.test.run ()"
-	@python3.1 -c "import pygame2.test; pygame2.test.run ()"
-	@python3.2 -c "import pygame2.test; pygame2.test.run ()"
-	@pypy1.9 -c "import pygame2.test; pygame2.test.run ()"
+	@python2.7 -c "import pygame2.test; pygame2.test.run()"
+	@python3.1 -c "import pygame2.test; pygame2.test.run()"
+	@python3.2 -c "import pygame2.test; pygame2.test.run()"
+	@pypy1.9 -c "import pygame2.test; pygame2.test.run()"
 
 purge_installs:
 	rm -rf /usr/local/lib/python2.7/site-packages/pygame2*

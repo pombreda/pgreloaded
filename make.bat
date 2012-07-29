@@ -79,8 +79,17 @@
 @GOTO :eof
 
 :docs
+@IF "%SPHINXBUILD%" == "" (
+   SET SPHINXBUILD=C:\Python27-x64\Scripts\sphinx-build.exe
+)
 @ECHO Creating docs package
-@ECHO TODO
+@RMDIR /S /Q doc\html
+@CD doc
+@CALL make html
+@MOVE /Y _build\html html
+@RMDIR /S /Q _build
+@CALL make clean
+@CD ..
 @GOTO :eof
 
 :release

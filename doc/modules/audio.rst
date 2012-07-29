@@ -14,16 +14,6 @@ playback mechanisms. The :class:`SoundSource` represents an in-application
 object that emits sounds and a :class:`SoundData` contains the PCM audio data
 to be played.
 
-The OpenAL standard supports 3D positional audio, so that a source of sound
-can be placed anywhere relative to the listener (the user of the application
-or some in-application avatar).
-
-.. image:: images/openalaudio.png
-
-The image above shows a listener surrounded by three sources of
-sound. Two are in front of them, while one is behind the listener,
-moving from left to right.
-
 Device handling
 ---------------
 
@@ -40,8 +30,8 @@ that audio data can be recorded or played back. ::
 .. note::
 
    Depending on what to accomplish and what kind of quality for audio output to
-   have, one might use a specific audio output device to be passed as argument
-   to the :class:`SoundSink` constructor.
+   have, you might want to use a specific audio output device to be passed as
+   argument to the :class:`SoundSink` constructor.
 
 It is possible to create multiple :class:`SoundSink` instances for the same
 device. OpenAL specifies an additional device-dependent execution context,
@@ -58,6 +48,16 @@ while each of them uses its own execution context.
 
 Placing the listener
 --------------------
+
+The OpenAL standard supports 3D positional audio, so that a source of sound
+can be placed anywhere relative to the listener (the user of the application
+or some in-application avatar).
+
+.. image:: images/openalaudio.png
+
+The image above shows a listener surrounded by three sources of
+sound. Two are in front of them, while one is behind the listener,
+moving from left to right.
 
 OpenAL only knows about a single listener at each time. Each
 :class:`SoundSink` can manage its own listener, which represents the user or
@@ -150,13 +150,10 @@ on. ::
    >>> wavsound = load_wav_file("vroom.wav")
 
 There are some helper functions, which create :class:`SoundData` objects from
-audio files. If you have a raw PCM data buffer, simply assign it to the
-:attr:`SoundData.data` attribute. ::
+audio files. If you have a raw PCM data buffer, you can create a
+:class:`SoundData` from it directly. ::
 
-   >>> rawsound = SoundData()
-   ...
-   >>> rawsound.data = pcmbuf
-   ...
+   >>> rawsound = SoundData(pcmformat, pcmbuf, size_of_buf, frequency_in_hz)
 
 Queueing the loaded sound is done via the :meth:`SoundSource.queue()` method,
 which appends the sound to the source for processing and playback.
@@ -249,12 +246,12 @@ Audio API
 
       The velocity of the listener as 3-value tuple within a x-y-z coordinate
       system.
-
+    
    .. attribute:: orientation
 
       The forward (in which direction does the listener look) orientation of
       the listener as 6-value tuple within a x-y-z coordinate system. The first
-      three values denote the forward vector of the listener, vlaue four to six
+      three values denote the forward vector of the listener, value four to six
       denote the upper orientation vector.
 
 

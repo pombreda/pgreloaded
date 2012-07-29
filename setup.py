@@ -28,7 +28,6 @@ if __name__ == "__main__":
                 ]
     package_dir = {"pygame2": "pygame2",
                    "pygame2.examples": "examples",
-                   "pygame2.test": "test",
                    }
 
     package_data = {"pygame2.test": ["resources/*.*"],

@@ -71,7 +71,8 @@ Trying out
 
 You also can test out Pygame2 without actually installing it. You just need
 to set up your ``PYTHONPATH`` to point to the location of the source
-distribution package. On Windows-based platforms, you might use something like
+distribution package. On Windows-based platforms, you might use something
+like ::
 
    set PYTHONPATH=C:\path\to\pgreloaded\:$PYTHONPATH
    
@@ -79,7 +80,7 @@ to define the ``PYTHONPATH`` on a command shell. On Linux/Unix, use ::
 
    export PYTHONPATH=/path/to/pgreloaded:$PYTHONPATH
    
-For bourne shell compatibles or
+For bourne shell compatibles or ::
 
    setenv PYTHONPATH /path/to/pgreloaded:$PYTHONPATH
 

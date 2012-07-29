@@ -6,16 +6,15 @@
 
 This module loosely follows a component oriented pattern to separate
 object instances, carried data and processing logic within applications
-or games. It uses a entity based approach, in which object instances are
+or games. It uses an entity based approach, in which object instances are
 unique identifiers, while their data is managed within components, which
 are separately stored. For each individual component type a processing
-system will take care of all necessary updates for the World
-environment.
+system will take care of all necessary updates on running the application.
 
 Component-based patterns
 ------------------------
 
-Component-based means that - instead of a traditional OOP approach, object
+Component-based means that - instead of a traditional OOP approach - object
 information are split up into separate data bags for reusability and that those
 data bags are separated from any application logic.
 
@@ -124,7 +123,7 @@ Once we split up the previously OOP-style classes into pure data containers and
 some separate processing code for the behaviour, we are talking about components
 and (processing) systems. A component is a data container, ideally grouping
 related information on a granular level, so that it is easy to (re)use.
-When you combin different components to build your in-application objects and
+When you combine different components to build your in-application objects and
 instantiate those, we are talking about entities.
 
 .. image:: images/ebs.png
@@ -199,7 +198,7 @@ object instantiation time. ::
 
 .. note::
 
-   The *world* argument in ``__init__()`` is necesary. It will be passed to the
+   The *world* argument in ``__init__()`` is necessary. It will be passed to the
    internal ``__new__()`` constructor of the :class:`Entity` and stores a
    reference to the :class:`World` and also allows the :class:`Entity` to store
    its information in the :class:`World`.
@@ -244,7 +243,7 @@ EBS API
 
    .. attribute:: world
 
-      The :class:`World` the entity reside in.
+      The :class:`World` the entity resides in.
 
 .. class:: Applicator()
 
@@ -330,8 +329,8 @@ EBS API
 
    .. method:: delete_entity(entity : Entity)
 
-      Removes an :class:`Entity` from the World, including all
-      :class:`Component` data that.
+      Removes an :class:`Entity` from the World, including all its
+      :class:`Component` data.
 
    .. method:: insert_system(index : int, system : System)
 

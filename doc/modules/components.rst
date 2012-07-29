@@ -5,7 +5,7 @@
 ==================================================
 
 This module contains often used data classes for applications. All data classes
-inherit from the :class:`Component` class to be usable with the
+inherit from the :class:`pygame2.ebs.Component` class to be usable with the
 :mod:`pygame2.ebs` module.
 
 .. class:: Position(x=0, y=0, z=0)

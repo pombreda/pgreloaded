@@ -6,16 +6,19 @@
 
 The :mod:`pygame2.compat` module is for internal purposes of the :mod:`pygame2`
 package and should not be used outside of the package. Classes, methods and
-interfaces might break between versions and there is no guarantee of API
-compatibility on different platforms and python implementations.
+interfaces might change between versions and there is no guarantee of API
+compatibility on different platforms and python implementations or between
+releases.
 
 .. data:: ISPYTHON2
 
-   True, if executed in a Python 2.x compatible interpreter, False otherwise.
+   ``True``, if executed in a Python 2.x compatible interpreter, ``False``
+   otherwise.
 
 .. data:: ISPYTHON3
 
-   True, if executed in a Python 3.x compatible interpreter, False otherwise.
+   ``True``, if executed in a Python 3.x compatible interpreter, ``False``
+   otherwise.
 
 .. function:: long([x[, base]])
 
@@ -35,7 +38,6 @@ compatibility on different platforms and python implementations.
 
       Only defined for Python 3.x, for which it is the same as
       ``isinstance(x, collections.Callable)``
-
 
 .. function:: byteify(x : string, enc : string) -> bytes
 
@@ -64,4 +66,5 @@ compatibility on different platforms and python implementations.
 
 .. class:: UnsupportedError(obj : object[, msg=None])
 
-   Indicates that a certain class, function or behaviour is not supported.
+   Indicates that a certain class, function or behaviour is not supported in
+   the specific execution environment.
