@@ -67,7 +67,7 @@ docs:
 
 release: dist
 runtest:
-	@PYTHONPATH=$(PYTHONPATH) $(PYTHON) pygame2/test/util/runtests.py
+	@PYTHONPATH=$(PYTHONPATH) $(PYTHON) -B pygame2/test/util/runtests.py
 
 # Do not run these in production environments! They are for testing
 # purposes only!
@@ -86,14 +86,15 @@ installall:
 	@pypy1.9 setup.py install
 
 testall:
+	@rm -rf pygame2/test/*.pyc
 	@-PYTHONPATH=$(PYTHONPATH) python2.7 pygame2/test/util/runtests.py
-	@rm -rf test/*.pyc
+	@rm -rf pygame2/test/*.pyc
 	@-PYTHONPATH=$(PYTHONPATH) python3.1 pygame2/test/util/runtests.py
-	@rm -rf test/*.pyc
+	@rm -rf pygame2/test/*.pyc
 	@-PYTHONPATH=$(PYTHONPATH) python3.2 pygame2/test/util/runtests.py
-	@rm -rf test/*.pyc
+	@rm -rf pygame2/test/*.pyc
 	@-PYTHONPATH=$(PYTHONPATH) pypy1.9 pygame2/test/util/runtests.py
-	@rm -rf test/*.pyc
+	@rm -rf pygame2/test/*.pyc
 
 testpackage:
 	@python2.7 -c "import pygame2.test; pygame2.test.run()"
@@ -106,4 +107,3 @@ purge_installs:
 	rm -rf /usr/local/lib/python3.1/site-packages/pygame2*
 	rm -rf /usr/local/lib/python3.2/site-packages/pygame2*
 	rm -rf /usr/local/lib/pypy-1.9/site-packages/pygame2*
-

@@ -5,6 +5,7 @@
 # Valgrind checker application and the default arguments to use.
 : ${VALGRIND:="valgrind"}
 : ${VALGRINDARGS:="--tool=memcheck --leak-check=summary"}
+: ${PYTHONPATH:="`dirname $0`/../"}
 
 usage()
 {
@@ -35,5 +36,5 @@ if [ $# -eq 0 ]; then
 fi
 
 for f in $@; do
-    $VALGRIND $DEFARGS $PYDEBUG -E $f
+    $VALGRIND $DEFARGS $PYDEBUG -B $f
 done

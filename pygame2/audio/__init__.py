@@ -6,6 +6,7 @@ as more complex features, e.g. channel selections, sound effects and more.
 """
 import os
 import wave
+from pygame2.compat import experimental
 from pygame2.ebs import System, Component
 import pygame2.openal.alc as alc
 import pygame2.openal.al as al
@@ -260,6 +261,7 @@ def load_wav_file(fname):
     return data
 
 
+@experimental
 def load_ogg_file(fname):
     """Loads an Ogg-Vorbis encoded audio file into a SoundData object."""
     fp = vorbis.fopen(fname)

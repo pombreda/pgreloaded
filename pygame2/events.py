@@ -1,13 +1,13 @@
 """General purpose event handling routines"""
 from pygame2.compat import *
 
-__all__ = ["EventHandler"]
+__all__ = ["EventHandler", "MPEventHandler"]
 
-# _HASMP = True
-# try:
-#     from multiprocessing import Pool
-# except:
-#     _HASMP = False
+_HASMP = True
+try:
+    from multiprocessing import Pool
+except ImportError:
+    _HASMP = False
 
 
 class EventHandler(object):
@@ -53,14 +53,22 @@ class EventHandler(object):
         self.callbacks.remove(callback)
 
 
-# class MPEventHandler(EventHandler):
-#     """TODO"""
-#     def __init__(self, sender, procs=5):
-#         if not _HASMP:
-#             # TODO: define an appropriate UnsupportedError somewhere
-#             raise Exception("no multiprocessing support found")
-#         self.procs = procs
-#
-#     def __call__(self, *args):
-#         pool = Pool(processes=procs)
-#         pool.map(lambda cb, args: cb(*args), self.callbacks)
+class MPEventHandler(EventHandler):
+    """An asynchronous event handling class in which callbacks are
+    executed in parallel.
+
+    It is the responsibility of the caller code to ensure that every
+    object used maintains a consistent state. The MPEventHandler class
+    will not apply any locks, synchronous state changes or anything else
+    to the arguments being used. Cosider it a "fire-and-forget" event
+    handling strategy
+    """
+    def __init__(self, sender, maxprocs=5):
+        if not _HASMP:
+            # TODO: define an appropriate UnsupportedError somewhere
+            raise UnsupportedError("no multiprocessing support found")
+        self.maxprocs = maxprocs
+
+    def __call__(self, *args):
+        pool = Pool(processes=maxprocs)
+        pool.map(lambda cb, args: cb(*args), self.callbacks)

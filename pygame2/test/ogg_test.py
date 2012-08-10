@@ -15,7 +15,7 @@ class OGGTest(unittest.TestCase):
         self.assertIsInstance(error, ogg.OggError)
         self.assertEqual(error.msg, None)
         self.assertEqual(str(error), "None")
-        
+
         def doraise(msg):
             raise ogg.OggError(msg)
 

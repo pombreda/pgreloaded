@@ -24,7 +24,7 @@ WHITE = Color(255, 255, 255)
 
 # This function will use a rectangular area and fill each second horizontal
 # line with a white color on the passed surface.
-def draw_stripes(surface, x1, x2, y1, y2):
+def draw_horizontal_stripes(surface, x1, x2, y1, y2):
     # Fill the entire surface with a black color. In contrast to
     # colorpalettes.py we use a Color() value here, just to demonstrate that
     # it really works.
@@ -36,11 +36,11 @@ def draw_stripes(surface, x1, x2, y1, y2):
     # on every platform, though.
     pixelview = video.PixelView(surface)
 
-    # Loop over the area bounds, considering each second line and every column
+    # Loop over the area bounds, considering each fourth line and every column
     # on the 2D view. The PixelView uses a y-x alignment to access pixels.
     # This mkeans that the first accessible dimension of the PixelView denotes
     # the horizontal lines of an image, and the second the vertical lines.
-    for y in range(y1, y2, 2):
+    for y in range(y1, y2, 4):
         for x in range(x1, x2):
             # Change the color of each individual pixel. We can assign any
             # color-like value here, since the assignment method of the
@@ -53,6 +53,15 @@ def draw_stripes(surface, x1, x2, y1, y2):
     # implicitly at creation time. Once we are done with all necessary
     # operations, we need to unlock the surface, which will be done
     # automatically at the time the PixelView is garbage-collected.
+    del pixelview
+
+# as draw_horizontal_stripes(), but vertical
+def draw_vertical_stripes(surface, x1, x2, y1, y2):
+    video.fill(surface, BLACK)
+    pixelview = video.PixelView(surface)
+    for x in range(x1, x2, 4):
+        for y in range(y1, y2):
+            pixelview[y][x] = WHITE
     del pixelview
 
 
@@ -70,7 +79,8 @@ def run():
     # We implement the functionality as it was done in colorpalettes.py and
     # utilise a mapping table to look up the function to be executed, together
     # with the arguments they should receive
-    functions = ((draw_stripes, (windowsurface, 300, 500, 200, 400)),
+    functions = ((draw_horizontal_stripes, (windowsurface, 300, 500, 200, 400)),
+                 (draw_vertical_stripes, (windowsurface, 300, 500, 200, 400)),
                  )
 
     # A storage variable for the function we are currently on, so that we know

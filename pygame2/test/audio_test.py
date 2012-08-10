@@ -51,7 +51,7 @@ class AudioTest(unittest.TestCase):
         self.assertRaises(TypeError, source.queue, None)
         self.assertRaises(TypeError, source.queue, "Test")
         self.assertRaises(TypeError, source.queue, 123456)
-        
+
         data = audio.SoundData()
         source.queue(data)
 
@@ -59,7 +59,7 @@ class AudioTest(unittest.TestCase):
     def test_SoundSink(self):
         sink = audio.SoundSink()
         self.assertIsInstance(sink, audio.SoundSink)
-        
+
 
     @unittest.skip("not implemented")
     def test_SoundSink_process(self):
@@ -87,8 +87,8 @@ class AudioTest(unittest.TestCase):
     def test_load_ogg_file(self):
         oggfile = RESOURCES.get_path("hey.ogg")
         snddata = audio.load_ogg_file(oggfile)
-        
-        
+
+
     @unittest.skip("not implemented")
     def test_load_stream(self):
         pass
