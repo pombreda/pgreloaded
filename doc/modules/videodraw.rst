@@ -25,14 +25,3 @@
    first checked, if the item denotes a single rectangular area
    (4 integer values) before assuming it to be a sequence of rectangular areas
    to fill with the color.
-
-.. class:: PixelView(source : object)
-
-   2D :class:`pygame2.array.MemoryView` for
-   :class:`Sprite` and surface pixel access.
-
-   .. note::
-
-      If necessary, the *source* surrface will be locked for accessing its
-      pixel data. The lock will be removed once the :class:`PixelView` is
-      garbage-collected or deleted.

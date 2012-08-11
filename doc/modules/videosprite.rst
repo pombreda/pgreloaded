@@ -5,7 +5,7 @@
 :mod:`pygame2.video.sprite` - Sprite, texture and pixel surface routines
 ========================================================================
 
-.. class:: Sprite(source=None, size=(0, 0), bpp=32, freesf=False)
+.. class:: Sprite(source=None, size=(0, 0), bpp=32, masks=None, freesf=False)
 
    A simple, visible, pixel-based 2D object.
 

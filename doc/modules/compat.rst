@@ -64,7 +64,18 @@ releases.
 
    Prints a deprecation message using the :meth:`warnings.warn()` method.
 
-.. class:: UnsupportedError(obj : object[, msg=None])
+.. exception:: UnsupportedError(obj : object[, msg=None])
 
    Indicates that a certain class, function or behaviour is not supported in
    the specific execution environment.
+
+.. decorator:: experimental
+
+   A simple decorator to mark functions and methods as
+   experimental. This will print a warning each time the function or
+   method is invoked.
+
+.. exception:: ExperimentalWarning(obj : object[, msg=None])
+
+   Indicates that a certain class, function or behaviour is in an
+   experimental state.

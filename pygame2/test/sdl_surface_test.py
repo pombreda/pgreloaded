@@ -31,9 +31,9 @@ rgba_pixelations_16x16 = (
      pixels.SDL_PIXELFORMAT_RGB444),
     )
 
-blitsizes = (
-    (2, 2), (5, 5), (10, 10), (20, 20), (2, 4), (5, 3), (8, 12), (27, 9),
-    )
+blitsizes = ((2, 2), (5, 5), (10, 10), (20, 20),
+             (2, 4), (5, 3), (8, 12), (27, 9),
+             )
 
 blitpositions = (
     rect.SDL_Rect(0, 0),
@@ -175,15 +175,14 @@ class SDLSurfaceTest(unittest.TestCase):
             surface.free_surface(sf)
 
     def test_fill_rect(self):
-        rectlist = (
-            rect.SDL_Rect(0, 0, 0, 0),
-            rect.SDL_Rect(0, 0, 10, 10),
-            rect.SDL_Rect(0, 0, -10, 10),
-            rect.SDL_Rect(0, 0, -10, -10),
-            rect.SDL_Rect(-10, -10, 10, 10),
-            rect.SDL_Rect(10, -10, 10, 10),
-            rect.SDL_Rect(10, 10, 10, 10),
-            )
+        rectlist = (rect.SDL_Rect(0, 0, 0, 0),
+                    rect.SDL_Rect(0, 0, 10, 10),
+                    rect.SDL_Rect(0, 0, -10, 10),
+                    rect.SDL_Rect(0, 0, -10, -10),
+                    rect.SDL_Rect(-10, -10, 10, 10),
+                    rect.SDL_Rect(10, -10, 10, 10),
+                    rect.SDL_Rect(10, 10, 10, 10),
+                    )
 
         for fmt in pixels.ALL_PIXELFORMATS:
             if pixels.SDL_ISPIXELFORMAT_FOURCC(fmt):
@@ -203,15 +202,14 @@ class SDLSurfaceTest(unittest.TestCase):
                     surface.free_surface(sf)
 
     def test_fill_rects(self):
-        rectlist = (
-            rect.SDL_Rect(0, 0, 0, 0),
-            rect.SDL_Rect(0, 0, 10, 10),
-            rect.SDL_Rect(0, 0, -10, 10),
-            rect.SDL_Rect(0, 0, -10, -10),
-            rect.SDL_Rect(-10, -10, 10, 10),
-            rect.SDL_Rect(10, -10, 10, 10),
-            rect.SDL_Rect(10, 10, 10, 10),
-            )
+        rectlist = (rect.SDL_Rect(0, 0, 0, 0),
+                    rect.SDL_Rect(0, 0, 10, 10),
+                    rect.SDL_Rect(0, 0, -10, 10),
+                    rect.SDL_Rect(0, 0, -10, -10),
+                    rect.SDL_Rect(-10, -10, 10, 10),
+                    rect.SDL_Rect(10, -10, 10, 10),
+                    rect.SDL_Rect(10, 10, 10, 10),
+                    )
 
         for fmt in pixels.ALL_PIXELFORMATS:
             if pixels.SDL_ISPIXELFORMAT_FOURCC(fmt):
@@ -249,18 +247,17 @@ class SDLSurfaceTest(unittest.TestCase):
             surface.free_surface(sf)
 
     def test_get_set_clip_rect(self):
-        rectlist = (
-            (rect.SDL_Rect(0, 0, 0, 0), False, False),
-            (rect.SDL_Rect(2, 2, 0, 0), False, False),
-            (rect.SDL_Rect(2, 2, 5, 1), True, True),
-            (rect.SDL_Rect(6, 5, 10, 3), True, False),
-            (rect.SDL_Rect(0, 0, 10, 10), True, True),
-            (rect.SDL_Rect(0, 0, -10, 10), False, False),
-            (rect.SDL_Rect(0, 0, -10, -10), False, False),
-            (rect.SDL_Rect(-10, -10, 10, 10), False, False),
-            (rect.SDL_Rect(10, -10, 10, 10), False, False),
-            (rect.SDL_Rect(10, 10, 10, 10), True, False)
-            )
+        rectlist = ((rect.SDL_Rect(0, 0, 0, 0), False, False),
+                    (rect.SDL_Rect(2, 2, 0, 0), False, False),
+                    (rect.SDL_Rect(2, 2, 5, 1), True, True),
+                    (rect.SDL_Rect(6, 5, 10, 3), True, False),
+                    (rect.SDL_Rect(0, 0, 10, 10), True, True),
+                    (rect.SDL_Rect(0, 0, -10, 10), False, False),
+                    (rect.SDL_Rect(0, 0, -10, -10), False, False),
+                    (rect.SDL_Rect(-10, -10, 10, 10), False, False),
+                    (rect.SDL_Rect(10, -10, 10, 10), False, False),
+                    (rect.SDL_Rect(10, 10, 10, 10), True, False)
+                    )
 
         sf = surface.create_rgb_surface(15, 15, 32)
         clip = surface.get_clip_rect(sf)
@@ -413,7 +410,7 @@ class SDLSurfaceTest(unittest.TestCase):
             for pos in blitpositions:
                 drect = pos.__copy__()
                 surface.fill_rect(dest, None, 0x0)  # fill with black
-                surface.lower_blit(src, src.clip_rect, dest, drect) 
+                surface.lower_blit(src, src.clip_rect, dest, drect)
                 buf = ctypes.cast(dest.pixels,
                                   ctypes.POINTER(ctypes.c_ubyte * pixelsize))
                 pbuf = pgarray.CTypesView(buf.contents, itemsize=1,
@@ -431,7 +428,7 @@ mismatch at %d,%d for %s: %d != %d""" % (y, x, pos, col, 0xFFFFFFFF))
                         else:
                             self.assertEqual(col, 0x0, msg="""color mismatch
 at %d,%d for %s: %d != %d""" % (y, x, pos, col, 0x0))
-        
+
         while len(sources) > 0:
             sf = sources.pop()
             surface.free_surface(sf)
@@ -480,7 +477,7 @@ mismatch at %d,%d for %s: %d != %d""" % (x, y, pos, col, 0xFFFFFFFF))
                         else:
                             self.assertEqual(col, 0x0, msg="""color mismatch
 at %d,%d for %s: %d != %d""" % (x, y, pos, col, 0x0))
-        
+
         while len(sources) > 0:
             sf = sources.pop()
             surface.free_surface(sf)

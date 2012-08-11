@@ -16,6 +16,7 @@ ISPYTHON3 = False
 if sys.version_info[0] < 3:
     # Wrapper around bytes() and decode() for Python 2.x
     byteify = lambda x, enc: x.encode(enc)
+    # Wrapper around str() for Python 2.x
     stringify = lambda x, enc: str(x)
     ISPYTHON2 = True
 else:

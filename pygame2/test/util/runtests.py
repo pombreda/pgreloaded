@@ -31,6 +31,7 @@ EXCLUDETAGS = ["interactive"]
 
 
 def printerror():
+    """Prints the last exception trace."""
     print(traceback.format_exc())
 
 
@@ -84,43 +85,41 @@ def create_options():
     optparser.add_option("-f", "--filename", type="string",
                          help="execute a single unit test file")
     optparser.add_option("-s", "--subprocess", action="store_true",
-                          default=False,
-                          help="run everything in an own subprocess "
-                          "(default: use a single process)")
+                         default=False,
+                         help="run everything in an own subprocess "
+                         "(default: use a single process)")
     optparser.add_option("-t", "--timeout", type="int", default=70,
-                          help="Timout for subprocesses before being killed "
-                          "(default: 70s per file)")
+                         help="Timout for subprocesses before being killed "
+                         "(default: 70s per file)")
     optparser.add_option("-v", "--verbose", action="store_true", default=False,
-                          help="be verbose adnd print anything instantly")
+                         help="be verbose adnd print anything instantly")
     optparser.add_option("-r", "--random", action="store_true", default=False,
-                          help="randomize the order of tests")
+                         help="randomize the order of tests")
     optparser.add_option("-S", "--seed", type="int",
-                          help="seed the randomizer(useful to "
-                          "recreate earlier randomized test cases)")
+                         help="seed the randomizer(useful to "
+                         "recreate earlier randomized test cases)")
     optparser.add_option("-i", "--interactive", action="callback",
-                          callback=include_tag,
-                          callback_args=("interactive",),
-                          help="also execute interactive tests")
+                         callback=include_tag,
+                         callback_args=("interactive",),
+                         help="also execute interactive tests")
     optparser.add_option("-e", "--exclude", action="callback",
-                          callback=exclude_tag, type="string",
-                          help="exclude test containing the tag")
+                         callback=exclude_tag, type="string",
+                         help="exclude test containing the tag")
     optparser.add_option("-l", "--listtags", action="callback",
-                          callback=list_tags,
-                          help="lists all available tags and exits")
-    optkeys = [
-        "filename",
-        "subprocess",
-        "timeout",
-        "random",
-        "seed",
-        "verbose"
-        ]
+                         callback=list_tags,
+                         help="lists all available tags and exits")
+    optkeys = ["filename",
+               "subprocess",
+               "timeout",
+               "random",
+               "seed",
+               "verbose"
+               ]
     return optparser, optkeys
 
 
 def gettestfiles(testdir=None, randomizer=None):
-    """
-    Get all test files from the passed test directory. If none is
+    """Get all test files from the passed test directory. If none is
     passed, use the default pygame2 test directory.
     """
     if not testdir:

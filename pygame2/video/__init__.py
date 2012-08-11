@@ -10,13 +10,15 @@ import pygame2.sdl.events as events
 import pygame2.sdl.timer as timer
 from pygame2.video.sprite import Sprite, SpriteRenderer
 from pygame2.video.window import Window
-from pygame2.video.draw import prepare_color, fill, PixelView
+from pygame2.video.draw import *
 from pygame2.video.font import BitmapFont
 from pygame2.video.gui import *
+from pygame2.video.pixelaccess import *
 
 __all__ = ["Window", "Sprite", "SpriteRenderer",
            "TestEventProcessor", "init", "quit",
-           "prepare_color", "fill", "PixelView",
+           "prepare_color", "fill",
+           "PixelView", "pixels2d", "pixels3d",
            "BitmapFont",
            "UIProcessor", "CheckButton", "Button", "TextEntry"]
 

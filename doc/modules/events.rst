@@ -57,3 +57,19 @@
    .. method:: remove_system(system : System)
 
       Removes a processing :class:`System` from the world.
+
+.. class:: MPEventHandler(sender)
+
+   An asynchronous event handling class based on :class:`EventHandler`,
+   in which callbacks are executed in parallel. It is the responsibility
+   of the caller code to ensure that every object used maintains a
+   consistent state. The :class:`MPEventHandler` class will not apply
+   any locks, synchronous state changes or anything else to the
+   arguments being used. Cosider it a "fire-and-forget" event handling
+   strategy.
+
+   .. note::
+
+      The :class:`MPEventHandler` relies on the :mod:`multiprocessing`
+      module. If the module is not available in the target environment,
+      a :exc:`pygame2.compat.UnsupportedError` is raised.

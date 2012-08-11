@@ -20,6 +20,7 @@ the :mod:`pygame2.video` module.
    videodraw.rst
    videofont.rst
    videogui.rst
+   videopixelaccess.rst
    videosprite.rst
    videowindow.rst
 
@@ -45,4 +46,3 @@ Video API
 
       Starts an event loop without actually processing any event. The method
       will run endlessly until a ``SDL_QUIT`` event occurs.
-

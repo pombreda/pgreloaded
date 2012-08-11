@@ -15,7 +15,7 @@ formats = ("bmp",
            "gif",
            "ico",
            "jpg",
-#           "lbm",
+           # "lbm",
            "pbm",
            "pcx",
            "pgm",
@@ -27,7 +27,7 @@ formats = ("bmp",
            "webp",
            "xcf",
            "xpm",
-#           "xv",
+           # "xv",
            )
 
 

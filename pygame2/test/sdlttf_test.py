@@ -53,7 +53,8 @@ class SDLTTFTest(unittest.TestCase):
         self.assertRaises(TypeError, sdlttf.open_font_index, None, None, None)
         self.assertRaises(TypeError, sdlttf.open_font_index, filename, None,
                           None)
-        self.assertRaises(TypeError, sdlttf.open_font_index, filename, 10, None)
+        self.assertRaises(TypeError, sdlttf.open_font_index, filename, 10,
+                          None)
         self.assertRaises(TypeError, sdlttf.open_font_index, filename, None, 0)
         self.assertRaises(TypeError, sdlttf.open_font_index, filename, None, 0)
         self.assertRaises(ValueError, sdlttf.open_font_index, filename, 10, -2)
@@ -96,13 +97,13 @@ class SDLTTFTest(unittest.TestCase):
         filename = RESOURCES.get_path("tuffy.ttf")
         font = sdlttf.open_font(filename, 10)
         self.assertIsInstance(font, sdlttf.TTF_Font)
-        self.assertEqual (sdlttf.get_font_style(font), sdlttf.TTF_STYLE_NORMAL)
+        self.assertEqual(sdlttf.get_font_style(font), sdlttf.TTF_STYLE_NORMAL)
         sdlttf.set_font_style(font, sdlttf.TTF_STYLE_BOLD)
-        self.assertEqual (sdlttf.get_font_style(font), sdlttf.TTF_STYLE_BOLD)
+        self.assertEqual(sdlttf.get_font_style(font), sdlttf.TTF_STYLE_BOLD)
         sdlttf.set_font_style(font, sdlttf.TTF_STYLE_BOLD |
                               sdlttf.TTF_STYLE_ITALIC)
-        self.assertEqual (sdlttf.get_font_style(font), sdlttf.TTF_STYLE_BOLD |
-                          sdlttf.TTF_STYLE_ITALIC)
+        self.assertEqual(sdlttf.get_font_style(font), sdlttf.TTF_STYLE_BOLD |
+                         sdlttf.TTF_STYLE_ITALIC)
         sdlttf.set_font_style(font, sdlttf.TTF_STYLE_BOLD |
                               sdlttf.TTF_STYLE_UNDERLINE)
         self.assertRaises(TypeError, sdlttf.get_font_style, None)

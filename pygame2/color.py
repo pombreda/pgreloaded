@@ -35,11 +35,11 @@ class Color(object):
 
     def __eq__(self, color):
         return self.r == color.r and self.g == color.g and \
-               self.b == color.b and self.a == color.a
+            self.b == color.b and self.a == color.a
 
     def __ne__(self, color):
         return self.r != color.r or self.g != color.g or \
-               self.b != color.b or self.a != color.a
+            self.b != color.b or self.a != color.a
 
     def __int__(self):
         return (self.r << 24 | self.g << 16 | self.b << 8 | self.a)
@@ -213,7 +213,7 @@ class Color(object):
             if type(x) not in(int, long, float):
                 raise TypeError("HSVA values must be of type float")
         if not (0 <= s <= 100) or not (0 <= v <= 100) or \
-                not (0 <= a <= 100) or  not (0 <= h <= 360):
+                not (0 <= a <= 100) or not (0 <= h <= 360):
             raise ValueError("invalid HSVA value")
 
         self.a = int((a / 100.0) * 255)
@@ -294,7 +294,7 @@ class Color(object):
             if type(x) not in (int, long, float):
                 raise TypeError("HSLA values must be of type float")
         if not (0 <= s <= 100) or not (0 <= l <= 100) or \
-                not (0 <= a <= 100) or  not (0 <= h <= 360):
+                not (0 <= a <= 100) or not (0 <= h <= 360):
             raise ValueError("invalid HSLA value")
 
         self.a = int((a / 100.0) * 255)
@@ -536,7 +536,7 @@ def string_to_color(s):
 
 def convert_to_color(v):
     """Tries to convert the passed value to a Color object.
-    
+
     If the color is an integer value, it is assumed to be in ARGB layout.
     """
     if isinstance(v, Color):
@@ -549,7 +549,7 @@ def convert_to_color(v):
 
     r, g, b, a = 0, 0, 0, 0
     if hasattr(v, "r") and hasattr(v, "g") and hasattr(v, "b"):
-        if 0 <= int(v.r) <= 255 and  0 <= int(v.g) <= 255 and \
+        if 0 <= int(v.r) <= 255 and 0 <= int(v.g) <= 255 and \
                 0 <= v.b <= 255:
             r = int(v.r)
             g = int(v.g)

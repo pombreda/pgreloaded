@@ -96,7 +96,9 @@ class TextEntry(Sprite):
 
 
 class UIProcessor(System):
-    """TODO
+    """A processing system for user interface elements and events.
+
+    TODO
     """
     def __init__(self):
         """Creates a new UIProcessor."""

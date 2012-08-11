@@ -63,7 +63,8 @@ class SpriteRenderer(System):
 
 class Sprite(Component):
     """A simple, visible, pixel-based 2D object."""
-    def __init__(self, source=None, size=(0, 0), bpp=32, freesf=False):
+    def __init__(self, source=None, size=(0, 0), bpp=32, masks=None,
+                 freesf=False):
         """Creates a new Sprite.
 
         If a source is provided, the constructor assumes it to be a
@@ -91,8 +92,13 @@ class Sprite(Component):
                 rw = rwops.rw_from_object(source)
                 self.surface = sdlsurface.load_bmp_rw(rw, True)
         else:
+            if masks:
+                rmask, gmask, bmask, amask = masks
+            else:
+                rmask = gmask = bmask = amask = 0
             self.surface = sdlsurface.create_rgb_surface(size[0], size[1],
-                                                         bpp)
+                                                         bpp, rmask, gmask,
+                                                         bmask, amask)
         self.depth = 0
         self.x = 0
         self.y = 0
