@@ -37,5 +37,6 @@ class SDLVersionTest(unittest.TestCase):
     def test_get_revision_number(self):
         self.assertGreaterEqual(version.get_revision_number(), 6380)
 
+
 if __name__ == '__main__':
     sys.exit(unittest.main())

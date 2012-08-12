@@ -488,7 +488,7 @@
 
    .. attribute:: msg
 
-      TODO
+      The exact :class:`pygame2.sdl.syswm.SDL_SysWMmsg`.
 
 .. class:: SDL_Event()
 

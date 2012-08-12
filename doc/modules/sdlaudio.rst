@@ -1,8 +1,8 @@
 ﻿.. module:: pygame2.sdl.audio
    :synopsis: SDL2 Audio wrapper
 
-:mod:`pygame2.sdl.audio` - SDL2 Audio  wrapper
-==============================================
+:mod:`pygame2.sdl.audio` - SDL2 Audio wrapper
+=============================================
 
 .. function:: SDL_AUDIO_BITSIZE(x : int) -> bool
 

@@ -23,7 +23,16 @@ class SDL_version(ctypes.Structure):
         self.patch = patch
 
     def __repr__(self):
-        return '%d.%d.%d' % (self.major, self.minor, self.patch)
+        return "%d.%d.%d" % (self.major, self.minor, self.patch)
+
+
+def SDL_VERSION(version):
+    """Fills a SDL_version with the version information of the loaded
+    SDL2 dll.
+    """
+    if not isinstance(version, SDL_version):
+        raise TypeError("version must be a a SDL_version")
+    dll.SDL_GetVersion(ctypes.byref(version))
 
 
 def SDL_VERSIONNUM(major, minor, patch):

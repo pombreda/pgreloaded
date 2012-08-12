@@ -41,6 +41,7 @@ Submodules
    sdltimer.rst
    sdlversion.rst
    sdlvideo.rst
+   sdlsyswm.rst
 
 SDL2 API
 --------

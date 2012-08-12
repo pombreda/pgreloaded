@@ -52,7 +52,7 @@ clean:
 		else \
 			cd $$dir; \
 			echo "Cleaning up in $$dir..."; \
-			rm -f *~ *.cache *.core *.pyc *.orig; \
+			rm -f *~ *.cache *.core *.pyc *.orig *py.class; \
 			rm -rf __pycache__; \
 		fi \
 	done

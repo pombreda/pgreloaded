@@ -4,6 +4,7 @@ Wrapper methods around the SDL2 event routines.
 import ctypes
 from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE, get_error, SDLError
 from pygame2.sdl.keyboard import SDL_Keysym
+from pygame2.sdl.syswm import SDL_SysWMmsg
 
 __all__ = ["SDL_WindowEvent", "SDL_KeyboardEvent", "SDL_TextEditingEvent",
            "SDL_TextInputEvent", "SDL_MouseMotionEvent",
@@ -315,8 +316,7 @@ class SDL_UserEvent(ctypes.Structure):
 class SDL_SysWMEvent(ctypes.Structure):
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
-                # TODO: create a capsule for SDL_SysWMmsg?
-                ("msg", ctypes.c_void_p),
+                ("msg", SDL_SysWMmsg),
                 ]
 
 
