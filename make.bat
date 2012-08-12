@@ -74,8 +74,9 @@
 :clean
 @RMDIR /S /Q build
 @RMDIR /S /Q dist
-@RMDIR /S /Q pygame2\test\__pycache__
-@DEL /Q MANIFEST
+@FOR /d /r . %%d in (__pycache__) do @IF EXIST "%%d" RMDIR /S /Q "%%d"
+@DEL /S /Q MANIFEST
+@DEL /S /Q *.pyc
 @GOTO :eof
 
 :docs
