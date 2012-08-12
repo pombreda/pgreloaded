@@ -117,7 +117,7 @@ pygame.event      Pygame2
 ``set_grab()``    :func:`pygame2.sdl.video.set_window_grab()`
 ``get_grab()``    :func:`pygame2.sdl.video.get_window_grab()`
 ``post()``        :func:`pygame2.sdl.events.peep_events()`
-``Event``         :class:`pygame2.sdl.events.Event`
+``Event``         :class:`pygame2.sdl.events.SDL_Event`
 ================= =================================================
 
 pygame.font

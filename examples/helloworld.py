@@ -37,7 +37,7 @@ def run():
     # Create a new window (like your browser window or editor window,
     # etc.) and give it a meaningful title and size. We definitely need
     # this, if we want to present something to the user.
-    window = video.Window("Hello World!", size=(640, 480))
+    window = video.Window("Hello World!", size=(592, 460))
 
     # By default, every Window is hidden, not shown on the screen right
     # after creation. Thus we need to tell it to be shown now.

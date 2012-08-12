@@ -1,12 +1,10 @@
 Installing Pygame2
 ==================
-
 This section provides an overview and guidance for installing Pygame2 on
 various target platforms.
 
 Prerequisites
 -------------
-
 Pygame2 relies on some 3rd party packages to be fully usable and to
 provide you full access to all of its features.
 
@@ -22,7 +20,7 @@ distribution.
 .. note::
    PyPy's :mod:`ctypes` implementation does not support everything
    supported by Python's :mod:`ctypes` implementation. For PyPy there
-   are some known regressions as listed in the TODOS.txt file.
+   are some known regressions as listed in the :doc:`todos`.
 
 Additionally, you will need the following packages and libraries to be
 installed to use *all* features of Pygame2:
@@ -50,7 +48,6 @@ libvorbis >= 1.3.3  :mod:`pygame2.ogg`      http://www.xiph.org
 
 Installation
 ------------
-
 You can either use the python way of installing the package or the make
 command using the Makefile on POSIX-compatible platforms, such as Linux
 or BSD, or the make.bat batch file on Windows platforms.
@@ -68,21 +65,28 @@ installation with as many features as possible.
 
 Trying out
 ^^^^^^^^^^
-
 You also can test out Pygame2 without actually installing it. You just need
 to set up your ``PYTHONPATH`` to point to the location of the source
 distribution package. On Windows-based platforms, you might use something
 like ::
 
    set PYTHONPATH=C:\path\to\pgreloaded\:$PYTHONPATH
-   
+
 to define the ``PYTHONPATH`` on a command shell. On Linux/Unix, use ::
 
    export PYTHONPATH=/path/to/pgreloaded:$PYTHONPATH
-   
+
 For bourne shell compatibles or ::
 
    setenv PYTHONPATH /path/to/pgreloaded:$PYTHONPATH
 
 for C shell compatibles. You can omit the `:$PYTHONPATH``, if you did not use
 it so far and if your environment settings do not define it.
+
+
+Notes on Mercurial usage
+^^^^^^^^^^^^^^^^^^^^^^^^
+The Mercurial version of Pygame Reloaded is not intended to be used in a
+production environment. Interfaces may change from one checkin to
+another, methods, classes or modules can be broken and so on. If you
+want more reliable code, please refer to the official releases.

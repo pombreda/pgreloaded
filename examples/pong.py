@@ -159,6 +159,7 @@ class Player(Entity):
         self.playerdata = PlayerData()
         self.playerdata.ai = ai
 
+
 class Ball(Entity):
     def __init__(self, world, posx=0, posy=0):
         self.sprite = video.Sprite(size=(20, 20), bpp=32)

@@ -12,12 +12,20 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   intro.rst   
+   intro.rst
    install.rst
    tutorial/index.rst
    modules/index.rst
    news.rst
-   
+
+Further readings:
+
+.. toctree::
+   :maxdepth: 1
+
+   todos.rst
+   copying.rst
+
 Indices and tables
 ==================
 
