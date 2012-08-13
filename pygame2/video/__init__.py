@@ -13,6 +13,7 @@ from pygame2.video.window import Window
 from pygame2.video.draw import *
 from pygame2.video.font import BitmapFont
 from pygame2.video.gui import *
+from pygame2.video.image import *
 from pygame2.video.pixelaccess import *
 
 __all__ = ["Window", "Sprite", "SpriteRenderer",
@@ -20,7 +21,8 @@ __all__ = ["Window", "Sprite", "SpriteRenderer",
            "prepare_color", "fill",
            "PixelView", "pixels2d", "pixels3d",
            "BitmapFont",
-           "UIProcessor", "CheckButton", "Button", "TextEntry"]
+           "UIProcessor", "CheckButton", "Button", "TextEntry",
+           "get_image_formats", "load_image"]
 
 
 def init():

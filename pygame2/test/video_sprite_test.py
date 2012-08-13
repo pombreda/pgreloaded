@@ -26,9 +26,9 @@ class VideoSpriteTest(unittest.TestCase):
     def test_SpriteRenderer_process(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_Sprite(self):
-        pass
+        sprite = video.Sprite(size=(10, 10), bpp=32)
+        sprite.area = 10
 
     @unittest.skip("not implemented")
     def test_Sprite_position(self):

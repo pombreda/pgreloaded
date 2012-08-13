@@ -169,12 +169,23 @@ def create_rgb_surface(width, height, depth, rmask=0, gmask=0, bmask=0,
 def create_rgb_surface_from(pixels, width, height, depth, pitch, rmask, gmask,
                             bmask, amask):
     """Creates a RGB surface from a pixel buffer.
+
+    Note: this will add a SDL_Surface._refdata attribute, to which pixels gets
+    assigned to. This allows the caller to forget about pixels without actually
+    having to manage them elsewhere. The calling code SHOULD NOT FREE pixels
+    or otherwise deallocate them, since the SDL_Surface uses pixels as buffer
+    backend.
+
+    The referenced pixels will not be deleted automatically on releasing
+    the SDL_Surface, either. Hence the caller needs to ensure to free
+    pixels properly, once the SDL_Surface has been freed.
     """
     pptr = ctypes.cast(pixels, ctypes.POINTER(ctypes.c_ubyte))
     ret = dll.SDL_CreateRGBSurfaceFrom(pptr, width, height, depth, pitch,
                                        rmask, gmask, bmask, amask)
     if ret is None or not bool(ret):
         raise SDLError()
+    ret._refdata = pixels
     return ret.contents
 
 
@@ -569,8 +580,7 @@ def soft_stretch(src, srcrect, dst, dstrect):
 @sdltype("SDL_SetSurfacePalette", [ctypes.POINTER(SDL_Surface),
                                    ctypes.POINTER(SDL_Palette)], ctypes.c_int)
 def set_surface_palette(surface, palette):
-    """Sets the palette used by the surface.
-    """
+    """Sets the palette used by the surface."""
     if not isinstance(surface, SDL_Surface):
         raise TypeError("surface must be a SDL_Surface")
     pptr = None

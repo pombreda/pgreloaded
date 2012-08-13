@@ -18,9 +18,17 @@ class VideoWindowTest(unittest.TestCase):
     def test_Window(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_Window_title(self):
-        pass
+        window = video.Window("Window", size=(10, 10))
+        self.assertEqual(window.title, "Window")
+        window.title = "Test1234"
+        self.assertEqual(window.title, "Test1234")
+
+        window.title = None
+        self.assertEqual(window.title, "None")
+        window.title = 1234
+        self.assertEqual(window.title, "1234")
+
 
     @unittest.skip("not implemented")
     def test_Window_show(self):

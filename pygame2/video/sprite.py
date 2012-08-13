@@ -78,7 +78,7 @@ class Sprite(Component):
         super(Sprite, self).__init__()
         self._freesf = True
         if source is not None:
-            if isinstance(source, video.SDL_Surface):
+            if isinstance(source, sdlsurface.SDL_Surface):
                 self.surface = source
                 self._freesf = freesf
             elif type(source) is str:
