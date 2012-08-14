@@ -80,6 +80,19 @@
 
    Creates a RGB surface from a pixel buffer.
 
+   .. note::
+
+      This will add a :attr:`SDL_Surface._refdata` attribute, to which
+      *pixels* gets assigned to. This allows the caller to forget about
+      *pixels* without actually having to manage them elsewhere. The
+      calling code **SHOULD NOT FREE** *pixels* or otherwise deallocate them,
+      since the :class:`SDL_Surface` uses *pixels* as buffer backend.
+
+      The referenced *pixels* will not be deleted automatically on
+      releasing the :class:`SDL_Surface`, either. Hence the caller needs
+      to ensure to free *pixels* properly, once the :class:`SDL_Surface`
+      has been freed.
+
    This wraps `SDL_CreateRGBSurfaceFrom`.
 
 .. function:: fill_rect(dst : SDL_Surface, rect : SDL_rect, color : int) -> None

@@ -31,12 +31,12 @@ def get_image_formats():
 def load_image(fname, assurface=False, enforce=None):
     """Creates a Sprite from an image file.
 
-    If assurface is True, an SDL_Surface will be returned instead of a Sprite
+    If assurface is True, a SDL_Surface will be returned instead of a Sprite
     object.
 
     This function makes use of the Python Imaging Library, if it is available
     on the target execution environment. The function will try to load the
-    file via pygame2.sdlimage first. If the file could not be looaded, it will
+    file via pygame2.sdlimage first. If the file could not be loaded, it will
     try to load it via PIL.
 
     You can force the function to use only one of them, by passing the enforce

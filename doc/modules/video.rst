@@ -20,6 +20,7 @@ the :mod:`pygame2.video` module.
    videodraw.rst
    videofont.rst
    videogui.rst
+   videoimage.rst
    videopixelaccess.rst
    videosprite.rst
    videowindow.rst
