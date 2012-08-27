@@ -1,5 +1,5 @@
 """Window routines to manage on-screen windows."""
-import pygame2.sdl.video as video
+import pygame2.sdl.video as sdlvideo
 
 __all__ = ["Window"]
 
@@ -12,7 +12,7 @@ class Window(object):
     application for displaying graphics and receive and process user
     input.
     """
-    DEFAULTFLAGS = video.SDL_WINDOW_HIDDEN
+    DEFAULTFLAGS = sdlvideo.SDL_WINDOW_HIDDEN
 
     def __init__(self, title, size, position=(0, 0), flags=None):
         """Creates a Window with a specific size and title.
@@ -28,37 +28,49 @@ class Window(object):
         """
         if flags is None:
             flags = self.DEFAULTFLAGS
-        self.window = video.create_window(title, position[0], position[1],
-                                          size[0], size[1], flags)
+        self.window = sdlvideo.create_window(title, position[0], position[1],
+                                             size[0], size[1], flags)
+
+    def __del__(self):
+        """Releases the resources of the Window, implicitly destroying the
+        underlying SDL2 window."""
+        if getattr(self, "window", None):
+          sdlvideo.destroy_window(self.window)
+          self.window = None
 
     @property
     def title(self):
         """The title of the window."""
-        return video.get_window_title(self.window)
+        return sdlvideo.get_window_title(self.window)
 
     @title.setter
     def title(self, value):
-        video.set_window_title(self.window, value)
+        sdlvideo.set_window_title(self.window, value)
 
+    @property
+    def size(self):
+        """The size of the window."""
+        return sdlvideo.get_window_size(self.window)
+        
     def show(self):
         """Show the window on the display."""
-        video.show_window(self.window)
+        sdlvideo.show_window(self.window)
 
     def hide(self):
         """Hides the window."""
-        video.hide_window(self.window)
+        sdlvideo.hide_window(self.window)
 
     def maximize(self):
         """Maximizes the window to the display's dimensions."""
-        video.maximize_window(self.window)
+        sdlvideo.maximize_window(self.window)
 
     def minimize(self):
         """Minimizes the window to an iconified state in the system tray."""
-        video.minimize_window(self.window)
+        sdlvideo.minimize_window(self.window)
 
     def refresh(self):
         """Refreshes the entire window surface."""
-        video.update_window_surface(self.window)
+        sdlvideo.update_window_surface(self.window)
 
     def get_surface(self):
         """Gets the SDL_Surface used by the Window to display 2D pixel
@@ -67,4 +79,4 @@ class Window(object):
         Using this method will make the usage of GL operations, such
         as texture handling, or using SDL renderers impossible.
         """
-        return video.get_window_surface(self.window)
+        return sdlvideo.get_window_surface(self.window)

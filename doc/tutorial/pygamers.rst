@@ -273,8 +273,8 @@ pygame.sprite
 ^^^^^^^^^^^^^
 Pygame2 uses a different approach of rendering and managing sprite
 objects via a component-based system and the
-:class:`pygame2.video.sprite.Sprite` class. A sprite module as for
-Pygame is not available yet.
+:class:`pygame2.video.Sprite` class. A sprite module as for Pygame is not
+available.
 
 pygame.Surface
 ^^^^^^^^^^^^^^
@@ -348,7 +348,7 @@ pygame.surfarray
 :class:`pygame2.video.PixelView` class in environments without
 numpy. Simplified numpy-array creation with direct pixel access (similar
 to ``pygame.surfarray.pixels2d()`` and ``pygame.surfarray.pixels3d()``
-will be made available via the :mod:`pygame2.video.draw` module in the
+will be made available via the :mod:`pygame2.video.pixelaccess` module in the
 future.
 
 pygame.time

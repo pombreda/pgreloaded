@@ -28,6 +28,10 @@
 
       The title of the :class:`Window`.
 
+   .. attribute:: size
+   
+      The size of the :class:`Window`.
+
    .. method:: show() -> None
 
       Show the :class:`Window` on the display.

@@ -154,6 +154,9 @@ def create_rgb_surface(width, height, depth, rmask=0, gmask=0, bmask=0,
     surface. If the depth is greater than 8 bits, the pixel format is set
     using the passed RGBA mask.
     """
+    # TODO: this check should be done by SDL
+    if width < 0 or height < 0:
+        raise ValueError("width and height must not be negative")
     ret = dll.SDL_CreateRGBSurface(0, width, height, depth, rmask, gmask,
                                    bmask, amask)
     if ret is None or not bool(ret):
@@ -180,6 +183,9 @@ def create_rgb_surface_from(pixels, width, height, depth, pitch, rmask, gmask,
     the SDL_Surface, either. Hence the caller needs to ensure to free
     pixels properly, once the SDL_Surface has been freed.
     """
+    # TODO: this check should be done by SDL
+    if width < 0 or height < 0:
+        raise ValueError("width and height must not be negative")
     pptr = ctypes.cast(pixels, ctypes.POINTER(ctypes.c_ubyte))
     ret = dll.SDL_CreateRGBSurfaceFrom(pptr, width, height, depth, pitch,
                                        rmask, gmask, bmask, amask)

@@ -77,6 +77,7 @@ class Sprite(Component):
         """
         super(Sprite, self).__init__()
         self._freesf = True
+        self.surface = None
         if source is not None:
             if isinstance(source, sdlsurface.SDL_Surface):
                 self.surface = source
@@ -105,7 +106,7 @@ class Sprite(Component):
 
     def __del__(self):
         """Releases the bound SDL_Surface, if it was created by the Sprite."""
-        if self._freesf:
+        if self._freesf and self.surface is not None:
             sdlsurface.free_surface(self.surface)
         self.surface = None
 

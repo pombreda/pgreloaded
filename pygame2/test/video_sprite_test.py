@@ -1,3 +1,4 @@
+
 import os
 import sys
 import unittest
@@ -26,21 +27,37 @@ class VideoSpriteTest(unittest.TestCase):
     def test_SpriteRenderer_process(self):
         pass
 
+    @unittest.skip("not implemented")
     def test_Sprite(self):
-        sprite = video.Sprite(size=(10, 10), bpp=32)
-        sprite.area = 10
+        pass
 
     @unittest.skip("not implemented")
     def test_Sprite_position(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_Sprite_size(self):
-        pass
+        sizes = [(w, h) for w in range(0, 200) for h in range(0, 200)]
+        for (w, h) in sizes:
+            sprite = video.Sprite(size=(w, h), bpp=32)
+            self.assertEqual(sprite.size, (w, h))
+        # TODO: (65535, 65535) throws an Out of Memory exception, but 65536
+        # works?
+        sizes = [(0, 0), (65536, 65536)]
+        for (w, h) in sizes:
+            sprite = video.Sprite(size=(w, h), bpp=32)
+            self.assertEqual(sprite.size, (w, h))
 
-    @unittest.skip("not implemented")
     def test_Sprite_area(self):
-        pass
+        sprite = video.Sprite(size=(10, 10), bpp=32)
+        self.assertEqual(sprite.area, (0, 0, 10, 10))
+        def setarea(s, v):
+            s.area = v
+        self.assertRaises(AttributeError, setarea, sprite, (1, 2, 3, 4))
+        
+        sprite.position = 7, 3
+        self.assertEqual(sprite.area, (7, 3, 17, 13))
+        sprite.position = -22, 99
+        self.assertEqual(sprite.area, (-22, 99, -12, 109))
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

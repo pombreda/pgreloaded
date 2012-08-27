@@ -1,5 +1,5 @@
 PYTHON ?= python
-top_srcdir != pwd
+top_srcdir := `pwd`
 PYTHONPATH ?= $(top_srcdir)
 SUBDIRS = \
 	$(top_srcdir)/doc \
