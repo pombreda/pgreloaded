@@ -18,7 +18,7 @@ from pygame2.video.pixelaccess import *
 
 __all__ = ["Window", "Sprite", "SpriteRenderer",
            "TestEventProcessor", "init", "quit",
-           "prepare_color", "fill",
+           "prepare_color", "fill", "line",
            "PixelView", "pixels2d", "pixels3d",
            "BitmapFont",
            "UIProcessor", "CheckButton", "Button", "TextEntry",

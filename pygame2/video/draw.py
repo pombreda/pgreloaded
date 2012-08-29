@@ -1,14 +1,25 @@
 """Drawing routines."""
 import ctypes
-from pygame2.compat import isiterable
+from pygame2.compat import isiterable, UnsupportedError
 from pygame2.color import convert_to_color
 import pygame2.sdl.surface as sdlsurface
 import pygame2.sdl.pixels as sdlpixels
 import pygame2.sdl.rect as rect
+from pygame2.algorithms import clipline
 from . import sprite
 
+__all__ = ["prepare_color", "fill", "line"]
 
-__all__ = ["prepare_color", "fill"]
+
+def _get_target_surface(target):
+    """Gets the SDL_surface from the passed target."""
+    if isinstance(target, sdlsurface.SDL_Surface):
+        rtarget = target
+    elif isinstance(target, sprite.Sprite):
+        rtarget = target.surface
+    else:
+        raise TypeError("unsupported target type")
+    return rtarget
 
 
 def prepare_color(color, target):
@@ -31,7 +42,7 @@ def prepare_color(color, target):
 
 
 def fill(target, color, area=None):
-    """Fills a certain area on the passed target with a color.
+    """Fills a certain rectangular area on the passed target with a color.
 
     If no area is provided, the entire target will be filled with
     the passed color. If an iterable item is provided as area (such as a list
@@ -40,13 +51,7 @@ def fill(target, color, area=None):
     of rectangular areas.
     """
     color = prepare_color(color, target)
-    rtarget = None
-    if isinstance(target, sdlsurface.SDL_Surface):
-        rtarget = target
-    elif isinstance(target, sprite.Sprite):
-        rtarget = target.surface
-    else:
-        raise TypeError("unsupported target type")
+    rtarget = _get_target_surface(target)
 
     varea = None
     if area is not None and isiterable(area):
@@ -67,3 +72,86 @@ def fill(target, color, area=None):
         sdlsurface.fill_rect(rtarget, varea, color)
     else:
         sdlsurface.fill_rects(rtarget, varea, color)
+
+
+def line(target, color, line, width=1):
+    """Draws one or multiple lines on the passed target.
+
+    line can be a sequence of four integers for a single line in the
+    form (x1, y1, x2, y2) or a sequence of a multiple of 4 for drawing
+    multiple lines at once, e.g. (x1, y1, x2, y2, x3, y3, x4, y4, ...).
+    """
+    if width < 1:
+        raise ValueError("width must be greater than 0")
+    color = prepare_color(color, target)
+    rtarget = _get_target_surface(target)
+
+    # line: (x1, y1, x2, y2) OR (x1, y1, x2, y2, ...)
+    if (len(line) % 4) != 0:
+        raise ValueError("line does not contain a valid set of points")
+    pcount = len(line)
+    SDLRect = rect.SDL_Rect
+    fillrect = sdlsurface.fill_rect
+
+    pitch = rtarget.pitch
+    bpp = rtarget.format.BytesPerPixel
+    clip_rect = rtarget.clip_rect
+    left, right = clip_rect.x, clip_rect.x + clip_rect.w
+    top, bottom = clip_rect.y, clip_rect.y + clip_rect.h
+
+    if bpp == 3:
+        raise UnsupportedError("24bpp are currently not supported")
+    if bpp == 2:
+        pxbuf = ctypes.cast(rtarget.pixels, ctypes.POINTER(ctypes.c_uint16))
+    elif bpp == 4:
+        pxbuf = ctypes.cast(rtarget.pixels, ctypes.POINTER(ctypes.c_uint32))
+    else:
+        pxbuf = rtarget.pixels # byte-wise access.
+
+    for idx in range(0, pcount, 4):
+        x1, y1, x2, y2 = line[idx:idx+4]
+        if x1 == x2:
+            # Vertical line
+            yh = abs(y2 - y1)
+            varea = SDLRect(x1 - width // 2, y1, width, yh)
+            fillrect(rtarget, varea, color)
+            continue
+        if y1 == y2:
+            # Horizontal line
+            xw = abs(x2 - x1)
+            varea = SDLRect(x1, y1 - width // 2, xw, width)
+            fillrect(rtarget, varea, color)
+            continue
+        if width != 1:
+            raise UnsupportedError
+        if width == 1:
+            # Bresenham
+            x1, y1, x2, y2 = clipline(left, top, right, bottom, x1, y1, x2, y2)
+            if x1 is None:
+                # not to be drawn
+                continue
+            dx = abs(x2 - x1)
+            dy = abs(y2 - y1)
+            err = dx - dy
+            sx, sy = 1, 1
+            if x1 > x2:
+                sx = -sx
+            if y1 > y2:
+                sy = -sy
+            mx = sx
+            my = sy * pitch / bpp
+
+            pxoff = y1 * pitch / bpp + x1
+            while True:
+                pxbuf[pxoff] = color
+                if x1 == x2 and y1 == y2:
+                    break
+                de = 2 * err
+                if de > - dy:
+                    err -= dy
+                    x1 += sx
+                    pxoff += mx
+                if de < dx:
+                    err += dx
+                    y1 += sy
+                    pxoff += my

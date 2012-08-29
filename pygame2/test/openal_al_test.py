@@ -1,5 +1,6 @@
 import sys
 import unittest
+from ctypes import ArgumentError
 import pygame2.openal.al as al
 
 
@@ -7,86 +8,119 @@ class ALTest(unittest.TestCase):
     __tags__ = ["openal"]
 
     def setUp(self):
-        pass
+        if sys.version.startswith("3.1"):
+            self.assertIsInstance = \
+                lambda x, t: self.assertTrue(isinstance(x, t))
 
     def tearDown(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_get_error(self):
-        pass
+        self.assertIsInstance(al.get_error(), int)
+        self.assertEqual(al.get_error(), al.AL_INVALID_OPERATION)
 
-    @unittest.skip("not implemented")
     def test_OpenALError(self):
-        pass
+        err = al.OpenALError()
+        self.assertEqual(err.msg, "Invalid operation")
+        err = al.OpenALError("Something's wrong")
+        self.assertEqual(err.msg, "Something's wrong")
 
-    @unittest.skip("not implemented")
     def test_enable(self):
-        pass
+        self.assertRaises(ArgumentError, al.enable, "Test")
+        self.assertRaises(al.OpenALError, al.enable, 0)
 
-    @unittest.skip("not implemented")
     def test_disable(self):
-        pass
+        self.assertRaises(ArgumentError, al.disable, "Test")
+        self.assertRaises(al.OpenALError, al.disable, 0)
 
-    @unittest.skip("not implemented")
     def test_is_enabled(self):
-        pass
+        self.assertRaises(ArgumentError, al.is_enabled, "Test")
+        self.assertRaises(al.OpenALError, al.is_enabled, 0)
 
-    @unittest.skip("not implemented")
     def test_get_string(self):
-        pass
+        self.assertRaises(ArgumentError, al.get_string, "Test")
+        self.assertRaises(al.OpenALError, al.get_string, 0)
 
-    @unittest.skip("not implemented")
     def test_get_boolean_v(self):
-        pass
+        self.assertRaises(ArgumentError, al.get_boolean_v, "Test")
+        self.assertRaises(al.OpenALError, al.get_boolean_v, 0)
 
-    @unittest.skip("not implemented")
     def test_get_integer_v(self):
-        pass
+        self.assertRaises(ArgumentError, al.get_integer_v, "Test")
+        self.assertRaises(al.OpenALError, al.get_integer_v, 0)
 
-    @unittest.skip("not implemented")
     def test_get_float_v(self):
-        pass
+        self.assertRaises(ArgumentError, al.get_float_v, "Test")
+        self.assertRaises(al.OpenALError, al.get_float_v, 0)
 
-    @unittest.skip("not implemented")
     def test_get_double_v(self):
-        pass
+        self.assertRaises(ArgumentError, al.get_double_v, "Test")
+        self.assertRaises(al.OpenALError, al.get_double_v, 0)
 
-    @unittest.skip("not implemented")
     def test_get_boolean(self):
-        pass
+        self.assertRaises(ArgumentError, al.get_boolean, "Test")
+        self.assertRaises(al.OpenALError, al.get_boolean, 0)
 
-    @unittest.skip("not implemented")
     def test_get_integer(self):
-        pass
+        self.assertRaises(ArgumentError, al.get_integer, "Test")
+        self.assertRaises(al.OpenALError, al.get_integer, 0)
 
-    @unittest.skip("not implemented")
     def test_get_float(self):
-        pass
+        self.assertRaises(ArgumentError, al.get_float, "Test")
+        self.assertRaises(al.OpenALError, al.get_float, 0)
 
-    @unittest.skip("not implemented")
     def test_get_double(self):
-        pass
+        self.assertRaises(ArgumentError, al.get_double, "Test")
+        self.assertRaises(al.OpenALError, al.get_double, 0)
 
-    @unittest.skip("not implemented")
     def test_is_extension_present(self):
-        pass
+        self.assertRaises(TypeError, al.is_extension_present, 1234)
+        self.assertRaises(al.OpenALError, al.is_extension_present, "Test")
 
-    @unittest.skip("not implemented")
     def test_get_proc_address(self):
-        pass
+        self.assertRaises(TypeError, al.get_proc_address, 1234)
+        self.assertEqual(al.get_proc_address("Test"), None)
 
-    @unittest.skip("not implemented")
     def test_get_enum_value(self):
-        pass
+        self.assertRaises(TypeError, al.get_enum_value, 1234)
+        self.assertEqual(al.get_enum_value("Test"), 0)
+        self.assertEqual(al.get_enum_value("AL_FORMAT_MONO8"),
+                         al.AL_FORMAT_MONO8)
 
-    @unittest.skip("not implemented")
     def test_listener_f(self):
-        pass
+        self.assertRaises(ArgumentError, al.listener_f, None, None)
+        self.assertRaises(ArgumentError, al.listener_f, "Test", None)
+        self.assertRaises(ArgumentError, al.listener_f, "Test", "Test")
+        self.assertRaises(ArgumentError, al.listener_f, 1234, None)
+        self.assertRaises(ArgumentError, al.listener_f, 1234, "Test")
+        self.assertRaises(al.OpenALError, al.listener_f, 1234, 10)
+        self.assertRaises(al.OpenALError, al.listener_f, 1234, 10.3333)
 
-    @unittest.skip("not implemented")
     def test_listener_3f(self):
-        pass
+        self.assertRaises(ArgumentError, al.listener_3f, None, None, None, None)
+        self.assertRaises(ArgumentError, al.listener_3f, "Test", None, None,
+                          None)
+        self.assertRaises(ArgumentError, al.listener_3f, "Test", "Test", None,
+                          None)
+        self.assertRaises(ArgumentError, al.listener_3f, "Test", "Test", "Test",
+                          None)
+        self.assertRaises(ArgumentError, al.listener_3f, "Test", "Test", "Test",
+                          "Test")
+        self.assertRaises(ArgumentError, al.listener_3f, 1234, None, None, None)
+        self.assertRaises(ArgumentError, al.listener_3f, 1234, "Test", None,
+                          None)
+        self.assertRaises(ArgumentError, al.listener_3f, 1234, "Test", "Test",
+                          None)
+        self.assertRaises(ArgumentError, al.listener_3f, 1234, "Test", "Test",
+                          "Test")
+        self.assertRaises(ArgumentError, al.listener_3f, 1234, 1, None, None)
+        self.assertRaises(ArgumentError, al.listener_3f, 1234, 1, "Test", None)
+        self.assertRaises(ArgumentError, al.listener_3f, 1234, 1, "Test",
+                          "Test")
+        self.assertRaises(ArgumentError, al.listener_3f, 1234, 1, 1, None)
+        self.assertRaises(ArgumentError, al.listener_3f, 1234, 1, 1, "Test")
+        self.assertRaises(al.OpenALError, al.listener_3f, 1234, 1, 1, 1)
+        self.assertRaises(al.OpenALError, al.listener_3f, 1234, 1.4, -5, 22.0)
 
     @unittest.skip("not implemented")
     def test_listener_fv(self):

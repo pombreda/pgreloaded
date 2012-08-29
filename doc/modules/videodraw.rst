@@ -25,3 +25,10 @@
    first checked, if the item denotes a single rectangular area
    (4 integer values) before assuming it to be a sequence of rectangular areas
    to fill with the color.
+
+.. function:: line(target : object, color : object[, width=1]) -> None
+
+   Draws one or multiple lines on the passed *target*. *line* can be a
+   sequence of four integers for a single line in the form ``(x1, y1,
+   x2, y2)`` or a sequence of a multiple of 4 for drawing multiple lines
+   at once, e.g. ``(x1, y1, x2, y2, x3, y3, x4, y4, ...)``.
