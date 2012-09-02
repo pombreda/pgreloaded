@@ -32,7 +32,7 @@ class VideoWindowTest(unittest.TestCase):
         self.assertRaises(TypeError, video.Window, "Test", None)
         self.assertRaises(TypeError, video.Window, "Test", (1, 1), None, None)
         self.assertRaises(TypeError, video.Window, "Test", (1, 1), None)
-            
+
     def test_Window_title(self):
         window = video.Window("Window", size=(10, 10))
         self.assertEqual(window.title, "Window")
@@ -89,7 +89,7 @@ class VideoWindowTest(unittest.TestCase):
         window = video.Window("Surface", size=(200, 200))
         sf = window.get_surface()
         self.assertIsInstance(sf, sdlsurface.SDL_Surface)
-        
+
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

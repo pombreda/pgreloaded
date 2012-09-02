@@ -754,7 +754,7 @@ def render_copy(renderer, texture, srcrect=None, dstrect=None):
         raise TypeError("texture is not a SDL_Texture")
     if srcrect is not None and not isinstance(srcrect, SDL_Rect):
         raise TypeError("srcrect must be a SDL_Rect")
-    if dstrect is not None and  not isinstance(dstrect, SDLRect):
+    if dstrect is not None and not isinstance(dstrect, SDL_Rect):
         raise TypeError("dstrect must be a SDL_Rect")
     srcval = None
     if srcrect is not None:
@@ -773,7 +773,7 @@ def render_copy(renderer, texture, srcrect=None, dstrect=None):
                                   ctypes.POINTER(ctypes.c_uint), ctypes.c_int],
          ctypes.c_int)
 def render_read_pixels(renderer, rect, format_, bufsize, pitch):
-    """
+    """TODO
     """
     if not isinstance(renderer, SDL_Renderer):
         raise TypeError("renderer is not a SDL_Renderer")
@@ -790,7 +790,7 @@ def render_read_pixels(renderer, rect, format_, bufsize, pitch):
 
 @sdltype("SDL_RenderPresent", [ctypes.POINTER(SDL_Renderer)], None)
 def render_present(renderer):
-    """
+    """TODO
     """
     if not isinstance(renderer, SDL_Renderer):
         raise TypeError("renderer is not a SDL_Renderer")
@@ -799,7 +799,7 @@ def render_present(renderer):
 
 @sdltype("SDL_DestroyTexture", [ctypes.POINTER(SDL_Texture)], None)
 def destroy_texture(texture):
-    """
+    """TODO
     """
     if not isinstance(texture, SDL_Texture):
         raise TypeError("texture is not a SDL_Texture")
@@ -808,7 +808,7 @@ def destroy_texture(texture):
 
 @sdltype("SDL_DestroyRenderer", [ctypes.POINTER(SDL_Renderer)], None)
 def destroy_renderer(renderer):
-    """
+    """TODO
     """
     if not isinstance(renderer, SDL_Renderer):
         raise TypeError("renderer is not a SDL_Renderer")

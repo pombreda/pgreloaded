@@ -106,10 +106,10 @@ def line(target, color, line, width=1):
     elif bpp == 4:
         pxbuf = ctypes.cast(rtarget.pixels, ctypes.POINTER(ctypes.c_uint32))
     else:
-        pxbuf = rtarget.pixels # byte-wise access.
+        pxbuf = rtarget.pixels  # byte-wise access.
 
     for idx in range(0, pcount, 4):
-        x1, y1, x2, y2 = line[idx:idx+4]
+        x1, y1, x2, y2 = line[idx:idx + 4]
         if x1 == x2:
             # Vertical line
             yh = abs(y2 - y1)

@@ -3,7 +3,7 @@ Pygame2 OpenAL wrapper.
 """
 import ctypes
 import pygame2.array as array
-from pygame2.compat import byteify, stringify
+from pygame2.compat import byteify
 from pygame2.openal import dll, openaltype
 
 __all__ = ["get_error", "OpenALError", "enable", "disable", "is_enabled",
@@ -124,10 +124,13 @@ _ERRMAP = {
 
 
 def _clear_error():
+    """Resets OpenAL's internal error state."""
     get_error()
 
 
 def _raise_error_or_continue():
+    """Depending on OpenAL's error state, this will raise an OpenALError
+    or return."""
     errcode = get_error()
     if errcode == AL_NO_ERROR:
         return
@@ -151,7 +154,7 @@ class OpenALError(Exception):
         If no msg is provided, the message will be set a mapped value of
         get_error().
         """
-        super(OpenALError, self).__init__(self)
+        super(OpenALError, self).__init__()
         self.msg = msg
         if msg is None:
             errcode = get_error()
@@ -574,7 +577,7 @@ def get_source_iv(sid, param, size):
             None)
 def source_play_v(sids):
     """Plays a set of sources."""
-    sids, size = array.to_ctypes(sids)
+    sids, size = array.to_ctypes(sids, ctypes.c_uint)
     ptr = ctypes.cast(sids, ctypes.POINTER(ctypes.c_uint))
     dll.alSourcePlayv(size, ptr)
     _raise_error_or_continue()
@@ -584,7 +587,7 @@ def source_play_v(sids):
             None)
 def source_stop_v(sids):
     """Stops a set of sources."""
-    sids, size = array.to_ctypes(sids)
+    sids, size = array.to_ctypes(sids, ctypes.c_uint)
     ptr = ctypes.cast(sids, ctypes.POINTER(ctypes.c_uint))
     dll.alSourceStopv(size, ptr)
     _raise_error_or_continue()
@@ -594,7 +597,7 @@ def source_stop_v(sids):
             None)
 def source_rewind_v(sids):
     """Rewinds a set of sources."""
-    sids, size = array.to_ctypes(sids)
+    sids, size = array.to_ctypes(sids, ctypes.c_uint)
     ptr = ctypes.cast(sids, ctypes.POINTER(ctypes.c_uint))
     dll.alSourceRewindv(size, ptr)
     _raise_error_or_continue()
@@ -604,7 +607,7 @@ def source_rewind_v(sids):
             None)
 def source_pause_v(sids):
     """Pauses a set of sources."""
-    sids, size = array.to_ctypes(sids)
+    sids, size = array.to_ctypes(sids, ctypes.c_uint)
     ptr = ctypes.cast(sids, ctypes.POINTER(ctypes.c_uint))
     dll.alSourcePausev(size, ptr)
     _raise_error_or_continue()

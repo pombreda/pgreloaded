@@ -218,7 +218,7 @@
 
    This wraps `SDL_GetWindowID`.
 
-.. function:: get_window_from_id(id : int) -> SDL_Window
+.. function:: get_window_from_id(wid : int) -> SDL_Window
 
    Get a SDL_Window from a stored id. If no SDL_Window could be found for the
    passed id, a SDLError is raised.
@@ -341,12 +341,14 @@
 
    Gets the SDL_Surface associated with the passed SDL_Window.
 
-    A new surface will be created with the optimal format for the
-    window, if necessary. This surface will be freed when the window is
-    destroyed.
+   A new surface will be created with the optimal format for the
+   window, if necessary. This surface will be freed when the window is
+   destroyed.
 
-    NOTE: You may not combine this with 3D or the rendering API on this
-    window.
+   .. note::
+
+      You may not combine this with 3D or the rendering API on this
+      window.
 
    This wraps `SDL_GetWindowSurface`.
 
@@ -360,7 +362,7 @@
 
    Copies a set of areas of the window surface to the screen.
 
-    The rects argument must be a sequence of SDL_Rect instances.
+   The rects argument must be a sequence of SDL_Rect instances.
 
    This wraps `SDL_UpdateWindowSurfaceRects`.
 
@@ -368,8 +370,8 @@
 
    Sets a window's input grab mode.
 
-    If grabbed is True, the window will grab the input, otherwise, it will
-    release the grab.
+   If grabbed is True, the window will grab the input, otherwise, it will
+   release the grab.
 
    This wraps `SDL_SetWindowGrab`.
 
@@ -407,13 +409,11 @@
 
    Dynamically loads the passed OpenGL library.
 
-    if path is None, the default OpenGL library will be loaded.
+   If path is None, the default OpenGL library will be loaded.
 
    This wraps `SDL_GL_LoadLibrary`.
 
 .. function:: gl_get_proc_address(proc) -> ctypes.c_void_p
-
-
 
    This wraps `SDL_GL_GetProcAddress`.
 
@@ -434,7 +434,7 @@
 
    Sets an OpenGL attribute for SDL.
 
-    The passed attr must be a valid SDL_GL_* constant.
+   The passed attr must be a valid SDL_GL_* constant.
 
    This wraps `SDL_GL_SetAttribute`.
 
@@ -448,9 +448,9 @@
 
    Creates a new OpenGL context for the specified SDL_Window.
 
-    The SDL_Window must have been created with the SDL_WINDOW_OPENGL flag.
+   The SDL_Window must have been created with the SDL_WINDOW_OPENGL flag.
 
-    On failure, a SDLError is raised.
+   On failure, a SDLError is raised.
 
    This wraps `SDL_GL_CreateContext`.
 
@@ -458,8 +458,8 @@
 
    Deletes a previously created OpenGL context.
 
-    Multiple invocations with the same context can lead to undefined
-    behaviur, so make sure, you call it only once per context.
+   Multiple invocations with the same context can lead to undefined
+   behaviur, so make sure, you call it only once per context.
 
    This wraps `SDL_GL_DeleteContext`.
 
@@ -467,11 +467,11 @@
 
    Sets up an OpenGL context for rendering into the passed OpenGL window.
 
-    The SDL_Window must have been created with the SDL_WINDOW_OPENGL
-    flag.  The passed OpenGL context must have been created with a
-    compatible window.
+   The SDL_Window must have been created with the SDL_WINDOW_OPENGL
+   flag. The passed OpenGL context must have been created with a
+   compatible window.
 
-    On failure, a SDLError is raised
+   On failure, a SDLError is raised
 
    This wraps `SDL_GL_MakeCurrent`.
 
@@ -479,10 +479,10 @@
 
    Set the swap interval for the current OpenGL context.
 
-    interval can be either 0 for immediate updates or 1 for updates
-    synchronized with the vertical retrace.
+   interval can be either 0 for immediate updates or 1 for updates
+   synchronized with the vertical retrace.
 
-    Raises a SDLError, if setting the swap interval is not supported.
+   Raises a SDLError, if setting the swap interval is not supported.
 
    This wraps `SDL_GL_SetSwapInterval`.
 
@@ -490,9 +490,9 @@
 
    Gets the swap interval for the current OpenGL context.
 
-    This returns either 0 for immediate updates or 1 if the updates are
-    synchronized with the vertical retrace. If getting the swap interval
-    is not supported, a SDLError is raised.
+   This returns either 0 for immediate updates or 1 if the updates are
+   synchronized with the vertical retrace. If getting the swap interval
+   is not supported, a SDLError is raised.
 
    This wraps `SDL_GL_GetSwapInterval`.
 

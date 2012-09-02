@@ -98,7 +98,6 @@ class SDLRWopsTest(unittest.TestCase):
         self.assertTrue(pos == buf.tell() == 8)
 
         pos = rwops.rw_seek(rw, -2, rwops.RW_SEEK_SET)
-        # The String
         self.assertEqual(pos, -1)
         self.assertTrue(buf.tell() == 8)
         pos = rwops.rw_seek(rw, 12, rwops.RW_SEEK_END)

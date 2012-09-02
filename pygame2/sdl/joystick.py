@@ -2,7 +2,7 @@
 Wrapper methods around the SDL2 joystick routines.
 """
 import ctypes
-from pygame2.compat import *
+from pygame2.compat import stringify
 from pygame2.sdl import sdltype, dll, SDLError
 
 __all__ = ["SDL_Joystick", "joystick_open", "joystick_opened",
@@ -26,10 +26,12 @@ SDL_HAT_LEFTDOWN  = SDL_HAT_LEFT | SDL_HAT_DOWN
 
 
 class _balldelta(ctypes.Structure):
+    """TODO"""
     _fields_ = [("dx", ctypes.c_int), ("dy", ctypes.c_int)]
 
 
 class SDL_Joystick(ctypes.Structure):
+    """TODO"""
     _fields_ = [("_index", ctypes.c_ubyte),
                 ("_name", ctypes.c_char_p),
                 ("_naxes", ctypes.c_int),

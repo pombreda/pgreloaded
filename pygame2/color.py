@@ -4,6 +4,7 @@ Pygame2 color module for color creation and conversion operations.
 from math import floor
 from pygame2.compat import *
 
+
 __all__ = ["Color", "is_rgb_color", "is_rgba_color", "argb_to_color", "ARGB",
            "rgba_to_color", "RGBA", "string_to_color", "convert_to_color",
            "COLOR"]
@@ -130,6 +131,7 @@ class Color(object):
 
     @r.setter
     def r(self, val):
+        """Gets or sets the red value of the Color."""
         if type(val) not in(int, long):
             raise TypeError("value must be an int")
         if val < 0 or val > 255:
@@ -143,6 +145,7 @@ class Color(object):
 
     @g.setter
     def g(self, val):
+        """Gets or sets the green value of the Color."""
         if type(val) not in(int, long):
             raise TypeError("value must be an int")
         if val < 0 or val > 255:
@@ -156,6 +159,7 @@ class Color(object):
 
     @b.setter
     def b(self, val):
+        """Gets or sets the blue value of the Color."""
         if type(val) not in(int, long):
             raise TypeError("value must be an int")
         if val < 0 or val > 255:
@@ -169,6 +173,7 @@ class Color(object):
 
     @a.setter
     def a(self, val):
+        """Gets or sets the alpha value of the Color."""
         if type(val) not in(int, long):
             raise TypeError("value must be an int")
         if val < 0 or val > 255:
@@ -208,6 +213,7 @@ class Color(object):
 
     @hsva.setter
     def hsva(self, value):
+        """The Color as HSVA value."""
         h, s, v, a = value
         for x in (h, s, v, a):
             if type(x) not in(int, long, float):
@@ -289,6 +295,7 @@ class Color(object):
 
     @hsla.setter
     def hsla(self, value):
+        """The Color a HSLA value."""
         h, s, l, a = value
         for x in (h, s, l, a):
             if type(x) not in (int, long, float):
@@ -380,6 +387,7 @@ class Color(object):
 
     @i1i2i3.setter
     def i1i2i3(self, value):
+        """The Color as I1I2I3 value."""
         i1, i2, i3 = value
         for x in (i1, i2, i3):
             if type(x) not in (int, long, float):
@@ -405,6 +413,7 @@ class Color(object):
 
     @cmy.setter
     def cmy(self, value):
+        """The Color as CMY value."""
         c, m, y = value
         if (c < 0 or c > 1) or (m < 0 or m > 1) or (y < 0 or y > 1):
             raise ValueError("invalid CMY value")
@@ -413,15 +422,15 @@ class Color(object):
         self.b = int((1.0 - y) * 255)
 
     def normalize(self):
-        """Returns the RGBA values in a normalized form with the range [0;1] as
-        tuple.
+        """Returns the RGBA values in a normalized form with the range
+        [0;1] as tuple.
         """
         return (self.r / 255.0, self.g / 255.0, self.b / 255.0, self.a / 255.0)
 
 
 def is_rgb_color(v):
-    """Checks, if the passed value is an item that could be converted to a RGB
-    color.
+    """Checks, if the passed value is an item that could be converted to
+    a RGB color.
     """
     try:
         if hasattr(v, "r") and hasattr(v, "g") and hasattr(v, "b"):
@@ -434,13 +443,13 @@ def is_rgb_color(v):
                     0 < int(v[2]) < 255:
                 return True
         return False
-    except:
+    except (TypeError, ValueError):
         return False
 
 
 def is_rgba_color(v):
-    """Checks, if the passed value is an item that could be converted to a RGBA
-    color.
+    """Checks, if the passed value is an item that could be converted to
+    a RGBA color.
     """
     rgb = is_rgb_color(v)
     if not rgb:
@@ -452,13 +461,13 @@ def is_rgba_color(v):
         if len(v) >= 4 and 0 <= int(v[3]) <= 255:
             return True
         return False
-    except:
+    except (TypeError, ValueError):
         return False
 
 
 def argb_to_color(v):
-    """Converts an integer value to a Color, assuming the integer represents a
-    32-bit ARGB value.
+    """Converts an integer value to a Color, assuming the integer
+    represents a 32-bit ARGB value.
     """
     v = long(v)
 
@@ -473,8 +482,8 @@ ARGB = argb_to_color
 
 
 def rgba_to_color(v):
-    """Converts an integer value to a Color, assuming the integer represents a
-    32-bit RGBBA value.
+    """Converts an integer value to a Color, assuming the integer
+    represents a 32-bit RGBBA value.
     """
     v = long(v)
 
@@ -502,7 +511,6 @@ def string_to_color(s):
     0xRGBA
     0xRRGGBB
     0xRRGGBBAA
-
     """
     if type(s) is not str:
         raise TypeError("s must be a string")

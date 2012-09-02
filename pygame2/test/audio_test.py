@@ -6,6 +6,7 @@ from pygame2.resources import Resources
 
 RESOURCES = Resources(__file__, "resources")
 
+
 class AudioTest(unittest.TestCase):
     __tags__ = ["openal"]
 
@@ -60,7 +61,6 @@ class AudioTest(unittest.TestCase):
         sink = audio.SoundSink()
         self.assertIsInstance(sink, audio.SoundSink)
 
-
     @unittest.skip("not implemented")
     def test_SoundSink_process(self):
         pass
@@ -87,7 +87,6 @@ class AudioTest(unittest.TestCase):
     def test_load_ogg_file(self):
         oggfile = RESOURCES.get_path("hey.ogg")
         snddata = audio.load_ogg_file(oggfile)
-
 
     @unittest.skip("not implemented")
     def test_load_stream(self):

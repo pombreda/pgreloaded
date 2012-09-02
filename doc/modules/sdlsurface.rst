@@ -8,6 +8,10 @@
 
    TODO
 
+   .. attribute:: flags
+
+      TODO
+
    .. attribute:: size
 
       TODO

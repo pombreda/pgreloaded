@@ -1,11 +1,10 @@
 """
 Wrapper methods around the SDL2 pixel routines
 """
-import sys
 import ctypes
 import pygame2.array as array
 from pygame2.compat import *
-from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE, SDLError
+from pygame2.sdl import sdltype, dll, SDL_TRUE, SDLError
 
 __all__ = ["SDL_FOURCC", "SDL_DEFINE_PIXELFOURCC", "SDL_DEFINE_PIXELFORMAT",
            "SDL_PIXELTYPE", "SDL_PIXELORDER", "SDL_PIXELLAYOUT",
@@ -131,7 +130,8 @@ def SDL_ISPIXELFORMAT_INDEXED(pformat):
 
 
 def SDL_ISPIXELFORMAT_ALPHA(pformat):
-    """Checks, if the passed format value is an alpha channel supporting format.
+    """Checks, if the passed format value is an alpha channel supporting
+    format.
     """
     return ((not SDL_ISPIXELFORMAT_FOURCC(pformat)) and
             ((SDL_PIXELORDER(pformat) == SDL_PACKEDORDER_ARGB) or
@@ -559,7 +559,7 @@ def set_palette_colors(palette, colors, first=0, ncolors=0):
     if type(ncolors) is not int:
         raise TypeError("ncolors must be an int")
     colors, size = array.to_ctypes(colors, SDL_Color)
-    ncolors = min(size, ncolors)
+    ncolors = max(size, ncolors)
     pcolor = ctypes.cast(colors, ctypes.POINTER(SDL_Color))
     return dll.SDL_SetPaletteColors(ctypes.byref(palette), pcolor, first,
                                     ncolors)

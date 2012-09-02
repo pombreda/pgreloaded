@@ -2,9 +2,9 @@
 Conversion routines for sequences.
 """
 import ctypes
-from pygame2.compat import *
 
-__all__ = ["CTypesView", "to_ctypes", "to_list", "to_tuple", "MemoryView"]
+__all__ = ["CTypesView", "to_ctypes", "to_list", "to_tuple", "create_array"
+           "MemoryView"]
 
 
 # Hack around an import error using relative import paths in Python 2.7
@@ -49,6 +49,23 @@ def to_ctypes(dataseq, dtype, mcount=0):
     return valset, count
 
 
+def create_array(obj, itemsize):
+    """Creates an array.array based copy of the passed object.
+
+    itemsize denotes the size in bytes for a single element within obj.
+    """
+    if itemsize == 1:
+        return _ARRAY.array("B", obj)
+    elif itemsize == 2:
+        return _ARRAY.array("H", obj)
+    elif itemsize == 4:
+        return _ARRAY.array("I", obj)
+    elif itemsize == 8:
+        return _ARRAY.array("d", obj)
+    else:
+        raise TypeError("unsupported data type")
+
+
 class CTypesView(object):
     """A proxy for byte-wise accessible data types to be used in ctypes
     bindings.
@@ -80,7 +97,7 @@ class CTypesView(object):
             bsize = objsize * itemsize
 
         if docopy:
-            self._obj = self._create_copy(self._obj, itemsize)
+            self._obj = create_array(self._obj, itemsize)
         try:
             self._view = (ctypes.c_ubyte * bsize).from_buffer(self._obj)
         except AttributeError:
@@ -95,21 +112,8 @@ class CTypesView(object):
                 if isinstance(self._obj, _ARRAY.array):
                     itemsize = self._obj.itemsize
                     bsize = len(self._obj) * itemsize
-                self._obj = self._create_copy(self._obj, itemsize)
+                self._obj = create_array(self._obj, itemsize)
             self._view = (ctypes.c_ubyte * bsize)(*bytearray(self._obj))
-
-    def _create_copy(self, obj, itemsize):
-        """Creates an array.array based copy of the object."""
-        if itemsize == 1:
-            return _ARRAY.array("B", obj)
-        elif itemsize == 2:
-            return _ARRAY.array("H", obj)
-        elif itemsize == 4:
-            return _ARRAY.array("I", obj)
-        elif itemsize == 8:
-            return _ARRAY.array("d", obj)
-        else:
-            raise TypeError("unsupported data type")
 
     def __repr__(self):
         dtype = type(self._obj).__name__

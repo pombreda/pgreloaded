@@ -2,7 +2,6 @@
 Wrapper methods around the SDL2 rwops routines.
 """
 import ctypes
-import sys
 from pygame2.compat import *
 from pygame2.sdl import sdltype, dll, SDLError
 
@@ -21,6 +20,7 @@ RW_SEEK_END = 2
 
 
 class SDL_RWops(ctypes.Structure):
+    """TODO"""
     pass
 
 
@@ -71,6 +71,7 @@ _sdlclose = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.POINTER(SDL_RWops))
 #                ]
 
 class _mem(ctypes.Structure):
+    """TODO"""
     _fields_ = [("base", ctypes.POINTER(ctypes.c_ubyte)),
                 ("here", ctypes.POINTER(ctypes.c_ubyte)),
                 ("stop", ctypes.POINTER(ctypes.c_ubyte)),
@@ -78,6 +79,7 @@ class _mem(ctypes.Structure):
 
 
 class _unknown(ctypes.Structure):
+    """TODO"""
     _fields_ = [("data1", ctypes.c_void_p)]
 
 
@@ -134,7 +136,7 @@ def rw_from_mem(mem, size):
     TODO
     """
     ptr = ctypes.c_void_p(mem)
-    retval = dll.SDL_RWFromMem(mem, size)
+    retval = dll.SDL_RWFromMem(ptr, size)
     if retval is None or not bool(retval):
         raise SDLError()
     return retval.contents
@@ -148,7 +150,7 @@ def rw_from_const_mem(mem, size):
     TODO
     """
     ptr = ctypes.c_void_p(mem)
-    retval = dll.SDL_RWFromMem(mem, size)
+    retval = dll.SDL_RWFromMem(ptr, size)
     if retval is None or not bool(retval):
         raise SDLError()
     return retval.contents
@@ -257,7 +259,7 @@ def rw_from_object(obj):
 
 
 def rw_seek(ctx, offset, whence):
-    """
+    """TODO
     """
     if not isinstance(ctx, SDL_RWops):
         raise TypeError("ctx must be a SDL_RWops")
@@ -265,7 +267,7 @@ def rw_seek(ctx, offset, whence):
 
 
 def rw_tell(ctx):
-    """
+    """TODO
     """
     if not isinstance(ctx, SDL_RWops):
         raise TypeError("ctx must be a SDL_RWops")
@@ -276,7 +278,7 @@ def rw_tell(ctx):
 
 
 def rw_read(ctx, ptr, size, n):
-    """
+    """TODO
     """
     raise NotImplementedError("not implemented")
     #if not isinstance(ctx, SDL_RWops):
@@ -285,7 +287,7 @@ def rw_read(ctx, ptr, size, n):
 
 
 def rw_write(ctx, ptr, size, n):
-    """
+    """TODO
     """
     raise NotImplementedError("not implemented")
     #if not isinstance(ctx, SDL_RWops):
@@ -294,7 +296,7 @@ def rw_write(ctx, ptr, size, n):
 
 
 def rw_close(ctx):
-    """
+    """TODO
     """
     if not isinstance(ctx, SDL_RWops):
         raise TypeError("ctx must be a SDL_RWops")

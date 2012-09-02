@@ -7,6 +7,7 @@ if hasattr(sys, "pypy_version_info"):
     print("")
     print("    *** PyPy's ctypes can't encapsule str in py_object() ***")
     print("    *** Using a class as workaround                      ***")
+
     class pypycapsule(object):
         def __init__(self, data):
             self.data = data
@@ -14,6 +15,7 @@ if hasattr(sys, "pypy_version_info"):
             return repr(self.data)
 else:
     pypycapsule = str
+
 
 class SDLEventsTest(unittest.TestCase):
     __tags__ = ["sdl"]

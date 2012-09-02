@@ -56,6 +56,12 @@ class SpriteRenderer(System):
 
     @sortfunc.setter
     def sortfunc(self, value):
+        """Sort function for the component processing order.
+
+        The default sort order is based on the depth attribute of every
+        sprite. Lower depth values will cause sprites to be drawn below
+        sprites with higher depth values.
+        """
         if not callable(value):
             raise TypeError("sortfunc must be callable")
         self._sortfunc = value
@@ -122,6 +128,7 @@ class Sprite(Component):
 
     @position.setter
     def position(self, value):
+        """The top-left position of the Sprite as tuple."""
         self.x = value[0]
         self.y = value[1]
 

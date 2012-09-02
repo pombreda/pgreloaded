@@ -65,6 +65,7 @@ class SDLSurfaceTest(unittest.TestCase):
     def test_SDL_Surface(self):
         sf = surface.SDL_Surface()
         self.assertIsInstance(sf, surface.SDL_Surface)
+        # TODO: property checks
 
     def test_convert_pixels(self):
         for buf, bpp, pitch, masks, fmt in rgba_pixelations_16x16:
@@ -88,6 +89,7 @@ class SDLSurfaceTest(unittest.TestCase):
             if fmt in (pixels.SDL_PIXELFORMAT_RGB332,
                        pixels.SDL_PIXELFORMAT_ARGB2101010):
                 # SDL2 segfault in the DUFFS_LOOOP() macros
+                # http://bugzilla.libsdl.org/show_bug.cgi?id=1534
                 continue
             bpp, rmask, gmask, bmask, amask = \
                 pixels.pixelformat_enum_to_masks(fmt)
@@ -118,6 +120,7 @@ class SDLSurfaceTest(unittest.TestCase):
             if fmt in (pixels.SDL_PIXELFORMAT_RGB332,
                        pixels.SDL_PIXELFORMAT_ARGB2101010):
                 # SDL2 segault in the DUFFS_LOOP() macros
+                # http://bugzilla.libsdl.org/show_bug.cgi?id=1534
                 continue
             bpp, rmask, gmask, bmask, amask = \
                 pixels.pixelformat_enum_to_masks(fmt)

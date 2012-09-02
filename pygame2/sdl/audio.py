@@ -2,7 +2,7 @@
 Wrapper methods around the SDL2 audio routines.
 """
 import ctypes
-from pygame2.compat import *
+from pygame2.compat import stringify, byteify
 from pygame2.sdl import sdltype, dll, SDLError
 from pygame2.sdl.rwops import SDL_RWops, rw_from_file
 from pygame2.sdl.endian import SDL_BYTEORDER, SDL_LIL_ENDIAN
@@ -144,6 +144,7 @@ samples=%d, size=%d)""" % (self.freq, self.format, self.channels, self.silence,
 
 
 class SDL_AudioCVT(ctypes.Structure):
+    """TODO"""
     pass
 
 
@@ -275,7 +276,7 @@ def get_audio_device_name(index, iscapture=False):
                                  ctypes.POINTER(SDL_AudioSpec), ctypes.c_int],
          ctypes.c_uint)
 def open_audio_device(device, iscapture, desired, allowed_changes):
-    """
+    """TODO
     """
     if not isinstance(desired, SDL_AudioSpec):
         raise TypeError("desired must be a SDL_AudioSpec")
@@ -294,21 +295,21 @@ def open_audio_device(device, iscapture, desired, allowed_changes):
 
 @sdltype("SDL_GetAudioStatus", None, ctypes.c_int)
 def get_audio_status():
-    """
+    """TODO
     """
     return dll.SDL_GetAudioStatus()
 
 
 @sdltype("SDL_GetAudioDeviceStatus", [ctypes.c_uint], ctypes.c_int)
 def get_audio_device_status(device):
-    """
+    """TODO
     """
     return dll.SDL_GetAudioDeviceStatus(device)
 
 
 @sdltype("SDL_PauseAudio", [ctypes.c_int], None)
 def pause_audio(pause_on):
-    """
+    """TODO
     """
     if bool(pause_on):
         dll.SDL_PauseAudio(1)
@@ -318,7 +319,7 @@ def pause_audio(pause_on):
 
 @sdltype("SDL_PauseAudioDevice", [ctypes.c_uint, ctypes.c_int], None)
 def pause_audio_device(device, pause_on):
-    """
+    """TODO
     """
     if bool(pause_on):
         dll.SDL_PauseAudioDevice(device, 1)
@@ -332,7 +333,7 @@ def pause_audio_device(device, pause_on):
                             ctypes.POINTER(ctypes.c_uint)],
          ctypes.POINTER(SDL_AudioSpec))
 def load_wav_rw(rwops, freesrc):
-    """
+    """TODO
     """
     if not isinstance(rwops, SDL_RWops):
         raise TypeError("rwops must be a SDL_RWops")
@@ -349,7 +350,7 @@ def load_wav_rw(rwops, freesrc):
 
 
 def load_wav(filename):
-    """
+    """TODO
     """
     rwops = rw_from_file(filename, "rb")
     return load_wav_rw(rwops, 1)
@@ -357,7 +358,7 @@ def load_wav(filename):
 
 @sdltype("SDL_FreeWAV", [ctypes.POINTER(ctypes.c_ubyte)], None)
 def free_wav(buf):
-    """
+    """TODO
     """
     dll.SDL_FreeWAV(ctypes.byref(buf))
 
@@ -367,7 +368,7 @@ def free_wav(buf):
                                ctypes.c_ubyte, ctypes.c_int], ctypes.c_int)
 def build_audio_cvt(src_format, src_channels, src_rate, dst_format,
                     dst_channels, dst_rate):
-    """
+    """TODO
     """
     cvt = SDL_AudioCVT()
     retval = dll.SDL_BuildAudioCVT(ctypes.byref(cvt), src_format, src_channels,
@@ -380,7 +381,7 @@ def build_audio_cvt(src_format, src_channels, src_rate, dst_format,
 
 @sdltype("SDL_ConvertAudio", [ctypes.POINTER(SDL_AudioCVT)], ctypes.c_int)
 def convert_audio(cvt):
-    """
+    """TODO
     """
     if not isinstance(cvt, SDL_AudioCVT):
         raise TypeError("cvt must be a SDL_AudioCVT")
@@ -393,7 +394,7 @@ def convert_audio(cvt):
                           ctypes.POINTER(ctypes.c_ubyte), ctypes.c_uint,
                           ctypes.c_int], None)
 def mix_audio(dst, src, length, volume):
-    """
+    """TODO
     """
     if len(dst) < length:
         raise ValueError("dst is too small")
@@ -407,7 +408,7 @@ def mix_audio(dst, src, length, volume):
                                 ctypes.c_ushort, ctypes.c_uint, ctypes.c_int],
          None)
 def mix_audio_format(dst, src, aformat, length, volume):
-    """
+    """TODO
     """
     if len(dst) < length:
         raise ValueError("dst is too small")
@@ -419,42 +420,42 @@ def mix_audio_format(dst, src, aformat, length, volume):
 
 @sdltype("SDL_LockAudio", None, None)
 def lock_audio():
-    """
+    """TODO
     """
     dll.SDL_LockAudio()
 
 
 @sdltype("SDL_LockAudioDevice", [ctypes.c_uint], None)
 def lock_audio_device(device):
-    """
+    """TODO
     """
     dll.SDL_LockAudioDevice(device)
 
 
 @sdltype("SDL_UnlockAudio", None, None)
 def unlock_audio():
-    """
+    """TODO
     """
     dll.SDL_UnlockAudio()
 
 
 @sdltype("SDL_UnlockAudioDevice", [ctypes.c_uint], None)
 def unlock_audio_device(device):
-    """
+    """TODO
     """
     dll.SDL_UnlockAudioDevice(device)
 
 
 @sdltype("SDL_CloseAudio", None, None)
 def close_audio():
-    """
+    """TODO
     """
     dll.SDL_CloseAudio()
 
 
 @sdltype("SDL_CloseAudioDevice", [ctypes.c_uint], None)
 def close_audio_device(device):
-    """
+    """TODO
     """
     dll.SDL_CloseAudioDevice(device)
 

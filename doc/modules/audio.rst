@@ -206,7 +206,7 @@ Audio API
     Indicates that the :class:`SoundSource` shall rewind to the start of the
     currently processed :class:`SoundData` buffer.
 
-.. class:: SoundData([format=None[, data=None[, size=None[, frequency=None]]]])
+.. class:: SoundData([aformat=None[, data=None[, size=None[, frequency=None]]]])
 
    Buffered audio data.
 
@@ -246,7 +246,7 @@ Audio API
 
       The velocity of the listener as 3-value tuple within a x-y-z coordinate
       system.
-    
+
    .. attribute:: orientation
 
       The forward (in which direction does the listener look) orientation of

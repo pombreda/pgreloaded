@@ -1,6 +1,6 @@
 """User interface elements."""
-from pygame2.compat import *
-from pygame2.ebs import Component, System, World
+from pygame2.compat import isiterable
+from pygame2.ebs import System, World
 from pygame2.events import EventHandler
 from pygame2.video import Sprite
 from pygame2.sdl.rect import SDL_Rect

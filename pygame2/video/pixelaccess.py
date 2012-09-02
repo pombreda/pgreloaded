@@ -85,9 +85,9 @@ try:
         Used to keep track of the original source object for pixels2d()
         and pixels3d() to avoid the deletion of the source object.
         """
-        def __new__(subtype, shape, dtype=float, buffer_=None, offset=0,
+        def __new__(cls, shape, dtype=float, buffer_=None, offset=0,
                     strides=None, order=None, source=None, surface=None):
-            sfarray = numpy.ndarray.__new__(subtype, shape, dtype, buffer_,
+            sfarray = numpy.ndarray.__new__(cls, shape, dtype, buffer_,
                                             offset, strides, order)
             sfarray._source = source
             sfarray._surface = surface
@@ -125,7 +125,7 @@ def pixels2d(source):
         raise ValueError("unsupported bpp")
     strides = (surface.pitch, bpp)
     srcsize = surface.size[1] * surface.pitch
-    shape = surface.size[1], surface.pitch // bpp
+    shape = surface.size[1], surface.size[0] #surface.pitch // bpp
 
     dtypes = {1: numpy.uint8,
               2: numpy.uint16,
@@ -138,7 +138,7 @@ def pixels2d(source):
     pxbuf = ctypes.cast(surface.pixels,
                         ctypes.POINTER(ctypes.c_ubyte * srcsize)).contents
     return SurfaceArray(shape, dtypes[bpp], pxbuf, 0, strides, "C", source,
-                        surface)
+                        surface).transpose()
 
 
 @experimental
@@ -159,11 +159,11 @@ def pixels3d(source):
         raise ValueError("unsupported bpp")
     strides = (surface.pitch, bpp, 1)
     srcsize = surface.size[1] * surface.pitch
-    shape = surface.size[1], surface.pitch // bpp, bpp
+    shape = surface.size[1], surface.size[0], bpp
 
     if sdlsurface.SDL_MUSTLOCK(surface):
         sdlsurface.lock_surface(surface)
     pxbuf = ctypes.cast(surface.pixels,
                         ctypes.POINTER(ctypes.c_ubyte * srcsize)).contents
     return SurfaceArray(shape, numpy.uint8, pxbuf, 0, strides, "C", source,
-                        surface)
+                        surface).transpose(1, 0, -2)

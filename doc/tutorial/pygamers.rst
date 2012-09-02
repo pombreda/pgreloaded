@@ -16,6 +16,13 @@ Conceptual differences
 ----------------------
 TODO
 
+Technical differences
+---------------------
+Pygame is implemented as a mixture of Python, C and Assembler code,
+wrapping 3rd party libraries with CPython API interfaces. Pygame2 in
+contrast is written in pure Python, using :mod:`ctypes` to interface
+with the C interfaces of 3rd party libraries.
+
 
 API differences
 ---------------
@@ -331,7 +338,7 @@ pygame.Surface          Pygame2
 ``get_rect()``          :attr:`pygame2.video.Sprite.area`
 ``get_bitsize()``       :attr:`pygame2.sdl.pixels.SDL_PixelFormat.BitsPerPixel`
 ``get_bytesize()``      :attr:`pygame2.sdl.pixels.SDL_PixelFormat.BytesPerPixel`
-``get_flags()``         No equivalent yet
+``get_flags()``         :attr:`pygame2.sdl.surface.SDL_Surface.flags`
 ``get_pitch()``         :attr:`pygame2.sdl.surface.SDL_Surface.pitch`
 ``get_masks()``         :attr:`pygame2.sdl.pixels.SDL_PixelFormat.Rmask`, ...
 ``get_shifts()``        :attr:`pygame2.sdl.pixels.SDL_PixelFormat.Rshift`, ...

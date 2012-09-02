@@ -46,10 +46,11 @@ class SoundListener(Component):
 
 class SoundData(Component):
     """A buffered audio object."""
-    def __init__(self, format=None, data=None, size=None, frequency=None):
+    def __init__(self, aformat=None, data=None, size=None, frequency=None):
+        """TODO"""
         super(SoundData, self).__init__()
         self._bufid = None
-        self.format = format
+        self.format = aformat
         self.data = data
         self.size = size
         self.frequency = frequency

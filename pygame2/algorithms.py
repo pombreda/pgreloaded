@@ -17,8 +17,6 @@ def cohensutherland(left, top, right, bottom, x1, y1, x2, y2):
     """
     LEFT, RIGHT, LOWER, UPPER = 1, 2, 4, 8
     k1 = k2 = 0
-    dx = abs(x2 - x1)
-    dy = abs(y2 - y1)
 
     def _getclip(xa, ya):
         p = 0

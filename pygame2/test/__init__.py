@@ -14,4 +14,3 @@ __all__ = ["run", "RESOURCES"]
 
 _fpath = os.path.dirname(os.path.abspath(__file__))
 RESOURCES = Resources(os.path.join(_fpath, "resources"))
-

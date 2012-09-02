@@ -1,5 +1,5 @@
 """Image loaders."""
-from pygame2.compat import UnsupportedError, experimental
+from pygame2.compat import UnsupportedError
 from pygame2.sdl.endian import SDL_BYTEORDER, SDL_LIL_ENDIAN
 import pygame2.sdl.surface as sdlsurface
 import pygame2.sdl.pixels as sdlpixels
@@ -47,6 +47,11 @@ def load_image(fname, assurface=False, enforce=None):
     """
     if enforce is not None and enforce not in ("PIL", "SDL"):
         raise ValueError("enforce must be either 'PIL' or 'SDL', if set")
+
+    if enforce == "PIL" and not _HASPIL:
+        raise UnsupportedError("PIL loading")
+    if enforce == "SDL" and not _HASSDLIMAGE:
+        raise UnsupportedError("SDL loading")
 
     surface = None
     if enforce != "PIL" and _HASSDLIMAGE:

@@ -7,6 +7,7 @@ __all__ = ["Position"]
 class Position(Component):
     """A simple positional coordinate on a 2D plane or in a 3D room."""
     def __init__(self, x=0, y=0, z=0):
+        super(Position, self).__init__()
         self.x = x
         self.y = y
         self.z = z

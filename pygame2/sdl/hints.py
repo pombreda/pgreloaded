@@ -2,7 +2,7 @@
 Wrapper methods around the SDL2 hint routines.
 """
 from ctypes import c_char_p, c_int, c_uint
-from pygame2.compat import *
+from pygame2.compat import stringify, byteify
 from pygame2.sdl import sdltype, dll
 
 __all__ = ["clear_hints", "get_hint", "set_hint", "set_hint_with_priority",
@@ -58,7 +58,7 @@ def set_hint(name, value):
 @sdltype("SDL_SetHintWithPriority", [c_char_p, c_char_p, c_uint], c_int)
 def set_hint_with_priority(name, value, priority):
     """Sets the value of a specific hint using a priority override.
-    
+
     The hint priority can be one of
     * SDL_HINT_DEFAULT
     * SDL_HINT_NORMAL

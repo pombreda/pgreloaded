@@ -1,10 +1,9 @@
 """
 A thin wrapper package around the SDL2_image library.
 """
-import sys
 import ctypes
 from pygame2.dll import DLL
-from pygame2.compat import byteify, stringify
+from pygame2.compat import byteify
 from pygame2.sdl import SDLError
 from pygame2.sdl.version import SDL_version
 from pygame2.sdl.surface import SDL_Surface

@@ -14,9 +14,6 @@ class SDLLogTest(unittest.TestCase):
     __tags__ = ["sdl"]
 
     def setUp(self):
-        # On windows, SDL_Log* uses OutputDebugString, which does nothing,
-        # if not executed in a development environment. Hence we will
-        # redirect anything to stderr
         self.logdata = []
 
         def logfunc(userdata, category, priority, message):

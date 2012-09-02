@@ -10,7 +10,7 @@ system will take care of all necessary updates for the World
 environment.
 """
 from uuid import uuid4
-from pygame2.compat import *
+from pygame2.compat import ISPYTHON2
 
 __all__ = ["Entity", "World", "System", "Applicator", "Component"]
 

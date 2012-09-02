@@ -2,6 +2,7 @@ import sys
 import unittest
 import pygame2.ogg as ogg
 
+
 class OGGTest(unittest.TestCase):
     __tags__ = ["ogg", "vorbis"]
 
@@ -21,6 +22,7 @@ class OGGTest(unittest.TestCase):
 
         self.assertRaises(ogg.OggError, doraise, None)
         self.assertRaises(ogg.OggError, doraise, "test")
+
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

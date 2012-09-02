@@ -192,10 +192,12 @@ def run():
     collision.ball = ball
     aicontroller.ball = ball
 
-    while True:
+    running = True
+    while running:
         event = sdlevents.poll_event(True)
-        if event is not None:
+        while event is not None:
             if event.type == sdlevents.SDL_QUIT:
+                running = False
                 break
             if event.type == sdlevents.SDL_KEYDOWN:
                 if event.key.keysym.sym == sdlkc.SDLK_UP:
@@ -205,6 +207,8 @@ def run():
             elif event.type == sdlevents.SDL_KEYUP:
                 if event.key.keysym.sym in (sdlkc.SDLK_UP, sdlkc.SDLK_DOWN):
                     player1.velocity.vy = 0
+            event = sdlevents.poll_event(True)
+
         sdltimer.delay(10)
         world.process()
 

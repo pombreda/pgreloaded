@@ -2,7 +2,7 @@
 Wrapper methods around the SDL2 video management routines.
 """
 import ctypes
-from pygame2.compat import *
+from pygame2.compat import byteify, stringify
 from pygame2.sdl import dll, sdltype, SDL_TRUE, SDLError
 import pygame2.array as array
 from pygame2.sdl.surface import SDL_Surface
@@ -105,7 +105,7 @@ SDL_WINDOWPOS_UNDEFINED_MASK = 0x1FFF0000
 
 
 def SDL_WINDOWPOS_UNDEFINED_DISPLAY(x):
-    """
+    """TODO
     """
     return(SDL_WINDOWPOS_UNDEFINED_MASK | x)
 
@@ -114,7 +114,7 @@ SDL_WINDOWPOS_UNDEFINED = SDL_WINDOWPOS_UNDEFINED_DISPLAY(0)
 
 
 def SDL_WINDOWPOS_ISUNDEFINED(x):
-    """
+    """TODO
     """
     return(x & 0xFFFF0000) == SDL_WINDOWPOS_UNDEFINED_MASK
 
@@ -123,7 +123,7 @@ SDL_WINDOWPOS_CENTERED_MASK = 0x2FFF0000
 
 
 def SDL_WINDOWPOS_CENTERED_DISPLAY(x):
-    """
+    """TODO
     """
     return(SDL_WINDOWPOS_CENTERED_MASK | x)
 
@@ -132,7 +132,7 @@ SDL_WINDOWPOS_CENTERED = SDL_WINDOWPOS_CENTERED_DISPLAY(0)
 
 
 def SDL_WINDOWPOS_ISCENTERED(x):
-    """
+    """TODO
     """
     return(x & 0xFFFF0000) == SDL_WINDOWPOS_CENTERED_MASK
 
@@ -154,7 +154,7 @@ class SDL_DisplayMode(ctypes.Structure):
 
     def __repr__(self):
         return "SDL_DisplayMode(format=%d, w=%d, h=%d, refresh_rate=%d)" % \
-           (self.format, self.w, self.h, self.refresh_rate)
+            (self.format, self.w, self.h, self.refresh_rate)
 
     def __eq__(self, mode):
         return self.format == mode.format and self.w == mode.w and \
@@ -166,11 +166,11 @@ class SDL_DisplayMode(ctypes.Structure):
 
 
 class SDL_Window(ctypes.Structure):
-    """
+    """TODO
     """
     def __repr__(self):
         return "SDL_Window(id=%d, title=%s, position=%s, size=%s)" % \
-           (self._id, self._title, (self._x, self._y), (self._w, self._h))
+            (self._id, self._title, (self._x, self._y), (self._w, self._h))
 
 SDL_Window._fields_ = [("_magic", ctypes.c_void_p),
                        ("_id", ctypes.c_uint),
@@ -194,7 +194,7 @@ SDL_Window._fields_ = [("_magic", ctypes.c_void_p),
                        ("_driverdata", ctypes.c_void_p),
                        ("_prev", ctypes.POINTER(SDL_Window)),
                        ("_next", ctypes.POINTER(SDL_Window)),
-                        ]
+                       ]
 
 
 @sdltype("SDL_CreateWindow", [ctypes.c_char_p, ctypes.c_int, ctypes.c_int,
@@ -214,7 +214,7 @@ def create_window(title, x, y, w, h, flags):
 
 @sdltype("SDL_CreateWindowFrom", [ctypes.c_void_p], ctypes.POINTER(SDL_Window))
 def create_window_from(data):
-    """
+    """TODO
     """
     retval = dll.SDL_CreateWindowFrom(ctypes.byref(data))
     if retval is None or not bool(retval):
@@ -488,15 +488,15 @@ def get_window_display_mode(window):
 
 
 @sdltype("SDL_GetWindowPixelFormat", [ctypes.POINTER(SDL_Window)],
-          ctypes.c_uint)
+         ctypes.c_uint)
 def get_window_pixelformat(window):
     """Retrieves the pixel format associated with the window."""
     if not isinstance(window, SDL_Window):
         raise TypeError("window must be a SDL_Window")
-    format = dll.SDL_GetWindowPixelFormat(ctypes.byref(window))
-    if format == 0:
+    wformat = dll.SDL_GetWindowPixelFormat(ctypes.byref(window))
+    if wformat == 0:
         raise SDLError()
-    return format
+    return wformat
 
 
 @sdltype("SDL_GetWindowID", [ctypes.POINTER(SDL_Window)], ctypes.c_int)
@@ -504,21 +504,21 @@ def get_window_id(window):
     """Gets the id of the SDL_Window."""
     if not isinstance(window, SDL_Window):
         raise TypeError("window must be a SDL_Window")
-    id = dll.SDL_GetWindowID(ctypes.byref(window))
-    if id == 0:
+    wid = dll.SDL_GetWindowID(ctypes.byref(window))
+    if wid == 0:
         raise SDLError()
-    return id
+    return wid
 
 
 @sdltype("SDL_GetWindowFromID", [ctypes.c_uint], ctypes.POINTER(SDL_Window))
-def get_window_from_id(id):
+def get_window_from_id(wid):
     """Get a SDL_Window from a stored id.
 
     If no SDL_Window could be found for the passed id, a SDLError is raised.
     """
-    if type(id) is not int:
+    if type(wid) is not int:
         raise TypeError("id must be an int")
-    window = dll.SDL_GetWindowFromID(id)
+    window = dll.SDL_GetWindowFromID(wid)
     if window is None:
         raise SDLError()
     return window.contents
@@ -547,7 +547,7 @@ def get_window_title(window):
 
 
 @sdltype("SDL_SetWindowTitle", [ctypes.POINTER(SDL_Window), ctypes.c_char_p],
-          None)
+         None)
 def set_window_title(window, title):
     """Sets the title to be used by a SDL_Window."""
     if not isinstance(window, SDL_Window):
@@ -837,7 +837,7 @@ def get_window_brightness(window):
                                     ctypes.POINTER(ctypes.c_ushort)],
          ctypes.c_int)
 def set_window_gamma_ramp(window, red, green, blue):
-    """
+    """TODO
     """
     if not isinstance(window, SDL_Window):
         raise TypeError("window must be a SDL_Window")
@@ -878,7 +878,7 @@ def set_window_gamma_ramp(window, red, green, blue):
                                     ctypes.POINTER(ctypes.c_ushort)],
          ctypes.c_int)
 def get_window_gamma_ramp(window):
-    """
+    """TODO
     """
     if not isinstance(window, SDL_Window):
         raise TypeError("window must be a SDL_Window")
@@ -991,7 +991,7 @@ def gl_delete_context(context):
 
 
 @sdltype("SDL_GL_MakeCurrent", [ctypes.POINTER(SDL_Window), ctypes.c_void_p],
-    ctypes.c_int)
+         ctypes.c_int)
 def gl_make_current(window, context):
     """Sets up an OpenGL context for rendering into the passed OpenGL window.
 

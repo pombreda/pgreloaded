@@ -256,7 +256,7 @@ EBS API
       A tuple of :class:`Component` based class identifiers that shall
       be processed by the :class:`Applicator`.
 
-   .. process(world : World, componentsets : iterable)
+  .. function:: process(world : World, componentsets : iterable)
 
       Processes tuples of :class:`Component` items. ``componentsets`` will
       contain :class:`Component` tuples, that match the :attr:`componenttypes`

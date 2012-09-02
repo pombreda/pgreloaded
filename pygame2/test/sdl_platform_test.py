@@ -18,7 +18,7 @@ class SDLPlatformTest(unittest.TestCase):
         elif sys.platform.startswith("darwin"):
             self.assertEqial(retval, "Mac OS X")
         # Do not check others atm, since we are unsure about what Python will
-        # return here,
+        # return here.
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

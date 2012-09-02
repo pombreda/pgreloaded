@@ -2,7 +2,7 @@
 Wrapper methods around the SDL 2 rect routines.
 """
 import ctypes
-from pygame2.sdl import dll, sdltype, SDL_TRUE, SDL_FALSE
+from pygame2.sdl import dll, sdltype, SDL_TRUE
 import pygame2.array as array
 
 __all__ = ["SDL_Point", "SDL_Rect", "enclose_points", "has_intersection",

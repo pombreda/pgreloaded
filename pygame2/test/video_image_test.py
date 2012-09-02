@@ -49,6 +49,12 @@ class VideoImageTest(unittest.TestCase):
         # TODO: add image comparision to check, if it actually does the
         # right thing (SDL2 BMP loaded image?)
         # Add argument tests
+        try:
+            import PIL
+            _HASPIL = True
+        except ImportError:
+            _HASPIL = False
+
         fname = "surfacetest.%s"
         for fmt in formats:
             filename = RESOURCES.get_path(fname % fmt)
@@ -58,7 +64,7 @@ class VideoImageTest(unittest.TestCase):
             self.assertIsInstance(sf, sdlsurface.SDL_Surface)
 
             # Force only PIL
-            if fmt not in ("webp", "xcf"):
+            if _HASPIL and fmt not in ("webp", "xcf"):
                 sprite = video.load_image(filename, enforce="PIL")
                 self.assertIsInstance(sprite, video.Sprite)
                 sf = video.load_image(filename, True, enforce="PIL")

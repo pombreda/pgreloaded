@@ -1,10 +1,7 @@
 """
 Wrapper methods around the SDL2 syswm routines.
 """
-import sys
 import ctypes
-#from ctypes.wintypes import HWND, UINT, WPARAM, LPARAM
-from pygame2.compat import *
 from pygame2.sdl import sdltype, dll, SDLError, SDL_FALSE
 from pygame2.sdl.version import SDL_version, SDL_VERSION
 from pygame2.sdl.video import SDL_Window
@@ -38,6 +35,7 @@ elif ctypes.sizeof(ctypes.c_longlong) == ctypes.sizeof(ctypes.c_void_p):
 
 
 class _winmsg(ctypes.Structure):
+    """TODO"""
     _fields_ = [("hwnd", HWND),
                 ("msg", UINT),
                 ("wParam", WPARAM),
@@ -46,22 +44,27 @@ class _winmsg(ctypes.Structure):
 
 
 class _x11msg(ctypes.Structure):
-    _fields_ = [("event", ctypes.c_void_p),]
+    """TODO"""
+    _fields_ = [("event", ctypes.c_void_p)]
 
 
 class _dfbmsg(ctypes.Structure):
+    """TODO"""
     _fields_ = [("event", ctypes.c_void_p)]
 
 
 class _cocoamsg(ctypes.Structure):
+    """TODO"""
     pass
 
 
 class _uikitmsg(ctypes.Structure):
+    """TODO"""
     pass
 
 
 class _msg(ctypes.Union):
+    """TODO"""
     _fields_ = [("win", _winmsg),
                 ("x11", _x11msg),
                 ("dfb", _dfbmsg),
@@ -72,6 +75,7 @@ class _msg(ctypes.Union):
 
 
 class SDL_SysWMmsg(ctypes.Structure):
+    """TODO"""
     _fields_ = [("version", SDL_version),
                 ("subsystem", ctypes.c_int),
                 ("msg", _msg)
@@ -79,29 +83,35 @@ class SDL_SysWMmsg(ctypes.Structure):
 
 
 class _wininfo(ctypes.Structure):
+    """TODO"""
     _fields_ = [("window", HWND)]
 
 
 class _x11info(ctypes.Structure):
+    """TODO"""
     _fields_ = [("display", ctypes.c_void_p),
                 ("window", ctypes.c_ulong)]
 
 
 class _dfbinfo(ctypes.Structure):
+    """TODO"""
     _fields_ = [("dfb", ctypes.c_void_p),
                 ("window", ctypes.c_void_p),
                 ("surface", ctypes.c_void_p)]
 
 
 class _cocoainfo(ctypes.Structure):
+    """TODO"""
     _fields_ = [("window", ctypes.c_void_p)]
 
 
 class _uikitinfo(ctypes.Structure):
+    """TODO"""
     _fields_ = [("window", ctypes.c_void_p)]
 
 
 class _info(ctypes.Union):
+    """TODO"""
     _fields_ = [("win", _wininfo),
                 ("x11", _x11info),
                 ("dfb", _dfbinfo),
@@ -110,7 +120,9 @@ class _info(ctypes.Union):
                 ("dummy", ctypes.c_int)
                 ]
 
+
 class SDL_SysWMinfo(ctypes.Structure):
+    """TODO"""
     _fields_ = [("version", SDL_version),
                 ("subsystem", ctypes.c_int),
                 ("info", _info)

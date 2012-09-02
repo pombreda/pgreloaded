@@ -8,7 +8,7 @@ class FontTest(unittest.TestCase):
 
     def test_init(self):
         font.init()
-        
+
     def test_list_fonts(self):
         sansfonts = [f for f in font.list_fonts() if "sans" in f[0]]
         self.assertGreaterEqual(len(sansfonts), 1)
@@ -27,13 +27,14 @@ class FontTest(unittest.TestCase):
             count = len(font.get_fonts(fname, font.STYLE_ITALIC))
             if count >= 1:
                 success += 1
-            count = len(font.get_fonts(fname, font.STYLE_ITALIC|font.STYLE_BOLD))
+            count = len(font.get_fonts(fname,
+                                       font.STYLE_ITALIC|font.STYLE_BOLD))
             if count >= 1:
                 success += 1
-        
+
         self.assertGreaterEqual(success, 4,
             "did not meet enough font criteria for get_fonts()")
-        
+
     def test_get_font(self):
         fontnames = ["sans", "arial", "helvetica", "times new roman", "serif"]
         # At least two fonts must be found.
@@ -42,9 +43,10 @@ class FontTest(unittest.TestCase):
             fontfile = font.get_font(fname)
             if fontfile is not None:
                 success += 1
-        
+
         self.assertGreaterEqual(success, 2,
             "could not find the required fonts for get_font()")
+
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

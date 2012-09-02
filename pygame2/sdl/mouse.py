@@ -154,7 +154,6 @@ def set_relative_mouse_mode(enabled):
 
     NOTE: This function will flush any pending mouse motion.
     """
-    setval = ctypes.c_int(1)
     ret = 0
     if bool(enabled):
         ret = dll.SDL_SetRelativeMouseMode(SDL_TRUE)
@@ -162,6 +161,7 @@ def set_relative_mouse_mode(enabled):
         ret = dll.SDL_SetRelativeMouseMode(SDL_FALSE)
     if ret < 0:
         raise SDLError()
+    return ret
 
 
 @sdltype("SDL_ShowCursor", [ctypes.c_int], ctypes.c_int)

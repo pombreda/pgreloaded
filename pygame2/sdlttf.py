@@ -1,14 +1,12 @@
 """
 A thin wrapper package around the SDL2_ttf library.
 """
-import sys
 import ctypes
 from pygame2.dll import DLL
-from pygame2.sdl import SDL_FALSE, SDL_TRUE, SDLError
+from pygame2.sdl import SDLError
 from pygame2.compat import byteify, stringify
 from pygame2.sdl.surface import SDL_Surface
 from pygame2.sdl.rwops import SDL_RWops
-from pygame2.sdl.render import SDL_Renderer, SDL_Texture
 from pygame2.sdl.pixels import SDL_Color
 
 
@@ -37,6 +35,7 @@ c_int_p = ctypes.POINTER(ctypes.c_int)
 
 
 class TTF_Font(ctypes.Structure):
+    """TODO"""
     pass
 
 
@@ -44,12 +43,15 @@ TTF_Font_p = ctypes.POINTER(TTF_Font)
 
 
 def _check_ptr(ret):
+    """Checks, if the passed pointer is valid and raises a SDLError on
+    demand."""
     if ret is None or not bool(ret):
         raise SDLError()
     return ret.contents
 
 
 def _check_int(ret):
+    """Checks, if the passed integer is 0 raises a SDLError, if not."""
     if ret != 0:
         raise SDLError()
     return

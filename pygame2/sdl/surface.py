@@ -3,7 +3,7 @@ Wrapper methods around the SDL2 surface routines.
 """
 import ctypes
 from pygame2.compat import *
-from pygame2.sdl import sdltype, dll, SDL_FALSE, SDL_TRUE, SDLError
+from pygame2.sdl import sdltype, dll, SDL_TRUE, SDLError
 from pygame2.sdl.pixels import SDL_PixelFormat, SDL_Palette
 from pygame2.sdl.rect import SDL_Rect
 import pygame2.sdl.rwops as rwops
@@ -28,7 +28,7 @@ SDL_DONTFREE  = 0x00000004
 
 
 class SDL_Surface(ctypes.Structure):
-    """
+    """TODO
     """
     _fields_ = [("_flags", ctypes.c_uint),
                 ("_format", ctypes.POINTER(SDL_PixelFormat)),
@@ -45,34 +45,46 @@ class SDL_Surface(ctypes.Structure):
                 ]
 
     @property
+    def flags(self):
+        """The flags of the SDL_Surface"""
+        return self._flags
+
+    @property
     def size(self):
+        """The size of the SDL_Surface."""
         return self._w, self._h
 
     @property
     def locked(self):
+        """Indicates, if the SDL_Surface is locked."""
         return self._locked
 
     @property
     def locked_data(self):
+        """Data that belongs to the lock"""
         return self._locked_data
 
     @property
     def clip_rect(self):
+        """The currently applied clipping area of the SDL_Surface"""
         return self._clip_rect
 
     @property
     def format(self):
+        """The SDL_PixelFormat of the SDL_Surface."""
         if self._format:
             return self._format.contents
 
     @property
     def pixels(self):
+        """The raw pixel buffer as ctypes byte pointer."""
         if SDL_MUSTLOCK(self) and not self._locked:
             raise SDLError("must be locked before accessing the pixels")
         return self._pixels
 
     @property
     def pitch(self):
+        """The pitch of a single pixel row."""
         return self._pitch
 
 
@@ -474,7 +486,7 @@ def unlock_surface(surface):
                            ctypes.POINTER(SDL_Surface),
                            ctypes.POINTER(SDL_Rect)], ctypes.c_int)
 def lower_blit(src, srcrect, dst, dstrect):
-    """
+    """TODO
     """
     if not isinstance(src, SDL_Surface):
         raise TypeError("src must be a SDL_Surface")
@@ -495,7 +507,7 @@ def lower_blit(src, srcrect, dst, dstrect):
                                  ctypes.POINTER(SDL_Surface),
                                  ctypes.POINTER(SDL_Rect)], ctypes.c_int)
 def lower_blit_scaled(src, srcrect, dst, dstrect):
-    """
+    """TODO
     """
     if not isinstance(src, SDL_Surface):
         raise TypeError("src must be a SDL_Surface")
@@ -516,7 +528,7 @@ def lower_blit_scaled(src, srcrect, dst, dstrect):
                            ctypes.POINTER(SDL_Surface),
                            ctypes.POINTER(SDL_Rect)], ctypes.c_int)
 def upper_blit(src, srcrect, dst, dstrect):
-    """
+    """TODO
     """
     if not isinstance(src, SDL_Surface):
         raise TypeError("src must be a SDL_Surface")
@@ -543,7 +555,7 @@ blit_surface = upper_blit
                                  ctypes.POINTER(SDL_Surface),
                                  ctypes.POINTER(SDL_Rect)], ctypes.c_int)
 def upper_blit_scaled(src, srcrect, dst, dstrect):
-    """
+    """TODO
     """
     if not isinstance(src, SDL_Surface):
         raise TypeError("src must be a SDL_Surface")
@@ -567,7 +579,7 @@ def upper_blit_scaled(src, srcrect, dst, dstrect):
                              ctypes.POINTER(SDL_Surface),
                              ctypes.POINTER(SDL_Rect)], ctypes.c_int)
 def soft_stretch(src, srcrect, dst, dstrect):
-    """
+    """TODO
     """
     if not isinstance(src, SDL_Surface):
         raise TypeError("src must be a SDL_Surface")

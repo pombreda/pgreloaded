@@ -7,7 +7,7 @@ import warnings
 
 __all__ = ["stringify", "byteify", "isiterable", "ISPYTHON2", "ISPYTHON3",
            "platform_is_64bit", "deprecated", "deprecation",
-           "UnsupportedError", "ExperimentalWarning", "experimental"
+           "UnsupportedError", "ExperimentalWarning", "experimental",
            ]
 
 ISPYTHON2 = False

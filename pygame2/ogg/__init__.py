@@ -8,6 +8,7 @@ class OggError(Exception):
     def __init__(self, msg=None):
         """Creates a new OggError instance with the specified message.
         """
+        super(OggError, self).__init__()
         self.msg = msg
 
     def __str__(self):

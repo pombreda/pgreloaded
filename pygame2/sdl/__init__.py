@@ -151,6 +151,7 @@ class SDLError(Exception):
         If no msg is provided, the message will be set to the value of
         get_error().
         """
+        super(SDLError, self).__init__()
         self.msg = msg
         if msg is None:
             self.msg = get_error()

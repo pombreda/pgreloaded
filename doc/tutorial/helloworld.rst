@@ -11,8 +11,8 @@ do not hesitate, if the one or other explanation is missing.
 
 Importing
 ---------
-Let's start with importing some basic SDL modules, which are necessary
-to display a small nice window and to do some basic drawing within that
+Let's start with importing some basic modules, which are necessary to
+display a small nice window and to do some basic drawing within that
 window. ::
 
     import sys

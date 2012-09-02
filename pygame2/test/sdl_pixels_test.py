@@ -316,7 +316,7 @@ class SDLPixelsTest(unittest.TestCase):
             rgb = pixels.get_rgb(0x11223344, pformat)
             self.assertEqual(rgb, (0xFF, 0xFF, 0xFF))
             rgb = pixels.get_rgb(0x00000000, pformat)
-            # TODO: Seems to be always(0xFF, 0xFF, 0xFF) ???
+            # TODO: Seems to be always (0xFF, 0xFF, 0xFF)???
             #self.assertEqual(rgb,(0x00, 0x00, 0x00))
             pixels.free_format(pformat)
         fmts = (pixels.SDL_PIXELFORMAT_INDEX4LSB,

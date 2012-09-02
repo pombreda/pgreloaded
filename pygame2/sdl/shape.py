@@ -2,7 +2,7 @@
 Wrapper methods around the SDL2 shape routines.
 """
 import ctypes
-from pygame2.compat import *
+from pygame2.compat import byteify
 from pygame2.sdl import sdltype, dll, SDL_TRUE, SDLError
 from pygame2.sdl.video import SDL_Window
 from pygame2.sdl.pixels import SDL_Color
@@ -32,12 +32,14 @@ def SDL_SHAPEMODEALPHA(mode):
 
 
 class SDL_WindowShapeParams(ctypes.Union):
+    """TODO"""
     _fields_ = [("binarizationCutoff", ctypes.c_ubyte),
                 ("colorKey", SDL_Color)
                 ]
 
 
 class SDL_WindowShapeMode(ctypes.Structure):
+    """TODO"""
     _fields_ = [("mode", ctypes.c_int),
                 ("parameters", SDL_WindowShapeParams)
                 ]

@@ -10,6 +10,7 @@ class, method or function, use the :ref:`genindex` or :ref:`search`.
    :maxdepth: 2
 
    pygame2.rst
+   algorithms.rst
    array.rst
    audio.rst
    color.rst

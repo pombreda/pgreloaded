@@ -257,6 +257,15 @@ Array API
       A tuple defining the length in bytes for accessing all
       elements in each dimension of the :class:`MemoryView`.
 
+.. function:: to_ctypes(dataseq : iterable, dtype[, mcount=0]) -> array, int
+
+    Converts an arbitrary sequence to a ctypes array of the specified
+    *dtype* and returns the ctypes array and amount of items as
+    two-value tuple.
+
+    Raises a :exc:`TypeError`, if one or more elements in the passed
+    sequence do not match the passed *dtype*.
+
 .. function:: to_list(dataseq : iterable) -> list
 
    Converts a ctypes array to a list.
@@ -264,3 +273,9 @@ Array API
 .. function:: to_tuple(dataseq : iterable) -> tuple
 
    Converts a ctypes array to a tuple.
+
+.. function:: create_array(obj : object, itemsize : int) -> array.array
+
+   Creates an :class:`array.array` based copy of the passed object.
+   *itemsize* denotes the size in bytes for a single element within
+   *obj*.

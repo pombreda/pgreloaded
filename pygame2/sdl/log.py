@@ -2,7 +2,7 @@
 Wrapper methods around the SDL2 log handling routines.
 """
 import ctypes
-from pygame2.compat import *
+from pygame2.compat import byteify
 from pygame2.sdl import sdltype, dll
 
 __all__ = ["log", "log_critical", "log_debug", "log_error", "log_info",
@@ -55,6 +55,7 @@ def log(text):
     """
     dll.SDL_Log(byteify(str(text), "utf-8"))
 SDL_log = log
+
 
 @sdltype("SDL_LogCritical", [ctypes.c_int, ctypes.c_char_p], None)
 def log_critical(category, text):
@@ -177,7 +178,7 @@ SDL_LogOutputFunction = ctypes.CFUNCTYPE(None, ctypes.py_object, ctypes.c_int,
 
 
 @sdltype("SDL_LogSetOutputFunction", [SDL_LogOutputFunction, ctypes.py_object],
-                                      None)
+         None)
 def log_set_output_function(function, userdata=None):
     """Sets the output function for the logging methods to the passed
     SDL_LogOutputFunction.

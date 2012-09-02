@@ -12,7 +12,6 @@ We start with creating the basic window and add a small event loop, so
 we are able to close the window and game. ::
 
     import sys
-
     try:
         import pygame2.video as video
         import pygame2.sdl.events as sdlevents
@@ -25,13 +24,13 @@ we are able to close the window and game. ::
         video.init()
         window = video.Window("The Pong Game", size=(800, 600))
         window.show()
-
-        while True:
+        running = True
+        while running:
             event = sdlevents.poll_event(True)
-            if event is None:
-                continue
-            if event.type == sdlevents.SDL_QUIT:
-                break
+            while event is not None:
+                if event.type == sdlevents.SDL_QUIT:
+                    running = False
+                    break
             window.refresh()
         return 0
 
@@ -42,13 +41,14 @@ The import statements, video initialisation and window creation were
 discussed previously in the :ref:`hello_world` tutorial. Instead of some
 integrated event processor, a new code fragment is introduced, though. ::
 
-    while True:
+    running = True
+    while running:
         event = sdlevents.poll_event(True)
-        if event is None:
-            continue
-        if event.type == sdlevents.SDL_QUIT:
-            break
-         window.refresh()
+        while event is not None:
+            if event.type == sdlevents.SDL_QUIT:
+                running = False
+                break
+        window.refresh()
 
 The while loop above is the main event loop of our application. It deals
 with all kinds of input events that can occur when working with the
@@ -109,10 +109,12 @@ that will display them. ::
         player1 = Player(world, 0, 250)
         player2 = Player(world, 780, 250)
 
-        while True:
+        running = True
+        while running:
             event = sdlevents.poll_event(True)
-            if event is not None:
+            while event is not None:
                 if event.type == sdlevents.SDL_QUIT:
+                    running = False
                     break
             world.process()
 
@@ -128,9 +130,9 @@ Afterwards, the player paddles will be implemented, based on an
 simple rectangular sprites that can be positioned anywhere on the
 window.
 
-In the main program function, we now put those things together by
-creating a :class:`pygame2.ebs.World`, in which the player paddles and
-the renderer can live and operate.
+In the main program function, we put those things together by creating a
+:class:`pygame2.ebs.World`, in which the player paddles and the renderer
+can live and operate.
 
 Within the main event loop, we allow the world to process all attached
 systems, which causes it to invoke the ``process()`` methods for all
@@ -139,8 +141,8 @@ systems, which causes it to invoke the ``process()`` methods for all
 Moving the ball
 ---------------
 
-We now have two static paddles centered vertically on the left and right
-of our window. Now we are going to add a ball that can move around
+We have two static paddles centered vertically on the left and right of
+our window. The next thing to do is to add a ball that can move around
 within the window boundaries. ::
 
     [...]
@@ -264,10 +266,12 @@ visible window area on moving around.
 Bouncing
 --------
 
-We now have a ball that can move around as well as the game logic for
-moving things around. In contrast to a classic OO approach we do not
+We have a ball that can move around as well as the general game logic
+for moving things around. In contrast to a classic OO approach we do not
 need to implement the movement logic within the ``Ball`` and ``Player``
-class individually, since the basic movement is the same for all.
+class individually, since the basic movement is the same for all (yes,
+you could have solved that with inheriting ``Ball`` and ``Player`` from
+a ``MovableObject`` class in OO).
 
 The ball now moves and stays within the bounds, but once it hits the
 left side, it will stay there. To make it *bouncy*, we need to add a
@@ -324,10 +328,12 @@ on colliding with the walls or the player paddles. ::
         [...]
         collision.ball = ball
 
-        while True:
+        running = True
+        while running:
             event = sdlevents.poll_event(True)
-            if event is not None:
+            while event is not None:
                 if event.type == sdlevents.SDL_QUIT:
+                    running = False
                     break
             sdltimer.delay(10)
             world.process()
@@ -347,8 +353,7 @@ direction (velocity) should be inverted, so that it *bounces* back.
 Additionally, we won't run at the full processor speed anymore in the
 main loop, but instead add a short delay, using the
 :mod:`pygame2.sdl.timer` module. This reduces the overall load on the
-CPU and lets the game be a bit slower (with a maximum of 60 frames per
-second).
+CPU and makes the game a bit slower.
 
 Reacting on player input
 ------------------------
@@ -373,10 +378,12 @@ to move one of the player paddles up or down. ::
 
     def run():
         [...]
-        while True:
+        running = True
+        while running:
             event = sdlevents.poll_event(True)
-            if event is not None:
+            while event is not None:
                 if event.type == sdlevents.SDL_QUIT:
+                    running = False
                     break
                 if event.type == sdlevents.SDL_KEYDOWN:
                     if event.key.keysym.sym == sdlkc.SDLK_UP:
@@ -572,14 +579,14 @@ complex as it sounds.
   * you can reset the ball's position in the ``CollisionSystem`` code,
     by changing the code for the ``minx`` and ``maxx`` test
 
-  * you could enhance the ``CollisionSystem`` to process
-    ``PlayerData`` components and add the functionality to add points
-    there (or write a small processor that keeps track of the ball only
-    and processes only the ``PlayerData`` and ``video.Sprite`` objects
-    of each player for adding points)
-    Alternatively, you could use the :class:`pygame2.event.EventHandler` class
-    to raise a score count function within the ``CollisionSystem``, if the
-    ball collides with one of the paddles.
+  * you could enhance the ``CollisionSystem`` to process ``PlayerData``
+    components and add the functionality to add points there (or write a
+    small processor that keeps track of the ball only and processes only
+    the ``PlayerData`` and ``video.Sprite`` objects of each player for
+    adding points). Alternatively, you could use the
+    :class:`pygame2.events.EventHandler` class to raise a score count
+    function within the ``CollisionSystem``, if the ball collides with
+    one of the paddles.
 
   * write an own Renderer, based on :class:`pygame2.ebs.Applicator`,
     which takes care of position and sprite sets ::

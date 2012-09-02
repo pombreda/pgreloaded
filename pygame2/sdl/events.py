@@ -111,6 +111,7 @@ SDL_ENABLE  = 1
 
 
 class SDL_WindowEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -124,6 +125,7 @@ class SDL_WindowEvent(ctypes.Structure):
 
 
 class SDL_KeyboardEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -136,6 +138,7 @@ class SDL_KeyboardEvent(ctypes.Structure):
 
 
 class SDL_TextEditingEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -146,6 +149,7 @@ class SDL_TextEditingEvent(ctypes.Structure):
 
 
 class SDL_TextInputEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -154,6 +158,7 @@ class SDL_TextInputEvent(ctypes.Structure):
 
 
 class SDL_MouseMotionEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -169,6 +174,7 @@ class SDL_MouseMotionEvent(ctypes.Structure):
 
 
 class SDL_MouseButtonEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -182,6 +188,7 @@ class SDL_MouseButtonEvent(ctypes.Structure):
 
 
 class SDL_MouseWheelEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -191,6 +198,7 @@ class SDL_MouseWheelEvent(ctypes.Structure):
 
 
 class SDL_JoyAxisEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("which", ctypes.c_ubyte),
@@ -202,6 +210,7 @@ class SDL_JoyAxisEvent(ctypes.Structure):
 
 
 class SDL_JoyBallEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("which", ctypes.c_ubyte),
@@ -214,6 +223,7 @@ class SDL_JoyBallEvent(ctypes.Structure):
 
 
 class SDL_JoyHatEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("which", ctypes.c_ubyte),
@@ -224,6 +234,7 @@ class SDL_JoyHatEvent(ctypes.Structure):
 
 
 class SDL_JoyButtonEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("which", ctypes.c_ubyte),
@@ -234,6 +245,7 @@ class SDL_JoyButtonEvent(ctypes.Structure):
 
 
 class SDL_TouchFingerEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -252,6 +264,7 @@ class SDL_TouchFingerEvent(ctypes.Structure):
 
 
 class SDL_TouchButtonEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -264,6 +277,7 @@ class SDL_TouchButtonEvent(ctypes.Structure):
 
 
 class SDL_MultiGestureEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -278,6 +292,7 @@ class SDL_MultiGestureEvent(ctypes.Structure):
 
 
 class SDL_DollarGestureEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -291,6 +306,7 @@ class SDL_DollarGestureEvent(ctypes.Structure):
 
 
 class SDL_DropEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("file", ctypes.c_char_p)
@@ -298,12 +314,14 @@ class SDL_DropEvent(ctypes.Structure):
 
 
 class SDL_QuitEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ]
 
 
 class SDL_UserEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -314,6 +332,7 @@ class SDL_UserEvent(ctypes.Structure):
 
 
 class SDL_SysWMEvent(ctypes.Structure):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("msg", SDL_SysWMmsg),
@@ -321,6 +340,7 @@ class SDL_SysWMEvent(ctypes.Structure):
 
 
 class SDL_Event(ctypes.Union):
+    """TODO"""
     _fields_ = [("type", ctypes.c_uint),
                 ("window", SDL_WindowEvent),
                 ("key", SDL_KeyboardEvent),

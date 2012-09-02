@@ -35,8 +35,8 @@ class Window(object):
         """Releases the resources of the Window, implicitly destroying the
         underlying SDL2 window."""
         if getattr(self, "window", None):
-          sdlvideo.destroy_window(self.window)
-          self.window = None
+            sdlvideo.destroy_window(self.window)
+            self.window = None
 
     @property
     def title(self):
@@ -45,13 +45,14 @@ class Window(object):
 
     @title.setter
     def title(self, value):
+        """The title of the window."""
         sdlvideo.set_window_title(self.window, value)
 
     @property
     def size(self):
         """The size of the window."""
         return sdlvideo.get_window_size(self.window)
-        
+
     def show(self):
         """Show the window on the display."""
         sdlvideo.show_window(self.window)

@@ -2,7 +2,7 @@
 Wrapper methods around the SDL2 version info routines.
 """
 import ctypes
-from pygame2.compat import *
+from pygame2.compat import stringify
 from pygame2.sdl import sdltype, dll
 
 __all__ = ["SDL_version", "SDL_VERSIONNUM", "SDL_VERSION_ATLEAST",

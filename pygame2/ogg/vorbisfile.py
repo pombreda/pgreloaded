@@ -1,7 +1,6 @@
 """
 A thin wrapper package around the vorbisfile library.
 """
-import sys
 import ctypes
 from pygame2.dll import DLL
 from pygame2.ogg import OggError
@@ -56,6 +55,7 @@ _ovtell = ctypes.CFUNCTYPE(ctypes.c_long, ctypes.c_void_p)
 
 
 class ov_callbacks(ctypes.Structure):
+    """TODO"""
     _fields_ = [("read_func", _ovread),
                 ("seek_func", _ovseek),
                 ("close_func", _ovclose),
@@ -64,6 +64,7 @@ class ov_callbacks(ctypes.Structure):
 
 
 class vorbis_info(ctypes.Structure):
+    """TODO"""
     _fields_ = [("version", ctypes.c_int),
                 ("channels", ctypes.c_int),
                 ("rate", ctypes.c_long),
@@ -80,6 +81,7 @@ class vorbis_info(ctypes.Structure):
 
 
 class OggVorbis_File(ctypes.Structure):
+    """TODO"""
     pass
 
 
@@ -121,10 +123,10 @@ def info(ovfilep, bstream=-1):
     # meantime.
     if not isinstance(ovfilep, OggVorbis_File):
         raise TypeError("ovfilep must be an OggVorbis_File")
-    info = dll.ov_info(ctypes.byref(ovfilep), bstream)
-    if info is None or not bool(info):
+    ovinfo = dll.ov_info(ctypes.byref(ovfilep), bstream)
+    if ovinfo is None or not bool(ovinfo):
         raise OggError("invalid bitstream or file")
-    return vi
+    return ovinfo
 
 
 @vfiletype("ov_pcm_total", [ctypes.POINTER(OggVorbis_File), ctypes.c_int],

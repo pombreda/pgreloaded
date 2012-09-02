@@ -25,8 +25,8 @@ class EventHandler(object):
         passing the sender of the EventHandler as first argument and the
         optional args as second, third, ... argument to them.
         """
-        for cb in self.callbacks:
-            cb(self.sender, *args)
+        for callback in self.callbacks:
+            callback(self.sender, *args)
 
     def __iadd__(self, callback):
         """Adds a callback to the EventHandler."""
@@ -65,10 +65,10 @@ class MPEventHandler(EventHandler):
     """
     def __init__(self, sender, maxprocs=5):
         if not _HASMP:
-            # TODO: define an appropriate UnsupportedError somewhere
             raise UnsupportedError("no multiprocessing support found")
+        super(MPEventHandler, self).__init__(sender)
         self.maxprocs = maxprocs
 
     def __call__(self, *args):
-        pool = Pool(processes=maxprocs)
+        pool = Pool(processes=self.maxprocs)
         pool.map(lambda cb, args: cb(*args), self.callbacks)
