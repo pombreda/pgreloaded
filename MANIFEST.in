@@ -1,4 +1,6 @@
 graft doc
+exclude *.dia
 include *.bat Makefile
 include *.txt
-include test
+include examples
+include util

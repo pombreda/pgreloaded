@@ -1,7 +1,6 @@
-import os
 import sys
 import unittest
-from pygame2.color import Color
+from pygame2.color import Color, COLOR
 import pygame2.array as array
 import pygame2.sdl.surface as surface
 import pygame2.sdl.pixels as pixels
@@ -21,7 +20,7 @@ class VideoDrawTest(unittest.TestCase):
 
     @unittest.skipIf(hasattr(sys, "pypy_version_info"),
                      "PyPy's ctypes can't do byref(value, offset)")
-    def test_fill(self):
+    def ttest_fill(self):
         # TODO: add exceptions and more bounding tests.
         rects = ((0, 0, 3, 2),
                  (2, 3, 4, 2),
@@ -47,18 +46,35 @@ class VideoDrawTest(unittest.TestCase):
                     else:
                         self.assertEqual(col, 0, "color mismatch at (x, y)")
 
-    @unittest.skip("not implemented")
     def test_prepare_color(self):
-        colors = (Color(0, 0, 0, 0),
-                  Color(255, 255, 255, 255),
-                  Color(8, 55, 110, 220),
-                  0x00000000,
-                  0xFFFFFFFF,
-                  0xAABBCCDD,
-                  "#000",
-                  "#FFF",
-                  "#AABBCCDD",
-                  )
+        rcolors = (Color(0, 0, 0, 0),
+                   Color(255, 255, 255, 255),
+                   Color(8, 55, 110, 220),
+                   )
+        icolors = (0x00000000,
+                   0xFFFFFFFF,
+                   0xAABBCCDD,
+                   )
+        scolors = ("#000",
+                   "#FFF",
+                   "#AABBCCDD",
+                   )
+        sprite = video.Sprite(size=(10, 10), bpp=32, masks=(0xFF000000,
+                                                            0x00FF0000,
+                                                            0x0000FF00,
+                                                            0x000000FF))
+
+        for color in rcolors:
+            c = video.prepare_color(color, sprite)
+            self.assertEqual(c, int(color))
+        for color in icolors:
+            c = video.prepare_color(color, sprite)
+            cc = COLOR(color)
+            self.assertEqual(c, int(cc))
+        for color in scolors:
+            c = video.prepare_color(color, sprite)
+            cc = COLOR(color)
+            self.assertEqual(c, int(cc))
 
 
 if __name__ == '__main__':

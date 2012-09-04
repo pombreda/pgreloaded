@@ -369,6 +369,10 @@ class ArrayTest(unittest.TestCase):
         for index, value in enumerate(vlist):
             self.assertEqual(value, ar[index])
 
+    @unittest.skip("not implemented")
+    def test_create_array(self):
+        pass
+
 
 if __name__ == '__main__':
     sys.exit(unittest.main())
