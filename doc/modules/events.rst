@@ -25,7 +25,6 @@
        >>> myobj.anevent()
        event triggered by <__main__.MyClass object at 0x801864e50>
 
-
    .. attribute:: callbacks
 
       A list of callbacks currently bound to the :class:`EventHandler`.
@@ -42,21 +41,16 @@
 
       Removes a callback from the :class:`EventHandler`.
 
-   .. method:: __call__(*args)
+   .. method:: __call__(*args) -> [ ... ]
 
       Executes all connected callbacks in the order of addition,
       passing the :attr:`sender` of the :class:`EventHandler` as first
       argument and the optional args as second, third, ... argument to
       them.
+      
+      This will return a list containing the return values of the callbacks
+      in the order of their execution.
 
-   .. method:: process()
-
-      Processes all :class:`Component` items within their corresponding
-      :class:`System` instances.
-
-   .. method:: remove_system(system : System)
-
-      Removes a processing :class:`System` from the world.
 
 .. class:: MPEventHandler(sender)
 
@@ -65,11 +59,24 @@
    of the caller code to ensure that every object used maintains a
    consistent state. The :class:`MPEventHandler` class will not apply
    any locks, synchronous state changes or anything else to the
-   arguments being used. Cosider it a "fire-and-forget" event handling
-   strategy.
+   arguments or callbacks being used. Consider it a "fire-and-forget" event
+   handling strategy.
 
    .. note::
 
       The :class:`MPEventHandler` relies on the :mod:`multiprocessing`
       module. If the module is not available in the target environment,
       a :exc:`pygame2.compat.UnsupportedError` is raised.
+      
+      Also, please be aware of the restrictions that apply to the
+      :mod:`multiprocessing` module; arguments and callback functions for
+      example have to be pickable, etc.
+
+   .. method:: __call__(*args) -> AsyncResult
+
+      Executes all connected callbacks within a :class:`multiprocessing.Pool`,
+      passing the :attr:`sender` as first argument and the optional *args* as
+      second, third, ... argument to them.
+      
+      This will return a :class:`multiprocessing.pool.AsyncResult` containing
+      the return values of the callbacks in the order of their execution.

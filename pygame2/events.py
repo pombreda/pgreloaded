@@ -25,8 +25,7 @@ class EventHandler(object):
         passing the sender of the EventHandler as first argument and the
         optional args as second, third, ... argument to them.
         """
-        for callback in self.callbacks:
-            callback(self.sender, *args)
+        return [callback(self.sender, *args) for callback in self.callbacks]
 
     def __iadd__(self, callback):
         """Adds a callback to the EventHandler."""
@@ -53,6 +52,11 @@ class EventHandler(object):
         self.callbacks.remove(callback)
 
 
+def _mp_callback(args):
+    # args = (function, sender, (args))
+    fargs = args[2]
+    return args[0](args[1], *fargs)
+
 class MPEventHandler(EventHandler):
     """An asynchronous event handling class in which callbacks are
     executed in parallel.
@@ -60,15 +64,23 @@ class MPEventHandler(EventHandler):
     It is the responsibility of the caller code to ensure that every
     object used maintains a consistent state. The MPEventHandler class
     will not apply any locks, synchronous state changes or anything else
-    to the arguments being used. Cosider it a "fire-and-forget" event
+    to the arguments being used. Consider it a "fire-and-forget" event
     handling strategy
     """
-    def __init__(self, sender, maxprocs=5):
+    def __init__(self, sender, maxprocs=None):
         if not _HASMP:
             raise UnsupportedError("no multiprocessing support found")
         super(MPEventHandler, self).__init__(sender)
         self.maxprocs = maxprocs
 
     def __call__(self, *args):
-        pool = Pool(processes=self.maxprocs)
-        pool.map(lambda cb, args: cb(*args), self.callbacks)
+        if self.maxprocs is not None:
+            pool = Pool(processes=self.maxprocs)
+        else:
+            pool = Pool()
+        psize = len(self.callbacks)
+        pv = zip(self.callbacks, [self.sender]*psize, [args[:]]*psize)
+        results = pool.map_async(_mp_callback, pv)
+        pool.close()
+        pool.join()
+        return results

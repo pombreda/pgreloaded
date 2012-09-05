@@ -27,7 +27,7 @@
     SET PYPY19=c:\pypy-1.9\pypy.exe
 )
 @IF "%IRONPYTHON27%" == "" (
-    SET IRONPYTHON27=c:\IronPython-2.7.2.1\ipy.exe
+    SET IRONPYTHON27=c:\IronPython-2.7.3\ipy.exe
 )
 
 @IF "%1" == "" (
@@ -149,7 +149,7 @@
 @GOTO :eof
 
 :testall
-@FOR /F "tokens=1 delims=" %%A in ('CHDIR') do @SET PYTHONPATH=%%A
+@FOR /F "tokens=1 delims=" %%A in ('CHDIR') do @SET PYTHONPATH=%%A && @SET IRONPYTHONPATH=%%A
 @%PYTHON27_X86% pygame2\test\util\runtests.py
 @DEL /Q pygame2\test\*.pyc
 @%PYTHON27_X64% pygame2\test\util\runtests.py

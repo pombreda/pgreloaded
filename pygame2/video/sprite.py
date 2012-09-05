@@ -137,3 +137,8 @@ class Sprite(Component):
         """The rectangular area occupied by the Sprite."""
         w, h = self.size
         return (self.x, self.y, self.x + w, self.y + h)
+
+    def __repr__(self):
+        return "Sprite(size=%s, bpp=%d)" % \
+            (self.size, self.surface.format.BitsPerPixel)
+

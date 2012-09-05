@@ -9,7 +9,8 @@ class VideoSpriteTest(unittest.TestCase):
         if sys.version.startswith("3.1"):
             self.assertIsInstance = \
                 lambda x, t: self.assertTrue(isinstance(x, t))
-
+        pass
+                
     def tearDown(self):
         pass
 
