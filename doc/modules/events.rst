@@ -4,6 +4,9 @@
 :mod:`pygame2.events` - General purpose event handling routines
 ===============================================================
 
+.. inheritance-diagram:: pygame2.events
+   :parts: 1
+
 .. class:: EventHandler(sender)
 
    A simple event handling class, which manages callbacks to be

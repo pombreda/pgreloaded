@@ -1,6 +1,5 @@
 .. module:: pygame2.video.window
    :synopsis: Window routines to manage on-screen windows
-.. currentmodule:: pygame2.video
 
 :mod:`pygame2.video.window` - Window routines to manage on-screen windows
 =========================================================================

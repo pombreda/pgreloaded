@@ -2,7 +2,7 @@
    :synopsis: SDL2 logging wrapper
 
 :mod:`pygame2.sdl.log` - SDL2 logging wrapper
-==================================================
+=============================================
 
 .. function:: log(text : string) -> None
 

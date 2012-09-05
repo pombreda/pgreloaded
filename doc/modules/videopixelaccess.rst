@@ -1,6 +1,5 @@
 .. module:: pygame2.video.pixelaccess
    :synopsis: 2D and 3D direct pixel access
-.. currentmodule:: pygame2.video
 
 :mod:`pygame2.video.pixelaccess` - 2D and 3D direct pixel access
 ================================================================

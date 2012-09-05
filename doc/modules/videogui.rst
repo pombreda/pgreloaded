@@ -1,9 +1,11 @@
 .. module:: pygame2.video.gui
    :synopsis: User interface elements
-.. currentmodule:: pygame2.video
 
 :mod:`pygame2.video.gui` - user interface elements
 ==================================================
+
+.. inheritance-diagram:: pygame2.video.gui
+   :parts: 1
 
 .. data:: RELEASED
 
@@ -61,6 +63,14 @@
 
       A dict containing the mapping of SDL2 events to the available
       :class:`pygame2.events.EventHandler` bindings of the :class:`Button`.
+
+.. class:: CheckButton(source=None, size=(0, 0), bpp=32, freesf=False)
+
+   A specialised :class:`Button` that retains its state.
+
+   .. attribute:: checked
+
+      Indicates, if the :class:`CheckButton` is checked or not.
 
 .. class:: TextEntry(source=None, size=(0, 0), bpp=32, freesf=False)
 
@@ -121,7 +131,7 @@
 
 .. class:: UIProcessor()
 
-   TODO
+   A processing system for user interface elements and events.
 
    .. attribute:: handlers
 
@@ -164,20 +174,20 @@
       the primary mouse button, the component will be marked as the next
       control to activate for text input.
 
-   .. method:: mouseup(self, component, event):
+   .. method:: mouseup(self, component, event) -> None
 
-    Checks, if the event's button release position is on the *component* and
-    executes the component's event handlers on demand. If the button release
-    position is not within the area of the component, nothing will be done.
+      Checks, if the event's button release position is on the *component* and
+      executes the component's event handlers on demand. If the button release
+      position is not within the area of the component, nothing will be done.
 
-    In case the component is a :class:`Button`, its :attr:`Button.state`
-    will be adjusted to reflect, whether it is hovered or not.
+      In case the component is a :class:`Button`, its :attr:`Button.state`
+      will be adjusted to reflect, whether it is hovered or not.
 
-    If the button release followed a button press on the same component and
-    if the button is the primary button, the click() event handler is invoked,
-    if the component is a :class:`Button`.
+      If the button release followed a button press on the same component and
+      if the button is the primary button, the click() event handler is invoked,
+      if the component is a :class:`Button`.
 
-   .. method:: dispatch(obj : object, event : SDL_Event):
+   .. method:: dispatch(obj : object, event : SDL_Event) -> None
 
       Passes an event to the given object. If *obj* is a
       :class:`pygame2.ebs.World` object, UI relevant components will receive

@@ -1,6 +1,5 @@
 .. module:: pygame2.video.image
    :synopsis: Image loaders
-.. currentmodule:: pygame2.video
 
 :mod:`pygame2.video.image` - Image loaders
 ==========================================

@@ -14,6 +14,13 @@ Submodules
 All classes and methods of the modules below are directly included in
 the :mod:`pygame2.video` module.
 
+.. inheritance-diagram::
+   pygame2.video.font
+   pygame2.video.gui
+   pygame2.video.sprite
+   pygame2.video.window
+   :parts: 2
+
 .. toctree::
    :maxdepth: 1
 

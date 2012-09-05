@@ -26,6 +26,7 @@ Submodules
    sdlcpuinfo.rst
    sdlendian.rst
    sdlevents.rst
+   sdlhaptic.rst
    sdlhints.rst
    sdljoystick.rst
    sdlkeyboard.rst

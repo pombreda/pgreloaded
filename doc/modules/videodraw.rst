@@ -1,6 +1,5 @@
 .. module:: pygame2.video.draw
    :synopsis: 2D drawing routines
-.. currentmodule:: pygame2.video
 
 :mod:`pygame2.video.draw` - 2D drawing routines
 ===============================================

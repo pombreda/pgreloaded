@@ -12,15 +12,15 @@ SDL2
 ----
 * SDL_assert.h API - we do not really need that one
 * SDL_gesture.h API
-* SDL_haptic.h API
 * SDL_mutex.h API - better be handled by multiprocessing and friends
 * SDL_thread.h API - better be handled by multiprocessing and friends
 * SDL_touch.h API
 
 * :func:`pygame2.sdl.rwops.rw_from_object()` seems to run into threading
   issues with 3rd party libraries that are loaded via SDL2
-  (esp. SDL2_image). This might have to be reworked to make it
-  thread-safe for ctypes.
+  (esp. SDL2_image) on 64-bit platforms. This might have to be reworked
+  to make it thread-safe for ctypes OR the 3rd party libraries are
+  somehow broken for such a usage.
 
 PyPy
 ----

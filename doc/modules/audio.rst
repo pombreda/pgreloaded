@@ -4,6 +4,9 @@
 :mod:`pygame2.audio` - Audio in- and output routines
 ====================================================
 
+.. inheritance-diagram:: pygame2.audio
+   :parts: 1
+
 The :mod:`pygame2.audio` module provides easy to use audio in- and output
 capabilities based on the OpenAL standard. It is designed to be non-invasive
 within a component-based application.

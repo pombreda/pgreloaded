@@ -1,9 +1,12 @@
 .. module:: pygame2.video.sprite
    :synopsis: Sprite, texture and pixel surface routines
-.. currentmodule:: pygame2.video
 
 :mod:`pygame2.video.sprite` - Sprite, texture and pixel surface routines
 ========================================================================
+
+.. inheritance-diagram:: pygame2.video.sprite
+   :parts: 1
+
 
 .. class:: Sprite(source=None, size=(0, 0), bpp=32, masks=None, freesf=False)
 
