@@ -26,6 +26,7 @@ Submodules
    sdlcpuinfo.rst
    sdlendian.rst
    sdlevents.rst
+   sdlgesture.rst
    sdlhaptic.rst
    sdlhints.rst
    sdljoystick.rst
@@ -40,6 +41,7 @@ Submodules
    sdlshape.rst
    sdlsurface.rst
    sdltimer.rst
+   sdltouch.rst
    sdlversion.rst
    sdlvideo.rst
    sdlsyswm.rst
