@@ -1,5 +1,3 @@
-Authors:
+Authors and contributors:
 Marcus von Appen <marcus@sysfault.org>
-
-Contributors:
-Alexander Sabourenkov - pygame2.sdlimage, pygame2.sdlttf
+Alexander Sabourenkov - initial versions of pygame2.sdlimage, pygame2.sdlttf

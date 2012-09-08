@@ -36,5 +36,5 @@ def get_dll_path():
     """Returns the path to the DLLs to be used."""
     return _DLLPATH
 
-__version__ = "2.0.0-alpha6"
-version_info = (2, 0, 0, "alpha6")
+__version__ = "2.0.0-beta1"
+version_info = (2, 0, 0, "beta1")
