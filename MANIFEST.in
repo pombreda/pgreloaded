@@ -1,6 +1,5 @@
 graft doc
-exclude *.dia
+graft util
+graft examples
 include *.bat Makefile
 include *.txt
-include examples
-include util
