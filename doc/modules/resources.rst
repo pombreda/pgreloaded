@@ -7,8 +7,8 @@
 Every application usually ships with various resources, such as image and data
 files, configuration files and so on. Accessing those files in the folder
 hierarchy or in a bundled format for various platforms can become a comple
-task, for which the :mod:`resources` module can provide ideal supportive
-application components.
+task, for which the :mod:`pygame2.resources` module can provide ideal
+supportive application components.
 
 The :class:`Resources` class allows you to manage different application data
 in a certain directory, providing a dictionary-style access functionality for
@@ -63,15 +63,15 @@ automatically. ::
     tilesimage = appresources.get("tileset1.bmp")
     audiofile = appresources.get("example.wav")
 
-If you request a an indexed file via :meth:`Resources.get`, you will receive
+If you request an indexed file via :meth:`Resources.get`, you will receive
 a :class:`io.BytesIO` stream, containing the file data, for further processing.
 
 .. note::
 
-   The scanned files act as keys within the :class:`Resources`
-   class. This means that two files, that have the same name, but
-   different location will not be indexed. Only one of them will be
-   accessible through the :class:`Resources` class.
+   The scanned files act as keys within the :class:`Resources` class. This
+   means that two files, that have the same name, but are located in different
+   directories, will not be indexed. Only one of them will be accessible
+   through the :class:`Resources` class.
 
 Resource management API
 -----------------------

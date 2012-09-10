@@ -78,7 +78,7 @@ SDL2_ttf API
 
    Gets the style of the font as ``TTF_STYLE_*`` combination.
 
-   This wraps :c:func:``TTF_GetFontStyle``.
+   This wraps :c:func:`TTF_GetFontStyle`.
 
 .. function:: set_font_style(font : TTF_Font, style : int) -> None
 

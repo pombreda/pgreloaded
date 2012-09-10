@@ -88,37 +88,48 @@ class ALTest(unittest.TestCase):
                          al.AL_FORMAT_MONO8)
 
     def test_listener_f(self):
-        self.assertRaises((ArgumentError, TypeError), al.listener_f, None, None)
-        self.assertRaises((ArgumentError, TypeError), al.listener_f, "Test", None)
-        self.assertRaises((ArgumentError, TypeError), al.listener_f, "Test", "Test")
-        self.assertRaises((ArgumentError, TypeError), al.listener_f, 1234, None)
-        self.assertRaises((ArgumentError, TypeError), al.listener_f, 1234, "Test")
+        self.assertRaises((ArgumentError, TypeError), al.listener_f,
+                          None, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_f,
+                          "Test", None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_f,
+                          "Test", "Test")
+        self.assertRaises((ArgumentError, TypeError), al.listener_f,
+                          1234, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_f,
+                          1234, "Test")
         self.assertRaises(al.OpenALError, al.listener_f, 1234, 10)
         self.assertRaises(al.OpenALError, al.listener_f, 1234, 10.3333)
 
     def test_listener_3f(self):
-        self.assertRaises((ArgumentError, TypeError), al.listener_3f, None, None, None, None)
-        self.assertRaises((ArgumentError, TypeError), al.listener_3f, "Test", None, None,
-                          None)
-        self.assertRaises((ArgumentError, TypeError), al.listener_3f, "Test", "Test", None,
-                          None)
-        self.assertRaises((ArgumentError, TypeError), al.listener_3f, "Test", "Test", "Test",
-                          None)
-        self.assertRaises((ArgumentError, TypeError), al.listener_3f, "Test", "Test", "Test",
-                          "Test")
-        self.assertRaises((ArgumentError, TypeError), al.listener_3f, 1234, None, None, None)
-        self.assertRaises((ArgumentError, TypeError), al.listener_3f, 1234, "Test", None,
-                          None)
-        self.assertRaises((ArgumentError, TypeError), al.listener_3f, 1234, "Test", "Test",
-                          None)
-        self.assertRaises((ArgumentError, TypeError), al.listener_3f, 1234, "Test", "Test",
-                          "Test")
-        self.assertRaises((ArgumentError, TypeError), al.listener_3f, 1234, 1, None, None)
-        self.assertRaises((ArgumentError, TypeError), al.listener_3f, 1234, 1, "Test", None)
-        self.assertRaises((ArgumentError, TypeError), al.listener_3f, 1234, 1, "Test",
-                          "Test")
-        self.assertRaises((ArgumentError, TypeError), al.listener_3f, 1234, 1, 1, None)
-        self.assertRaises((ArgumentError, TypeError), al.listener_3f, 1234, 1, 1, "Test")
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          None, None, None, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          "Test", None, None, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          "Test", "Test", None, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          "Test", "Test", "Test", None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          "Test", "Test", "Test", "Test")
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, None, None, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, "Test", None, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, "Test", "Test", None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, "Test", "Test", "Test")
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, 1, None, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, 1, "Test", None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, 1, "Test", "Test")
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, 1, 1, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, 1, 1, "Test")
         self.assertRaises(al.OpenALError, al.listener_3f, 1234, 1, 1, 1)
         self.assertRaises(al.OpenALError, al.listener_3f, 1234, 1.4, -5, 22.0)
 
@@ -126,13 +137,51 @@ class ALTest(unittest.TestCase):
     def test_listener_fv(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_listener_i(self):
-        pass
+        self.assertRaises((ArgumentError, TypeError), al.listener_i,
+                          None, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_i,
+                          "Test", None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_i,
+                          "Test", "Test")
+        self.assertRaises((ArgumentError, TypeError), al.listener_i,
+                          1234, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_i,
+                          1234, "Test")
+        self.assertRaises(al.OpenALError, al.listener_i, 1234, 10)
+        self.assertRaises(al.OpenALError, al.listener_i, 1234, 123456)
 
-    @unittest.skip("not implemented")
     def test_listener_3i(self):
-        pass
+        self.assertRaises((ArgumentError, TypeError), al.listener_3i,
+                          None, None, None, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3i,
+                          "Test", None, None, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3i,
+                          "Test", "Test", None, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3i,
+                          "Test", "Test", "Test", None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3i,
+                          "Test", "Test", "Test", "Test")
+        self.assertRaises((ArgumentError, TypeError), al.listener_3i,
+                          1234, None, None, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, "Test", None, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, "Test", "Test", None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, "Test", "Test", "Test")
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, 1, None, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, 1, "Test", None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, 1, "Test", "Test")
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, 1, 1, None)
+        self.assertRaises((ArgumentError, TypeError), al.listener_3f,
+                          1234, 1, 1, "Test")
+        self.assertRaises(al.OpenALError, al.listener_3f, 1234, 1, 1, 1)
+        self.assertRaises(al.OpenALError, al.listener_3f, 1234, 1.4, -5, 22.0)
 
     @unittest.skip("not implemented")
     def test_listener_iv(self):

@@ -38,6 +38,7 @@ Submodules
    sdlpower.rst
    sdlrect.rst
    sdlrender.rst
+   sdlrwops.rst
    sdlshape.rst
    sdlsurface.rst
    sdltimer.rst

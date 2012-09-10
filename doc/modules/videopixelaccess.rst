@@ -19,7 +19,7 @@
 .. function:: pixels2d(source : object)
 
    Creates a 2D pixel array, based on ``numpy.ndarray``, from the passed
-   *source*. *source* can be a :class:`Sprite` or
+   *source*. *source* can be a :class:`pygame2.video.sprite.Sprite` or
    :class:`pygame2.sdl.surface.SDL_Surface`. The *source*'s
    ``SDL_Surface`` will be locked and unlocked automatically.
 
@@ -34,7 +34,7 @@
 .. function:: pixels3d(source : object)
 
    Creates a 3D pixel array, based on ``numpy.ndarray``, from the passed
-   *source*. *source* can be a :class:`Sprite` or
+   *source*. *source* can be a :class:`pygame2.video.sprite.Sprite` or
    :class:`pygame2.sdl.surface.SDL_Surface`. The *source*'s
    ``SDL_Surface`` will be locked and unlocked automatically.
 

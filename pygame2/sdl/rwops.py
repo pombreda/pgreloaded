@@ -20,7 +20,7 @@ RW_SEEK_END = 2
 
 
 class SDL_RWops(ctypes.Structure):
-    """TODO"""
+    """An arbitrary object capable of byte-wise read and write access"""
     pass
 
 
@@ -113,13 +113,12 @@ def rw_from_file(filename, mode):
 @sdltype("SDL_RWFromFP", [ctypes.c_void_p, ctypes.c_int],
          ctypes.POINTER(SDL_RWops))
 def rw_from_fp(fp, autoclose):
-    """Creates a SDL_RWops from a file handle.
-
-    TODO
-
+    """Creates a SDL_RWops from a file handle (FILE* in C).
+    
+    autoclose indicates, if the file handle should be closed automatically.
     """
     ptr = ctypes.cast(fp, ctypes.c_void_p)
-    if autoclose:
+    if bool(autoclose):
         retval = dll.SDL_RWFromFP(ptr, 1)
     else:
         retval = dll.SDL_RWFromFP(ptr, 0)
@@ -132,8 +131,8 @@ def rw_from_fp(fp, autoclose):
          ctypes.POINTER(SDL_RWops))
 def rw_from_mem(mem, size):
     """Creates a SDL_RWops from a contiguous memory region.
-
-    TODO
+    
+    size denotes the size of the memory region in bytes.
     """
     ptr = ctypes.c_void_p(mem)
     retval = dll.SDL_RWFromMem(ptr, size)
@@ -146,8 +145,8 @@ def rw_from_mem(mem, size):
          ctypes.POINTER(SDL_RWops))
 def rw_from_const_mem(mem, size):
     """Creates a SDL_RWops from a contiguous memory region.
-
-    TODO
+    
+    size denotes the size of the memory region in bytes.
     """
     ptr = ctypes.c_void_p(mem)
     retval = dll.SDL_RWFromMem(ptr, size)
@@ -259,7 +258,8 @@ def rw_from_object(obj):
 
 
 def rw_seek(ctx, offset, whence):
-    """TODO
+    """Moves the read/write offset marker of the SDL_RWops to the passed
+    offset.
     """
     if not isinstance(ctx, SDL_RWops):
         raise TypeError("ctx must be a SDL_RWops")
@@ -267,8 +267,7 @@ def rw_seek(ctx, offset, whence):
 
 
 def rw_tell(ctx):
-    """TODO
-    """
+    """Returns the current position of the offset marker for the SDL_RWops."""
     if not isinstance(ctx, SDL_RWops):
         raise TypeError("ctx must be a SDL_RWops")
     retval = ctx.seek(ctypes.byref(ctx), 0, RW_SEEK_CUR)
@@ -278,7 +277,10 @@ def rw_tell(ctx):
 
 
 def rw_read(ctx, ptr, size, n):
-    """TODO
+    """Reads up to n * size bytes from the passed SDL_RWops.
+
+    The read bytes are stored in ptr. size denotes the size in bytes of a
+    single chunk and n the amount of chunks to read.
     """
     raise NotImplementedError("not implemented")
     #if not isinstance(ctx, SDL_RWops):
@@ -287,7 +289,10 @@ def rw_read(ctx, ptr, size, n):
 
 
 def rw_write(ctx, ptr, size, n):
-    """TODO
+    """Writes up to n * size bytes to the passed SDL_RWops.
+
+    The data to write is to be provided by ptr. size denotes the size in
+    bytes of a single chunk and n the amount of chunks to write.
     """
     raise NotImplementedError("not implemented")
     #if not isinstance(ctx, SDL_RWops):
@@ -296,8 +301,7 @@ def rw_write(ctx, ptr, size, n):
 
 
 def rw_close(ctx):
-    """TODO
-    """
+    """Closes the passed SDL_RWops."""
     if not isinstance(ctx, SDL_RWops):
         raise TypeError("ctx must be a SDL_RWops")
     return ctx.close(ctypes.byref(ctx))
@@ -307,7 +311,7 @@ def rw_close(ctx):
 def alloc_rw():
     """Allocates an empty SDL_RWops instance.
 
-    This method is mainly for use with unmanaged code, which should gain full
+    This function is mainly for use with unmanaged code, which should gain full
     access to the SDL features. It should not be used within Python.
 
     The return value must be freed using pygame2.sdl.rwops.free_rw().

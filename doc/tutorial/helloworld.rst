@@ -58,28 +58,30 @@ to the user. ::
 First, we initialize the :mod:`pygame2.video` internals, so we can
 have access to the screen and create windows on top of it. Afterwards,
 we get an image from the :mod:`pygame2.examples` package and create a
-:class:`pygame2.video.Sprite` from it, which can be easily shown later on.
+:class:`pygame2.video.sprite.Sprite` from it, which can be easily shown later
+on.
 
-Once done with that, :class:`pygame2.video.Window` will create the
+Once done with that, :class:`pygame2.video.window.Window` will create the
 window for us and we supply a title to be shown on the window's border along
-with its initial size. Since :class:`pygame2.video.Window` instances are not
-shown by default, we have to tell the operating system and window manager that
-there is a new window to display by calling :meth:`pygame2.video.Window.show()`.
+with its initial size. Since :class:`pygame2.video.window.Window` instances are
+not shown by default, we have to tell the operating system and window manager
+that there is a new window to display by calling
+:meth:`pygame2.video.window.Window.show()`.
 
-To display the image, we will use a :class:`pygame2.video.SpriteRenderer`,
-which can copy the image to the window for display. The
-:class:`pygame2.video.SpriteRenderer` needs to know, where to copy to, so we
-supply the window as target for copy and display operations. All left to do is
-to actually initiate the copy process by calling
-:class:`pygame2.video.SpriteRenderer.render()` with the image we created
+To display the image, we will use a
+:class:`pygame2.video.sprite.SpriteRenderer`, which can copy the image to the
+window for display. The :class:`pygame2.video.sprite.SpriteRenderer` needs to
+know, where to copy to, so we supply the window as target for copy and display
+operations. All left to do is to actually initiate the copy process by calling
+:class:`pygame2.video.sprite.SpriteRenderer.render()` with the image we created
 earlier.
 
 .. tip::
 
    You will notice that the sprite used above will always be drawn at the
-   top-left corner of the :class:`pygame2.video.Window`. You can change the
-   position of where to draw it by changing its
-   :attr:`pygame2.video.Sprite.position` value. ::
+   top-left corner of the :class:`pygame2.video.window.Window`. You can change
+   the position of where to draw it by changing its
+   :attr:`pygame2.video.sprite.Sprite.position` value. ::
 
         # will cause the renderer to draw the sprite 10px to the right and
         # 20 px to the bottom

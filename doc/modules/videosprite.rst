@@ -53,23 +53,26 @@
 
       The rectangular area occupied by the :class:`Sprite`.
 
-.. class:: SpriteRenderer(window : Window)
+.. class:: SpriteRenderer(window : object)
 
    A rendering system for :class:`Sprite` components. The
-   :class:`SpriteRenderer` class uses a :class:`Window` as drawing
-   device to display :class:`Sprite` surfaces. It uses the internal SDL
-   surface of the *window* as drawing context, so that GL operations,
+   :class:`SpriteRenderer` class uses a :class:`pygame2.sdl.video.SDL_Window`
+   as drawing device to display :class:`Sprite` surfaces. It uses the internal
+   SDL surface of the *window* as drawing context, so that GL operations,
    such as texture handling or the usage of SDL renderers is not
    possible.
+   
+   *window* can be either a :class:`pygame2.video.window.Window` or
+   :class:`pygame2.sdl.video.SDL_Window` instance.
 
    .. attribute:: window
 
-      The :class:`Window` that is used as drawing device.
+      The :class:`pygame2.sdl.video.SDL_Window` that is used as drawing device.
 
    .. attribute:: surface
 
       The :class:`pygame2.sdl.surface.SDL_Surface` that acts as drawing context
-      for the :class:`Window`.
+      for :attr:`window`.
 
    .. attribute:: sortfunc
 
@@ -81,7 +84,7 @@
 
    .. method:: render(sprite : Sprite[, x=None[, y=None]]) -> None
 
-      Draws the passed *sprite* on the :class:`pygame2.video.Window`
+      Draws the passed *sprite* on the :class:`pygame2.video.window.Window`
       surface. *x* and *y* are optional arguments that can be used as drawing
       location for *sprite*. If set to ``None``, the location information
       of the *sprite* are used.
@@ -89,4 +92,4 @@
    .. method:: process(world : World, components : iterable) -> None
 
       Draws the passed :class:`Sprite` objects on the
-      :class:`pygame2.video.Window` surface.
+      :class:`pygame2.video.window.Window` surface.

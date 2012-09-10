@@ -121,9 +121,10 @@ that will display them. ::
     if __name__ == "__main__":
         sys.exit(run())
 
-The first thing to do is to enhance the :class:`pygame2.video.SpriteRenderer`
-so that it will paint the whole window sceeen black on every drawing cycle,
-before drawing all sprites on the window.
+The first thing to do is to enhance the
+:class:`pygame2.video.sprite.SpriteRenderer` so that it will paint the whole
+window sceeen black on every drawing cycle, before drawing all sprites on the
+window.
 
 Afterwards, the player paddles will be implemented, based on an
 :class:`pygame2.ebs.Entity` data container. The player paddles are
@@ -253,7 +254,7 @@ data of our in-game items, without creating complex data structures.
    ``Velocity`` component, it would not be processed by the
    ``MovementSystem``.
 
-Why do we use this approach? The :class:`pygame2.video.Sprite`
+Why do we use this approach? The :class:`pygame2.video.sprite.Sprite`
 objects carry a position, which defines the location at which
 they should be rendered, when processed by the ``Renderer``. If they
 should move around (which is a change in the position), we need to apply the

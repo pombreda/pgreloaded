@@ -1,6 +1,8 @@
 import sys
 import unittest
+from ctypes import ArgumentError
 import pygame2.video as video
+from pygame2.sdl import SDLError
 
 
 class VideoSpriteTest(unittest.TestCase):
@@ -26,9 +28,26 @@ class VideoSpriteTest(unittest.TestCase):
     def test_SpriteRenderer_process(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_Sprite(self):
-        pass
+        for w in range(0, 100):
+            for h in range(0, 100):
+                for bpp in (1, 4, 8, 12, 15, 16, 24, 32):
+                    sprite = video.Sprite(size=(w, h), bpp=bpp)
+                    self.assertIsInstance(sprite, video.Sprite)
+        sprite = video.Sprite()
+        self.assertIsInstance(sprite, video.Sprite)
+        
+        self.assertRaises(ValueError, video.Sprite, size=(-1, -1))
+        self.assertRaises(ValueError, video.Sprite, size=(-10, 5))
+        self.assertRaises(ValueError, video.Sprite, size=(10, -5))
+        self.assertRaises(TypeError, video.Sprite, size=None)
+        self.assertRaises(SDLError, video.Sprite, bpp=-1)
+        self.assertRaises(TypeError, video.Sprite, masks=5)
+        self.assertRaises((ArgumentError, TypeError), video.Sprite,
+                          masks=(None, None, None, None))
+        self.assertRaises((ArgumentError, TypeError), video.Sprite,
+                          masks=("Test", 1, 2, 3))
+        # TODO: tests for source argument
 
     def test_Sprite_position_xy(self):
         sprite = video.Sprite(size=(10, 10), bpp=32)

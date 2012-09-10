@@ -1,7 +1,19 @@
-import os
 import sys
 import unittest
+from pygame2.resources import Resources
 import pygame2.video as video
+import pygame2.sdl.surface as sdlsurface
+
+RESOURCES = Resources(__file__, "resources")
+FONTMAP = ["0123456789",
+           "ABCDEFGHIJ",
+           "KLMNOPQRST",
+           "UVWXYZ    ",
+           "abcdefghij",
+           "klmnopqrst",
+           "uvwxyz    ",
+           ",;.:!?-+()"
+           ]
 
 
 class VideoFontTest(unittest.TestCase):
@@ -15,9 +27,17 @@ class VideoFontTest(unittest.TestCase):
     def tearDown(self):
         video.quit()
 
-    @unittest.skip("not implemented")
     def test_BitmapFont(self):
-        pass
+        sf = sdlsurface.load_bmp(RESOURCES.get_path("font.bmp"))
+        self.assertIsInstance(sf, sdlsurface.SDL_Surface)
+        font = video.BitmapFont(sf, (32, 32), FONTMAP)
+        self.assertIsInstance(font, video.BitmapFont)
+        sdlsurface.free_surface(sf)
+
+        sprite = video.Sprite(RESOURCES.get_path("font.bmp"))
+        self.assertIsInstance(sprite, video.Sprite)
+        font = video.BitmapFont(sprite, (32, 32), FONTMAP)
+        self.assertIsInstance(font, video.BitmapFont)
 
     @unittest.skip("not implemented")
     def test_BitmapFont_render(self):

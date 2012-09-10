@@ -5,6 +5,8 @@ import pygame2.sdl.surface as sdlsurface
 import pygame2.sdl.rect as rect
 import pygame2.sdl.video as video
 import pygame2.sdl.rwops as rwops
+from . import window
+
 
 __all__ = ["SpriteRenderer", "Sprite"]
 
@@ -20,8 +22,14 @@ class SpriteRenderer(System):
     def __init__(self, window):
         """Creates a new SpriteRenderer for a specific Window."""
         super(SpriteRenderer, self).__init__()
-        self.window = window
-        self.surface = video.get_window_surface(window.window)
+        if isinstance(window, window.Window):
+            self.window = window.window
+        elif isinstance(window, video.SDL_Window):
+            self.window = window
+        else:
+            raise TypeError("unsupported window type")
+
+        self.surface = video.get_window_surface(self.window)
         self._sortfunc = lambda e1, e2: cmp(e1.depth, e2.depth)
         self.componenttypes = (Sprite, )
 
@@ -32,7 +40,7 @@ class SpriteRenderer(System):
             y = sprite.y
         r = rect.SDL_Rect(x, y, 0, 0)
         sdlsurface.blit_surface(sprite.surface, None, self.surface, r)
-        video.update_window_surface(self.window.window)
+        video.update_window_surface(self.window)
 
     def process(self, world, components):
         """Draws the passed Sprite objects on the Window's surface."""
@@ -42,7 +50,7 @@ class SpriteRenderer(System):
             r.x = sprite.x
             r.y = sprite.y
             sdlsurface.blit_surface(sprite.surface, None, self.surface, r)
-        video.update_window_surface(self.window.window)
+        video.update_window_surface(self.window)
 
     @property
     def sortfunc(self):

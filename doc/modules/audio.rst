@@ -366,4 +366,4 @@ Audio API
 
    .. note::
 
-      This requires the :mod:`pygame2.ogg.voribsfile` module.
+      This requires the :mod:`pygame2.ogg.vorbisfile` module.

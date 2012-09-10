@@ -31,7 +31,7 @@
 
    * ``SDL_ARRAYORDER_*``
    * ``SDL_PACKEDORDER_*``
-   * `` SDL_BITMAPORDER_*``
+   * ``SDL_BITMAPORDER_*``
 
    This wraps `SDL_PIXELORDER`.
 

@@ -69,9 +69,9 @@ pygame.display          Pygame2
 ``init()``              :func:`pygame2.video.init()`
 ``quit()``              :func:`pygame2.video.quit()`
 ``get_init()``          :func:`pygame2.sdl.was_init()`
-``set_mode()``          :class:`pygame2.video.Window`
-``get_surface()``       :meth:`pygame2.video.Window.get_surface()`
-``flip()``              :meth:`pygame2.video.Window.refresh()`
+``set_mode()``          :class:`pygame2.video.window.Window`
+``get_surface()``       :meth:`pygame2.video.window.Window.get_surface()`
+``flip()``              :meth:`pygame2.video.window.Window.refresh()`
 ``update()``            :meth:`pygame2.sdl.video.update_window_surface_rects()`
 ``get_driver()``        :func:`pygame2.sdl.video.get_current_video_driver()`
 ``Info``                No equivalent yet
@@ -81,13 +81,13 @@ pygame.display          Pygame2
 ``gl_get_attribute()``  :func:`pygame2.sdl.video.gl_get_attribute()`
 ``gl_set_attribute()``  :func:`pygame2.sdl.video.gl_set_attribute()`
 ``get_active()``        No equivalent yet
-``iconify()``           :meth:`pygame2.video.Window.minimize()`
+``iconify()``           :meth:`pygame2.video.window.Window.minimize()`
 ``toggle_fullscreen()`` :func:`pygame2.sdl.video.set_window_fullscreen()`
 ``set_gamma()``         :func:`pygame2.sdl.video.set_window_brightness()`
 ``set_gamma_ramp()``    :func:`pygame2.sdl.video.set_window_gamma_ramp()`
 ``set_icon()``          :func:`pygame2.sdl.video.set_window_icon()`
-``set_caption()``       :attr:`pygame2.video.Window.title`
-``get_caption()``       :attr:`pygame2.video.Window.title`
+``set_caption()``       :attr:`pygame2.video.window.Window.title`
+``get_caption()``       :attr:`pygame2.video.window.Window.title`
 ``set_palette()``       :func:`pygame2.sdl.surface.set_surface_palette()`
 ======================= =================================================
 
@@ -259,7 +259,7 @@ with :class:`pygame2.sdl.render.SDL_Texture` objects.
 pygame.PixelArray
 ^^^^^^^^^^^^^^^^^
 You can access pixel data of sprites and surfaces directly via the
-:class:`pygame2.video.PixelView` class. It does not feature
+:class:`pygame2.video.pixelaccess.PixelView` class. It does not feature
 comparision or extractions methods.
 
 pygame.Rect
@@ -280,20 +280,20 @@ pygame.sprite
 ^^^^^^^^^^^^^
 Pygame2 uses a different approach of rendering and managing sprite
 objects via a component-based system and the
-:class:`pygame2.video.Sprite` class. A sprite module as for Pygame is not
-available.
+:class:`pygame2.video.sprite.Sprite` class. A sprite module as for Pygame is
+not available.
 
 pygame.Surface
 ^^^^^^^^^^^^^^
-======================= ===================================================
+======================= =====================================================
 pygame.Surface          Pygame2
-======================= ===================================================
-``blit()``              :meth:`pygame2.video.SpriteRenderer.render()`,
+======================= =====================================================
+``blit()``              :meth:`pygame2.video.sprite.SpriteRenderer.render()`,
                         :func:`pygame2.sdl.surface.blit_surface()`
 ``convert()``           :func:`pygame2.sdl.surface.convert_surface()`
 ``convert_alpha()``     :func:`pygame2.sdl.surface.convert_surface()`
 ``copy()``              :func:`pygame2.sdl.surface.convert_surface()`
-``fill()``              :func:`pygame2.video.fill()`,
+``fill()``              :func:`pygame2.video.draw.fill()`,
                         :func:`pygame2.sdl.surface.fill_rect()`,
                         :func:`pygame2.sdl.surface.fill_rects()`
 ``scroll()``            No equivalent yet
@@ -308,10 +308,10 @@ pygame.Surface          Pygame2
 ``get_locks()``         No equivalent planned
 ``get_at()``            Direct access to the pixels for surfaces can be
                         achieved via the
-                        :class:`pygame2.video.PixelView` class
+                        :class:`pygame2.video.pixelaccess.PixelView` class
 ``set_at()``            Direct access to the pixels for surfaces can be
                         achieved via the
-                        :class:`pygame2.video.PixelView` class
+                        :class:`pygame2.video.pixelaccess.PixelView` class
 ``get_at_mapped()``     No equivalent planned
 ``get_palette()``       via :attr:`pygame2.sdl.surface.SDL_Surface.format`
                         and the
@@ -329,13 +329,13 @@ pygame.Surface          Pygame2
 ``get_abs_parent()``    As for ``subsurface``
 ``get_offset()``        As for ``subsurface``
 ``get_abs_offset()``    As for ``subsurface``
-``get_size()``          :attr:`pygame2.video.Sprite.size`,
+``get_size()``          :attr:`pygame2.video.sprite.Sprite.size`,
                         :attr:`pygame2.sdl.surface.SDL_Surface.size`
-``get_width()``         ``pygame2.video.Sprite.size[0]``,
+``get_width()``         ``pygame2.video.sprite.Sprite.size[0]``,
                         ``pygame2.sdl.surface.SDL_Surface.size[0]``
-``get_height()``        ``pygame2.video.Sprite.size[1]``,
+``get_height()``        ``pygame2.video.sprite.Sprite.size[1]``,
                         ``pygame2.sdl.surface.SDL_Surface.size[1]``
-``get_rect()``          :attr:`pygame2.video.Sprite.area`
+``get_rect()``          :attr:`pygame2.video.sprite.Sprite.area`
 ``get_bitsize()``       :attr:`pygame2.sdl.pixels.SDL_PixelFormat.BitsPerPixel`
 ``get_bytesize()``      :attr:`pygame2.sdl.pixels.SDL_PixelFormat.BytesPerPixel`
 ``get_flags()``         :attr:`pygame2.sdl.surface.SDL_Surface.flags`
@@ -344,19 +344,19 @@ pygame.Surface          Pygame2
 ``get_shifts()``        :attr:`pygame2.sdl.pixels.SDL_PixelFormat.Rshift`, ...
 ``get_losses()``        :attr:`pygame2.sdl.pixels.SDL_PixelFormat.Rloss`, ...
 ``get_bounding_rect()`` No equivalent yet
-``get_view()``          :class:`pygame2.video.PixelView`
-``get_buffer()``        :class:`pygame2.video.PixelView` or
+``get_view()``          :class:`pygame2.video.pixelaccess.PixelView`
+``get_buffer()``        :class:`pygame2.video.pixelaccess.PixelView` or
                         :attr:`pygame2.sdl.surface.SDL_Surface.pixels`
-======================= ===================================================
+======================= =====================================================
 
 pygame.surfarray
 ^^^^^^^^^^^^^^^^
 2D and 3D pixel access can be achieved via the
-:class:`pygame2.video.PixelView` class in environments without
+:class:`pygame2.video.pixelaccess.PixelView` class in environments without
 numpy. Simplified numpy-array creation with direct pixel access (similar
-to ``pygame.surfarray.pixels2d()`` and ``pygame.surfarray.pixels3d()``
-will be made available via the :mod:`pygame2.video.pixelaccess` module in the
-future.
+to ``pygame.surfarray.pixels2d()`` and ``pygame.surfarray.pixels3d()``)
+is available via :func:`pygame2.video.pixelaccess.pixels2d()` and
+:func:`pygame2.video.pixelaccess.pixels3d()`.
 
 pygame.time
 ^^^^^^^^^^^
