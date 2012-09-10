@@ -5,7 +5,7 @@ import pygame2.sdl.surface as sdlsurface
 import pygame2.sdl.rect as rect
 import pygame2.sdl.video as video
 import pygame2.sdl.rwops as rwops
-from . import window
+from . import window as vwindow
 
 
 __all__ = ["SpriteRenderer", "Sprite"]
@@ -22,7 +22,7 @@ class SpriteRenderer(System):
     def __init__(self, window):
         """Creates a new SpriteRenderer for a specific Window."""
         super(SpriteRenderer, self).__init__()
-        if isinstance(window, window.Window):
+        if isinstance(window, vwindow.Window):
             self.window = window.window
         elif isinstance(window, video.SDL_Window):
             self.window = window
@@ -149,4 +149,3 @@ class Sprite(Component):
     def __repr__(self):
         return "Sprite(size=%s, bpp=%d)" % \
             (self.size, self.surface.format.BitsPerPixel)
-
