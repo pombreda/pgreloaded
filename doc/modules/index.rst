@@ -23,6 +23,7 @@ class, method or function, use the :ref:`genindex` or :ref:`search`.
    font.rst
    ogg.rst
    openal.rst
+   particles.rst
    resources.rst
    scene.rst
    sdl.rst

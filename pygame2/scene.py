@@ -11,9 +11,9 @@ __all__ = ["Scene", "SceneManager", "SCENE_ENDED", "SCENE_RUNNING",
            ]
 
 
-SCENE_ENDED = 0
+SCENE_ENDED =   0
 SCENE_RUNNING = 1
-SCENE_PAUSED = 2
+SCENE_PAUSED =  2
 
 
 class SceneManager(object):
@@ -92,7 +92,7 @@ class Scene(object):
         self.ended = EventHandler(self)
 
     def __repr__(self):
-        states =  ("ENDED", "RUNNING", "PAUSED")
+        states = ("ENDED", "RUNNING", "PAUSED")
         return "Scene(name='%s', state='%s')" % (self.name, states[self.state])
 
     def start(self):

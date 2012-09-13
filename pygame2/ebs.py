@@ -153,13 +153,11 @@ class World(object):
         if ISPYTHON2:
             for compkey, compset in self.components.viewitems():
                 keys = set(compset.viewkeys()) - eids
-                self.components[compkey] =  \
-                    dict((k, v) for k, compset[k] in keys)
+                self.components[compkey] = dict((k, compset[k]) for k in keys)
         else:
-            for compset in self.components.itervalues():
+            for compkey, compset in self.components.items():
                 keys = set(compset.keys()) - eids
-                self.components[compkey] = \
-                    dict((k, v) for k, compset[k] in keys)
+                self.components[compkey] = dict((k, compset[k]) for k in keys)
         self.entities -= eids
 
     def get_components(self, componenttype):

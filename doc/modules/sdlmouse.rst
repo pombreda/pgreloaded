@@ -92,13 +92,13 @@
 
 .. function:: show_cursor(show : int) -> bool
 
-   Shows, hides or queries the state of the mouse cursor. If *show* is 1, the
-   cursor will be shown, if it is 0, the cursor will be hidden. If *show* is
-   -1, the state of the cursor(shown or hidden) will be returned as boolean
-   flag.
+   Shows, hides or queries the state of the mouse cursor. If *show* is 1
+   or ``True``, the cursor will be shown, if it is 0 or ``False``, the
+   cursor will be hidden. If *show* is -1, the state of the cursor
+   (shown or hidden) will be returned as boolean flag.
 
-   This will always return a bool, indicating whether the cursor is shown or
-   hidden.
+   This will always return a bool, indicating whether the cursor is
+   shown or hidden.
 
    This wraps `SDL_ShowCursor`.
 

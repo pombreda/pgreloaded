@@ -168,15 +168,15 @@ def set_relative_mouse_mode(enabled):
 def show_cursor(show):
     """Shows, hides or queries the state of the mouse cursor.
 
-    If show is 1, the cursor will be shown, if it is 0, the cursor will be
-    hidden. If show is -1, the state of the cursor(shown or hidden) will be
-    returned as boolean flag.
+    If show is 1 or True, the cursor will be shown, if it is 0 or False, the
+    cursor will be hidden. If show is -1, the state of the cursor(shown or
+    hidden) will be returned as boolean flag.
 
     This will always return a bool, indicating whether the cursor is shown or
     hidden.
     """
-    if type(show) is not int:
-        raise TypeError("show must be an int")
+    if show != -1:
+       show = bool(show)
     return dll.SDL_ShowCursor(show) == 1
 
 

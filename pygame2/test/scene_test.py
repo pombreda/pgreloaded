@@ -4,7 +4,6 @@ from pygame2.events import EventHandler
 from pygame2.scene import *
 
 
-
 class SceneTest(unittest.TestCase):
     __tags__ = ["scene"]
 
@@ -75,6 +74,7 @@ class SceneTest(unittest.TestCase):
         unpaused = []
         started = []
         ended = []
+
         def pause_cb(scene):
             paused.append(scene)
 
@@ -150,7 +150,6 @@ class SceneTest(unittest.TestCase):
         self.assertTrue(scene1.is_running)
         self.assertEqual(started[0], scene1)
 
-
     def test_Scene(self):
         scene = Scene()
         self.assertIsInstance(scene, Scene)
@@ -160,7 +159,7 @@ class SceneTest(unittest.TestCase):
         self.assertIsInstance(scene.paused, EventHandler)
         self.assertIsInstance(scene.unpaused, EventHandler)
         self.assertIsInstance(scene.ended, EventHandler)
-        
+
         scene = Scene("test")
         self.assertIsInstance(scene, Scene)
         self.assertEqual(scene.name, "test")
@@ -168,13 +167,13 @@ class SceneTest(unittest.TestCase):
     def test_Scene_start_pause_unpause_end(self):
         scene = Scene()
         self.assertEqual(scene.state, SCENE_ENDED)
-        
+
         # Starting
         scene.start()
         self.assertEqual(scene.state, SCENE_RUNNING)
         scene.start()
         self.assertEqual(scene.state, SCENE_RUNNING)
-        
+
         # Restart
         scene.end()
         self.assertEqual(scene.state, SCENE_ENDED)
@@ -184,7 +183,7 @@ class SceneTest(unittest.TestCase):
         self.assertEqual(scene.state, SCENE_RUNNING)
         scene.end()
         self.assertEqual(scene.state, SCENE_ENDED)
-        
+
         # Pause/start
         scene.pause()
         self.assertEqual(scene.state, SCENE_ENDED)
@@ -198,7 +197,7 @@ class SceneTest(unittest.TestCase):
         self.assertEqual(scene.state, SCENE_RUNNING)
         scene.end()
         self.assertEqual(scene.state, SCENE_ENDED)
-        
+
     def test_Scene_is_running_is_paused_has_ended(self):
         scene = Scene()
         self.assertEqual(scene.state, SCENE_ENDED)
