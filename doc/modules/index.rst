@@ -24,6 +24,7 @@ class, method or function, use the :ref:`genindex` or :ref:`search`.
    ogg.rst
    openal.rst
    resources.rst
+   scene.rst
    sdl.rst
    sdlimage.rst
    sdlttf.rst

@@ -9,7 +9,7 @@ are separately stored. For each individual component type a processing
 system will take care of all necessary updates for the World
 environment.
 """
-from uuid import uuid4
+import uuid
 from pygame2.compat import ISPYTHON2
 
 __all__ = ["Entity", "World", "System", "Applicator", "Component"]
@@ -43,19 +43,13 @@ class Entity(object):
         if not isinstance(world, World):
             raise TypeError("world must be a World")
         entity = object.__new__(cls)
-        entity._id = uuid4()
+        entity._id = uuid.uuid4()
         entity._world = world
         world.entities.add(entity)
         return entity
 
     def __repr__(self):
         return "Entity(id=%s)" % self._id
-
-    def __eq__(self, entity):
-        return self._id == entity._id
-
-    def __ne__(self, entity):
-        return self._id != entity._id
 
     def __hash__(self):
         return hash(self._id)
@@ -93,6 +87,10 @@ class Entity(object):
         ctype = self._world._componenttypes[name]
         del self._world.components[ctype][self._id]
 
+    def delete(self):
+        """Removes the Entity from the world it belongs to."""
+        self.world.delete(self)
+
     @property
     def id(self):
         """The id of the Entity."""
@@ -127,24 +125,14 @@ class World(object):
         self.components = {}
         self._componenttypes = {}
 
-    def _applicator_components(self, ctypes):
+    def combined_components(self, comptypes):
         """A generator view on combined sets of Component items."""
         comps = self.components
-        keysets = [set(comps[ctype]) for ctype in ctypes]
-        valsets = [comps[ctype] for ctype in ctypes]
+        keysets = [set(comps[ctype]) for ctype in comptypes]
+        valsets = [comps[ctype] for ctype in comptypes]
         entities = keysets[0].intersection(*keysets[1:])
         for ekey in entities:
             yield tuple(component[ekey] for component in valsets)
-
-    def _add_system_information(self, system):
-        """Adds the component type information, the system deal with, to
-        the internal lookup tables.
-        """
-        for classtype in system.componenttypes:
-            if Component not in classtype.mro():
-                raise TypeError("'%s' must be a  Component")
-            if classtype not in self.components:
-                self.add_componenttype(classtype)
 
     def add_componenttype(self, classtype):
         """Adds a supported component type to the World."""
@@ -153,14 +141,26 @@ class World(object):
         self.components[classtype] = {}
         self._componenttypes[classtype.__name__.lower()] = classtype
 
-    def delete_entity(self, entity):
+    def delete(self, entity):
         """Removes an Entity from the World, including all its data."""
-        if not isinstance(entity, Entity):
-            raise TypeError("entity must be a Entity")
-        eid = entity.id
         for componentset in self.components.values():
-            componentset.pop(eid, None)
+            componentset.pop(entity, None)
         self.entities.discard(entity)
+
+    def delete_entities(self, entities):
+        """Removes multiple entities from the World at once."""
+        eids = set(e.id for e in entities)
+        if ISPYTHON2:
+            for compkey, compset in self.components.viewitems():
+                keys = set(compset.viewkeys()) - eids
+                self.components[compkey] =  \
+                    dict((k, v) for k, compset[k] in keys)
+        else:
+            for compset in self.components.itervalues():
+                keys = set(compset.keys()) - eids
+                self.components[compkey] = \
+                    dict((k, v) for k, compset[k] in keys)
+        self.entities -= eids
 
     def get_components(self, componenttype):
         """Gets all existing components for a sepcific component type.
@@ -179,7 +179,11 @@ class World(object):
         """
         if not isinstance(system, System):
             raise TypeError("system must be a System")
-        self._add_system_information(system)
+        for classtype in system.componenttypes:
+            if Component not in classtype.mro():
+                raise TypeError("'%s' must be a  Component")
+            if classtype not in self.components:
+                self.add_componenttype(classtype)
         self._systems.append(system)
 
     def insert_system(self, index, system):
@@ -205,7 +209,7 @@ class World(object):
         for system in self._systems:
             s_process = system.process
             if isinstance(system, Applicator):
-                comps = self._applicator_components(system.componenttypes)
+                comps = self.combined_components(system.componenttypes)
                 s_process(self, comps)
             else:
                 if ISPYTHON2:

@@ -245,6 +245,11 @@ EBS API
 
       The :class:`World` the entity resides in.
 
+   .. method:: delete() -> None
+
+      Deletes the :class:`Entity` from its :class:`World`. This
+      basically calls :meth:`World.delete()` with the :class:`Entity`.
+
 .. class:: Applicator()
 
    A processing system for combined data sets. The :class:`Applicator`
@@ -327,10 +332,15 @@ EBS API
       Adds a processing :class:`System` to the world. The system will be
       added as last item in the processing order.
 
-   .. method:: delete_entity(entity : Entity)
+   .. method:: delete(entity : Entity)
 
       Removes an :class:`Entity` from the World, including all its
       :class:`Component` data.
+
+   .. method:: delete_entities(entities : iterable)
+
+      Removes a set of :class:`Entity` instances from the World,
+      including all their :class:`Component` data.
 
    .. method:: insert_system(index : int, system : System)
 

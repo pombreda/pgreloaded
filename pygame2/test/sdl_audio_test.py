@@ -139,7 +139,7 @@ class SDLAudioTest(unittest.TestCase):
         self.assertRaises(sdl.SDLError, audio.get_audio_device_name, -1)
         self.assertRaises(sdl.SDLError, audio.get_audio_device_name, -1, True)
         sdl.quit_subsystem(sdl.SDL_INIT_AUDIO)
-        
+
         self.assertRaises(sdl.SDLError, audio.get_audio_device_name, 0)
         self.assertRaises(sdl.SDLError, audio.get_audio_device_name, 0, True)
 

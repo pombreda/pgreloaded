@@ -101,6 +101,10 @@ class EBSTest(unittest.TestCase):
         self.assertNotEqual(ent2.world, world)
         self.assertNotEqual(ent1.world, ent2.world)
 
+    @unittest.skip("not implemented")
+    def test_Entity_delete(self):
+        pass
+
     def test_Entity__inheritance(self):
         world = World()
 
@@ -162,24 +166,24 @@ class EBSTest(unittest.TestCase):
             Entity(w)
         self.assertEqual(len(w.entities), 100)
 
-    def test_World_delete_entity(self):
+    def test_World_delete(self):
         w = World()
         e1 = Entity(w)
         e2 = Entity(w)
 
-        self.assertRaises(TypeError, w.delete_entity, None)
-        self.assertRaises(TypeError, w.delete_entity, "Test")
-        self.assertRaises(TypeError, w.delete_entity, 1234)
-
         self.assertEqual(len(w.entities), 2)
-        w.delete_entity(e1)
+        w.delete(e1)
         self.assertEqual(len(w.entities), 1)
-        w.delete_entity(e2)
+        w.delete(e2)
         self.assertEqual(len(w.entities), 0)
 
         # The next two should have no effect
-        w.delete_entity(e1)
-        w.delete_entity(e2)
+        w.delete(e1)
+        w.delete(e2)
+
+    @unittest.skip("not implemented")
+    def test_World_delete_entities(self):
+        pass
 
     def test_System(self):
         world = World()
