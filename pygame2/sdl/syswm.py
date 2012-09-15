@@ -35,7 +35,7 @@ elif ctypes.sizeof(ctypes.c_longlong) == ctypes.sizeof(ctypes.c_void_p):
 
 
 class _winmsg(ctypes.Structure):
-    """TODO"""
+    """The window manager message for Win32."""
     _fields_ = [("hwnd", HWND),
                 ("msg", UINT),
                 ("wParam", WPARAM),
@@ -44,27 +44,27 @@ class _winmsg(ctypes.Structure):
 
 
 class _x11msg(ctypes.Structure):
-    """TODO"""
+    """The window manager message for X11"""
     _fields_ = [("event", ctypes.c_void_p)]
 
 
 class _dfbmsg(ctypes.Structure):
-    """TODO"""
+    """The window manager message for DirectFB."""
     _fields_ = [("event", ctypes.c_void_p)]
 
 
 class _cocoamsg(ctypes.Structure):
-    """TODO"""
+    """The window manager message for MacOS X"""
     pass
 
 
 class _uikitmsg(ctypes.Structure):
-    """TODO"""
+    """The window manager message for iOS"""
     pass
 
 
 class _msg(ctypes.Union):
-    """TODO"""
+    """Platform-specific window manager message details."""
     _fields_ = [("win", _winmsg),
                 ("x11", _x11msg),
                 ("dfb", _dfbmsg),
@@ -75,7 +75,11 @@ class _msg(ctypes.Union):
 
 
 class SDL_SysWMmsg(ctypes.Structure):
-    """TODO"""
+    """System-specific window manager messages.
+
+    This contains the message information for SDL_WindowEvent events
+    being raised.
+    """
     _fields_ = [("version", SDL_version),
                 ("subsystem", ctypes.c_int),
                 ("msg", _msg)
@@ -83,35 +87,35 @@ class SDL_SysWMmsg(ctypes.Structure):
 
 
 class _wininfo(ctypes.Structure):
-    """TODO"""
+    """Window information for Win32"""
     _fields_ = [("window", HWND)]
 
 
 class _x11info(ctypes.Structure):
-    """TODO"""
+    """Window information for X11."""
     _fields_ = [("display", ctypes.c_void_p),
                 ("window", ctypes.c_ulong)]
 
 
 class _dfbinfo(ctypes.Structure):
-    """TODO"""
+    """Window information for DirectFB."""
     _fields_ = [("dfb", ctypes.c_void_p),
                 ("window", ctypes.c_void_p),
                 ("surface", ctypes.c_void_p)]
 
 
 class _cocoainfo(ctypes.Structure):
-    """TODO"""
+    """Window information for MacOS X."""
     _fields_ = [("window", ctypes.c_void_p)]
 
 
 class _uikitinfo(ctypes.Structure):
-    """TODO"""
+    """Window information for iOS."""
     _fields_ = [("window", ctypes.c_void_p)]
 
 
 class _info(ctypes.Union):
-    """TODO"""
+    """The platform-specific information of a window."""
     _fields_ = [("win", _wininfo),
                 ("x11", _x11info),
                 ("dfb", _dfbinfo),
@@ -122,7 +126,10 @@ class _info(ctypes.Union):
 
 
 class SDL_SysWMinfo(ctypes.Structure):
-    """TODO"""
+    """System-specific window manager information.
+
+    This holds the low-level information about the window.
+    """
     _fields_ = [("version", SDL_version),
                 ("subsystem", ctypes.c_int),
                 ("info", _info)

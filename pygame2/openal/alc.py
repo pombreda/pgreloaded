@@ -51,12 +51,12 @@ ALC_CAPTURE_SAMPLES =                  0x312
 
 
 class ALCdevice(ctypes.Structure):
-    """TODO"""
+    """An OpenAL device used for audio operations."""
     pass
 
 
 class ALCcontext(ctypes.Structure):
-    """TODO"""
+    """An execution context on a OpenAL device."""
     pass
 
 

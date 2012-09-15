@@ -55,7 +55,7 @@ _ovtell = ctypes.CFUNCTYPE(ctypes.c_long, ctypes.c_void_p)
 
 
 class ov_callbacks(ctypes.Structure):
-    """TODO"""
+    """A callback handler structure for reading OGG-Vorbis streams."""
     _fields_ = [("read_func", _ovread),
                 ("seek_func", _ovseek),
                 ("close_func", _ovclose),
@@ -64,7 +64,7 @@ class ov_callbacks(ctypes.Structure):
 
 
 class vorbis_info(ctypes.Structure):
-    """TODO"""
+    """Information about a vorbis stream."""
     _fields_ = [("version", ctypes.c_int),
                 ("channels", ctypes.c_int),
                 ("rate", ctypes.c_long),
@@ -81,7 +81,7 @@ class vorbis_info(ctypes.Structure):
 
 
 class OggVorbis_File(ctypes.Structure):
-    """TODO"""
+    """OggVorbis file structure."""
     pass
 
 
@@ -92,7 +92,11 @@ def get_dll_file():
 
 @vfiletype("ov_clear", [ctypes.POINTER(OggVorbis_File)], ctypes.c_int)
 def clear(ovfilep):
-    """x"""
+    """Releases the resources held by a OggVorbis_File.
+
+    Note: do not use the passed OggVorbis_File after calling this
+    function.
+    """
     if not isinstance(ovfilep, OggVorbis_File):
         raise TypeError("ovfilep must be an OggVorbis_File")
     retval = dll.ov_clear(ctypes.byref(ovfilep))
@@ -103,7 +107,7 @@ def clear(ovfilep):
 @vfiletype("ov_fopen", [ctypes.c_char_p, ctypes.POINTER(OggVorbis_File)],
            ctypes.c_int)
 def fopen(fname):
-    """x"""
+    """Opens a file and loads it into a OggVorbis_File."""
     if type(fname) is not str:
         raise TypeError("fname must be a string")
     ovf = OggVorbis_File()
@@ -116,7 +120,7 @@ def fopen(fname):
 @vfiletype("ov_info", [ctypes.POINTER(OggVorbis_File), ctypes.c_int],
            ctypes.POINTER(vorbis_info))
 def info(ovfilep, bstream=-1):
-    """x"""
+    """Retrieves the vorbis information from the OggVorbis_File."""
     # TODO: rewrite this by implementing the info() lookup code - since
     # it is a struct value of OggVorbis_File, we can create random
     # segfaults and bus errors, if the OggVorbis_File is freed in the
@@ -132,7 +136,9 @@ def info(ovfilep, bstream=-1):
 @vfiletype("ov_pcm_total", [ctypes.POINTER(OggVorbis_File), ctypes.c_int],
            ctypes.c_int64)
 def pcm_total(ovfilep, bstream=-1):
-    """x"""
+    """Retrieves the total size in bytes of the PCM buffer of a
+    OggVorbis_File.
+    """
     if not isinstance(ovfilep, OggVorbis_File):
         raise TypeError("ovfilep must be an OggVorbis_File")
     retval = dll.ov_pcm_total(ovfilep, bstream)
@@ -146,7 +152,7 @@ def pcm_total(ovfilep, bstream=-1):
                        ctypes.c_int, ctypes.c_int, ctypes.c_int,
                        ctypes.POINTER(ctypes.c_int)], ctypes.c_int)
 def read(ovfilep, length, outbuf=None, bigendian=False, word=2, signed=True):
-    """x"""
+    """Loads the PCM buffer of a OggVorbis_File."""
     if not isinstance(ovfilep, OggVorbis_File):
         raise TypeError("ovfilep must be an OggVorbis_File")
     if word not in (1, 2):

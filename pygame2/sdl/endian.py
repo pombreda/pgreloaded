@@ -2,6 +2,7 @@
 Wrapper methods around the SDL 2 endian routines.
 """
 import sys
+import array
 
 __all__ = ["SDL_BYTEORDER", "SDL_LIL_ENDIAN", "SDL_BIG_ENDIAN", "swap16",
            "swap32", "swap64", "swap_float", "swap_le_16", "swap_le_32",
@@ -37,7 +38,9 @@ def swap64(x):
 
 def swap_float(x):
     """Swaps the byte order of a float value."""
-    raise NotImplementedError("not yet implemented")
+    ar = array.array("d", (x, ))
+    ar.byteswap()
+    return ar[0]
 
 
 def _nop(x):
@@ -54,7 +57,7 @@ if SDL_BYTEORDER == SDL_LIL_ENDIAN:
     swap_be_16 = swap16
     swap_be_32 = swap32
     swap_be_64 = swap64
-    swap_float_be = swap_float  # TODO
+    swap_float_be = swap_float
 else:
     swap_be_16 = _nop
     swap_be_32 = _nop
@@ -63,4 +66,4 @@ else:
     swap_le_16 = swap16
     swap_le_32 = swap32
     swap_le_64 = swap64
-    swap_float_le = swap_float  # TODO
+    swap_float_le = swap_float

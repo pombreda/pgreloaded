@@ -111,7 +111,7 @@ SDL_ENABLE  = 1
 
 
 class SDL_WindowEvent(ctypes.Structure):
-    """TODO"""
+    """A SDL_Window event"""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -125,7 +125,7 @@ class SDL_WindowEvent(ctypes.Structure):
 
 
 class SDL_KeyboardEvent(ctypes.Structure):
-    """TODO"""
+    """A keyboard input event, raised on pressing or releasing keys."""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -138,7 +138,7 @@ class SDL_KeyboardEvent(ctypes.Structure):
 
 
 class SDL_TextEditingEvent(ctypes.Structure):
-    """TODO"""
+    """A text editing event, raised on text edit operations."""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -149,7 +149,7 @@ class SDL_TextEditingEvent(ctypes.Structure):
 
 
 class SDL_TextInputEvent(ctypes.Structure):
-    """TODO"""
+    """A text input event, raised on text input operations."""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -158,7 +158,9 @@ class SDL_TextInputEvent(ctypes.Structure):
 
 
 class SDL_MouseMotionEvent(ctypes.Structure):
-    """TODO"""
+    """A mouse motion event, raised on moving the mouse cursor around
+    within the area of a SDL_Window.
+    """
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -174,7 +176,9 @@ class SDL_MouseMotionEvent(ctypes.Structure):
 
 
 class SDL_MouseButtonEvent(ctypes.Structure):
-    """TODO"""
+    """A mouse button event, raised on pressing or releasing a mouse
+    button on a SDL_Window.
+    """
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -188,7 +192,9 @@ class SDL_MouseButtonEvent(ctypes.Structure):
 
 
 class SDL_MouseWheelEvent(ctypes.Structure):
-    """TODO"""
+    """A mouse wheel event, raised on using the mouse wheel on a
+    SDL_Window.
+    """
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -198,7 +204,7 @@ class SDL_MouseWheelEvent(ctypes.Structure):
 
 
 class SDL_JoyAxisEvent(ctypes.Structure):
-    """TODO"""
+    """A joystick axis event, raised on changing the axis aptitude."""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("which", ctypes.c_ubyte),
@@ -210,7 +216,7 @@ class SDL_JoyAxisEvent(ctypes.Structure):
 
 
 class SDL_JoyBallEvent(ctypes.Structure):
-    """TODO"""
+    """A joystick ball event, raised on rotating the joystick ball."""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("which", ctypes.c_ubyte),
@@ -223,7 +229,7 @@ class SDL_JoyBallEvent(ctypes.Structure):
 
 
 class SDL_JoyHatEvent(ctypes.Structure):
-    """TODO"""
+    """A joystick hat event, raised on on changing the hat aptitude."""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("which", ctypes.c_ubyte),
@@ -234,7 +240,7 @@ class SDL_JoyHatEvent(ctypes.Structure):
 
 
 class SDL_JoyButtonEvent(ctypes.Structure):
-    """TODO"""
+    """A joystick button event, raised on pressing a button."""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("which", ctypes.c_ubyte),
@@ -245,7 +251,7 @@ class SDL_JoyButtonEvent(ctypes.Structure):
 
 
 class SDL_TouchFingerEvent(ctypes.Structure):
-    """TODO"""
+    """A finger touch event, raised on performing a touch gesture."""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -264,7 +270,7 @@ class SDL_TouchFingerEvent(ctypes.Structure):
 
 
 class SDL_TouchButtonEvent(ctypes.Structure):
-    """TODO"""
+    """A touch button event, raised on pressing a touch button."""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -277,7 +283,7 @@ class SDL_TouchButtonEvent(ctypes.Structure):
 
 
 class SDL_MultiGestureEvent(ctypes.Structure):
-    """TODO"""
+    """A gesture event."""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -292,7 +298,7 @@ class SDL_MultiGestureEvent(ctypes.Structure):
 
 
 class SDL_DollarGestureEvent(ctypes.Structure):
-    """TODO"""
+    """A $1 gesture event, raised on performing a recorded $1 gesture."""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -306,7 +312,7 @@ class SDL_DollarGestureEvent(ctypes.Structure):
 
 
 class SDL_DropEvent(ctypes.Structure):
-    """TODO"""
+    """A file drop event."""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("file", ctypes.c_char_p)
@@ -314,14 +320,14 @@ class SDL_DropEvent(ctypes.Structure):
 
 
 class SDL_QuitEvent(ctypes.Structure):
-    """TODO"""
+    """A quit event, raised on quitting the application."""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ]
 
 
 class SDL_UserEvent(ctypes.Structure):
-    """TODO"""
+    """A user event, which is raised by the application."""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("windowid", ctypes.c_uint),
@@ -332,7 +338,7 @@ class SDL_UserEvent(ctypes.Structure):
 
 
 class SDL_SysWMEvent(ctypes.Structure):
-    """TODO"""
+    """A system window manager event."""
     _fields_ = [("type", ctypes.c_uint),
                 ("timestamp", ctypes.c_uint),
                 ("msg", SDL_SysWMmsg),
@@ -340,7 +346,9 @@ class SDL_SysWMEvent(ctypes.Structure):
 
 
 class SDL_Event(ctypes.Union):
-    """TODO"""
+    """The generic event structure, which contains the concrete event
+    being raised.
+    """
     _fields_ = [("type", ctypes.c_uint),
                 ("window", SDL_WindowEvent),
                 ("key", SDL_KeyboardEvent),

@@ -26,12 +26,12 @@ SDL_HAT_LEFTDOWN  = SDL_HAT_LEFT | SDL_HAT_DOWN
 
 
 class _balldelta(ctypes.Structure):
-    """TODO"""
+    """Joystick ball movement/axis deltas."""
     _fields_ = [("dx", ctypes.c_int), ("dy", ctypes.c_int)]
 
 
 class SDL_Joystick(ctypes.Structure):
-    """TODO"""
+    """A joystick device."""
     _fields_ = [("_index", ctypes.c_ubyte),
                 ("_name", ctypes.c_char_p),
                 ("_naxes", ctypes.c_int),

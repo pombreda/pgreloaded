@@ -59,21 +59,3 @@ class TestEventProcessor(object):
                 return
             else:
                 window.refresh()
-
-
-# class EventProcessor(object):
-#     """TODO"""
-#     def __init__(self, delay=10):
-#         self.delay = delay
-#         self._callbacks = { }
-#         for sdlevent in events.ALL_EVENTS:
-#             self._callbacks[sdlevent] = None
-
-#     def run(self):
-#         """TODO"""
-#         while True:
-#             event = events.poll_event(True)
-#             if event is None:
-#                 self.delay(10)
-#             if self._callbacks in event.type:
-#                 self._callbacks

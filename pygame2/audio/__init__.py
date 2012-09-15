@@ -38,6 +38,8 @@ class SoundListener(Component):
     """A simple sound listener."""
     def __init__(self, position=(0, 0, 0), velocity=(0, 0, 0),
                  orientation=(0, 0, -1, 0, 1, 0)):
+        """Creates a new SoundListener with a specific position,
+        movement velocity and hearing orientation."""
         super(SoundListener, self).__init__()
         self.position = position
         self.velocity = velocity
@@ -45,9 +47,13 @@ class SoundListener(Component):
 
 
 class SoundData(Component):
-    """A buffered audio object."""
+    """A buffered audio object.
+
+    The SoundData consists of a PCM audio data buffer, the audio
+    frequency in Hz, and the audio format.
+    """
     def __init__(self, aformat=None, data=None, size=None, frequency=None):
-        """TODO"""
+        """Creates a new sound data object."""
         super(SoundData, self).__init__()
         self._bufid = None
         self.format = aformat

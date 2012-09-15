@@ -71,7 +71,9 @@ _sdlclose = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.POINTER(SDL_RWops))
 #                ]
 
 class _mem(ctypes.Structure):
-    """TODO"""
+    """SDL_Rwops internal memory mapping structure for contiguous memory
+    regions.
+    """
     _fields_ = [("base", ctypes.POINTER(ctypes.c_ubyte)),
                 ("here", ctypes.POINTER(ctypes.c_ubyte)),
                 ("stop", ctypes.POINTER(ctypes.c_ubyte)),
@@ -79,7 +81,9 @@ class _mem(ctypes.Structure):
 
 
 class _unknown(ctypes.Structure):
-    """TODO"""
+    """SDL_RWops internal memory buffer mapping structure for arbitrary
+    objects being accessed.
+    """
     _fields_ = [("data1", ctypes.c_void_p)]
 
 
@@ -114,7 +118,7 @@ def rw_from_file(filename, mode):
          ctypes.POINTER(SDL_RWops))
 def rw_from_fp(fp, autoclose):
     """Creates a SDL_RWops from a file handle (FILE* in C).
-    
+
     autoclose indicates, if the file handle should be closed automatically.
     """
     ptr = ctypes.cast(fp, ctypes.c_void_p)
@@ -131,7 +135,7 @@ def rw_from_fp(fp, autoclose):
          ctypes.POINTER(SDL_RWops))
 def rw_from_mem(mem, size):
     """Creates a SDL_RWops from a contiguous memory region.
-    
+
     size denotes the size of the memory region in bytes.
     """
     ptr = ctypes.c_void_p(mem)
@@ -145,7 +149,7 @@ def rw_from_mem(mem, size):
          ctypes.POINTER(SDL_RWops))
 def rw_from_const_mem(mem, size):
     """Creates a SDL_RWops from a contiguous memory region.
-    
+
     size denotes the size of the memory region in bytes.
     """
     ptr = ctypes.c_void_p(mem)

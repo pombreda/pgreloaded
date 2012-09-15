@@ -32,7 +32,7 @@ SDL_BUTTON_X2MASK = SDL_BUTTON(SDL_BUTTON_X2)
 
 
 class SDL_Cursor(ctypes.Structure):
-    """TODO"""
+    """A mouse cursor structure."""
     pass
 
 
@@ -62,8 +62,6 @@ def create_color_cursor(surface, hotx, hoty):
          ctypes.POINTER(SDL_Cursor))
 def create_cursor(data, mask, w, h, hotx, hoty):
     """Creates a cursor from the passed black/white data and alpha mask.
-
-    TODO
     """
     cursor = dll.SDL_CreateCursor(ctypes.byref(data), ctypes.byref(mask),
                                   w, h, hotx, hoty)

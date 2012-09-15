@@ -35,7 +35,7 @@ c_int_p = ctypes.POINTER(ctypes.c_int)
 
 
 class TTF_Font(ctypes.Structure):
-    """TODO"""
+    """SDL_ttf font information structure."""
     pass
 
 

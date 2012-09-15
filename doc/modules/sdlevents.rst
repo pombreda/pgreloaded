@@ -6,6 +6,8 @@
 
 .. class:: SDL_WindowEvent()
 
+   A :class:`pygame2.sdl.video.SDL_Window` event.
+
    .. attribute:: type
 
       The type identifier of the event.
@@ -16,7 +18,8 @@
 
    .. attribute:: windowid
 
-      The id of the SDL window, for which the event occured.
+      The id of the :class:`pygame2.sdl.video.SDL_Window`, for which the
+      event occured.
 
    .. attribute:: event
 
@@ -31,6 +34,8 @@
       TODO
 
 .. class:: SDL_KeyboardEvent()
+
+   A keyboard input event, raised on pressing or releasing keys.
 
    .. attribute:: type
 
@@ -53,6 +58,8 @@
       TODO
 
 .. class:: SDL_TextEditingEvent()
+
+   A text editing event, raised on text edit operations.
 
    .. attribute:: type
 
@@ -80,6 +87,8 @@
 
 .. class:: SDL_TextInputEvent()
 
+   A text input event, raised on text input operations.
+
    .. attribute:: type
 
       The type identifier of the event.
@@ -97,6 +106,9 @@
       The text input.
 
 .. class:: SDL_MouseMotionEvent()
+
+   A mouse motion event, raised on moving the mouse cursor around within
+   the area of a :class:`pygame2.sdl.video.SDL_Window`.
 
    .. attribute:: type
 
@@ -132,6 +144,9 @@
 
 .. class:: SDL_MouseButtonEvent()
 
+   A mouse button event, raised on pressing or releasing a mouse button
+   on a SDL_Window.
+
    .. attribute:: type
 
       The type identifier of the event.
@@ -162,6 +177,8 @@
 
 .. class:: SDL_MouseWheelEvent()
 
+   A mouse wheel event, raised on using the mouse wheel on a SDL_Window.
+
    .. attribute:: type
 
       The type identifier of the event.
@@ -184,6 +201,8 @@
 
 .. class:: SDL_JoyAxisEvent()
 
+   A joystick axis event, raised on changing the axis aptitude.
+
    .. attribute:: type
 
       The type identifier of the event.
@@ -205,6 +224,8 @@
       TODO
 
 .. class:: SDL_JoyBallEvent()
+
+   A joystick ball event, raised on rotating the joystick ball.
 
    .. attribute:: type
 
@@ -232,6 +253,8 @@
 
 .. class:: SDL_JoyHatEvent()
 
+   A joystick hat event, raised on on changing the hat aptitude.
+
    .. attribute:: type
 
       The type identifier of the event.
@@ -254,6 +277,8 @@
 
 .. class:: SDL_JoyButtonEvent()
 
+   A joystick button event, raised on pressing a button.
+
    .. attribute:: type
 
       The type identifier of the event.
@@ -275,6 +300,8 @@
       TODO
 
 .. class:: SDL_TouchFingerEvent()
+
+   A finger touch event, raised on performing a touch gesture.
 
    .. attribute:: type
 
@@ -322,6 +349,8 @@
 
 .. class:: SDL_TouchButtonEvent()
 
+   A touch button event, raised on pressing a touch button.
+
    .. attribute:: type
 
       The type identifier of the event.
@@ -347,6 +376,8 @@
       TODO
 
 .. class:: SDL_MultiGestureEvent()
+
+   A gesture event.
 
    .. attribute:: type
 
@@ -386,6 +417,8 @@
 
 .. class:: SDL_DollarGestureEvent()
 
+   A $1 gesture event, raised on performing a recorded $1 gesture.
+
    .. attribute:: type
 
       The type identifier of the event.
@@ -424,6 +457,8 @@
 
 .. class:: SDL_DropEvent()
 
+   A file drop event.
+
    .. attribute:: type
 
       The type identifier of the event.
@@ -442,6 +477,8 @@
 
 .. class:: SDL_QuitEvent()
 
+   A quit event, raised on quitting the application.
+
    .. attribute:: type
 
       The type identifier of the event.
@@ -451,6 +488,8 @@
       The exact time at which the event occured.
 
 .. class:: SDL_UserEvent()
+
+   A user event, which is raised by the application.
 
    .. attribute:: type
 
@@ -478,6 +517,8 @@
 
 .. class:: SDL_SysWMEvent()
 
+   A system window manager event.
+
    .. attribute:: type
 
       The type identifier of the event.
@@ -491,6 +532,9 @@
       The exact :class:`pygame2.sdl.syswm.SDL_SysWMmsg`.
 
 .. class:: SDL_Event()
+
+   The generic event structure, which contains the concrete event being
+   raised.
 
    .. attribute:: type
 
@@ -574,8 +618,10 @@
 
 .. class:: SDL_EventFilter(callback)
 
-   TODO
+   A :func:`ctypes.CFUNCTYPE` function callback handler for the watch
+   and filter operations.
 
+   This wraps :c:func:`SDL_EventFilter`.
 
 .. function:: add_event_watch(efilter : SDL_EventFilter[, \
                               userdata=None]) -> None
