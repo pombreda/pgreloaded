@@ -74,10 +74,6 @@ def load_image(fname, assurface=False, enforce=None):
             # "P" = palette-based, 8-bit
             pitch = width
             depth = 8
-        elif mode in ("I", "F"):
-            # 32-bit signed integer or float
-            # TODO
-            raise TypeError("unsupported image format")
         elif mode == "RGB":
             # 3x8-bit, 24bpp
             if SDL_BYTEORDER == SDL_LIL_ENDIAN:

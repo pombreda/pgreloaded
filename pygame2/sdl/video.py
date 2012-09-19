@@ -84,21 +84,21 @@ SDL_WINDOW_INPUT_FOCUS      = 0x00000200
 SDL_WINDOW_MOUSE_FOCUS      = 0x00000400
 SDL_WINDOW_FOREIGN          = 0x00000800
 
-SDL_WINDOWEVENT_NONE            = 0
-SDL_WINDOWEVENT_SHOWN           = 1
-SDL_WINDOWEVENT_HIDDEN          = 2
-SDL_WINDOWEVENT_EXPOSED         = 3
-SDL_WINDOWEVENT_MOVED           = 4
-SDL_WINDOWEVENT_RESIZED         = 5
-SDL_WINDOWEVENT_SIZE_CHANGED    = 6
-SDL_WINDOWEVENT_MINIMIZED       = 7
-SDL_WINDOWEVENT_MAXIMIZED       = 8
-SDL_WINDOWEVENT_RESTORED        = 9
-SDL_WINDOWEVENT_ENTER           = 10
-SDL_WINDOWEVENT_LEAVE           = 11
-SDL_WINDOWEVENT_FOCUS_GAINED    = 12
-SDL_WINDOWEVENT_FOCUS_LOST      = 13
-SDL_WINDOWEVENT_CLOSE           = 14
+SDL_WINDOWEVENT_NONE         = 0
+SDL_WINDOWEVENT_SHOWN        = 1
+SDL_WINDOWEVENT_HIDDEN       = 2
+SDL_WINDOWEVENT_EXPOSED      = 3
+SDL_WINDOWEVENT_MOVED        = 4
+SDL_WINDOWEVENT_RESIZED      = 5
+SDL_WINDOWEVENT_SIZE_CHANGED = 6
+SDL_WINDOWEVENT_MINIMIZED    = 7
+SDL_WINDOWEVENT_MAXIMIZED    = 8
+SDL_WINDOWEVENT_RESTORED     = 9
+SDL_WINDOWEVENT_ENTER        = 10
+SDL_WINDOWEVENT_LEAVE        = 11
+SDL_WINDOWEVENT_FOCUS_GAINED = 12
+SDL_WINDOWEVENT_FOCUS_LOST   = 13
+SDL_WINDOWEVENT_CLOSE        = 14
 
 
 SDL_WINDOWPOS_UNDEFINED_MASK = 0x1FFF0000
@@ -107,7 +107,7 @@ SDL_WINDOWPOS_UNDEFINED_MASK = 0x1FFF0000
 def SDL_WINDOWPOS_UNDEFINED_DISPLAY(x):
     """TODO
     """
-    return(SDL_WINDOWPOS_UNDEFINED_MASK | x)
+    return (SDL_WINDOWPOS_UNDEFINED_MASK | x)
 
 
 SDL_WINDOWPOS_UNDEFINED = SDL_WINDOWPOS_UNDEFINED_DISPLAY(0)
@@ -116,7 +116,7 @@ SDL_WINDOWPOS_UNDEFINED = SDL_WINDOWPOS_UNDEFINED_DISPLAY(0)
 def SDL_WINDOWPOS_ISUNDEFINED(x):
     """TODO
     """
-    return(x & 0xFFFF0000) == SDL_WINDOWPOS_UNDEFINED_MASK
+    return (x & 0xFFFF0000) == SDL_WINDOWPOS_UNDEFINED_MASK
 
 
 SDL_WINDOWPOS_CENTERED_MASK = 0x2FFF0000
@@ -125,20 +125,19 @@ SDL_WINDOWPOS_CENTERED_MASK = 0x2FFF0000
 def SDL_WINDOWPOS_CENTERED_DISPLAY(x):
     """TODO
     """
-    return(SDL_WINDOWPOS_CENTERED_MASK | x)
+    return (SDL_WINDOWPOS_CENTERED_MASK | x)
 
 
 SDL_WINDOWPOS_CENTERED = SDL_WINDOWPOS_CENTERED_DISPLAY(0)
 
 
 def SDL_WINDOWPOS_ISCENTERED(x):
-    """TODO
-    """
-    return(x & 0xFFFF0000) == SDL_WINDOWPOS_CENTERED_MASK
+    """ """
+    return (x & 0xFFFF0000) == SDL_WINDOWPOS_CENTERED_MASK
 
 
 class SDL_DisplayMode(ctypes.Structure):
-    """TODO"""
+    """Describes the mode and format of a connected display device."""
     _fields_ = [("format", ctypes.c_uint),
                 ("w", ctypes.c_int),
                 ("h", ctypes.c_int),
@@ -166,8 +165,7 @@ class SDL_DisplayMode(ctypes.Structure):
 
 
 class SDL_Window(ctypes.Structure):
-    """TODO
-    """
+    """A SDL window to be displayed on-screen on the window manager."""
     def __repr__(self):
         return "SDL_Window(id=%d, title=%s, position=%s, size=%s)" % \
             (self._id, self._title, (self._x, self._y), (self._w, self._h))
@@ -202,8 +200,6 @@ SDL_Window._fields_ = [("_magic", ctypes.c_void_p),
          ctypes.POINTER(SDL_Window))
 def create_window(title, x, y, w, h, flags):
     """Creates a new SDL window with the specified dimensions and title.
-
-    TODO
     """
     title = byteify(str(title), "utf-8")
     retval = dll.SDL_CreateWindow(title, x, y, w, h, flags)
@@ -214,7 +210,10 @@ def create_window(title, x, y, w, h, flags):
 
 @sdltype("SDL_CreateWindowFrom", [ctypes.c_void_p], ctypes.POINTER(SDL_Window))
 def create_window_from(data):
-    """TODO
+    """Create a SDL window from an existing native window.
+
+    data represenets the platform- and driver-dependent window creation
+    data, typically a native window cast to a void*.
     """
     retval = dll.SDL_CreateWindowFrom(ctypes.byref(data))
     if retval is None or not bool(retval):
@@ -837,7 +836,11 @@ def get_window_brightness(window):
                                     ctypes.POINTER(ctypes.c_ushort)],
          ctypes.c_int)
 def set_window_gamma_ramp(window, red, green, blue):
-    """TODO
+    """Sets the window's gamma ramp based on the passed red, green and
+    blue tables.
+
+    Each value table has to have 256 entries for calculating the gamma
+    of the specific color channel.
     """
     if not isinstance(window, SDL_Window):
         raise TypeError("window must be a SDL_Window")
@@ -878,8 +881,8 @@ def set_window_gamma_ramp(window, red, green, blue):
                                     ctypes.POINTER(ctypes.c_ushort)],
          ctypes.c_int)
 def get_window_gamma_ramp(window):
-    """TODO
-    """
+    """Gets the gamma ramp for the passed window, returning the gamma
+    values for the red, green and blue color channes as tuple."""
     if not isinstance(window, SDL_Window):
         raise TypeError("window must be a SDL_Window")
     rtable = (256 * ctypes.c_ushort)()

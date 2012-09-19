@@ -101,8 +101,7 @@ class Sprite(Component):
                     # Load from file
                     self.surface = sdlsurface.load_bmp(source)
                 else:
-                    # TODO: string buffer
-                    raise NotImplementedError("string buffers not supported")
+                    raise ValueError("source string is not a path")
             else:
                 rw = rwops.rw_from_object(source)
                 self.surface = sdlsurface.load_bmp_rw(rw, True)

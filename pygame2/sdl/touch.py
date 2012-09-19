@@ -9,7 +9,7 @@ __all__ = ["SDL_Finger", "SDL_Touch", "get_touch", "get_finger"]
 
 
 class SDL_Finger(ctypes.Structure):
-    """TODO"""
+    """Finger gesture information."""
     _fields_ = [("id", ctypes.c_longlong),
                 ("x", ctypes.c_ushort),
                 ("y", ctypes.c_ushort),
@@ -24,7 +24,7 @@ class SDL_Finger(ctypes.Structure):
 
 
 class SDL_Touch(ctypes.Structure):
-    """TODO"""
+    """Touch gesture information."""
     _fields_ = [("FreeTouch", ctypes.c_void_p),
                 ("pressure_max", ctypes.c_float),
                 ("pressure_min", ctypes.c_float),

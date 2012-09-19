@@ -1,4 +1,5 @@
 import sys
+import math
 import unittest
 import pygame2.sdl as sdl
 import pygame2.sdl.endian as endian
@@ -59,8 +60,31 @@ class SDLEndianTest(unittest.TestCase):
             self.assertEqual(endian.swap64, endian.swap_le_64)
 
     def test_swap_float(self):
-        # TODO: implement swap_float()
-        self.assertRaises(NotImplementedError, endian.swap_float, 10)
+        v = -100.0
+        while v < 101:
+            p = endian.swap_float(v)
+            self.assertNotEqual(p, v)
+            self.assertEqual(endian.swap_float(p), v)
+            v += 0.1
+        values = (sys.float_info.epsilon,
+                  sys.float_info.min,
+                  sys.float_info.max,
+                  - sys.float_info.min,
+                  math.pi,
+                  - math.pi
+                  )
+        for v in values:
+            p = endian.swap_float(v)
+            self.assertNotEqual(p, v)
+            self.assertEqual(endian.swap_float(p), v)
+
+        if sys.byteorder == "little":
+            self.assertEqual(endian.swap_float, endian.swap_float_be)
+            self.assertNotEqual(endian.swap_float, endian.swap_float_le)
+        else:
+            self.assertNotEqual(endian.swap_float, endian.swap_float_be)
+            self.assertEqual(endian.swap_float, endian.swap_float_le)
+
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

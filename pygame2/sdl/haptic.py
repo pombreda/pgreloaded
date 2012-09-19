@@ -57,17 +57,17 @@ SDL_HAPTIC_INFINITY = 4294967295
 
 
 class SDL_Haptic(ctypes.Structure):
-    """TODO"""
+    """A haptic-enabled device."""
     pass
 
 
 class SDL_HapticDirection(ctypes.Structure):
-    """TODO"""
+    """The direction a haptic effect comes from."""
     _fields_ = [("type", ctypes.c_ubyte), ("dir", ctypes.c_int * 3)]
 
 
 class SDL_HapticConstant(ctypes.Structure):
-    """TODO"""
+    """A constant effect that does not change while running."""
     _fields_ = [("type", ctypes.c_ushort),
                 ("direction", SDL_HapticDirection),
                 ("length", ctypes.c_uint),
@@ -83,7 +83,7 @@ class SDL_HapticConstant(ctypes.Structure):
 
 
 class SDL_HapticPeriodic(ctypes.Structure):
-    """TODO"""
+    """A periodic effect."""
     _fields_ = [("type", ctypes.c_ushort),
                 ("direction", SDL_HapticDirection),
                 ("length", ctypes.c_uint),
@@ -102,7 +102,7 @@ class SDL_HapticPeriodic(ctypes.Structure):
 
 
 class SDL_HapticCondition(ctypes.Structure):
-    """TODO"""
+    """A conditionally running effect."""
     _fields_ = [("type", ctypes.c_ushort),
                 ("direction", SDL_HapticDirection),
                 ("length", ctypes.c_uint),
@@ -119,7 +119,7 @@ class SDL_HapticCondition(ctypes.Structure):
 
 
 class SDL_HapticRamp(ctypes.Structure):
-    """TODO"""
+    """A ramp-like effect."""
     _fields_ = [("type", ctypes.c_ushort),
                 ("direction", SDL_HapticDirection),
                 ("length", ctypes.c_uint),
@@ -136,7 +136,7 @@ class SDL_HapticRamp(ctypes.Structure):
 
 
 class SDL_HapticCustom(ctypes.Structure):
-    """TODO"""
+    """A custom effect."""
     _fields_ = [("type", ctypes.c_ushort),
                 ("direction", SDL_HapticDirection),
                 ("length", ctypes.c_uint),
@@ -155,7 +155,7 @@ class SDL_HapticCustom(ctypes.Structure):
 
 
 class SDL_HapticEffect(ctypes.Union):
-    """TODO"""
+    """A generic haptic effect, containing the concrete haptic effect."""
     _fields_ = [("type", ctypes.c_ushort),
                 ("constant", SDL_HapticConstant),
                 ("periodic", SDL_HapticPeriodic),

@@ -28,8 +28,7 @@ SDL_DONTFREE  = 0x00000004
 
 
 class SDL_Surface(ctypes.Structure):
-    """TODO
-    """
+    """2D pixel buffer used for software blitting operations."""
     _fields_ = [("_flags", ctypes.c_uint),
                 ("_format", ctypes.POINTER(SDL_PixelFormat)),
                 ("_w", ctypes.c_int),
@@ -231,8 +230,7 @@ def fill_rect(dst, rect, color):
                            ctypes.POINTER(SDL_Rect), ctypes.c_int,
                            ctypes.c_uint], ctypes.c_int)
 def fill_rects(dst, rects, color):
-    """Fills multiple areas with a certain color on the surface.
-    """
+    """Fills multiple areas with a certain color on the surface."""
     if not isinstance(dst, SDL_Surface):
         raise TypeError("dst must be a SDL_Surface")
     rects, count = array.to_ctypes(rects, SDL_Rect)
@@ -486,7 +484,8 @@ def unlock_surface(surface):
                            ctypes.POINTER(SDL_Surface),
                            ctypes.POINTER(SDL_Rect)], ctypes.c_int)
 def lower_blit(src, srcrect, dst, dstrect):
-    """TODO
+    """Copy pixels from the source surface to the destination surface
+    with now argument or rectangle validation or clipping.
     """
     if not isinstance(src, SDL_Surface):
         raise TypeError("src must be a SDL_Surface")
@@ -507,7 +506,8 @@ def lower_blit(src, srcrect, dst, dstrect):
                                  ctypes.POINTER(SDL_Surface),
                                  ctypes.POINTER(SDL_Rect)], ctypes.c_int)
 def lower_blit_scaled(src, srcrect, dst, dstrect):
-    """TODO
+    """Performs a scaled pixel copy operation from the source surface to
+    the destination surface, without argument checks or clipping.
     """
     if not isinstance(src, SDL_Surface):
         raise TypeError("src must be a SDL_Surface")
@@ -528,7 +528,8 @@ def lower_blit_scaled(src, srcrect, dst, dstrect):
                            ctypes.POINTER(SDL_Surface),
                            ctypes.POINTER(SDL_Rect)], ctypes.c_int)
 def upper_blit(src, srcrect, dst, dstrect):
-    """TODO
+    """Copy pixels from the source surface to the destination surface,
+    performing argument and rectangle validation as well as clipping.
     """
     if not isinstance(src, SDL_Surface):
         raise TypeError("src must be a SDL_Surface")
@@ -555,7 +556,8 @@ blit_surface = upper_blit
                                  ctypes.POINTER(SDL_Surface),
                                  ctypes.POINTER(SDL_Rect)], ctypes.c_int)
 def upper_blit_scaled(src, srcrect, dst, dstrect):
-    """TODO
+    """Performs a scaled pixel copy operation from the source surface to
+    the destination surface, including argument checks and clipping.
     """
     if not isinstance(src, SDL_Surface):
         raise TypeError("src must be a SDL_Surface")
@@ -579,7 +581,8 @@ def upper_blit_scaled(src, srcrect, dst, dstrect):
                              ctypes.POINTER(SDL_Surface),
                              ctypes.POINTER(SDL_Rect)], ctypes.c_int)
 def soft_stretch(src, srcrect, dst, dstrect):
-    """TODO
+    """perform a fast, low quality, stretched copy operation between two
+    surfaces of the same pixel format.
     """
     if not isinstance(src, SDL_Surface):
         raise TypeError("src must be a SDL_Surface")
