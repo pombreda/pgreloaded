@@ -1,5 +1,6 @@
 """Sprite, texture and pixel surface routines."""
 import os
+from pygame2.compat import isiterable
 from pygame2.ebs import Component, System
 import pygame2.sdl.surface as sdlsurface
 import pygame2.sdl.rect as rect
@@ -33,24 +34,37 @@ class SpriteRenderer(System):
         self._sortfunc = lambda e1, e2: cmp(e1.depth, e2.depth)
         self.componenttypes = (Sprite, )
 
-    def render(self, sprite, x=None, y=None):
-        """Draws the passed sprite on the Window's surface."""
-        if x is None or y is None:
-            x = sprite.x
-            y = sprite.y
-        r = rect.SDL_Rect(x, y, 0, 0)
-        sdlsurface.blit_surface(sprite.surface, None, self.surface, r)
+    def render(self, sprites, x=None, y=None):
+        """Draws the passed sprites (or sprite) on the Window's surface.
+
+        x and y are optional arguments that can be used as relative
+        drawing location for sprites. If set to None, the location
+        information of the sprites are used. If set and sprites is an
+        iterable, such as a list of Sprite objects, x and y are relative
+        location values that will be added to each individual sprite's
+        position. If sprites is a single Sprite, x and y denote the
+        absolute position of the Sprite, if set.
+        """
+        r = rect.SDL_Rect(0, 0, 0, 0)
+        if isiterable(sprites):
+            blit_surface = sdlsurface.blit_surface
+            surface = self.surface
+            x = x or 0
+            y = y or 0
+            for sp in sprites:
+                r.x = x + sp.x
+                r.y = y + sp.y
+                blit_surface(sp.surface, None, surface, r)
+        else:
+            if x is None or y is None:
+                x = sprite.x
+                y = sprite.y
+            sdlsurface.blit_surface(sprite.surface, None, self.surface, r)
         video.update_window_surface(self.window)
 
     def process(self, world, components):
         """Draws the passed Sprite objects on the Window's surface."""
-        r = rect.SDL_Rect(0, 0, 0, 0)
-        components = sorted(components, self._sortfunc)
-        for sprite in components:
-            r.x = sprite.x
-            r.y = sprite.y
-            sdlsurface.blit_surface(sprite.surface, None, self.surface, r)
-        video.update_window_surface(self.window)
+        self.render(sorted(components, self._sortfunc))
 
     @property
     def sortfunc(self):

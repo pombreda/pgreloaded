@@ -28,6 +28,7 @@ class SceneManager(object):
         self.scenes = []
         self.next = None
         self.current = None
+        self.switched = EventHandler(self)
 
     def push(self, scene):
         """Pushes a new scene to the scene stack.
@@ -64,18 +65,17 @@ class SceneManager(object):
         Updates the scene state and switches to the next scene, if any
         has been pushed into place.
         """
-        # Ignore all scene components on the world.
         if self.next:
             # A scene is about to be started, finish the old one
             if self.current and self.current.is_running:
                 self.current.end()
+                self.current.manager = None
             self.current = self.next
+            self.current.manager = self
             self.next = None
-        if self.current:
-            if self.current.has_ended:
-                self.current.start()
-            elif self.current.is_paused:
-                self.current.unpause()
+            self.switched()
+        if self.current and self.current.has_ended:
+            self.current.start()
 
 
 class Scene(object):
@@ -85,6 +85,7 @@ class Scene(object):
     def __init__(self, name=None):
         """Creates a new Scene."""
         self.name = name
+        self.manager = None
         self.state = SCENE_ENDED
         self.started = EventHandler(self)
         self.paused = EventHandler(self)

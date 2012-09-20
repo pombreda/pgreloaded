@@ -26,6 +26,11 @@
 
       The currently running/active :class:`Scene`.
 
+   .. attribute:: switched
+   
+      A :class:`pygame2.events.EventHandler` that is invoked, when a new
+      :class:`Scene` is started.
+      
    .. method:: push(scene : Scene) -> None
 
       Pushes a new :class:`Scene` to the scene stack.
@@ -58,6 +63,16 @@
    A simple scene state object used to maintain the application workflow
    based on the presentation of an application.
 
+   .. attribute:: manager
+   
+      The :class:`SceneManager`, the :class:`Scene` is currently executed on.
+      
+      .. note::
+      
+         This will be set automatically on starting the :class:`Scene` by the
+         :class:`SceneManager`. If the :class:`Scene` is ended, it will be
+         reset.
+   
    .. attribute:: state
 
       The current scene state.

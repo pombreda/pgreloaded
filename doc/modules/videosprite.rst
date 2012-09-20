@@ -61,7 +61,7 @@
    SDL surface of the *window* as drawing context, so that GL operations,
    such as texture handling or the usage of SDL renderers is not
    possible.
-   
+
    *window* can be either a :class:`pygame2.video.window.Window` or
    :class:`pygame2.sdl.video.SDL_Window` instance.
 
@@ -82,12 +82,16 @@
       if :attr:`sortfunc` shall be overriden, it must match thre callback
       requirements for :func:`sorted()`.
 
-   .. method:: render(sprite : Sprite[, x=None[, y=None]]) -> None
+   .. method:: render(sprites : object[, x=None[, y=None]]) -> None
 
-      Draws the passed *sprite* on the :class:`pygame2.video.window.Window`
-      surface. *x* and *y* are optional arguments that can be used as drawing
-      location for *sprite*. If set to ``None``, the location information
-      of the *sprite* are used.
+      Draws the passed *sprites* on the :class:`pygame2.video.window.Window`
+      surface. *x* and *y* are optional arguments that can be used as relative
+      drawing location for *sprites*. If set to ``None``, the location
+      information of the *sprites* are used. If set and *sprites* is an
+      iterable, such as a list of :class:`Sprite` objects, *x* and *y* are
+      relative location values that will be added to each individual sprite's
+      position. If *sprites* is a single :class:`Sprite`, *x* and *y* denote
+      the absolute position of the :class:`Sprite`, if set.
 
    .. method:: process(world : World, components : iterable) -> None
 
