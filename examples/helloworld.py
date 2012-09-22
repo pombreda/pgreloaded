@@ -29,11 +29,6 @@ def run():
     # classes.
     video.init()
 
-    # Creates a new 2D pixel-based surface to be displayed, processed or
-    # manipulated. We will use the one of the shipped example images
-    # from the reosurce package to display.
-    sprite = video.Sprite(RESOURCES.get("hello.bmp"))
-
     # Create a new window (like your browser window or editor window,
     # etc.) and give it a meaningful title and size. We definitely need
     # this, if we want to present something to the user.
@@ -44,10 +39,31 @@ def run():
     window.show()
 
     # Creates a simple rendering system for the Window. The
-    # SpriteRenderer can draw Sprite objects (like the one created
-    # above) on the window. Do NOT confuse that with the SDL2 renderer
-    # systems found under TODO.
-    renderer = video.SpriteRenderer(window)
+    # SoftSpriteRenderer can draw SoftSprite objects (like the one
+    # created above) on the window. Do NOT confuse that with the SDL2
+    # renderer systems used in the SpriteRenderer.
+    renderer = video.SoftSpriteRenderer(window)
+
+    # If you want hardware-accelerated rendering, comment out the
+    # SoftSpriteRenderer and use the SpriteRenderer below.
+    #
+    # renderer = video.SpriteRenderer(window)
+    #
+
+    # Creates a new 2D pixel-based surface to be displayed, processed or
+    # manipulated. We will use the one of the shipped example images
+    # from the resource package to display.
+    sprite = video.SoftSprite(RESOURCES.get("hello.bmp"))
+
+    # If you want hardware-accelerated sprites, that are stored as
+    # textures internally, comment out the SoftSprite and use the Sprite
+    # below.
+    #
+    # Note: you can not mix the SoftSprite or SoftSpriteRenderer with
+    # the Sprite or SpriteRenderer!
+    #
+    # sprite = video.Sprite(renderer.renderer, RESOURCES.get("hello.bmp"))
+    #
 
     # Display the surface on the window. This will copy the contents
     # (pixels) of the surface to the window. The surface will be
@@ -73,7 +89,6 @@ def run():
     # release the resources hold by the SDL DLL.
     video.quit()
 
-    return 0
 
 if __name__ == "__main__":
     sys.exit(run())

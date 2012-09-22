@@ -100,9 +100,9 @@ def deleteparticles(world, deadones):
 
 
 # Create a simple rendering system for particles. This is somewhat
-# similar to the SprinteRenderer from pygame2.video. Since we operate on
-# particles rather than sprites, we need to provide our own rendering
-# logic.
+# similar to the SoftSprinteRenderer from pygame2.video. Since we
+# operate on particles rather than sprites, we need to provide our own
+# rendering logic.
 class ParticleRenderer(System):
     def __init__(self, surface, images):
         # Create a new particle renderer. The surface argument will be
@@ -211,7 +211,7 @@ def run():
     windowsurface = window.get_surface()
 
     # Create the rendering system for the particles. This is somewhat
-    # similar to the SpriteRenderer, but since we only operate with
+    # similar to the SoftSpriteRenderer, but since we only operate with
     # hundreds of particles (and not sprites with all their overhead),
     # we need an own rendering system.
     renderer = ParticleRenderer(windowsurface, images)

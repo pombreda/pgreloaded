@@ -51,8 +51,10 @@ class BitmapFont(object):
         else:
             self.mapping = mapping
         self.offsets = {}
-        if isinstance(surface, sprite.Sprite):
+        if isinstance(surface, sprite.SoftSprite):
             self.surface = surface.surface
+        #elif isinstance(surface, sprite.Sprite):
+        #    TODO
         elif isinstance(surface, sdlsurface.SDL_Surface):
             self.surface = surface
         self.size = size[0], size[1]
@@ -76,7 +78,7 @@ class BitmapFont(object):
         x, y = 0, 0
         tw, th = 0, 0
         w, h = self.size
-
+        # TODO
         lines = text.split(os.linesep)
         for line in lines:
             tw = max(tw, sum([w for c in line]))
@@ -84,7 +86,7 @@ class BitmapFont(object):
 
         if bpp is None:
             bpp = self.surface.format.BitsPerPixel
-        surface = sprite.Sprite(tw, th, bpp)
+        surface = sprite.SoftSprite(tw, th, bpp)
         target = surface.surface
         blit_surface = sdlsurface.blit_surface
         fontsf = self.surface
@@ -107,8 +109,10 @@ class BitmapFont(object):
         w, h = self.size
 
         target = None
-        if isinstance(surface, sprite.Sprite):
+        if isinstance(surface, sprite.SoftSprite):
             target = surface.surface
+        #elif isinstance(surface, sprite.Sprite):
+        #    TODO
         elif isinstance(surface, sdlsurface.SDL_Surface):
             target = surface
         else:

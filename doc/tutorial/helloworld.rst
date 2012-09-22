@@ -16,7 +16,10 @@ display a small nice window and to do some basic drawing within that
 window. ::
 
     import sys
-    from pygame2.examples import RESOURCES
+
+    from pygame2.resources import Resources
+    RESOURCES = Resources(__file__, "resources")
+
     try:
         import pygame2.video as video
     except ImportError:
@@ -24,9 +27,10 @@ window. ::
         traceback.print_exc()
         sys.exit(1)
 
-We start with importing some resources from :mod:`pygame2.examples`, so that
-we have a test image around to display on the window later on. In your own
-applications, it is unlikely that you will ever need to import them.
+We start with importing some resources from the ``resources`` folder, so
+that we have a test image around to display on the window later on. In
+your own applications, it is unlikely that you will ever need to import
+them.
 
 Afterwards, we try to import :mod:`pygame2.video` module, which is
 necessary for displaying the window and image. :mod:`pygame2.video` requires
@@ -47,7 +51,7 @@ to the user. ::
 
     video.init ()
 
-    sprite = video.Sprite(RESOURCES.get("hello.bmp"))
+    sprite = video.SoftSprite(RESOURCES.get("hello.bmp"))
 
     window = video.Window("Hello World!", size=(640, 480))
     window.show()
@@ -55,11 +59,11 @@ to the user. ::
     renderer = video.SpriteRenderer(window)
     renderer.render(sprite)
 
-First, we initialize the :mod:`pygame2.video` internals, so we can
-have access to the screen and create windows on top of it. Afterwards,
-we get an image from the :mod:`pygame2.examples` package and create a
-:class:`pygame2.video.sprite.Sprite` from it, which can be easily shown later
-on.
+First, we initialize the :mod:`pygame2.video` internals, so we can have
+access to the screen and create windows on top of it. Afterwards, we get
+an image from the :mod:`pygame2.examples` package and create a
+:class:`pygame2.video.sprite.SoftSprite` from it, which can be easily
+shown later on.
 
 Once done with that, :class:`pygame2.video.window.Window` will create the
 window for us and we supply a title to be shown on the window's border along
@@ -69,19 +73,20 @@ that there is a new window to display by calling
 :meth:`pygame2.video.window.Window.show()`.
 
 To display the image, we will use a
-:class:`pygame2.video.sprite.SpriteRenderer`, which can copy the image to the
-window for display. The :class:`pygame2.video.sprite.SpriteRenderer` needs to
-know, where to copy to, so we supply the window as target for copy and display
-operations. All left to do is to actually initiate the copy process by calling
-:class:`pygame2.video.sprite.SpriteRenderer.render()` with the image we created
-earlier.
+:class:`pygame2.video.sprite.SoftSpriteRenderer`, which can copy the
+image to the window for display. The
+:class:`pygame2.video.sprite.SoftSpriteRenderer` needs to know, where to
+copy to, so we supply the window as target for copy and display
+operations. All left to do is to actually initiate the copy process by
+calling :class:`pygame2.video.sprite.SoftSpriteRenderer.render()` with
+the image we created earlier.
 
 .. tip::
 
    You will notice that the sprite used above will always be drawn at the
    top-left corner of the :class:`pygame2.video.window.Window`. You can change
    the position of where to draw it by changing its
-   :attr:`pygame2.video.sprite.Sprite.position` value. ::
+   :attr:`pygame2.video.sprite.SoftSprite.position` value. ::
 
         # will cause the renderer to draw the sprite 10px to the right and
         # 20 px to the bottom

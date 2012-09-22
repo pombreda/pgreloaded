@@ -3,7 +3,8 @@ from pygame2.compat import UnsupportedError
 from pygame2.sdl.endian import SDL_BYTEORDER, SDL_LIL_ENDIAN
 import pygame2.sdl.surface as sdlsurface
 import pygame2.sdl.pixels as sdlpixels
-from . import sprite
+from pygame2.sdl.render import SDL_Renderer
+from pygame2.video.sprite import Sprite, SoftSprite, Renderer
 
 _HASPIL = True
 try:
@@ -28,11 +29,12 @@ def get_image_formats():
             "png", "pnm", "ppm", "tga", "tif", "webp", "xcf", "xpm")
 
 
-def load_image(fname, assurface=False, enforce=None):
+def load_image(fname, renderer=None, assurface=False, enforce=None):
     """Creates a Sprite from an image file.
 
-    If assurface is True, a SDL_Surface will be returned instead of a Sprite
-    object.
+    If assurface is True, a SDL_Surface will be returned instead of a
+    Sprite or SoftSprite object. If renderer is set to a SDL_Renderer, a
+    Sprite will be returned.
 
     This function makes use of the Python Imaging Library, if it is available
     on the target execution environment. The function will try to load the
@@ -135,5 +137,14 @@ def load_image(fname, assurface=False, enforce=None):
                 sdlpixels.free_palette(sdlpalette)
     if assurface:
         return surface
+    elif renderer:
+        sp = None
+        if isinstance(renderer, sdlrender.SDL_Renderer):
+            sp = Sprite(renderer, source=surface)
+        elif isinstance(renderer, Renderer):
+            sp = Sprite(renderer.renderer, source=surface)
+        sdlsurface.free_surface(surface)
+        if sp is None:
+            raise TypeError("renderer must be a Renderer or SDL_Renderer")
     else:
-        return sprite.Sprite(source=surface, freesf=True)
+        return SoftSprite(source=surface, freesf=True)

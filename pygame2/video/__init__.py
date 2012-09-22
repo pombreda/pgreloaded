@@ -8,7 +8,7 @@ graphics.
 import pygame2.sdl as sdl
 import pygame2.sdl.events as events
 import pygame2.sdl.timer as timer
-from pygame2.video.sprite import Sprite, SpriteRenderer
+from pygame2.video.sprite import *
 from pygame2.video.window import Window
 from pygame2.video.draw import *
 from pygame2.video.font import BitmapFont
@@ -16,13 +16,13 @@ from pygame2.video.gui import *
 from pygame2.video.image import *
 from pygame2.video.pixelaccess import *
 
-__all__ = ["Window", "Sprite", "SpriteRenderer",
-           "TestEventProcessor", "init", "quit",
-           "prepare_color", "fill", "line",
-           "PixelView", "pixels2d", "pixels3d",
-           "BitmapFont",
-           "UIProcessor", "CheckButton", "Button", "TextEntry",
-           "get_image_formats", "load_image"]
+__all__ = ["TestEventProcessor", "init", "quit", "Window",
+           "Sprite", "SpriteRenderer", "SoftSprite", "SoftSpriteRenderer",
+           "Renderer", "prepare_color", "fill", "line", "PixelView",
+           "pixels2d", "pixels3d", "BitmapFont", "UIProcessor", "CheckButton",
+           "Button", "TextEntry", "UIFactory", "SoftCheckButton", "SoftButton",
+           "SoftTextEntry", "get_image_formats", "load_image"
+           ]
 
 
 def init():

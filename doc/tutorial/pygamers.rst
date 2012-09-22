@@ -30,7 +30,7 @@ API differences
 pygame
 ^^^^^^
 ======================= =================================================
-pygame                  Pygame2
+pygame                  pygame2
 ======================= =================================================
 ``init()``              :func:`pygame2.sdl.init()` where appropriate
 ``quit()``              :func:`pygame2.sdl.quit()` where appropriate
@@ -41,9 +41,9 @@ pygame                  Pygame2
 ``get_sdl_version()``   :func:`pygame2.sdl.version.get_version()`
 ``get_sdl_byteorder()`` :data:`pygame2.sdl.endian.SDL_BYTEORDER`
 ``register_quit()``     No equivalent planned
-``encode_string()``     Encoding anddecoding strings is done implicitly,
+``encode_string()``     Encoding and decoding strings is done implicitly,
                         where necessary
-``encode_file_path()``  Encoding anddecoding strings is done implicitly,
+``encode_file_path()``  Encoding and decoding strings is done implicitly,
                         where necessary
 ======================= =================================================
 
@@ -64,7 +64,7 @@ Pygame2 does not feature any pre-defined cursor settings at the moment.
 pygame.display
 ^^^^^^^^^^^^^^
 ======================= =================================================
-pygame.display          Pygame2
+pygame.display          pygame2
 ======================= =================================================
 ``init()``              :func:`pygame2.video.init()`
 ``quit()``              :func:`pygame2.video.quit()`
@@ -75,7 +75,7 @@ pygame.display          Pygame2
 ``update()``            :meth:`pygame2.sdl.video.update_window_surface_rects()`
 ``get_driver()``        :func:`pygame2.sdl.video.get_current_video_driver()`
 ``Info``                No equivalent yet
-``get_wm_info()``       No equivalent yet
+``get_wm_info()``       :func:`pygame2.sdl.syswm.get_window_wm_info()`
 ``list_modes()``        :func:`pygame2.sdl.video.get_num_display_modes()`
 ``mode_ok()``           :func:`pygame2.sdl.video.get_closest_display_mode()`
 ``gl_get_attribute()``  :func:`pygame2.sdl.video.gl_get_attribute()`
@@ -94,14 +94,16 @@ pygame.display          Pygame2
 pygame.draw
 ^^^^^^^^^^^
 ============== =================================================
-pygame.draw    Pygame2
+pygame.draw    pygame2
 ============== =================================================
-``rect()``     :func:`pygame2.sdl.render.render_draw_rect()`
+``rect()``     :func:`pygame2.sdl.render.render_draw_rect()`,
+               :func:`pygame2.video.draw.fill()`
 ``polygon()``  No equivalent yet
 ``circle()``   No equivalent yet
 ``ellipse()``  No equivalent yet
 ``arc()``      No equivalent yet
-``lines()``    :func:`pygame2.sdl.render.render_draw_lines()`
+``lines()``    :func:`pygame2.sdl.render.render_draw_lines()`,
+               :func:`pygame2.video.draw.line()`
 ``aaline()``   No equivalent yet
 ``aalines()``  No equivalent yet
 ============== =================================================
@@ -109,7 +111,7 @@ pygame.draw    Pygame2
 pygame.event
 ^^^^^^^^^^^^
 ================= =================================================
-pygame.event      Pygame2
+pygame.event      pygame2
 ================= =================================================
 ``pump()``        :func:`pygame2.sdl.events.pump_events()`
 ``get()``         :func:`pygame2.sdl.events.poll_event()`
@@ -130,7 +132,7 @@ pygame.event      Pygame2
 pygame.font
 ^^^^^^^^^^^
 ====================== =================================================
-pygame.font            Pygame2
+pygame.font            pygame2
 ====================== =================================================
 ``init()``             :func:`pygame2.sdlttf.init()`
 ``quit()``             :func:`pygame2.sdlttf.quit()`
@@ -153,9 +155,10 @@ Pygame2 does not feature SDL_gfx support at the moment.
 pygame.image
 ^^^^^^^^^^^^
 ================== =================================================
-pygame.image       Pygame2
+pygame.image       pygame2
 ================== =================================================
-``load()``         :func:`pygame2.sdlimage.load()`
+``load()``         :func:`pygame2.sdlimage.load()`,
+                   :func:`pygame2.video.image.load_image()`
 ``save()``         :func:`pygame2.sdl.surface.save_bmp()`
 ``get_extended()`` :func:`pygame2.sdlimage.is_bmp()` et al.
 ``tostring()``     No equivalent yet
@@ -166,7 +169,7 @@ pygame.image       Pygame2
 pygame.joystick
 ^^^^^^^^^^^^^^^
 ================== ========================================================
-pygame.joystick    Pygame2
+pygame.joystick    pygame2
 ================== ========================================================
 ``init()``         :func:`pygame2.sdl.init()`
 ``quit()``         :func:`pygame2.sdl.quit()`
@@ -179,14 +182,14 @@ pygame.joystick    Pygame2
 pygame.key
 ^^^^^^^^^^
 ================== ========================================================
-pygame.key         Pygame2
+pygame.key         pygame2
 ================== ========================================================
 ``get_focused()``  :func:`pygame2.sdl.keyboard.get_keyboard_focus()`
 ``get_pressed()``  :func:`pygame2.sdl.keyboard.get_keyboard_state()`
 ``get_mods()``     :func:`pygame2.sdl.keyboard.get_mod_state()`
 ``set_mods()``     :func:`pygame2.sdl.keyboard.set_mod_state()`
-``set_repeat()``   Based on the OS/WM settings now
-``get_repeat()``   Based on the OS/WM settings now
+``set_repeat()``   Based on the OS/WM settings, no equivalent
+``get_repeat()``   Based on the OS/WM settings, no equivalent
 ``name()``         :func:`pygame2.sdl.keyboard.get_key_name()`
 ================== ========================================================
 
@@ -201,14 +204,14 @@ SDL_mixer is currently not supported by Pygame2. The focus is set on
 OpenAL usage through :mod:`pygame2.openal` and :mod:`pygame2.audio`.
 
 ====================== ====================================================
-pygame.mixer           Pygame2
+pygame.mixer           pygame2
 ====================== ====================================================
 ``init()``             No necessity to explicitly initialize
 ``quit()``             No necessity to explicitly quit
 ``get_init()``         No necessity to explicitly initialize
-``stop()``             No equivalent yet
-``pause()``            No equivalent yet
-``unpause()``          No equivalent yet
+``stop()``             ``pygame2.audio.SoundSource.request = SOURCE_STOP``
+``pause()``            ``pygame2.audio.SoundSource.request = SOURCE_PAUSE``
+``unpause()``          ``pygame2.audio.SoundSource.request = SOURCE_PLAY``
 ``fadeout()``          No equivalent yet
 ``set_num_channels()`` Depends on the :class:`pygame2.audio.SoundSink`
                        device and bound
@@ -235,7 +238,7 @@ See `pygame.mixer`_.
 pygame.mouse
 ^^^^^^^^^^^^
 ================= ====================================================
-pygame.mouse      Pygame2
+pygame.mouse      pygame2
 ================= ====================================================
 ``get_pressed()`` :func:`pygame2.sdl.mouse.get_mouse_state()`
 ``get_pos()``     :func:`pygame2.sdl.mouse.get_mouse_state()`
@@ -264,7 +267,9 @@ comparision or extractions methods.
 
 pygame.Rect
 ^^^^^^^^^^^
-No such functionality is available for Pygame2.
+No such functionality is available for Pygame2. Rectangles are represented
+via :class:`pygame2.sdl.rect.SDL_Rect` for low-level SDL2 wrappers or 4-value
+tuples.
 
 pygame.scrap
 ^^^^^^^^^^^^
@@ -281,12 +286,12 @@ pygame.sprite
 Pygame2 uses a different approach of rendering and managing sprite
 objects via a component-based system and the
 :class:`pygame2.video.sprite.Sprite` class. A sprite module as for Pygame is
-not available.
+not planned.
 
 pygame.Surface
 ^^^^^^^^^^^^^^
 ======================= =====================================================
-pygame.Surface          Pygame2
+pygame.Surface          pygame2
 ======================= =====================================================
 ``blit()``              :meth:`pygame2.video.sprite.SpriteRenderer.render()`,
                         :func:`pygame2.sdl.surface.blit_surface()`
@@ -304,7 +309,7 @@ pygame.Surface          Pygame2
 ``lock()``              :func:`pygame2.sdl.surface.lock_surface()`
 ``unlock()``            :func:`pygame2.sdl.surface.unlock_surface()`
 ``mustlock()``          :func:`pygame2.sdl.surface.SDL_MUSTLOCK()`
-``get_locked()``        No equivalent planned
+``get_locked()``        :attr:`pygame2.sdl.surface.SDL_Surface.locked`
 ``get_locks()``         No equivalent planned
 ``get_at()``            Direct access to the pixels for surfaces can be
                         achieved via the

@@ -27,6 +27,18 @@ class VideoGUITest(unittest.TestCase):
         pass
 
     @unittest.skip("not implemented")
+    def test_SoftButton(self):
+        pass
+
+    @unittest.skip("not implemented")
+    def test_SoftCheckButton(self):
+        pass
+
+    @unittest.skip("not implemented")
+    def test_SoftTextEntry(self):
+        pass
+
+    @unittest.skip("not implemented")
     def test_UIProcessor(self):
         pass
 
@@ -65,6 +77,7 @@ class VideoGUITest(unittest.TestCase):
     @unittest.skip("not implemented")
     def test_UIProcessor_textinput(self):
         pass
+
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

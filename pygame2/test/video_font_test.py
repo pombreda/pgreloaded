@@ -34,8 +34,8 @@ class VideoFontTest(unittest.TestCase):
         self.assertIsInstance(font, video.BitmapFont)
         sdlsurface.free_surface(sf)
 
-        sprite = video.Sprite(RESOURCES.get_path("font.bmp"))
-        self.assertIsInstance(sprite, video.Sprite)
+        sprite = video.SoftSprite(RESOURCES.get_path("font.bmp"))
+        self.assertIsInstance(sprite, video.SoftSprite)
         font = video.BitmapFont(sprite, (32, 32), FONTMAP)
         self.assertIsInstance(font, video.BitmapFont)
 

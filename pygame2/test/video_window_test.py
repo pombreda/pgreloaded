@@ -3,6 +3,7 @@ import unittest
 import pygame2.video as video
 import pygame2.sdl.video as sdlvideo
 import pygame2.sdl.surface as sdlsurface
+import pygame2.sdl.render as sdlrender
 from pygame2.test.util.testutils import interactive, doprint
 
 

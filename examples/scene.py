@@ -27,7 +27,7 @@ class ExampleScene(Scene):
 def create_scene1(manager):
     print("Creating scene 1")
     scene = ExampleScene("Scene 1")
-    button_back = video.Button(size=(100, 50))
+    button_back = video.SoftButton(size=(100, 50))
     button_back.position = 200, 200
     video.fill(button_back, 0xFFFFFFFF)
     button_back.click += lambda btn, ev: manager.pop()
@@ -38,7 +38,7 @@ def create_scene1(manager):
 def create_scene2(manager):
     print("Creating scene 2")
     scene = ExampleScene("Scene 2")
-    button_back = video.Button(size=(100, 50))
+    button_back = video.SoftButton(size=(100, 50))
     button_back.position = 200, 200
     video.fill(button_back, 0xFFFFFFFF)
     button_back.click += lambda btn, ev: manager.pop()
@@ -49,7 +49,7 @@ def create_scene2(manager):
 def create_scene3(manager):
     print("Creating scene 3")
     scene = ExampleScene("Scene 3")
-    button_back = video.Button(size=(100, 50))
+    button_back = video.SoftButton(size=(100, 50))
     button_back.position = 200, 200
     video.fill(button_back, 0xFFFFFFFF)
     button_back.click += lambda btn, ev: manager.pop()
@@ -60,7 +60,7 @@ def create_scene3(manager):
 def create_scene4(manager):
     print("Creating scene 4")
     scene = ExampleScene("Scene 4")
-    button_back = video.Button(size=(100, 50))
+    button_back = video.SoftButton(size=(100, 50))
     button_back.position = 200, 200
     video.fill(button_back, 0xFFFFFFFF)
     button_back.click += lambda btn, ev: manager.pop()
@@ -75,28 +75,28 @@ def switch_to(manager, scene):
 
 def start_mainmenu(scene):
     scene.components = []
-    button_scene1 = video.Button(size=(100, 50))
+    button_scene1 = video.SoftButton(size=(100, 50))
     button_scene1.position = 100, 100
     video.fill(button_scene1, 0xFFFFFFFF)
     button_scene1.click += lambda btn, ev: \
         switch_to(scene.manager, create_scene1(scene.manager))
     scene.components.append(button_scene1)
 
-    button_scene2 = video.Button(size=(100, 50))
+    button_scene2 = video.SoftButton(size=(100, 50))
     button_scene2.position = 100, 160
     video.fill(button_scene2, 0xFFFFFFFF)
     button_scene2.click += lambda btn, ev: \
         switch_to(scene.manager, create_scene2(scene.manager))
     scene.components.append(button_scene2)
 
-    button_scene3 = video.Button(size=(100, 50))
+    button_scene3 = video.SoftButton(size=(100, 50))
     button_scene3.position = 100, 220
     video.fill(button_scene3, 0xFFFFFFFF)
     button_scene3.click += lambda btn, ev: \
         switch_to(scene.manager, create_scene3(scene.manager))
     scene.components.append(button_scene3)
 
-    button_scene4 = video.Button(size=(100, 50))
+    button_scene4 = video.SoftButton(size=(100, 50))
     button_scene4.position = 100, 280
     video.fill(button_scene4, 0xFFFFFFFF)
     button_scene4.click += lambda btn, ev: \
@@ -118,7 +118,7 @@ def run():
     # Since all gui elements are sprites, we can use the SpriteRenderer
     # class, we learned about in helloworld.py, to draw them on the
     # Window.
-    renderer = video.SpriteRenderer(window)
+    renderer = video.SoftSpriteRenderer(window)
 
     # Create a new UIProcessor, which will handle the user input events
     # and pass them on to the relevant user interface elements.

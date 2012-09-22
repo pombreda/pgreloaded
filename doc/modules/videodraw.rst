@@ -1,8 +1,8 @@
 .. module:: pygame2.video.draw
-   :synopsis: 2D drawing routines
+   :synopsis: 2D drawing routines for software surfaces
 
-:mod:`pygame2.video.draw` - 2D drawing routines
-===============================================
+:mod:`pygame2.video.draw` - 2D drawing routines for software surfaces
+=====================================================================
 
 .. function:: prepare_color(color : object, target : object) -> int
 
@@ -11,7 +11,7 @@
    :func:`pygame2.color.convert_to_color()`. *target* can be any
    :class:`pygame2.sdl.pixels.SDL_PixelFormat`,
    :class:`pygame2.sdl.surface.SDL_Surface` or
-   :class:`Sprite` instance.
+   :class:`pygame2.video.sprite.SoftSprite` instance.
 
    The returned integer will be a color value matching the target's pixel
    format.
@@ -25,9 +25,15 @@
    (4 integer values) before assuming it to be a sequence of rectangular areas
    to fill with the color.
 
+   *target* can be any :class:`pygame2.sdl.surface.SDL_Surface` or
+   :class:`pygame2.video.sprite.SoftSprite` instance.
+
 .. function:: line(target : object, color : object[, width=1]) -> None
 
    Draws one or multiple lines on the passed *target*. *line* can be a
    sequence of four integers for a single line in the form ``(x1, y1,
    x2, y2)`` or a sequence of a multiple of 4 for drawing multiple lines
    at once, e.g. ``(x1, y1, x2, y2, x3, y3, x4, y4, ...)``.
+
+   *target* can be any :class:`pygame2.sdl.surface.SDL_Surface` or
+   :class:`pygame2.video.sprite.SoftSprite` instance.

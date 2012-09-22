@@ -82,7 +82,7 @@ that will display them. ::
 
     [...]
 
-    class Renderer(video.SpriteRenderer):
+    class Renderer(video.SoftSpriteRenderer):
         def __init__(self, window):
             super(Renderer, self).__init__(window)
 
@@ -93,7 +93,7 @@ that will display them. ::
 
     class Player(Entity):
         def __init__(self, world, posx=0, posy=0):
-            self.sprite = video.Sprite(size=(20, 100), bpp=32)
+            self.sprite = video.SoftSprite(size=(20, 100), bpp=32)
             video.fill(self.sprite, Color(255, 255, 255))
             self.sprite.position = posx, posy
 
@@ -122,7 +122,7 @@ that will display them. ::
         sys.exit(run())
 
 The first thing to do is to enhance the
-:class:`pygame2.video.sprite.SpriteRenderer` so that it will paint the whole
+:class:`pygame2.video.sprite.SoftSpriteRenderer` so that it will paint the whole
 window sceeen black on every drawing cycle, before drawing all sprites on the
 window.
 
@@ -150,7 +150,7 @@ within the window boundaries. ::
     class MovementSystem(Applicator):
         def __init__(self, minx, miny, maxx, maxy):
             super(MovementSystem, self).__init__()
-            self.componenttypes = (Velocity, video.Sprite)
+            self.componenttypes = (Velocity, video.SoftSprite)
             self.minx = minx
             self.miny = miny
             self.maxx = maxx
@@ -188,7 +188,7 @@ within the window boundaries. ::
 
     class Ball(Entity):
         def __init__(self, world, posx=0, posy=0):
-            self.sprite = video.Sprite(size=(20, 20), bpp=32)
+            self.sprite = video.SoftSprite(size=(20, 20), bpp=32)
             video.fill(self.sprite, Color(255, 255, 255))
             self.sprite.position = posx, posy
             self.velocity = Velocity()
@@ -239,7 +239,7 @@ data. When the :meth:`pygame2.ebs.Applicator.process()` method is
 called, the passed ``componentsets`` iterable will contain tuples of
 :class:`pygame2.ebs.Component` instances that belong to an instance.
 The ``MovementSystem``'s ``process()`` implementation hence will loop
-over sets of ``Velocity`` and ``Sprite`` instances that belong to the
+over sets of ``Velocity`` and ``SoftSprite`` instances that belong to the
 same :class:`pygame2.ebs.Entity`. Since we have a ball and two players
 currently available, it typically would loop over three tuples, two for
 the individual players and one for the ball.
@@ -254,7 +254,7 @@ data of our in-game items, without creating complex data structures.
    ``Velocity`` component, it would not be processed by the
    ``MovementSystem``.
 
-Why do we use this approach? The :class:`pygame2.video.sprite.Sprite`
+Why do we use this approach? The :class:`pygame2.video.sprite.SoftSprite`
 objects carry a position, which defines the location at which
 they should be rendered, when processed by the ``Renderer``. If they
 should move around (which is a change in the position), we need to apply the
@@ -290,7 +290,7 @@ on colliding with the walls or the player paddles. ::
     class CollisionSystem(Applicator):
         def __init__(self, minx, miny, maxx, maxy):
             super(CollisionSystem, self).__init__()
-            self.componenttypes = (Velocity, video.Sprite)
+            self.componenttypes = (Velocity, video.SoftSprite)
             self.ball = None
             self.minx = minx
             self.miny = miny
@@ -485,7 +485,7 @@ back to us, which sounds more interesting. ::
     class TrackingAIController(Applicator):
         def __init__(self, miny, maxy):
             super(TrackingAIController, self).__init__()
-            self.componenttypes = (PlayerData, Velocity, video.Sprite)
+            self.componenttypes = (PlayerData, Velocity, video.SoftSprite)
             self.miny = miny
             self.maxy = maxy
             self.ball = None
@@ -522,7 +522,7 @@ back to us, which sounds more interesting. ::
 
     class Player(Entity):
         def __init__(self, world, posx=0, posy=0, ai=False):
-            self.sprite = video.Sprite(size=(20, 100), bpp=32)
+            self.sprite = video.SoftSprite(size=(20, 100), bpp=32)
             video.fill(self.sprite, Color(255, 255, 255))
             self.sprite.position = posx, posy
             self.velocity = Velocity()
@@ -583,7 +583,7 @@ complex as it sounds.
   * you could enhance the ``CollisionSystem`` to process ``PlayerData``
     components and add the functionality to add points there (or write a
     small processor that keeps track of the ball only and processes only
-    the ``PlayerData`` and ``video.Sprite`` objects of each player for
+    the ``PlayerData`` and ``video.SoftSprite`` objects of each player for
     adding points). Alternatively, you could use the
     :class:`pygame2.events.EventHandler` class to raise a score count
     function within the ``CollisionSystem``, if the ball collides with
@@ -595,7 +595,7 @@ complex as it sounds.
        StaticRepeatingSprite(Entity):
            ...
            self.positions = Positions((400, 0), (400, 60), (400, 120), ...)
-           self.sprite = video.Sprite(size=(10, 40)
+           self.sprite = video.SoftSprite(size=(10, 40)
 
   * draw some simple images for 0-9 and render them as sprites,
     depending on the points a player made.

@@ -1,5 +1,6 @@
 """Window routines to manage on-screen windows."""
 import pygame2.sdl.video as sdlvideo
+import pygame2.sdl.render as render
 
 __all__ = ["Window"]
 
@@ -30,6 +31,7 @@ class Window(object):
             flags = self.DEFAULTFLAGS
         self.window = sdlvideo.create_window(title, position[0], position[1],
                                              size[0], size[1], flags)
+        self._renderer = None  # used by get_renderer()
 
     def __del__(self):
         """Releases the resources of the Window, implicitly destroying the

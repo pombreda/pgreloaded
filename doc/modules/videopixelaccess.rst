@@ -6,8 +6,8 @@
 
 .. class:: PixelView(source : object)
 
-   2D :class:`pygame2.array.MemoryView` for :class:`Sprite` and surface
-   pixel access.
+   2D :class:`pygame2.array.MemoryView` for
+   :class:`pygame2.video.sprite.SoftSprite` and surface pixel access.
 
    .. note::
 
@@ -19,8 +19,8 @@
 .. function:: pixels2d(source : object)
 
    Creates a 2D pixel array, based on ``numpy.ndarray``, from the passed
-   *source*. *source* can be a :class:`pygame2.video.sprite.Sprite` or
-   :class:`pygame2.sdl.surface.SDL_Surface`. The *source*'s
+   *source*. *source* can be a :class:`pygame2.video.sprite.SoftSprite` or
+   :class:`pygame2.sdl.surface.SDL_Surface`. The *source* its
    ``SDL_Surface`` will be locked and unlocked automatically.
 
    The *source* pixels will be accessed and manipulated directly.
@@ -34,8 +34,8 @@
 .. function:: pixels3d(source : object)
 
    Creates a 3D pixel array, based on ``numpy.ndarray``, from the passed
-   *source*. *source* can be a :class:`pygame2.video.sprite.Sprite` or
-   :class:`pygame2.sdl.surface.SDL_Surface`. The *source*'s
+   *source*. *source* can be a :class:`pygame2.video.sprite.SoftSprite`
+   or :class:`pygame2.sdl.surface.SDL_Surface`. The *source* its
    ``SDL_Surface`` will be locked and unlocked automatically.
 
    The *source* pixels will be accessed and manipulated directly.

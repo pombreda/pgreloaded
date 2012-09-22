@@ -19,10 +19,12 @@ class PixelView(MemoryView):
         The lock will be removed once the PixelView is garbage-collected or
         deleted.
         """
-        if isinstance(source, sprite.Sprite):
+        if isinstance(source, sprite.SoftSprite):
             self._surface = source.surface
             # keep a reference, so the Sprite's not GC'd
             self._sprite = source
+        elif isinstance(source, sprite.Sprite):
+            TODO
         elif isinstance(source, sdlsurface.SDL_Surface):
             self._surface = source
         else:
@@ -113,8 +115,10 @@ def pixels2d(source):
     """Creates a 2D pixel array from the passed source."""
     if not _HASNUMPY:
         raise UnsupportedError("numpy module could not be loaded")
-    if isinstance(source, sprite.Sprite):
+    if isinstance(source, sprite.SoftSprite):
         surface = source.surface
+    elif isinstance(source, sprite.Sprite):
+        TODO
     elif isinstance(source, sdlsurface.SDL_Surface):
         surface = source
     else:
@@ -147,8 +151,10 @@ def pixels3d(source):
     """
     if not _HASNUMPY:
         raise UnsupportedError("numpy module could not be loaded")
-    if isinstance(source, sprite.Sprite):
+    if isinstance(source, sprite.SoftSprite):
         surface = source.surface
+    elif isinstance(source, sprite.Sprite):
+        TODO
     elif isinstance(source, sdlsurface.SDL_Surface):
         surface = source
     else:

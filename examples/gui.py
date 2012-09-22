@@ -20,6 +20,10 @@ except ImportError:
 WHITE = Color(255, 255, 255)
 GREY = Color(200, 200, 200)
 
+# Import the resources, so we have easy access to the example images.
+from pygame2.resources import Resources
+RESOURCES = Resources(__file__, "resources")
+
 
 # A callback for the Button.motion event.
 def onmotion(button, event):
@@ -47,30 +51,48 @@ def run():
     # You know those from the helloworld.py example.
     # Initialize the video subsystem, create a window and make it visible.
     video.init()
-    window = video.Window("Pixel Access", size=(800, 600))
+    window = video.Window("UI Elements", size=(800, 600))
     window.show()
 
+    # If you want to have hardware-accelerated rendering, a Renderer is
+    # necessary for the UI creation as well as the rendering of the UI
+    # elements.
+    #
+    # graphicsrenderer = video.Renderer(window)
+    #
+
+    # Create a UI factory, which will handle several defaults for
+    # us. Also, the UIFactory can utilises software-based UI elements as
+    # well as hardware-accelerated ones; this allows us to keep the UI
+    # creation code clean.
+    uifactory = video.UIFactory(uitype=video.UIFactory.SOFTWARE)
+
+    # If you are going for hardware-accelerated rendering, use the
+    # RENDERER type. This also should pass a renderer= argument as
+    # default to be used for all UI elements.
+    #
+    # uifactory = video.UIFactory(uitype=video.UIFactory.RENDERER,
+    #                             renderer=graphicsrenderer)
+    #
+
     # Create a simple Button sprite, which reacts on mouse movements and
-    # button presses and fill it with a white color. The Button class inherits
-    # directly from the Sprite class, so everything you can do with the Sprite
-    # class is also possible for the Button class.
-    button = video.Button(size=(100, 100))
-    video.fill(button, WHITE)
+    # button presses and fill it with a white color. All UI elements
+    # inherit directly from the Sprite (for RENDERER) or SoftSprite (for
+    # SOFTWARE), so everything you can do with the Sprite or SoftSprite
+    # classes is also possible for the UI elements.
+    button = uifactory.create_button(source=RESOURCES.get("button.bmp"))
     button.position = 50, 50
 
     # Create a TextEntry sprite, which reacts on keyboard presses and
-    # text input and fill it with a grey color. The TextEntry inherits
-    # directly from the Sprite class, so everything you can do with the
-    # Sprite class is also possible for the TextEntry class.
-    entry = video.TextEntry(size=(100, 100))
-    video.fill(entry, GREY)
+    # text input.
+    entry = uifactory.create_text_entry(source=RESOURCES.get("textentry.bmp"))
     entry.position = 50, 200
 
     # Create a CheckButton sprite. The CheckButton is a specialised
     # Button, which can switch its state, identified by the 'checked'
     # attribute by clicking.
-    checkbutton = video.CheckButton(size=(100, 100))
-    video.fill(checkbutton, WHITE)
+    checkbutton = uifactory.create_check_button \
+        (source=RESOURCES.get("button.bmp"))
     checkbutton.position = 200, 50
 
     # Bind some actions to the button's event handlers. Whenever a click
@@ -84,7 +106,6 @@ def run():
     button.click += onclick
     button.motion += onmotion
 
-
     # Bind some actions to the entry's event handlers. The TextEntry
     # receives input events, once it has been activated by a mouse
     # button press on its designated area. The UIProcessor class takes
@@ -95,40 +116,39 @@ def run():
     entry.input += oninput
     entry.editing += onedit
 
-    # Since all gui elements are sprites, we can use the SpriteRenderer
-    # class, we learned about in helloworld.py, to draw them on the
-    # Window-.
-    renderer = video.SpriteRenderer(window)
+    # Since all gui elements are sprites, we can use the
+    # SoftSpriteRenderer class, we learned about in helloworld.py, to
+    # draw them on the Window.
+    spriterenderer = video.SoftSpriteRenderer(window)
+
+    # Hardware-accelerated rendering requires us to use the
+    # SpriteRenderer class, which also requires a Renderer context to
+    # draw on.
+    #
+    # spriterenderer = video.SpriteRenderer(graphicsrenderer)
+    #
 
     # Create a new UIProcessor, which will handle the user input events
     # and pass them on to the relevant user interface elements.
     uiprocessor = video.UIProcessor()
 
-    while True:
+    running = True
+    while running:
         event = sdlevents.poll_event(True)
-        if event is None:
-            continue
-        if event.type == sdlevents.SDL_QUIT:
-            break
-        # Everytime, the CheckButton changes its 'checked' state, we
-        # will render it in a different color.
-        if checkbutton.checked:
-            video.fill(checkbutton, GREY)
-        else:
-            video.fill(checkbutton, WHITE)
-
-        # Pass the SDL2 events to the UIProcessor, which takes care of
-        # the user interface logic.
-        uiprocessor.dispatch([button, checkbutton, entry], event)
+        while event is not None:
+            if event.type == sdlevents.SDL_QUIT:
+                running = False
+            # Pass the SDL2 events to the UIProcessor, which takes care of
+            # the user interface logic.
+            uiprocessor.dispatch([button, checkbutton, entry], event)
+            event = sdlevents.poll_event(True)
 
         # Render all user interface elements on the window.
-        renderer.render(button)
-        renderer.render(entry)
-        renderer.render(checkbutton)
-        window.refresh()
+        spriterenderer.render((button, entry, checkbutton))
 
     video.quit()
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(run())

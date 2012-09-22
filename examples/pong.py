@@ -21,7 +21,7 @@ BALL_SPEED = 3
 class CollisionSystem(Applicator):
     def __init__(self, minx, miny, maxx, maxy):
         super(CollisionSystem, self).__init__()
-        self.componenttypes = (Velocity, video.Sprite)
+        self.componenttypes = (Velocity, video.SoftSprite)
         self.ball = None
         self.minx = minx
         self.miny = miny
@@ -30,11 +30,11 @@ class CollisionSystem(Applicator):
 
     def _overlap(self, item):
         sprite = item[1]
-        if sprite == self.ball.sprite:
+        if sprite == self.ball.softsprite:
             return False
 
         left, top, right, bottom = sprite.area
-        bleft, btop, bright, bbottom = self.ball.sprite.area
+        bleft, btop, bright, bbottom = self.ball.softsprite.area
 
         return bleft < right and bright > left and \
             btop < bottom and bbottom > top
@@ -45,7 +45,8 @@ class CollisionSystem(Applicator):
             self.ball.velocity.vx = -self.ball.velocity.vx
 
             sprite = collitems[0][1]
-            ballcentery = self.ball.sprite.y + self.ball.sprite.size[1] // 2
+            ballcentery = self.ball.softsprite.y + \
+                self.ball.softsprite.size[1] // 2
             halfheight = sprite.size[1] // 2
             stepsize = halfheight // 10
             degrees = 0.7
@@ -59,19 +60,19 @@ class CollisionSystem(Applicator):
             else:
                 self.ball.velocity.vy = - self.ball.velocity.vy
 
-        if self.ball.sprite.y <= self.miny or \
-                self.ball.sprite.y + self.ball.sprite.size[1] >= self.maxy:
+        if self.ball.softsprite.y <= self.miny or \
+                self.ball.softsprite.y + self.ball.softsprite.size[1] >= self.maxy:
             self.ball.velocity.vy = - self.ball.velocity.vy
 
-        if self.ball.sprite.x <= self.minx or \
-                self.ball.sprite.x + self.ball.sprite.size[0] >= self.maxx:
+        if self.ball.softsprite.x <= self.minx or \
+                self.ball.softsprite.x + self.ball.softsprite.size[0] >= self.maxx:
             self.ball.velocity.vx = - self.ball.velocity.vx
 
 
 class MovementSystem(Applicator):
     def __init__(self, minx, miny, maxx, maxy):
         super(MovementSystem, self).__init__()
-        self.componenttypes = (Velocity, video.Sprite)
+        self.componenttypes = (Velocity, video.SoftSprite)
         self.minx = minx
         self.miny = miny
         self.maxx = maxx
@@ -97,7 +98,7 @@ class MovementSystem(Applicator):
 class TrackingAIController(Applicator):
     def __init__(self, miny, maxy):
         super(TrackingAIController, self).__init__()
-        self.componenttypes = (PlayerData, Velocity, video.Sprite)
+        self.componenttypes = (PlayerData, Velocity, video.SoftSprite)
         self.miny = miny
         self.maxy = maxy
         self.ball = None
@@ -118,7 +119,7 @@ class TrackingAIController(Applicator):
                 else:
                     vel.vy = 0
             else:
-                bcentery = self.ball.sprite.y + self.ball.sprite.size[1] // 2
+                bcentery = self.ball.softsprite.y + self.ball.softsprite.size[1] // 2
                 if bcentery < centery + sheight // 3:
                     vel.vy = -PADDLE_SPEED
                 elif bcentery > centery - sheight // 3:
@@ -127,7 +128,7 @@ class TrackingAIController(Applicator):
                     vel.vy = 0
 
 
-class Renderer(video.SpriteRenderer):
+class Renderer(video.SoftSpriteRenderer):
     def __init__(self, window):
         super(Renderer, self).__init__(window)
 
@@ -152,9 +153,9 @@ class PlayerData(Component):
 
 class Player(Entity):
     def __init__(self, world, posx=0, posy=0, ai=False):
-        self.sprite = video.Sprite(size=(20, 100), bpp=32)
-        video.fill(self.sprite, WHITE)
-        self.sprite.position = posx, posy
+        self.softsprite = video.SoftSprite(size=(20, 100), bpp=32)
+        video.fill(self.softsprite, WHITE)
+        self.softsprite.position = posx, posy
         self.velocity = Velocity()
         self.playerdata = PlayerData()
         self.playerdata.ai = ai
@@ -162,9 +163,9 @@ class Player(Entity):
 
 class Ball(Entity):
     def __init__(self, world, posx=0, posy=0):
-        self.sprite = video.Sprite(size=(20, 20), bpp=32)
-        video.fill(self.sprite, WHITE)
-        self.sprite.position = posx, posy
+        self.softsprite = video.SoftSprite(size=(20, 20), bpp=32)
+        video.fill(self.softsprite, WHITE)
+        self.softsprite.position = posx, posy
         self.velocity = Velocity()
 
 

@@ -1,4 +1,4 @@
-"""Drawing routines."""
+"""Drawing routines for software surfaces."""
 import ctypes
 from pygame2.compat import isiterable, UnsupportedError
 from pygame2.color import convert_to_color
@@ -6,7 +6,7 @@ import pygame2.sdl.surface as sdlsurface
 import pygame2.sdl.pixels as sdlpixels
 import pygame2.sdl.rect as rect
 from pygame2.algorithms import clipline
-from . import sprite
+from pygame2.video.sprite import SoftSprite, Sprite
 
 __all__ = ["prepare_color", "fill", "line"]
 
@@ -15,7 +15,7 @@ def _get_target_surface(target):
     """Gets the SDL_surface from the passed target."""
     if isinstance(target, sdlsurface.SDL_Surface):
         rtarget = target
-    elif isinstance(target, sprite.Sprite):
+    elif isinstance(target, SoftSprite):
         rtarget = target.surface
     else:
         raise TypeError("unsupported target type")
@@ -27,11 +27,12 @@ def prepare_color(color, target):
     """
     color = convert_to_color(color)
     pformat = None
+    # Software surfaces
     if isinstance(target, sdlpixels.SDL_PixelFormat):
         pformat = target
     elif isinstance(target, sdlsurface.SDL_Surface):
         pformat = target.format
-    elif isinstance(target, sprite.Sprite):
+    elif isinstance(target, SoftSprite):
         pformat = target.surface.format
     if pformat is None:
         raise TypeError("unsupported target type")
@@ -68,6 +69,7 @@ def fill(target, color, area=None):
             varea = []
             for r in area:
                 varea.append(rect.SDL_Rect(r[0], r[1], r[2], r[3]))
+
     if varea is None or isinstance(varea, rect.SDL_Rect):
         sdlsurface.fill_rect(rtarget, varea, color)
     else:

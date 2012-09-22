@@ -28,7 +28,7 @@
       The title of the :class:`Window`.
 
    .. attribute:: size
-   
+
       The size of the :class:`Window`.
 
    .. method:: show() -> None

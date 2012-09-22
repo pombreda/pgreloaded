@@ -27,7 +27,7 @@ class VideoDrawTest(unittest.TestCase):
                  (5, -1, 2, 2),
                  (1, 7, 4, 8)
                  )
-        sprite = video.Sprite(size=(10, 10), bpp=32)
+        sprite = video.SoftSprite(size=(10, 10), bpp=32)
         view = video.PixelView(sprite)
         for rect in rects:
             video.fill(sprite, 0)
@@ -59,10 +59,10 @@ class VideoDrawTest(unittest.TestCase):
                    "#FFF",
                    "#AABBCCDD",
                    )
-        sprite = video.Sprite(size=(10, 10), bpp=32, masks=(0xFF000000,
-                                                            0x00FF0000,
-                                                            0x0000FF00,
-                                                            0x000000FF))
+        sprite = video.SoftSprite(size=(10, 10), bpp=32, masks=(0xFF000000,
+                                                                0x00FF0000,
+                                                                0x0000FF00,
+                                                                0x000000FF))
 
         for color in rcolors:
             c = video.prepare_color(color, sprite)

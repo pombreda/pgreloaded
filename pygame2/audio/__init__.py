@@ -216,8 +216,13 @@ class SoundSink(System):
         ssid = source._ssid
         if ssid is None:
             ssid = self._create_source(source)
-        # TODO: if the properties of the source changed, they must be
-        # updated.
+        
+        # TODO: this should be only set on changes.
+        # al.source_f(ssid, al.AL_GAIN, source.gain)
+        # al.source_f(ssid, al.AL_PITCH, source.pitch)
+        # al.source_fv(ssid, al.AL_POSITION, source.position)
+        # al.source_fv(ssid, al.AL_VELOCITY, source.velocity)
+        
         self._create_buffers(source)
         querystate = al.get_source_i(ssid, al.AL_SOURCE_STATE)
         if source.request == SOURCE_NONE:
