@@ -18,7 +18,7 @@ try:
     import pygame2.sdl.events as sdlevents
     import pygame2.sdl.mouse as sdlmouse
     import pygame2.sdl.timer as sdltimer
-    import pygame2.sdl.surface as sdlsurface
+    import pygame2.sdl.render as sdlrender
     import pygame2.sdl.rect as sdlrect
 except ImportError:
     import traceback
@@ -49,7 +49,6 @@ class CParticle(particles.Particle):
         self.type = ptype
         self.vx = vx
         self.vy = vy
-
 
 # A simple Entity class, that contains the particle information. This
 # represents our living particle object.
@@ -100,11 +99,11 @@ def deleteparticles(world, deadones):
 
 
 # Create a simple rendering system for particles. This is somewhat
-# similar to the SoftSprinteRenderer from pygame2.video. Since we
+# similar to the TextureSprinteRenderer from pygame2.video. Since we
 # operate on particles rather than sprites, we need to provide our own
 # rendering logic.
 class ParticleRenderer(System):
-    def __init__(self, surface, images):
+    def __init__(self, renderer, images):
         # Create a new particle renderer. The surface argument will be
         # the targets surface to do the rendering on. images is a set of
         # images to be used for rendering the particles.
@@ -112,7 +111,7 @@ class ParticleRenderer(System):
         # Define, what Component instances are processed by the
         # ParticleRenderer.
         self.componenttypes = (CParticle, )
-        self.surface = surface
+        self.renderer = renderer
         self.images = images
 
     def process(self, world, components):
@@ -128,27 +127,30 @@ class ParticleRenderer(System):
         # The SDL_Rect is used for the blit operation below and is used
         # as destination position for rendering the particle.
         r = sdlrect.SDL_Rect()
-        # TheSDL2 blit function to use. This will take an image
-        # (SDL_Surface) as source and another one as target to copy the
-        # source on. The whole process is called "blitting".
-        doblit = sdlsurface.blit_surface
+        
+        # The SDL2 blit function to use. This will take an image
+        # (SDL_Texture) as source and copies it on the target.
+        dorender = sdlrender.render_copy
+
         # And some more shortcuts.
-        target = self.surface
+        sdlrenderer = self.renderer.renderer
         images = self.images
         # Before rendering all particles, make sure the old ones are
-        # removed from the surface by filling it will a black color.
-        video.fill(target, 0x0)
+        # removed from the window by filling it with a black color.
+        self.renderer.clear(0x0)
+        
         # Render all particles.
         for particle in components:
             # Set the correct destination position for the particle
             r.x = int(particle.x)
             r.y = int(particle.y)
+            
             # Select the correct image for the particle.
             img = images[particle.type]
-            # Render (or blit) the particle by using the designated
-            # image.
-            doblit(img.surface, None, target, r)
-
+            r.w, r.h = img.size
+            # Render (or blit) the particle by using the designated image.
+            dorender(sdlrenderer, img.texture, None, r)
+        self.renderer.present()
 
 def run():
     # Create the environment, in which our particles will exist.
@@ -190,11 +192,14 @@ def run():
     window = video.Window("Particles", size=(800, 600))
     window.show()
 
+    renderer = video.RenderContext(window)
+    factory = video.SpriteFactory(video.TEXTURE, renderer=renderer)
+    
     # Create a set of images to be used as particles on rendering. The
     # images are used by the ParticleRenderer created below.
-    images = (video.load_image(RESOURCES.get_path("circle.png")),
-              video.load_image(RESOURCES.get_path("square.png")),
-              video.load_image(RESOURCES.get_path("star.png"))
+    images = (factory.from_image(RESOURCES.get_path("circle.png")),
+              factory.from_image(RESOURCES.get_path("square.png")),
+              factory.from_image(RESOURCES.get_path("star.png"))
               )
 
     # Center the mouse on the window. We use the SDL2 functions directly
@@ -206,16 +211,12 @@ def run():
     # particles.
     sdlmouse.show_cursor(False)
 
-    # As in colorpalettes.py, explicitly acquire the window's surface to
-    # draw on.
-    windowsurface = window.get_surface()
-
     # Create the rendering system for the particles. This is somewhat
     # similar to the SoftSpriteRenderer, but since we only operate with
     # hundreds of particles (and not sprites with all their overhead),
     # we need an own rendering system.
-    renderer = ParticleRenderer(windowsurface, images)
-    world.add_system(renderer)
+    particlerenderer = ParticleRenderer(renderer, images)
+    world.add_system(particlerenderer)
 
     # The almighty event loop. You already know several parts of it.
     running = True

@@ -24,10 +24,10 @@ class ExampleScene(Scene):
 
 
 # Creates the first example scene
-def create_scene1(manager):
+def create_scene1(manager, uifactory):
     print("Creating scene 1")
     scene = ExampleScene("Scene 1")
-    button_back = video.SoftButton(size=(100, 50))
+    button_back = uifactory.create_button(size=(100, 50))
     button_back.position = 200, 200
     video.fill(button_back, 0xFFFFFFFF)
     button_back.click += lambda btn, ev: manager.pop()
@@ -35,10 +35,10 @@ def create_scene1(manager):
     return scene
 
 
-def create_scene2(manager):
+def create_scene2(manager, uifactory):
     print("Creating scene 2")
     scene = ExampleScene("Scene 2")
-    button_back = video.SoftButton(size=(100, 50))
+    button_back = uifactory.create_button(size=(100, 50))
     button_back.position = 200, 200
     video.fill(button_back, 0xFFFFFFFF)
     button_back.click += lambda btn, ev: manager.pop()
@@ -46,10 +46,10 @@ def create_scene2(manager):
     return scene
 
 
-def create_scene3(manager):
+def create_scene3(manager, uifactory):
     print("Creating scene 3")
     scene = ExampleScene("Scene 3")
-    button_back = video.SoftButton(size=(100, 50))
+    button_back = uifactory.create_button(size=(100, 50))
     button_back.position = 200, 200
     video.fill(button_back, 0xFFFFFFFF)
     button_back.click += lambda btn, ev: manager.pop()
@@ -57,10 +57,10 @@ def create_scene3(manager):
     return scene
 
 
-def create_scene4(manager):
+def create_scene4(manager, uifactory):
     print("Creating scene 4")
     scene = ExampleScene("Scene 4")
-    button_back = video.SoftButton(size=(100, 50))
+    button_back = uifactory.create_button(size=(100, 50))
     button_back.position = 200, 200
     video.fill(button_back, 0xFFFFFFFF)
     button_back.click += lambda btn, ev: manager.pop()
@@ -75,32 +75,32 @@ def switch_to(manager, scene):
 
 def start_mainmenu(scene):
     scene.components = []
-    button_scene1 = video.SoftButton(size=(100, 50))
+    button_scene1 = scene.uifactory.create_button(size=(100, 50))
     button_scene1.position = 100, 100
     video.fill(button_scene1, 0xFFFFFFFF)
     button_scene1.click += lambda btn, ev: \
-        switch_to(scene.manager, create_scene1(scene.manager))
+        switch_to(scene.manager, create_scene1(scene.manager, scene.uifactory))
     scene.components.append(button_scene1)
 
-    button_scene2 = video.SoftButton(size=(100, 50))
+    button_scene2 = scene.uifactory.create_button(size=(100, 50))
     button_scene2.position = 100, 160
     video.fill(button_scene2, 0xFFFFFFFF)
     button_scene2.click += lambda btn, ev: \
-        switch_to(scene.manager, create_scene2(scene.manager))
+        switch_to(scene.manager, create_scene2(scene.manager, scene.uifactory))
     scene.components.append(button_scene2)
 
-    button_scene3 = video.SoftButton(size=(100, 50))
+    button_scene3 = scene.uifactory.create_button(size=(100, 50))
     button_scene3.position = 100, 220
     video.fill(button_scene3, 0xFFFFFFFF)
     button_scene3.click += lambda btn, ev: \
-        switch_to(scene.manager, create_scene3(scene.manager))
+        switch_to(scene.manager, create_scene3(scene.manager, scene.uifactory))
     scene.components.append(button_scene3)
 
-    button_scene4 = video.SoftButton(size=(100, 50))
+    button_scene4 = scene.uifactory.create_button(size=(100, 50))
     button_scene4.position = 100, 280
     video.fill(button_scene4, 0xFFFFFFFF)
     button_scene4.click += lambda btn, ev: \
-        switch_to(scene.manager, create_scene4(scene.manager))
+        switch_to(scene.manager, create_scene4(scene.manager, scene.uifactory))
     scene.components.append(button_scene4)
 
 
@@ -115,10 +115,13 @@ def run():
     window = video.Window("Pixel Access", size=(800, 600))
     window.show()
 
+    spritefactory = video.SpriteFactory(video.SOFTWARE)
+    uifactory = video.UIFactory(spritefactory)
+
     # Since all gui elements are sprites, we can use the SpriteRenderer
     # class, we learned about in helloworld.py, to draw them on the
     # Window.
-    renderer = video.SoftSpriteRenderer(window)
+    renderer = spritefactory.create_sprite_renderer(window)
 
     # Create a new UIProcessor, which will handle the user input events
     # and pass them on to the relevant user interface elements.
@@ -133,6 +136,10 @@ def run():
 
     # Create the initial scene.
     mainmenu = Scene("Main Menu")
+
+    # We need the uifactory to create buttons for the different scenes.
+    mainmenu.uifactory = uifactory
+
     # Bind the start and end events of the scene. started() will be invoked
     # every time the SceneManager starts the scene. ended() will be invoked,
     # if the scene ends, e.g. if a new scene is pushed to the manager.

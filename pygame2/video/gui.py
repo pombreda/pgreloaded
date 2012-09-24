@@ -2,17 +2,15 @@
 from pygame2.compat import isiterable
 from pygame2.ebs import Component, System, World
 from pygame2.events import EventHandler
-from pygame2.video.sprite import Sprite, SoftSprite
+from pygame2.video.sprite import Sprite, SpriteFactory
 from pygame2.sdl.rect import SDL_Rect
 import pygame2.sdl.pixels as pixels
 import pygame2.sdl.events as events
 import pygame2.sdl.mouse as mouse
 import pygame2.sdl.keyboard as keyboard
 
-__all__ = ["RELEASED", "HOVERED", "PRESSED",
-           "CheckButton", "Button", "TextEntry",
-           "SoftCheckButton", "SoftButton", "SoftTextEntry",
-           "UIProcessor", "UIFactory"
+__all__ = ["RELEASED", "HOVERED", "PRESSED", "BUTTON", "CHECKBUTTON",
+           "TEXTENTRY", "UIProcessor", "UIFactory"
            ]
 
 
@@ -20,66 +18,11 @@ RELEASED = 0x0000
 HOVERED =  0x0001
 PRESSED =  0x0002
 
+BUTTON =      0x0001
+CHECKABLE =   0x0002
+CHECKBUTTON = (CHECKABLE | BUTTON)
+TEXTENTRY =   0x0004
 
-class UIFactory(object):
-    """A simple UI factory for creating GUI elements for software- or
-    texture-based rendering."""
-    RENDERER = 0
-    SOFTWARE = 1
-    def __init__(self, uitype=RENDERER, **kwargs):
-        """Creates a new UIFactory.
-
-        uitype can be RENDERER for texture-based UI elements or SOFTWARE
-        for software-buffer-based UI elements.
-
-        The additional kwargs will be stored internall and passed to the
-        UI creation methods as arguments. Hence they can act as default
-        arguments to be passed to each and every UI element to be
-        created.
-        """
-        self._uitype = uitype
-        if uitype == UIFactory.RENDERER:
-            self.default_args = kwargs
-            self._button = Button
-            self._checkbutton = CheckButton
-            self._textentry = TextEntry
-        elif uitype == UIFactory.SOFTWARE:
-            self.default_args = kwargs
-            self._button = SoftButton
-            self._checkbutton = SoftCheckButton
-            self._textentry = SoftTextEntry
-        else:
-            raise ValueError("unsupported UIFactory type")
-
-    @property
-    def uitype(self):
-        """The UI element type created by the factory."""
-        return self._uitype
-
-    def create_button(self, **kwargs):
-        """Creates a new Button UI element."""
-        args = self.default_args.copy()
-        args.update(kwargs)
-        return self._button(**args)
-
-    def create_check_button(self, **kwargs):
-        """Creates a new CheckButton UI element."""
-        args = self.default_args.copy()
-        args.update(kwargs)
-        return self._checkbutton(**args)
-
-    def create_text_entry(self, **kwargs):
-        """Creates a new TextEntry UI element."""
-        args = self.default_args.copy()
-        args.update(kwargs)
-        return self._textentry(**args)
-
-    def __repr__(self):
-        uitype = "RENDERER"
-        if self.uitype == SOFTWARE:
-            uitype = "SOFTWARE"
-        return "UIFactory(uitype=%s, default_args=%s)" % (uitype,
-                                                          self.default_args)
 
 def _compose_button(obj):
     """Binds button attributes to the object, so it can be properly
@@ -89,6 +32,7 @@ def _compose_button(obj):
     inheritance and composition issues and should not be used by user
     code.
     """
+    obj.uitype = BUTTON
     obj.state = RELEASED
     obj.motion = EventHandler(obj)
     obj.pressed = EventHandler(obj)
@@ -101,7 +45,20 @@ def _compose_button(obj):
         }
 
 
-def _compose_text_entry(obj):
+def _compose_checkbutton(obj):
+    """Binds check button attributes to the object, so it can be properly
+    processed by the UIProcessor.
+
+    Note: this is an internal helper method to avoid multiple
+    inheritance and composition issues and should not be used by user
+    code.
+    """
+    _compose_button(obj)
+    obj.uitype = CHECKBUTTON
+    obj.checked = False
+
+
+def _compose_textentry(obj):
     """Binds text entry attributes to the object, so it can be properly
     processed by the UIProcessor.
 
@@ -109,6 +66,7 @@ def _compose_text_entry(obj):
     inheritance and composition issues and should not be used by user
     code.
     """
+    obj.uitype = TEXTENTRY
     obj.text = ""
     obj.motion = EventHandler(obj)
     obj.pressed = EventHandler(obj)
@@ -128,142 +86,89 @@ def _compose_text_entry(obj):
         }
 
 
-class Button(Sprite):
-    """A Sprite object that can react on mouse events."""
-    def __init__(self, *args, **kwargs):
-        """Creates a new Button.
+class UIFactory(object):
+    """A simple UI factory for creating GUI elements for software- or
+    texture-based rendering."""
+    def __init__(self, spritefactory, **kwargs):
+        """Creates a new UIFactory.
 
-        If a source is provided, the constructor assumes it to be a
-        readable buffer object or file path to load the pixel data from.
-        The size and bpp will be ignored in those cases.
-
-        If no source is provided, a size tuple containing the width and
-        height of the button and a bpp value, indicating the bits per
-        pixel to be used, need to be provided.
+        The additional kwargs will be stored internally and passed to the
+        UI creation methods as arguments. Hence they can act as default
+        arguments to be passed to each and every UI element to be
+        created.
         """
-        super(Button, self).__init__(*args, **kwargs)
-        _compose_button(self)
+        if not isinstance(spritefactory, SpriteFactory):
+            raise TypeError("spritefactory must be a SpriteFactory")
+        self.spritefactory = spritefactory
+        self.default_args = kwargs
+
+    def from_image(self, uitype, fname):
+        """Creates a new UI element from the passed image file."""
+        sprite = self.spritefactory.from_image(fname)
+        if uitype == BUTTON:
+            _compose_button(sprite)
+        elif uitype == CHECKBUTTON:
+            _compose_checkbutton(sprite)
+        elif uitype == TEXTENTRY:
+            _compose_textentry(sprite)
+        else:
+            raise ValueError("uitype must be a valid UI type identifier")
+        return sprite
+
+    def from_surface(self, uitype, surface, free=False):
+        """Creates a new UI element from the passed SDL surface."""
+        sprite = self.spritefactory.from_surface(surface, free)
+        if uitype == BUTTON:
+            _compose_button(sprite)
+        elif uitype == CHECKBUTTON:
+            _compose_checkbutton(sprite)
+        elif uitype == TEXTENTRY:
+            _compose_textentry(sprite)
+        else:
+            raise ValueError("uitype must be a valid UI type identifier")
+        return sprite
+
+    def from_object(self, uitype, obj):
+        """Creates a new UI element from an arbitrary object."""
+        sprite = self.spritefactory.from_object(obj)
+        if uitype == BUTTON:
+            _compose_button(sprite)
+        elif uitype == CHECKBUTTON:
+            _compose_checkbutton(sprite)
+        elif uitype == TEXTENTRY:
+            _compose_textentry(sprite)
+        else:
+            raise ValueError("uitype must be a valid UI type identifier")
+        return sprite
+
+    def create_button(self, **kwargs):
+        """Creates a new Sprite that can react on mouse events."""
+        args = self.default_args.copy()
+        args.update(kwargs)
+        sprite = self.spritefactory.create_sprite(**args)
+        _compose_button(sprite)
+        return sprite
+
+    def create_checkbutton(self, **kwargs):
+        """Creates a new Sprite that can react on mouse events and
+        retains its state."""
+        args = self.default_args.copy()
+        args.update(kwargs)
+        sprite = self.spritefactory.create_sprite(**args)
+        _compose_checkbutton(sprite)
+        return sprite
+
+    def create_text_entry(self, **kwargs):
+        """Creates a new Sprite that can react on text input."""
+        args = self.default_args.copy()
+        args.update(kwargs)
+        sprite = self.spritefactory.create_sprite(**args)
+        _compose_text_entry(sprite)
+        return sprite
 
     def __repr__(self):
-        format, access, w, h = render.query_texture(self.texture)
-        static = "True"
-        if access == render.SDL_TEXTUREACCESS_STREAMING:
-            static = "False"
-        return "Button(format=%d, static=%s, size=%s)" % \
-            (format, static, (w, h))
-
-
-class SoftButton(SoftSprite):
-    """A SoftSprite object that can react on mouse events."""
-    def __init__(self, *args, **kwargs):
-        """Creates a new Button.
-
-        If a source is provided, the constructor assumes it to be a
-        readable buffer object or file path to load the pixel data from.
-        The size and bpp will be ignored in those cases.
-
-        If no source is provided, a size tuple containing the width and
-        height of the button and a bpp value, indicating the bits per
-        pixel to be used, need to be provided.
-        """
-        super(SoftButton, self).__init__(*args, **kwargs)
-        _compose_button(self)
-
-    def __repr__(self):
-        return "SoftButton(size=%s, bpp=%d)" % \
-            (self.size, self.surface.format.BitsPerPixel)
-
-
-class CheckButton(Button):
-    """A specialised Button that retains its state."""
-    def __init__(self, *args, **kwargs):
-        """Creates a new CheckButton.
-
-        If a source is provided, the constructor assumes it to be a
-        readable buffer object or file path to load the pixel data from.
-        The size and bpp will be ignored in those cases.
-
-        If no source is provided, a size tuple containing the width and
-        height of the button and a bpp value, indicating the bits per
-        pixel to be used, need to be provided.
-        """
-        super(CheckButton, self).__init__(*args, **kwargs)
-        self.checked = False
-
-    def __repr__(self):
-        format, access, w, h = render.query_texture(self.texture)
-        static = "True"
-        if access == render.SDL_TEXTUREACCESS_STREAMING:
-            static = "False"
-        return "CheckButton(format=%d, static=%s, size=%s)" % \
-            (format, static, (w, h))
-
-
-class SoftCheckButton(SoftButton):
-    """A specialised SoftButton that retains its state."""
-    def __init__(self, *args, **kwargs):
-        """Creates a new SoftCheckButton.
-
-        If a source is provided, the constructor assumes it to be a
-        readable buffer object or file path to load the pixel data from.
-        The size and bpp will be ignored in those cases.
-
-        If no source is provided, a size tuple containing the width and
-        height of the button and a bpp value, indicating the bits per
-        pixel to be used, need to be provided.
-        """
-        super(SoftCheckButton, self).__init__(*args, **kwargs)
-        self.checked = False
-
-    def __repr__(self):
-        return "SoftCheckButton(size=%s, bpp=%d)" % \
-            (self.size, self.surface.format.BitsPerPixel)
-
-
-class TextEntry(Sprite):
-    """A Sprite object that can react on text input."""
-    def __init__(self, *args, **kwargs):
-        """Creates a new TextEntry.
-
-        If a source is provided, the constructor assumes it to be a
-        readable buffer object or file path to load the pixel data from.
-        The size and bpp will be ignored in those cases.
-
-        If no source is provided, a size tuple containing the width and
-        height of the button and a bpp value, indicating the bits per
-        pixel to be used, need to be provided.
-        """
-        super(TextEntry, self).__init__(*args, **kwargs)
-        _compose_text_entry(self)
-
-    def __repr__(self):
-        format, access, w, h = render.query_texture(self.texture)
-        static = "True"
-        if access == render.SDL_TEXTUREACCESS_STREAMING:
-            static = "False"
-        return "TextEntry(format=%d, static=%s, size=%s)" % \
-            (format, static, (w, h))
-
-
-class SoftTextEntry(SoftSprite):
-    """A SoftSprite object that can react on text input."""
-    def __init__(self, *args, **kwargs):
-        """Creates a new SoftTextEntry.
-
-        If a source is provided, the constructor assumes it to be a
-        readable buffer object or file path to load the pixel data from.
-        The size and bpp will be ignored in those cases.
-
-        If no source is provided, a size tuple containing the width and
-        height of the button and a bpp value, indicating the bits per
-        pixel to be used, need to be provided.
-        """
-        super(SoftTextEntry, self).__init__(*args, **kwargs)
-        _compose_text_entry(self)
-
-    def __repr__(self):
-        return "SoftTextEntry(size=%s, bpp=%d)" % \
-            (self.size, self.surface.format.BitsPerPixel)
+        return "UIFactory(spritefactory=%s, default_args=%s)" % \
+            (self.spritefactory, self.default_args)
 
 
 class UIProcessor(System):
@@ -271,7 +176,7 @@ class UIProcessor(System):
     def __init__(self):
         """Creates a new UIProcessor."""
         super(UIProcessor, self).__init__()
-        self.componenttypes = (Button, TextEntry, SoftButton, SoftTextEntry)
+        self.componenttypes = (Sprite, )
         self._nextactive = None
         self._activecomponent = None
         self.handlers = {
@@ -283,10 +188,10 @@ class UIProcessor(System):
 
     def activate(self, component):
         """Activates a control to receive input."""
-        if self._activecomponent != component:
+        if self._activecomponent and self._activecomponent != component:
             self.deactivate(self._activecomponent)
 
-        if isinstance(component, (TextEntry, SoftTextEntry)):
+        if (component.uitype & TEXTENTRY):
             area = SDL_Rect(component.x, component.y,
                             component.size[0], component.size[1])
             keyboard.set_text_input_rect(area)
@@ -296,7 +201,7 @@ class UIProcessor(System):
     def deactivate(self, component):
         """Deactivates the currently active control."""
         if component == self._activecomponent:
-            if isinstance(self._activecomponent, (TextEntry, SoftTextEntry)):
+            if (self._activecomponent.uitype & TEXTENTRY):
                 keyboard.stop_text_input()
             self._activecomponent = None
 
@@ -310,7 +215,7 @@ class UIProcessor(System):
         """Checks, if an active component is available and matches the
         passed component and passes the event on to that component."""
         if self._activecomponent == component:
-            if isinstance(component, (TextEntry, SoftTextEntry)):
+            if (component.uitype & TEXTENTRY):
                 component.text += event.text.text
             component.events[event.type](event)
 
@@ -328,9 +233,9 @@ class UIProcessor(System):
                 event.motion.y >= y1 and event.motion.y < y2:
             # Within the area of the component, raise the event on it.
             component.events[event.type](event)
-            if isinstance(component, (Button, SoftButton)):
+            if (component.uitype & BUTTON):
                 component.state |= HOVERED
-        elif isinstance(component, (Button, SoftButton)):
+        elif (component.uitype & BUTTON):
             # The mouse is not within the area of the button, reset the
             # state
             component.state &= ~HOVERED
@@ -351,17 +256,15 @@ class UIProcessor(System):
                 event.button.y >= y1 and event.button.y < y2:
             # Within the area of the component, raise the event on it.
             component.events[event.type](event)
-            if isinstance(component, (Button, SoftButton)):
+            if (component.uitype & BUTTON):
                 component.state = PRESSED | HOVERED
-                if isinstance(component, (CheckButton, SoftCheckButton)):
+                if (component.uitype & CHECKABLE):
                     if event.button.button == mouse.SDL_BUTTON_LEFT:
                         component.checked = not component.checked
-            elif isinstance(component, (TextEntry, SoftTextEntry)):
-                if event.button.button == mouse.SDL_BUTTON_LEFT:
-                    # Since we loop over all components, and might deactivate
-                    # some, store it temporarily for later activation.
-                    self._nextactive = component
-        elif isinstance(component, (Button, SoftButton)):
+            # Since we loop over all components, and might deactivate
+            # some, store it temporarily for later activation.
+            self._nextactive = component
+        elif (component.uitype & BUTTON):
             component.state &= ~PRESSED
 
     def mouseup(self, component, event):
@@ -380,12 +283,12 @@ class UIProcessor(System):
                 event.button.y >= y1 and event.button.y < y2:
             # Within the area of the component, raise the event on it.
             component.events[event.type](event)
-            if isinstance(component, (Button, SoftButton)):
+            if (component.uitype & BUTTON):
                 if (component.state & PRESSED) == PRESSED:
                     # Was pressed already, now it is a click
                     component.click(event)
                 component.state = RELEASED | HOVERED
-        elif isinstance(component, (Button, SoftButton)):
+        elif (component.uitype & BUTTON):
             component.state &= ~HOVERED
 
     def dispatch(self, obj, event):
@@ -396,9 +299,11 @@ class UIProcessor(System):
 
         If obj is a single object, obj.events MUST be a dictionary
         consisting of SDL event type identifiers and EventHandler
-        instances bound to the object.
+        instances bound to the object. obj also must have a 'uitype' attribute
+        referring to the UI type of the object.
         If obj is an iterable, such as a list or set, every item within
-        obj MUST feature an 'events' attribute as described above.
+        obj MUST feature an 'events' and 'uitype' attribute as described
+        above.
         """
         if event is None:
             return
@@ -408,7 +313,8 @@ class UIProcessor(System):
             for ctype in self.componenttypes:
                 items = obj.get_components(ctype)
                 items = [(v, e) for v in items for e in (event,)
-                         if e.type in v.events]
+                         if hasattr(v, "events") and hasattr(v, "uitype") \
+                            and e.type in v.events]
                 if len(items) > 0:
                     arg1, arg2 = zip(*items)
                     map(handler, arg1, arg2)

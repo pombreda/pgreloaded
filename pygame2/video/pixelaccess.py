@@ -3,8 +3,8 @@ import ctypes
 from pygame2.compat import UnsupportedError, experimental
 from pygame2.array import MemoryView
 import pygame2.sdl.surface as sdlsurface
-from . import sprite
-from . import draw
+from pygame2.video.sprite import SoftwareSprite
+from pygame2.video.draw import prepare_color
 
 
 __all__ = ["PixelView", "pixels2d", "pixels3d"]
@@ -19,12 +19,10 @@ class PixelView(MemoryView):
         The lock will be removed once the PixelView is garbage-collected or
         deleted.
         """
-        if isinstance(source, sprite.SoftSprite):
+        if isinstance(source, SoftwareSprite):
             self._surface = source.surface
             # keep a reference, so the Sprite's not GC'd
             self._sprite = source
-        elif isinstance(source, sprite.Sprite):
-            TODO
         elif isinstance(source, sdlsurface.SDL_Surface):
             self._surface = source
         else:
@@ -69,7 +67,7 @@ class PixelView(MemoryView):
             raise NotImplementedError("unsupported bpp")
         elif self.itemsize == 4:
             target = ctypes.cast(self.source, ctypes.POINTER(ctypes.c_uint))
-        value = draw.prepare_color(value, self._surface)
+        value = prepare_color(value, self._surface)
         target[start // self.itemsize] = value
 
     def __del__(self):
@@ -115,10 +113,8 @@ def pixels2d(source):
     """Creates a 2D pixel array from the passed source."""
     if not _HASNUMPY:
         raise UnsupportedError("numpy module could not be loaded")
-    if isinstance(source, sprite.SoftSprite):
+    if isinstance(source, SoftwareSprite):
         surface = source.surface
-    elif isinstance(source, sprite.Sprite):
-        TODO
     elif isinstance(source, sdlsurface.SDL_Surface):
         surface = source
     else:
@@ -151,10 +147,8 @@ def pixels3d(source):
     """
     if not _HASNUMPY:
         raise UnsupportedError("numpy module could not be loaded")
-    if isinstance(source, sprite.SoftSprite):
+    if isinstance(source, SoftwareSprite):
         surface = source.surface
-    elif isinstance(source, sprite.Sprite):
-        TODO
     elif isinstance(source, sdlsurface.SDL_Surface):
         surface = source
     else:

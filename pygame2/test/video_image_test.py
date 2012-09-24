@@ -59,21 +59,18 @@ class VideoImageTest(unittest.TestCase):
         for fmt in formats:
             filename = RESOURCES.get_path(fname % fmt)
             sprite = video.load_image(filename)
-            self.assertIsInstance(sprite, video.SoftSprite)
-            sf = video.load_image(filename, assurface=True)
+            sf = video.load_image(filename)
             self.assertIsInstance(sf, sdlsurface.SDL_Surface)
 
             # Force only PIL
             if _HASPIL and fmt not in ("webp", "xcf"):
                 sprite = video.load_image(filename, enforce="PIL")
-                self.assertIsInstance(sprite, video.SoftSprite)
-                sf = video.load_image(filename, assurface=True, enforce="PIL")
+                sf = video.load_image(filename, enforce="PIL")
                 self.assertIsInstance(sf, sdlsurface.SDL_Surface)
 
             # Force only pygame2.sdlimage
             sprite = video.load_image(filename, enforce="SDL")
-            self.assertIsInstance(sprite, video.SoftSprite)
-            sf = video.load_image(filename, assurface=True, enforce="SDL")
+            sf = video.load_image(filename, enforce="SDL")
             self.assertIsInstance(sf, sdlsurface.SDL_Surface)
 
 

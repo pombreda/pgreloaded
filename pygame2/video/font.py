@@ -1,7 +1,7 @@
 """Font and text rendering routines."""
 import os
 import pygame2.sdl.surface as sdlsurface
-from . import sprite
+from pygame2.video.sprite import SoftwareSprite
 
 __all__ = ["BitmapFont"]
 
@@ -51,7 +51,7 @@ class BitmapFont(object):
         else:
             self.mapping = mapping
         self.offsets = {}
-        if isinstance(surface, sprite.SoftSprite):
+        if isinstance(surface, SoftwareSprite):
             self.surface = surface.surface
         #elif isinstance(surface, sprite.Sprite):
         #    TODO
@@ -86,7 +86,7 @@ class BitmapFont(object):
 
         if bpp is None:
             bpp = self.surface.format.BitsPerPixel
-        surface = sprite.SoftSprite(tw, th, bpp)
+        surface = SoftwareSprite(tw, th, bpp)
         target = surface.surface
         blit_surface = sdlsurface.blit_surface
         fontsf = self.surface
@@ -109,7 +109,7 @@ class BitmapFont(object):
         w, h = self.size
 
         target = None
-        if isinstance(surface, sprite.SoftSprite):
+        if isinstance(surface, SoftwareSprite):
             target = surface.surface
         #elif isinstance(surface, sprite.Sprite):
         #    TODO

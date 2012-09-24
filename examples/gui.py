@@ -53,46 +53,41 @@ def run():
     video.init()
     window = video.Window("UI Elements", size=(800, 600))
     window.show()
-
-    # If you want to have hardware-accelerated rendering, a Renderer is
-    # necessary for the UI creation as well as the rendering of the UI
-    # elements.
+    
+    spritefactory = video.SpriteFactory(video.SOFTWARE)
+    # If you want hardware-accelerated rendering, use video.TEXTURE instead
+    # and pass a renderer along:
     #
-    # graphicsrenderer = video.Renderer(window)
+    # renderer = video.RenderContext(window)
+    # factory = video.SpriteFactory(video.TEXTURE, renderer=renderer)
     #
 
     # Create a UI factory, which will handle several defaults for
     # us. Also, the UIFactory can utilises software-based UI elements as
     # well as hardware-accelerated ones; this allows us to keep the UI
     # creation code clean.
-    uifactory = video.UIFactory(uitype=video.UIFactory.SOFTWARE)
-
-    # If you are going for hardware-accelerated rendering, use the
-    # RENDERER type. This also should pass a renderer= argument as
-    # default to be used for all UI elements.
-    #
-    # uifactory = video.UIFactory(uitype=video.UIFactory.RENDERER,
-    #                             renderer=graphicsrenderer)
-    #
+    uifactory = video.UIFactory(spritefactory)
 
     # Create a simple Button sprite, which reacts on mouse movements and
     # button presses and fill it with a white color. All UI elements
-    # inherit directly from the Sprite (for RENDERER) or SoftSprite (for
-    # SOFTWARE), so everything you can do with the Sprite or SoftSprite
-    # classes is also possible for the UI elements.
-    button = uifactory.create_button(source=RESOURCES.get("button.bmp"))
+    # inherit directly from the TextureSprite (for TEXTURE) or SoftwareSprite
+    # (for SOFTWARE), so everything you can do with those classes is also 
+    # possible for the UI elements.
+    button = uifactory.from_image \
+        (video.BUTTON, RESOURCES.get_path("button.bmp"))
     button.position = 50, 50
 
     # Create a TextEntry sprite, which reacts on keyboard presses and
     # text input.
-    entry = uifactory.create_text_entry(source=RESOURCES.get("textentry.bmp"))
+    entry = uifactory.from_image \
+        (video.TEXTENTRY, RESOURCES.get_path("textentry.bmp"))
     entry.position = 50, 200
 
     # Create a CheckButton sprite. The CheckButton is a specialised
     # Button, which can switch its state, identified by the 'checked'
     # attribute by clicking.
-    checkbutton = uifactory.create_check_button \
-        (source=RESOURCES.get("button.bmp"))
+    checkbutton = uifactory.from_image \
+        (video.CHECKBUTTON, RESOURCES.get_path("button.bmp"))
     checkbutton.position = 200, 50
 
     # Bind some actions to the button's event handlers. Whenever a click
@@ -117,16 +112,9 @@ def run():
     entry.editing += onedit
 
     # Since all gui elements are sprites, we can use the
-    # SoftSpriteRenderer class, we learned about in helloworld.py, to
+    # SpriteRenderer class, we learned about in helloworld.py, to
     # draw them on the Window.
-    spriterenderer = video.SoftSpriteRenderer(window)
-
-    # Hardware-accelerated rendering requires us to use the
-    # SpriteRenderer class, which also requires a Renderer context to
-    # draw on.
-    #
-    # spriterenderer = video.SpriteRenderer(graphicsrenderer)
-    #
+    spriterenderer = spritefactory.create_sprite_renderer(window)
 
     # Create a new UIProcessor, which will handle the user input events
     # and pass them on to the relevant user interface elements.

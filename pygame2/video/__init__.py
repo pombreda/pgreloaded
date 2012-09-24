@@ -16,12 +16,15 @@ from pygame2.video.gui import *
 from pygame2.video.image import *
 from pygame2.video.pixelaccess import *
 
+
 __all__ = ["TestEventProcessor", "init", "quit", "Window",
-           "Sprite", "SpriteRenderer", "SoftSprite", "SoftSpriteRenderer",
-           "Renderer", "prepare_color", "fill", "line", "PixelView",
-           "pixels2d", "pixels3d", "BitmapFont", "UIProcessor", "CheckButton",
-           "Button", "TextEntry", "UIFactory", "SoftCheckButton", "SoftButton",
-           "SoftTextEntry", "get_image_formats", "load_image"
+           "Sprite", "SpriteRenderer", "SoftwareSprite",
+           "SoftwareSpriteRenderer", "TextureSprite", "TextureSpriteRenderer",
+           "RenderContext", "SOFTWARE", "TEXTURE", "prepare_color", "fill",
+           "line", "PixelView", "pixels2d", "pixels3d", "BitmapFont",
+           "UIFactory", "UIProcessor", "BUTTON", "CHECKBUTTON", "TEXTENTRY",
+           "RELEASED", "HOVERED", "PRESSED",
+           "get_image_formats", "load_image"
            ]
 
 

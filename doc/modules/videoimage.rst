@@ -11,14 +11,7 @@
 .. function:: load_image(fname : str[, renderer=None[,assurface=False[, \
    enforce=None]]]) -> SDL_Surface, Sprite or SoftSprite
 
-   Creates a :class:`Sprite` from an image file.
-
-   If *assurface* is ``True``, a
-   :class:`pygame2.sdl.surface.SDL_Surface` will be returned instead of
-   a :class:`pygame2.video.sprite.Sprite` or
-   :class:`pygame2.video.sprite.SoftSprite` object. If *renderer* is set
-   to a SDL_Renderer, a :class:`pygame2.video.sprite.Sprite` will be
-   returned.
+   Creates a :class:`pygame2.sdl.surface.SDL_Surface` from an image file.
 
    This function makes use of the `Python Imaging Library
    <http://www.pythonware.com/products/pil/>`_, if it is available on

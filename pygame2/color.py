@@ -568,7 +568,6 @@ def convert_to_color(v):
             raise ValueError("value is not Color-compatible")
         return Color(r, g, b, a)
 
-    length = 0
     try:
         length = len(v)
     except:
@@ -576,11 +575,11 @@ def convert_to_color(v):
     if length < 3:
         raise ValueError("value is not Color-compatible")
     if 0 <= int(v[0]) <= 255 and 0 <= int(v[1]) <= 255 and \
-            0 < int(v[2]) < 255:
+            0 <= int(v[2]) <= 255:
         r = int(v[0])
         g = int(v[1])
         b = int(v[2])
-        if len(v) >= 4 and 0 <= int(v[4]) <= 255:
+        if length >= 4 and 0 <= int(v[3]) <= 255:
             a = int(v[3])
         return Color(r, g, b, a)
 

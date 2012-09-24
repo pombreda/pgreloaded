@@ -38,39 +38,29 @@ def run():
     # after creation. Thus we need to tell it to be shown now.
     window.show()
 
+    factory = video.SpriteFactory(video.SOFTWARE)
+    # If you want hardware-accelerated rendering, use video.TEXTURE instead
+    # and pass a renderer along:
+    #
+    # renderer = video.RenderContext(window)
+    # factory = video.SpriteFactory(video.TEXTURE, renderer=renderer)
+    #
+    
     # Creates a simple rendering system for the Window. The
-    # SoftSpriteRenderer can draw SoftSprite objects (like the one
-    # created above) on the window. Do NOT confuse that with the SDL2
-    # renderer systems used in the SpriteRenderer.
-    renderer = video.SoftSpriteRenderer(window)
-
-    # If you want hardware-accelerated rendering, comment out the
-    # SoftSpriteRenderer and use the SpriteRenderer below.
-    #
-    # renderer = video.SpriteRenderer(window)
-    #
+    # SpriteRenderer can draw Sprite objects on the window.
+    spriterenderer = factory.create_sprite_renderer(window)
 
     # Creates a new 2D pixel-based surface to be displayed, processed or
     # manipulated. We will use the one of the shipped example images
     # from the resource package to display.
-    sprite = video.SoftSprite(RESOURCES.get("hello.bmp"))
-
-    # If you want hardware-accelerated sprites, that are stored as
-    # textures internally, comment out the SoftSprite and use the Sprite
-    # below.
-    #
-    # Note: you can not mix the SoftSprite or SoftSpriteRenderer with
-    # the Sprite or SpriteRenderer!
-    #
-    # sprite = video.Sprite(renderer.renderer, RESOURCES.get("hello.bmp"))
-    #
+    sprite = factory.from_image(RESOURCES.get_path("hello.bmp"))
 
     # Display the surface on the window. This will copy the contents
     # (pixels) of the surface to the window. The surface will be
     # displayed at surface.position on the window. Play around with the
     # surface.x and surface.y values or surface.position (which is just
     # surface.x and surface.y grouped as tuple)!
-    renderer.render(sprite)
+    spriterenderer.render(sprite)
 
     # Set up an example event loop processing system. This is a necessity,
     # so the application can exit correctly, mouse movements, etc. are

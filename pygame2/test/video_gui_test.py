@@ -15,6 +15,22 @@ class VideoGUITest(unittest.TestCase):
         video.quit()
 
     @unittest.skip("not implemented")
+    def test_UIFactory(self):
+        pass
+
+    @unittest.skip("not implemented")
+    def test_UIFactory_create_button(self):
+        pass
+
+    @unittest.skip("not implemented")
+    def test_UIFactory_create_checkbutton(self):
+        pass
+
+    @unittest.skip("not implemented")
+    def test_UIFactory_create_text_entry(self):
+        pass
+
+    @unittest.skip("not implemented")
     def test_Button(self):
         pass
 
@@ -24,18 +40,6 @@ class VideoGUITest(unittest.TestCase):
 
     @unittest.skip("not implemented")
     def test_TextEntry(self):
-        pass
-
-    @unittest.skip("not implemented")
-    def test_SoftButton(self):
-        pass
-
-    @unittest.skip("not implemented")
-    def test_SoftCheckButton(self):
-        pass
-
-    @unittest.skip("not implemented")
-    def test_SoftTextEntry(self):
         pass
 
     @unittest.skip("not implemented")

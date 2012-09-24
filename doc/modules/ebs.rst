@@ -212,6 +212,38 @@ you to write the following: ::
        def __init__(self, world):
            self.myabsolutelyawesomedatacontainer = MyAbsolutelyAwesomeDataContainer()
 
+.. note::
+
+   This is not entirely true. A reference of the object will be stored on a
+   per-class-in-mro basis. This means that if ``MyAbsolutelyAwesomeDataContainer``
+   inherits from ``ShortName``, you can also do: ::
+   
+   class SomeEntity(Entity):
+       def __init__(self, world):
+           self.shortname = MyAbsolutelyAwesomeDataContainer()
+
+:class:`Component` implementors should be as atomic as possible and avoid
+complex inheritance. Since each value of an Entity is stored per class in
+its mro list, components inheriting from the same class(es) will overwrite
+each other on conflicting classes: ::
+
+  class Vector(Position2D):
+      def __init__(self, x=0, y=0, z=0):
+          super(Vector, self).__init__(x, y)
+     
+
+  class SomeEntity(Entity):
+      def __init__(self, world):
+          # This will associate self.position2d with the new Position2D
+          # value, while the previous Vector association is overwritten
+          self.position2d = Position2D(4, 4)
+          
+          # self.vector will also associate a self.position2d attribute
+          # with the Entity, since Vector inherits from Position2D. The
+          # original association will vanish, and each call to
+          # entity.position2d will effectively manipulate the vector!
+          self.vector = Vector(1,2,3)
+
 EBS API
 -------
 

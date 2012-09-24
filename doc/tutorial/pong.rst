@@ -82,19 +82,18 @@ that will display them. ::
 
     [...]
 
-    class Renderer(video.SoftSpriteRenderer):
+    class SoftwareRenderer(video.SoftwareSpriteRenderer):
         def __init__(self, window):
-            super(Renderer, self).__init__(window)
+            super(SoftwareRenderer, self).__init__(window)
 
-        def process(self, world, componentsets):
+        def render(self, components):
             video.fill(self.surface, Color(0, 0, 0))
-            super(Renderer, self).process(world, componentsets)
+            super(SoftwareRenderer, self).render(components)
 
 
     class Player(Entity):
-        def __init__(self, world, posx=0, posy=0):
-            self.sprite = video.SoftSprite(size=(20, 100), bpp=32)
-            video.fill(self.sprite, Color(255, 255, 255))
+        def __init__(self, world, sprite, posx=0, posy=0):
+            self.sprite = sprite
             self.sprite.position = posx, posy
 
 
@@ -106,8 +105,12 @@ that will display them. ::
         renderer = Renderer(window)
         world.add_system(renderer)
 
-        player1 = Player(world, 0, 250)
-        player2 = Player(world, 780, 250)
+        factory = video.SpriteFactory(video.SOFTWARE)
+        sp_paddle1 = factory.from_color(WHITE, size=(20, 100))
+        sp_paddle2 = factory.from_color(WHITE, size=(20, 100))
+
+        player1 = Player(world, sp_paddle1, 0, 250)
+        player2 = Player(world, sp_paddle2, 780, 250)
 
         running = True
         while running:
@@ -122,9 +125,9 @@ that will display them. ::
         sys.exit(run())
 
 The first thing to do is to enhance the
-:class:`pygame2.video.sprite.SoftSpriteRenderer` so that it will paint the whole
-window sceeen black on every drawing cycle, before drawing all sprites on the
-window.
+:class:`pygame2.video.sprite.SoftwareSpriteRenderer` so that it will paint
+the whole window sceeen black on every drawing cycle, before drawing all
+sprites on the window.
 
 Afterwards, the player paddles will be implemented, based on an
 :class:`pygame2.ebs.Entity` data container. The player paddles are
@@ -150,7 +153,7 @@ within the window boundaries. ::
     class MovementSystem(Applicator):
         def __init__(self, minx, miny, maxx, maxy):
             super(MovementSystem, self).__init__()
-            self.componenttypes = (Velocity, video.SoftSprite)
+            self.componenttypes = (Velocity, video.Sprite)
             self.minx = minx
             self.miny = miny
             self.maxx = maxx
@@ -187,24 +190,25 @@ within the window boundaries. ::
 
 
     class Ball(Entity):
-        def __init__(self, world, posx=0, posy=0):
-            self.sprite = video.SoftSprite(size=(20, 20), bpp=32)
-            video.fill(self.sprite, Color(255, 255, 255))
+        def __init__(self, world, sprite, posx=0, posy=0):
+            self.sprite = sprite
             self.sprite.position = posx, posy
             self.velocity = Velocity()
 
 
     def run():
         [...]
+        sp_ball = factory.from_color(WHITE, size=(20, 20))
+        [...]
         movement = MovementSystem(0, 0, 800, 600)
         renderer = Renderer(window)
-
+        
         world.add_system(movement)
         world.add_system(renderer)
 
         [...]
 
-        ball = Ball(world, 390, 290)
+        ball = Ball(world, sp_ball, 390, 290)
         ball.velocity.vx = -3
 
         [...]
@@ -239,7 +243,7 @@ data. When the :meth:`pygame2.ebs.Applicator.process()` method is
 called, the passed ``componentsets`` iterable will contain tuples of
 :class:`pygame2.ebs.Component` instances that belong to an instance.
 The ``MovementSystem``'s ``process()`` implementation hence will loop
-over sets of ``Velocity`` and ``SoftSprite`` instances that belong to the
+over sets of ``Velocity`` and ``Sprite`` instances that belong to the
 same :class:`pygame2.ebs.Entity`. Since we have a ball and two players
 currently available, it typically would loop over three tuples, two for
 the individual players and one for the ball.
@@ -254,7 +258,7 @@ data of our in-game items, without creating complex data structures.
    ``Velocity`` component, it would not be processed by the
    ``MovementSystem``.
 
-Why do we use this approach? The :class:`pygame2.video.sprite.SoftSprite`
+Why do we use this approach? The :class:`pygame2.video.sprite.Sprite`
 objects carry a position, which defines the location at which
 they should be rendered, when processed by the ``Renderer``. If they
 should move around (which is a change in the position), we need to apply the
@@ -290,7 +294,7 @@ on colliding with the walls or the player paddles. ::
     class CollisionSystem(Applicator):
         def __init__(self, minx, miny, maxx, maxy):
             super(CollisionSystem, self).__init__()
-            self.componenttypes = (Velocity, video.SoftSprite)
+            self.componenttypes = (Velocity, video.Sprite)
             self.ball = None
             self.minx = minx
             self.miny = miny
@@ -485,7 +489,7 @@ back to us, which sounds more interesting. ::
     class TrackingAIController(Applicator):
         def __init__(self, miny, maxy):
             super(TrackingAIController, self).__init__()
-            self.componenttypes = (PlayerData, Velocity, video.SoftSprite)
+            self.componenttypes = (PlayerData, Velocity, video.Sprite)
             self.miny = miny
             self.maxy = maxy
             self.ball = None
@@ -521,9 +525,8 @@ back to us, which sounds more interesting. ::
 
 
     class Player(Entity):
-        def __init__(self, world, posx=0, posy=0, ai=False):
-            self.sprite = video.SoftSprite(size=(20, 100), bpp=32)
-            video.fill(self.sprite, Color(255, 255, 255))
+        def __init__(self, world, sprite, posx=0, posy=0, ai=False):
+            self.sprite = sprite
             self.sprite.position = posx, posy
             self.velocity = Velocity()
             self.playerdata = PlayerData()
@@ -539,8 +542,8 @@ back to us, which sounds more interesting. ::
         world.add_system(collision)
         world.add_system(renderer)
 
-        player1 = Player(world, 0, 250)
-        player2 = Player(world, 780, 250, True)
+        player1 = Player(world, sp_paddle1, 0, 250)
+        player2 = Player(world, sp_paddle2, 780, 250, True)
         [...]
         aicontroller.ball = ball
 
@@ -595,7 +598,7 @@ complex as it sounds.
        StaticRepeatingSprite(Entity):
            ...
            self.positions = Positions((400, 0), (400, 60), (400, 120), ...)
-           self.sprite = video.SoftSprite(size=(10, 40)
+           ...
 
   * draw some simple images for 0-9 and render them as sprites,
     depending on the points a player made.

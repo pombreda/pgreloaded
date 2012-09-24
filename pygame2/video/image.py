@@ -3,8 +3,6 @@ from pygame2.compat import UnsupportedError
 from pygame2.sdl.endian import SDL_BYTEORDER, SDL_LIL_ENDIAN
 import pygame2.sdl.surface as sdlsurface
 import pygame2.sdl.pixels as sdlpixels
-from pygame2.sdl.render import SDL_Renderer
-from pygame2.video.sprite import Sprite, SoftSprite, Renderer
 
 _HASPIL = True
 try:
@@ -29,8 +27,8 @@ def get_image_formats():
             "png", "pnm", "ppm", "tga", "tif", "webp", "xcf", "xpm")
 
 
-def load_image(fname, renderer=None, assurface=False, enforce=None):
-    """Creates a Sprite from an image file.
+def load_image(fname, enforce=None):
+    """Creates a SDL_Surface from an image file.
 
     If assurface is True, a SDL_Surface will be returned instead of a
     Sprite or SoftSprite object. If renderer is set to a SDL_Renderer, a
@@ -135,16 +133,4 @@ def load_image(fname, renderer=None, assurface=False, enforce=None):
                 # This will decrease the refcount on the palette, so it gets
                 # freed properly on releasing the SDL_Surface.
                 sdlpixels.free_palette(sdlpalette)
-    if assurface:
-        return surface
-    elif renderer:
-        sp = None
-        if isinstance(renderer, sdlrender.SDL_Renderer):
-            sp = Sprite(renderer, source=surface)
-        elif isinstance(renderer, Renderer):
-            sp = Sprite(renderer.renderer, source=surface)
-        sdlsurface.free_surface(surface)
-        if sp is None:
-            raise TypeError("renderer must be a Renderer or SDL_Renderer")
-    else:
-        return SoftSprite(source=surface, freesf=True)
+    return surface

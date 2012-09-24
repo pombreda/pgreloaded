@@ -13,15 +13,17 @@ except ImportError:
     traceback.print_exc()
     sys.exit(1)
 
+
 BLACK = Color(0, 0, 0)
 WHITE = Color(255, 255, 255)
 PADDLE_SPEED = 3
 BALL_SPEED = 3
 
+
 class CollisionSystem(Applicator):
     def __init__(self, minx, miny, maxx, maxy):
         super(CollisionSystem, self).__init__()
-        self.componenttypes = (Velocity, video.SoftSprite)
+        self.componenttypes = (Velocity, video.Sprite)
         self.ball = None
         self.minx = minx
         self.miny = miny
@@ -30,11 +32,11 @@ class CollisionSystem(Applicator):
 
     def _overlap(self, item):
         sprite = item[1]
-        if sprite == self.ball.softsprite:
+        if sprite == self.ball.sprite:
             return False
 
         left, top, right, bottom = sprite.area
-        bleft, btop, bright, bbottom = self.ball.softsprite.area
+        bleft, btop, bright, bbottom = self.ball.sprite.area
 
         return bleft < right and bright > left and \
             btop < bottom and bbottom > top
@@ -45,8 +47,8 @@ class CollisionSystem(Applicator):
             self.ball.velocity.vx = -self.ball.velocity.vx
 
             sprite = collitems[0][1]
-            ballcentery = self.ball.softsprite.y + \
-                self.ball.softsprite.size[1] // 2
+            ballcentery = self.ball.sprite.y + \
+                self.ball.sprite.size[1] // 2
             halfheight = sprite.size[1] // 2
             stepsize = halfheight // 10
             degrees = 0.7
@@ -60,19 +62,19 @@ class CollisionSystem(Applicator):
             else:
                 self.ball.velocity.vy = - self.ball.velocity.vy
 
-        if self.ball.softsprite.y <= self.miny or \
-                self.ball.softsprite.y + self.ball.softsprite.size[1] >= self.maxy:
+        if self.ball.sprite.y <= self.miny or \
+                self.ball.sprite.y + self.ball.sprite.size[1] >= self.maxy:
             self.ball.velocity.vy = - self.ball.velocity.vy
 
-        if self.ball.softsprite.x <= self.minx or \
-                self.ball.softsprite.x + self.ball.softsprite.size[0] >= self.maxx:
+        if self.ball.sprite.x <= self.minx or \
+                self.ball.sprite.x + self.ball.sprite.size[0] >= self.maxx:
             self.ball.velocity.vx = - self.ball.velocity.vx
 
 
 class MovementSystem(Applicator):
     def __init__(self, minx, miny, maxx, maxy):
         super(MovementSystem, self).__init__()
-        self.componenttypes = (Velocity, video.SoftSprite)
+        self.componenttypes = (Velocity, video.Sprite)
         self.minx = minx
         self.miny = miny
         self.maxx = maxx
@@ -98,7 +100,7 @@ class MovementSystem(Applicator):
 class TrackingAIController(Applicator):
     def __init__(self, miny, maxy):
         super(TrackingAIController, self).__init__()
-        self.componenttypes = (PlayerData, Velocity, video.SoftSprite)
+        self.componenttypes = (PlayerData, Velocity, video.Sprite)
         self.miny = miny
         self.maxy = maxy
         self.ball = None
@@ -119,7 +121,7 @@ class TrackingAIController(Applicator):
                 else:
                     vel.vy = 0
             else:
-                bcentery = self.ball.softsprite.y + self.ball.softsprite.size[1] // 2
+                bcentery = self.ball.sprite.y + self.ball.sprite.size[1] // 2
                 if bcentery < centery + sheight // 3:
                     vel.vy = -PADDLE_SPEED
                 elif bcentery > centery - sheight // 3:
@@ -128,13 +130,26 @@ class TrackingAIController(Applicator):
                     vel.vy = 0
 
 
-class Renderer(video.SoftSpriteRenderer):
+class SoftwareRenderer(video.SoftwareSpriteRenderer):
     def __init__(self, window):
-        super(Renderer, self).__init__(window)
+        super(SoftwareRenderer, self).__init__(window)
 
-    def process(self, world, componentsets):
+    def render(self, components):
         video.fill(self.surface, BLACK)
-        super(Renderer, self).process(world, componentsets)
+        super(SoftwareRenderer, self).render(components)
+
+
+class TextureRenderer(video.TextureSpriteRenderer):
+    def __init__(self, renderer):
+        super(TextureRenderer, self).__init__(renderer)
+        self.renderer = renderer
+
+    def render(self, components):
+        tmp = self.renderer.color
+        self.renderer.color = BLACK
+        self.renderer.clear()
+        self.renderer.color = tmp
+        super(TextureRenderer, self).render(components)
 
 
 class Velocity(Component):
@@ -152,20 +167,18 @@ class PlayerData(Component):
 
 
 class Player(Entity):
-    def __init__(self, world, posx=0, posy=0, ai=False):
-        self.softsprite = video.SoftSprite(size=(20, 100), bpp=32)
-        video.fill(self.softsprite, WHITE)
-        self.softsprite.position = posx, posy
+    def __init__(self, world, sprite, posx=0, posy=0, ai=False):
+        self.sprite = sprite
+        self.sprite.position = posx, posy
         self.velocity = Velocity()
         self.playerdata = PlayerData()
         self.playerdata.ai = ai
 
 
 class Ball(Entity):
-    def __init__(self, world, posx=0, posy=0):
-        self.softsprite = video.SoftSprite(size=(20, 20), bpp=32)
-        video.fill(self.softsprite, WHITE)
-        self.softsprite.position = posx, posy
+    def __init__(self, world, sprite, posx=0, posy=0):
+        self.sprite = sprite
+        self.sprite.position = posx, posy
         self.velocity = Velocity()
 
 
@@ -174,21 +187,39 @@ def run():
     window = video.Window("The Pong Game", size=(800, 600))
     window.show()
 
+    factory = video.SpriteFactory(video.SOFTWARE)
+    # For hardware acceleration, comment out the above line and uncomment the
+    # next two lines
+    #
+    #renderer = video.RenderContext(window)
+    #factory = video.SpriteFactory(video.TEXTURE, renderer=renderer)
+    #
+
+    # Create the paddles - we want white ones. To keep it easy enough for us,
+    # we create a set of surfaces that can be used for Texture- and
+    # Software-based sprites.
+    sp_paddle1 = factory.from_color(WHITE, size=(20, 100))
+    sp_paddle2 = factory.from_color(WHITE, size=(20, 100))
+    sp_ball = factory.from_color(WHITE, size=(20, 20))
+
     world = World()
 
     movement = MovementSystem(0, 0, 800, 600)
     collision = CollisionSystem(0, 0, 800, 600)
-    renderer = Renderer(window)
     aicontroller = TrackingAIController(0, 600)
+    if factory.sprite_type == video.SOFTWARE:
+        spriterenderer = SoftwareRenderer(window)
+    else:
+        spriterenderer = TextureRenderer(renderer)
 
     world.add_system(aicontroller)
     world.add_system(movement)
     world.add_system(collision)
-    world.add_system(renderer)
+    world.add_system(spriterenderer)
 
-    player1 = Player(world, 0, 250)
-    player2 = Player(world, 780, 250, True)
-    ball = Ball(world, 390, 290)
+    player1 = Player(world, sp_paddle1, 0, 250)
+    player2 = Player(world, sp_paddle2, 780, 250, True)
+    ball = Ball(world, sp_ball, 390, 290)
     ball.velocity.vx = - BALL_SPEED
     collision.ball = ball
     aicontroller.ball = ball

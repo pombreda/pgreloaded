@@ -6,7 +6,7 @@ import pygame2.sdl.surface as sdlsurface
 import pygame2.sdl.pixels as sdlpixels
 import pygame2.sdl.rect as rect
 from pygame2.algorithms import clipline
-from pygame2.video.sprite import SoftSprite, Sprite
+from pygame2.video.sprite import SoftwareSprite
 
 __all__ = ["prepare_color", "fill", "line"]
 
@@ -15,7 +15,7 @@ def _get_target_surface(target):
     """Gets the SDL_surface from the passed target."""
     if isinstance(target, sdlsurface.SDL_Surface):
         rtarget = target
-    elif isinstance(target, SoftSprite):
+    elif isinstance(target, SoftwareSprite):
         rtarget = target.surface
     else:
         raise TypeError("unsupported target type")
@@ -32,7 +32,7 @@ def prepare_color(color, target):
         pformat = target
     elif isinstance(target, sdlsurface.SDL_Surface):
         pformat = target.format
-    elif isinstance(target, SoftSprite):
+    elif isinstance(target, SoftwareSprite):
         pformat = target.surface.format
     if pformat is None:
         raise TypeError("unsupported target type")

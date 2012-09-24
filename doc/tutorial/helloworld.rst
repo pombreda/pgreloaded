@@ -51,42 +51,45 @@ to the user. ::
 
     video.init ()
 
-    sprite = video.SoftSprite(RESOURCES.get("hello.bmp"))
-
     window = video.Window("Hello World!", size=(640, 480))
     window.show()
 
-    renderer = video.SpriteRenderer(window)
-    renderer.render(sprite)
+    factory = video.SpriteFactory(video.SOFTWARE)
+    sprite = factory.from_image(RESOURCES.get_path("hello.bmp"))
+
+    spriterenderer = factory.create_sprite_renderer(window)
+    spriterenderer.render(sprite)
 
 First, we initialize the :mod:`pygame2.video` internals, so we can have
-access to the screen and create windows on top of it. Afterwards, we get
-an image from the :mod:`pygame2.examples` package and create a
-:class:`pygame2.video.sprite.SoftSprite` from it, which can be easily
-shown later on.
+access to the screen and create windows on top of it. Once done with that,
+:class:`pygame2.video.window.Window` will create the window for us and we
+supply a title to be shown on the window's border along with its initial size.
+Since :class:`pygame2.video.window.Window` instances are not shown by default,
+we have to tell the operating system and window manager that there is a new
+window to display by calling :meth:`pygame2.video.window.Window.show()`.
 
-Once done with that, :class:`pygame2.video.window.Window` will create the
-window for us and we supply a title to be shown on the window's border along
-with its initial size. Since :class:`pygame2.video.window.Window` instances are
-not shown by default, we have to tell the operating system and window manager
-that there is a new window to display by calling
-:meth:`pygame2.video.window.Window.show()`.
+Afterwards, we get an image from the resources folder and create a
+:class:`pygame2.video.sprite.Sprite` from it, which can be easily shown later
+on. This is done via a :class:`pygame2.video.sprite.SpriteFactory`, since the
+factory allows us to switch between texture-based, hardware-accelerated, and
+software-based sprites easily.
 
 To display the image, we will use a
-:class:`pygame2.video.sprite.SoftSpriteRenderer`, which can copy the
-image to the window for display. The
-:class:`pygame2.video.sprite.SoftSpriteRenderer` needs to know, where to
-copy to, so we supply the window as target for copy and display
-operations. All left to do is to actually initiate the copy process by
-calling :class:`pygame2.video.sprite.SoftSpriteRenderer.render()` with
-the image we created earlier.
+:class:`pygame2.video.sprite.SpriteRenderer`, which supports the sprite type
+(texture- or software-based) and can copy the image to the window for display.
+The :class:`pygame2.video.sprite.SpriteRenderer` needs to know, where to copy
+to, so we supply the window as target for copy and display operations.
+
+All left to do is to actually initiate the copy process by calling
+:class:`pygame2.video.sprite.SpriteRenderer.render()` with the image we
+created earlier.
 
 .. tip::
 
    You will notice that the sprite used above will always be drawn at the
    top-left corner of the :class:`pygame2.video.window.Window`. You can change
    the position of where to draw it by changing its
-   :attr:`pygame2.video.sprite.SoftSprite.position` value. ::
+   :attr:`pygame2.video.sprite.Sprite.position` value. ::
 
         # will cause the renderer to draw the sprite 10px to the right and
         # 20 px to the bottom
@@ -97,7 +100,7 @@ the image we created earlier.
         sprite.position = 55, 10
 
    Experiment with different values to see their effect. Do not forget to do
-   this *before* ``renderer.render(sprite)`` is called.
+   this *before* ``spriterenderer.render(sprite)`` is called.
 
 Making the application responsive
 ---------------------------------
