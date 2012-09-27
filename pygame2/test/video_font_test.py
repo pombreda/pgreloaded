@@ -27,15 +27,13 @@ class VideoFontTest(unittest.TestCase):
     def tearDown(self):
         video.quit()
 
-    @unittest.skip("not implemented")
     def test_BitmapFont(self):
         sf = sdlsurface.load_bmp(RESOURCES.get_path("font.bmp"))
         self.assertIsInstance(sf, sdlsurface.SDL_Surface)
         font = video.BitmapFont(sf, (32, 32), FONTMAP)
         self.assertIsInstance(font, video.BitmapFont)
-        sdlsurface.free_surface(sf)
 
-        sprite = video.SoftSprite(RESOURCES.get_path("font.bmp"))
+        sprite = video.SoftwareSprite(sf, True)
         self.assertIsInstance(sprite, video.SoftwareSprite)
         font = video.BitmapFont(sprite, (32, 32), FONTMAP)
         self.assertIsInstance(font, video.BitmapFont)

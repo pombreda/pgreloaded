@@ -72,7 +72,11 @@ class Window(object):
         sdlvideo.minimize_window(self.window)
 
     def refresh(self):
-        """Refreshes the entire window surface."""
+        """Refreshes the entire window surface.
+
+        This only needs to be called, if a SDL_Surface was acquired via
+        get_surface() and is used to display contents.
+        """
         sdlvideo.update_window_surface(self.window)
 
     def get_surface(self):

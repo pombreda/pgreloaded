@@ -24,9 +24,26 @@ class VideoSpriteTest(unittest.TestCase):
     def test_SpriteFactory_create_sprite(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_SpriteFactory_create_software_sprite(self):
-        pass
+        factory = video.SpriteFactory(video.SOFTWARE)
+        for w in range(0, 100):
+            for h in range(0, 100):
+                for bpp in (1, 4, 8, 12, 15, 16, 24, 32):
+                    sprite = factory.create_software_sprite((w, h), bpp)
+                    self.assertIsInstance(sprite, video.SoftwareSprite)
+
+        self.assertRaises(ValueError, factory.create_software_sprite, (-1, -1))
+        self.assertRaises(ValueError, factory.create_software_sprite, (-10, 5))
+        self.assertRaises(ValueError, factory.create_software_sprite, (10, -5))
+        self.assertRaises(TypeError, factory.create_software_sprite, size=None)
+        self.assertRaises(SDLError, factory.create_software_sprite, bpp=-1)
+        self.assertRaises(TypeError, factory.create_software_sprite, masks=5)
+        self.assertRaises((ArgumentError, TypeError),
+                          factory.create_software_sprite,
+                          masks=(None, None, None, None))
+        self.assertRaises((ArgumentError, TypeError),
+                          factory.create_software_sprite,
+                          masks=("Test", 1, 2, 3))
 
     @unittest.skip("not implemented")
     def test_SpriteFactory_create_texture_sprite(self):
@@ -89,26 +106,13 @@ class VideoSpriteTest(unittest.TestCase):
         pass
 
     @unittest.skip("not implemented")
+    def test_Sprite_area(self):
+        pass
+
+    @unittest.skip("not implemented")
     def test_SoftwareSprite(self):
-        for w in range(0, 100):
-            for h in range(0, 100):
-                for bpp in (1, 4, 8, 12, 15, 16, 24, 32):
-                    sprite = video.SoftwareSprite(size=(w, h), bpp=bpp)
-                    self.assertIsInstance(sprite, video.SoftwareSprite)
         sprite = video.SoftwareSprite()
         self.assertIsInstance(sprite, video.SoftwareSprite)
-
-        self.assertRaises(ValueError, video.SoftwareSprite, size=(-1, -1))
-        self.assertRaises(ValueError, video.SoftwareSprite, size=(-10, 5))
-        self.assertRaises(ValueError, video.SoftwareSprite, size=(10, -5))
-        self.assertRaises(TypeError, video.SoftwareSprite, size=None)
-        self.assertRaises(SDLError, video.SoftwareSprite, bpp=-1)
-        self.assertRaises(TypeError, video.SoftwareSprite, masks=5)
-        self.assertRaises((ArgumentError, TypeError), video.SoftwareSprite,
-                          masks=(None, None, None, None))
-        self.assertRaises((ArgumentError, TypeError), video.SoftwareSprite,
-                          masks=("Test", 1, 2, 3))
-        # TODO: tests for source argument
 
     @unittest.skip("not implemented")
     def test_SoftwareSprite_position_xy(self):

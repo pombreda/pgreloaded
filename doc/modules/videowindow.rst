@@ -51,6 +51,11 @@
 
       Refreshes the entire :class:`Window` surface.
 
+      .. note::
+
+         This only needs to be called, if a SDL_Surface was acquired via
+         get_surface() and is used to display contents.
+
    .. method:: get_surface() -> SDL_Surface
 
       Gets the :class:`pygame2.sdl.surface.SDL_Surface` used by the

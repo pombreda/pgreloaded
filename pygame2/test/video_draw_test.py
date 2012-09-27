@@ -20,7 +20,6 @@ class VideoDrawTest(unittest.TestCase):
 
     @unittest.skipIf(hasattr(sys, "pypy_version_info"),
                      "PyPy's ctypes can't do byref(value, offset)")
-    @unittest.skip("not implemented")
     def test_fill(self):
         # TODO: add exceptions and more bounding tests.
         rects = ((0, 0, 3, 2),
@@ -28,7 +27,8 @@ class VideoDrawTest(unittest.TestCase):
                  (5, -1, 2, 2),
                  (1, 7, 4, 8)
                  )
-        sprite = video.SoftwareSprite(size=(10, 10), bpp=32)
+        factory = video.SpriteFactory(video.SOFTWARE)
+        sprite = factory.create_sprite(size=(10, 10), bpp=32)
         view = video.PixelView(sprite)
         for rect in rects:
             video.fill(sprite, 0)
@@ -47,7 +47,6 @@ class VideoDrawTest(unittest.TestCase):
                     else:
                         self.assertEqual(col, 0, "color mismatch at (x, y)")
 
-    @unittest.skip("not implemented")
     def test_prepare_color(self):
         rcolors = (Color(0, 0, 0, 0),
                    Color(255, 255, 255, 255),
@@ -61,10 +60,13 @@ class VideoDrawTest(unittest.TestCase):
                    "#FFF",
                    "#AABBCCDD",
                    )
-        sprite = video.SoftwareSprite(size=(10, 10), bpp=32, masks=(0xFF000000,
-                                                                    0x00FF0000,
-                                                                    0x0000FF00,
-                                                                    0x000000FF))
+
+        factory = video.SpriteFactory(video.SOFTWARE)
+        sprite = factory.create_sprite(size=(10, 10), bpp=32,
+                                       masks=(0xFF000000,
+                                              0x00FF0000,
+                                              0x0000FF00,
+                                              0x000000FF))
 
         for color in rcolors:
             c = video.prepare_color(color, sprite)
