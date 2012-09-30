@@ -53,7 +53,7 @@ def run():
     video.init()
     window = video.Window("UI Elements", size=(800, 600))
     window.show()
-    
+
     spritefactory = video.SpriteFactory(video.SOFTWARE)
     # If you want hardware-accelerated rendering, use video.TEXTURE instead
     # and pass a renderer along:
@@ -71,7 +71,7 @@ def run():
     # Create a simple Button sprite, which reacts on mouse movements and
     # button presses and fill it with a white color. All UI elements
     # inherit directly from the TextureSprite (for TEXTURE) or SoftwareSprite
-    # (for SOFTWARE), so everything you can do with those classes is also 
+    # (for SOFTWARE), so everything you can do with those classes is also
     # possible for the UI elements.
     button = uifactory.from_image \
         (video.BUTTON, RESOURCES.get_path("button.bmp"))

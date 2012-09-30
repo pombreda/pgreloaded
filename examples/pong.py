@@ -42,7 +42,7 @@ class CollisionSystem(Applicator):
             btop < bottom and bbottom > top
 
     def process(self, world, componentsets):
-        collitems = filter(self._overlap, componentsets)
+        collitems = [comp for comp in componentsets if self._overlap(comp)]
         if len(collitems) != 0:
             self.ball.velocity.vx = -self.ball.velocity.vx
 

@@ -322,8 +322,8 @@ class UIProcessor(System):
             items = [(v, e) for v in obj for e in (event,)
                      if e.type in v.events]
             if len(items) > 0:
-                arg1, arg2 = zip(*items)
-                map(handler, arg1, arg2)
+                for v, e in items:
+                    handler(v, e)
         elif event.type in obj.events:
             handler(obj, event)
         if self._nextactive is not None:

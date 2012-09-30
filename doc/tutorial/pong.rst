@@ -202,7 +202,7 @@ within the window boundaries. ::
         [...]
         movement = MovementSystem(0, 0, 800, 600)
         renderer = Renderer(window)
-        
+
         world.add_system(movement)
         world.add_system(renderer)
 
@@ -313,7 +313,7 @@ on colliding with the walls or the player paddles. ::
                 btop < bottom and bbottom > top
 
         def process(self, world, componentsets):
-            collitems = filter(self._overlap, componentsets)
+            collitems = [comp for comp in componentsets if self._overlap(comp)]
             if len(collitems) != 0:
                 self.ball.velocity.vx = -self.ball.velocity.vx
 
@@ -435,7 +435,7 @@ its initial movement direction. ::
         [...]
 
         def process(self, world, componentsets):
-            collitems = filter(self._overlap, componentsets)
+            collitems = [comp for comp in componentsets if self._overlap(comp)]
             if len(collitems) != 0:
                 self.ball.velocity.vx = -self.ball.velocity.vx
 

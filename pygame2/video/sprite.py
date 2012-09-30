@@ -390,7 +390,7 @@ class SpriteFactory(object):
             c = pixels.map_rgba(fmt, color.r, color.g, color.b, color.a)
         else:
             c = pixels.map_rgb(fmt, color.r, color.g, color.b)
-        sdlsurface.fill_rect(sf, None, color)
+        sdlsurface.fill_rect(sf, None, c)
         return self.from_surface(sf, True)
 
     def create_sprite(self, **kwargs):
@@ -463,7 +463,7 @@ class SpriteRenderer(System):
     def __init__(self):
         super(SpriteRenderer, self).__init__()
         self.componenttypes = (Sprite, )
-        self._sortfunc = lambda e1, e2: cmp(e1.depth, e2.depth)
+        self._sortfunc = lambda e: e.depth
 
     def render(self, sprites):
         """Renders the passed sprites.
@@ -475,7 +475,7 @@ class SpriteRenderer(System):
 
     def process(self, world, components):
         """Draws the passed SoftSprite objects on the Window's surface."""
-        self.render(sorted(components, self._sortfunc))
+        self.render(sorted(components, key=self._sortfunc))
 
     @property
     def sortfunc(self):
