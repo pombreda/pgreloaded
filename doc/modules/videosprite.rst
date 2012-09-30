@@ -7,7 +7,6 @@
 .. inheritance-diagram:: pygame2.video.sprite
    :parts: 1
 
-
 .. class:: Sprite()
 
    A simple 2D object, implemented as abstract base class.
@@ -177,6 +176,94 @@
       :class:`TextureSprite`, *x* and *y* denote the absolute position of the
       :class:`TextureSprite`, if set.
 
+.. class:: SpriteFactory(sprite_type=SOFTWARE, **kwargs)
+
+   A factory class for creating :class:`Sprite` objects. The
+   :class:`SpriteFactory` can create :class:`TextureSprite` or
+   :class:`SoftwareSprite` instances, depending on the *sprite_type*
+   being passed to it, which can be ``SOFTWARE`` or ``TEXTURE``.  The
+   additional *kwargs* are used as default arguments for creating
+   sprites within the factory methods.
+
+   .. attribute:: sprite_type
+
+      The sprite type created by the factory. This will be either
+      ``SOFTWARE`` for :class:`SoftwareSprite` or ``TEXTURE`` for
+      :class:`TextureSprite` objects.
+
+   .. attribute:: default_args
+
+      The default arguments to use for creating new sprites.
+
+
+   .. method:: create_software_sprite(size=(0, 0), bpp=32, \
+      masks=None) -> SoftwareSprite
+
+      Creates a software sprite. A *size* tuple containing the width and
+      height of the sprite and a *bpp* value, indicating the bits per
+      pixel to be used, need to be provided.
+
+   .. method:: create_sprite(**kwargs) -> Sprite
+
+      Creates a :class:`Sprite`. Depending on the :attr:`sprite_type`,
+      this will return a :class:`SoftwareSprite` or
+      :class:`TextureSprite`.
+
+      *kwargs* are the arguments to be passed for the sprite
+      construction and can vary depending on the sprite type. Usually
+      they have to follow the :meth:`create_software_sprite()` and
+      :meth:`create_texture_sprite()` method signatures. *kwargs*
+      however will be mixed with the set :attr:`default_args` so that
+      one does not necessarily have to provide all arguments, if they
+      are set within the :attr:`default_args`. If *kwargs* and
+      :attr:`default_args` contain the same keys, the key-value pair of
+      *kwargs* is chosen.
+
+   .. method:: create_sprite_renderer(*args, **kwargs) -> SpriteRenderer
+
+      Creates a new :class:`SpriteRenderer`, based on the set
+      :attr:`sprite_type`. If :attr:`sprite_type` is ``TEXTURE``, a
+      :class:`TextureSpriteRenderer` is created with the the
+      ``renderer`` from the :attr:`default_args`. Other keyword
+      arguments are ignored in that case.
+
+      Otherwise a :class:`SoftwareSpriteRenderer` is created and *args*
+      and *kwargs* are passed to it.
+
+   .. method:: create_texture_sprite(renderer : object, size=(0, 0), \
+      pformat=2252742660, static=True) -> TextureSprite
+
+      Creates a texture sprite. A *size* tuple containing the width and
+      height of the sprite needs to be provided.
+
+      :class:`TextureSprite` objects are assumed to be static by
+      default, making it impossible to access their pixel buffer in
+      favour for faster copy operations. If you need to update the pixel
+      data frequently, *static* can be set to ``False`` to allow a
+      streaming access on the underlying texture pixel buffer.
+
+   .. method:: from_color(color : object , size=(0, 0), bpp=32, \
+      masks=None) -> Sprite
+
+      Creates a :class:`Sprite` with a certain color.
+
+   .. method:: from_image(fname : str) -> Sprite
+
+      Creates a :class:`Sprite` from an image file. The image must be
+      loadable via :func:`pygame2.video.image.load_image()`.
+
+   .. method:: from_object(obj: object) -> Sprite
+
+      Creates a :class:`Sprite` from an object. The object will be
+      passed through :func:`pygame2.sdl.rwops.rwops_from_object()` in
+      order to try to load image data from it.
+
+   .. method:: from_surface(surface : SDL_Surface[, free=False]) -> Sprite
+
+      Creates a :class:`Sprite` from the passed
+      :class:`pygame2.sdl.surface.SDL_Surface`. If *free* is set to
+      ``True``, the passed *surface* will be freed automatically.
+
 .. class:: RenderContext(target : obj[, index=-1[, \
    flags=SDL_RENDERER_ACCELERATED]])
 
@@ -218,23 +305,23 @@
        Clears the rendering context with the currently set or passed
        *color*.
 
-    .. method:: copy(src : obj[, srcrect=None[, dstrect=None]])
+    .. method:: copy(src : obj[, srcrect=None[, dstrect=None]]) -> None
 
        TODO
 
-    .. method:: draw_line(points : iterable[, color=None])
+    .. method:: draw_line(points : iterable[, color=None]) -> None
 
        Draws one or multiple lines on the rendering context.
 
-    .. method:: draw_point(points : iterable[, color=None])
+    .. method:: draw_point(points : iterable[, color=None]) -> None
 
        Draws one or multiple points on the rendering context.
 
-    .. method:: draw_rect(rects : iterable[, color=None])
+    .. method:: draw_rect(rects : iterable[, color=None]) -> None
 
        Draws one or multiple rectangles on the rendering context.
 
-    .. method:: fill(rects : iterable[, color=None])
+    .. method:: fill(rects : iterable[, color=None]) -> None
 
        Fills one or multiple rectangular areas on the rendering context
        with the current set or passed *color*.

@@ -95,7 +95,7 @@ testall:
 	@rm -rf pygame2/test/*.pyc
 	@-PYTHONPATH=$(PYTHONPATH) python3.2 pygame2/test/util/runtests.py
 	@rm -rf pygame2/test/*.pyc
-	@-PYTHONPATH=$(PYTHONPATH) python3.2 pygame2/test/util/runtests.py
+	@-PYTHONPATH=$(PYTHONPATH) python3.3 pygame2/test/util/runtests.py
 	@rm -rf pygame2/test/*.pyc
 	@-PYTHONPATH=$(PYTHONPATH) pypy1.9 pygame2/test/util/runtests.py
 	@rm -rf pygame2/test/*.pyc
@@ -113,4 +113,3 @@ purge_installs:
 	rm -rf /usr/local/lib/python3.2/site-packages/pygame2*
 	rm -rf /usr/local/lib/python3.3/site-packages/pygame2*
 	rm -rf /usr/local/lib/pypy-1.9/site-packages/pygame2*
-
