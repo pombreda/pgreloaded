@@ -4,7 +4,7 @@ import platform
 from distutils.core import setup
 from distutils.command.install_data import install_data
 
-VERSION = "2.0.0-beta1"
+VERSION = "2.0.0-beta2"
 
 if __name__ == "__main__":
 
