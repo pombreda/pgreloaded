@@ -238,7 +238,6 @@ class Sprite(Component):
 
     @property
     @abc.abstractmethod
-    #@abc.abstractproperty
     def size(self):
         """The size of the Sprite as tuple."""
         return
@@ -305,9 +304,16 @@ class TextureSprite(Sprite):
 
 
 class SpriteFactory(object):
-    """x"""
+    """A factory class for creating Sprite objects."""
     def __init__(self, sprite_type=TEXTURE, **kwargs):
-        """x"""
+        """Creates a new SpriteFactory.
+
+        The SpriteFactory can create TextureSprite or SoftwareSprite
+        instances, depending on the sprite_type being passed to it,
+        which can be SOFTWARE or TEXTURE. The additional kwargs are used
+        as default arguments for creating sprites within the factory
+        methods.
+        """
         if sprite_type == TEXTURE:
             if "renderer" not in kwargs:
                 raise ValueError("you have to provide a renderer= argument")
