@@ -17,6 +17,12 @@
 @IF "%PYTHON32_X64%" == "" (
     SET PYTHON32_X64=c:\Python32-x64\python.exe
 )
+@IF "%PYTHON33_X86%" == "" (
+    SET PYTHON33_X86=c:\Python33-x86\python.exe
+)
+@IF "%PYTHON33_X64%" == "" (
+    SET PYTHON33_X64=c:\Python33-x64\python.exe
+)
 @IF "%PYTHON%" == "" (
     SET PYTHON=%PYTHON27_X64%
 )
@@ -55,9 +61,11 @@
 @%PYTHON27_X86% setup.py bdist --format=msi
 @%PYTHON31_X86% setup.py bdist --format=msi
 @%PYTHON32_X86% setup.py bdist --format=msi
+@%PYTHON33_X86% setup.py bdist --format=msi
 @%PYTHON27_X64% setup.py bdist --format=msi
 @%PYTHON31_X64% setup.py bdist --format=msi
 @%PYTHON32_X64% setup.py bdist --format=msi
+@%PYTHON33_X64% setup.py bdist --format=msi
 @GOTO :eof
 
 :build
@@ -118,6 +126,10 @@
 @CALL :clean
 @%PYTHON32_X64% setup.py build
 @CALL :clean
+@%PYTHON33_X86% setup.py build
+@CALL :clean
+@%PYTHON33_X64% setup.py build
+@CALL :clean
 @%PYPY18% setup.py build
 @CALL :clean
 @%PYPY19% setup.py build
@@ -139,6 +151,10 @@
 @%PYTHON32_X86% setup.py install
 @CALL :clean
 @%PYTHON32_X64% setup.py install
+@CALL :clean
+@%PYTHON33_X86% setup.py install
+@CALL :clean
+@%PYTHON33_X64% setup.py install
 @CALL :clean
 @%PYPY18% setup.py install
 @CALL :clean
@@ -166,6 +182,12 @@
 @%PYTHON32_X64% pygame2\test\util\runtests.py
 @DEL /Q pygame2\test\*.pyc
 @RMDIR /S /Q pygame2\test\__pycache__
+@%PYTHON33_X86% pygame2\test\util\runtests.py
+@DEL /Q pygame2\test\*.pyc
+@RMDIR /S /Q pygame2\test\__pycache__
+@%PYTHON33_X64% pygame2\test\util\runtests.py
+@DEL /Q pygame2\test\*.pyc
+@RMDIR /S /Q pygame2\test\__pycache__
 @%PYPY18% pygame2\test\util\runtests.py
 @DEL /Q pygame2\test\*.pyc
 @%PYPY19% pygame2\test\util\runtests.py
@@ -181,6 +203,8 @@
 @%PYTHON31_X64% -c "import pygame2.test; pygame2.test.run ()"
 @%PYTHON32_X86% -c "import pygame2.test; pygame2.test.run ()"
 @%PYTHON32_X64% -c "import pygame2.test; pygame2.test.run ()"
+@%PYTHON33_X86% -c "import pygame2.test; pygame2.test.run ()"
+@%PYTHON33_X64% -c "import pygame2.test; pygame2.test.run ()"
 @%PYPY18% -c "import pygame2.test; pygame2.test.run ()"
 @%PYPY19% -c "import pygame2.test; pygame2.test.run ()"
 @%IRONPYTHON27% -c "import pygame2.test; pygame2.test.run ()"
@@ -194,9 +218,11 @@
 @RMDIR /S /Q C:\Python31-x64\Lib\site-packages\pygame2
 @RMDIR /S /Q C:\Python32-x86\Lib\site-packages\pygame2
 @RMDIR /S /Q C:\Python32-x64\Lib\site-packages\pygame2
+@RMDIR /S /Q C:\Python33-x86\Lib\site-packages\pygame2
+@RMDIR /S /Q C:\Python33-x64\Lib\site-packages\pygame2
 @RMDIR /S /Q C:\pypy-1.8\site-packages\pygame2
 @RMDIR /S /Q C:\pypy-1.9\site-packages\pygame2
-@RMDIR /S /Q C:\IronPython-2.7.2.1\Lib\site-packages\pygame2
+@RMDIR /S /Q C:\IronPython-2.7.3\Lib\site-packages\pygame2
 @echo done
 @GOTO :eof
 

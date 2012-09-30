@@ -10,7 +10,7 @@ provide you full access to all of its features.
 
 You must have at least one of the following Python versions installed:
 
-* Python 2.7, 3.1, 3.2 (http://www.python.org)
+* Python 2.7, 3.1+     (http://www.python.org)
 * PyPy 1.8.0+          (http://www.pypy.org)
 
 Other Python versions or Python implementations might work, but are

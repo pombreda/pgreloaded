@@ -236,7 +236,9 @@ class Sprite(Component):
         self.x = value[0]
         self.y = value[1]
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
+    #@abc.abstractproperty
     def size(self):
         """The size of the Sprite as tuple."""
         return

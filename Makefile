@@ -76,6 +76,7 @@ buildall: clean
 	@python2.7 setup.py build
 	@python3.1 setup.py build
 	@python3.2 setup.py build
+	@python3.3 setup.py build
 	@pypy1.9 setup.py build
 
 
@@ -83,6 +84,7 @@ installall:
 	@python2.7 setup.py install
 	@python3.1 setup.py install
 	@python3.2 setup.py install
+	@python3.3 setup.py install
 	@pypy1.9 setup.py install
 
 testall:
@@ -93,6 +95,8 @@ testall:
 	@rm -rf pygame2/test/*.pyc
 	@-PYTHONPATH=$(PYTHONPATH) python3.2 pygame2/test/util/runtests.py
 	@rm -rf pygame2/test/*.pyc
+	@-PYTHONPATH=$(PYTHONPATH) python3.2 pygame2/test/util/runtests.py
+	@rm -rf pygame2/test/*.pyc
 	@-PYTHONPATH=$(PYTHONPATH) pypy1.9 pygame2/test/util/runtests.py
 	@rm -rf pygame2/test/*.pyc
 
@@ -100,10 +104,13 @@ testpackage:
 	@python2.7 -c "import pygame2.test; pygame2.test.run()"
 	@python3.1 -c "import pygame2.test; pygame2.test.run()"
 	@python3.2 -c "import pygame2.test; pygame2.test.run()"
+	@python3.3 -c "import pygame2.test; pygame2.test.run()"
 	@pypy1.9 -c "import pygame2.test; pygame2.test.run()"
 
 purge_installs:
 	rm -rf /usr/local/lib/python2.7/site-packages/pygame2*
 	rm -rf /usr/local/lib/python3.1/site-packages/pygame2*
 	rm -rf /usr/local/lib/python3.2/site-packages/pygame2*
+	rm -rf /usr/local/lib/python3.3/site-packages/pygame2*
 	rm -rf /usr/local/lib/pypy-1.9/site-packages/pygame2*
+

@@ -16,13 +16,48 @@ class VideoSpriteTest(unittest.TestCase):
     def tearDown(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_SpriteFactory(self):
-        pass
+        factory = video.SpriteFactory(video.SOFTWARE)
+        self.assertIsInstance(factory, video.SpriteFactory)
+        self.assertEqual(factory.default_args, {})
 
-    @unittest.skip("not implemented")
+        factory = video.SpriteFactory(video.SOFTWARE, bananas="tasty")
+        self.assertIsInstance(factory, video.SpriteFactory)
+        self.assertEqual(factory.default_args, {"bananas": "tasty"})
+
+        window = video.Window("Test", size=(1,1))
+        renderer = video.RenderContext(window)
+
+        factory = video.SpriteFactory(video.TEXTURE, renderer=renderer)
+        self.assertIsInstance(factory, video.SpriteFactory)
+
+        factory = video.SpriteFactory(video.TEXTURE, renderer=renderer)
+        self.assertIsInstance(factory, video.SpriteFactory)
+        self.assertEqual(factory.default_args, {"renderer": renderer})
+
+        self.assertRaises(ValueError, video.SpriteFactory, "Test")
+        self.assertRaises(ValueError, video.SpriteFactory, -456)
+        self.assertRaises(ValueError, video.SpriteFactory, 123)
+        self.assertRaises(ValueError, video.SpriteFactory, video.TEXTURE)
+
     def test_SpriteFactory_create_sprite(self):
-        pass
+        window = video.Window("Test", size=(1,1))
+        renderer = video.RenderContext(window)
+        tfactory = video.SpriteFactory(video.TEXTURE, renderer=renderer)
+        sfactory = video.SpriteFactory(video.SOFTWARE)
+
+        for w in range(0, 100):
+            for h in range(0, 100):
+                for bpp in (1, 4, 8, 12, 15, 16, 24, 32):
+                    sprite = sfactory.create_sprite(size=(w, h), bpp=bpp)
+                    self.assertIsInstance(sprite, video.SoftwareSprite)
+
+                if w == 0 or h == 0:
+                    self.assertRaises(SDLError, tfactory.create_sprite,
+                                      size=(w, h))
+                    continue
+                sprite = tfactory.create_sprite(size=(w, h))
+                self.assertIsInstance(sprite, video.TextureSprite)
 
     def test_SpriteFactory_create_software_sprite(self):
         factory = video.SpriteFactory(video.SOFTWARE)
@@ -45,13 +80,20 @@ class VideoSpriteTest(unittest.TestCase):
                           factory.create_software_sprite,
                           masks=("Test", 1, 2, 3))
 
-    @unittest.skip("not implemented")
     def test_SpriteFactory_create_texture_sprite(self):
-        pass
+        window = video.Window("Test", size=(1,1))
+        renderer = video.RenderContext(window)
+        factory = video.SpriteFactory(video.TEXTURE, renderer=renderer)
+        for w in range(1, 100):
+            for h in range(1, 100):
+                sprite = factory.create_texture_sprite(renderer, size=(w, h))
 
     @unittest.skip("not implemented")
     def test_SpriteFactory_from_image(self):
-        pass
+        window = video.Window("Test", size=(1,1))
+        renderer = video.RenderContext(window)
+        tfactory = video.SpriteFactory(video.TEXTURE, renderer=renderer)
+        sfactory = video.SpriteFactory(video.SOFTWARE)
 
     @unittest.skip("not implemented")
     def test_SpriteFactory_from_object(self):
@@ -97,9 +139,15 @@ class VideoSpriteTest(unittest.TestCase):
     def test_TextureSpriteRenderer_process(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_Sprite(self):
-        pass
+        class MSprite(video.Sprite):
+            @property
+            def size(self):
+                return None
+
+        sprite = MSprite()
+        self.assertIsInstance(sprite, MSprite)
+        self.assertIsInstance(sprite, video.Sprite)
 
     @unittest.skip("not implemented")
     def test_Sprite_position_xy(self):
@@ -161,7 +209,7 @@ class VideoSpriteTest(unittest.TestCase):
         pass
 
     @unittest.skip("not implemented")
-    def test_TextureSprite_size(self):
+    def test_TextureSprite_sdize(self):
         pass
 
     @unittest.skip("not implemented")
