@@ -83,6 +83,10 @@ For bourne shell compatibles or ::
 for C shell compatibles. You can omit the `:$PYTHONPATH``, if you did not use
 it so far and if your environment settings do not define it.
 
+.. note::
+
+   If you are using IronPython, use ``IRONPYTHONPATH`` instead of
+   ``PYTHONPATH``.
 
 Notes on Mercurial usage
 ^^^^^^^^^^^^^^^^^^^^^^^^
