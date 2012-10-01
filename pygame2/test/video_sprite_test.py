@@ -11,10 +11,10 @@ class VideoSpriteTest(unittest.TestCase):
         if sys.version.startswith("3.1"):
             self.assertIsInstance = \
                 lambda x, t: self.assertTrue(isinstance(x, t))
-        pass
+        video.init()
 
     def tearDown(self):
-        pass
+        video.quit()
 
     def test_SpriteFactory(self):
         factory = video.SpriteFactory(video.SOFTWARE)
@@ -87,6 +87,7 @@ class VideoSpriteTest(unittest.TestCase):
         for w in range(1, 100):
             for h in range(1, 100):
                 sprite = factory.create_texture_sprite(renderer, size=(w, h))
+                del sprite
 
     @unittest.skip("not implemented")
     def test_SpriteFactory_from_image(self):

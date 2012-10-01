@@ -7,263 +7,218 @@
 .. inheritance-diagram:: pygame2.video.gui
    :parts: 1
 
-.. data:: RELEASED
+User interface elements within the :mod:`pygame2.video.gui` module are simple
+:class:`pygame2.video.sprite.Sprite` objects, which are enhanced by certain
+input hooks; as such, they are not classes on their own. The user input itself
+is handled by an :class:`UIProcessor` object, which take care of delegating
+input events, such as mouse movements, clicks and keyboard input, to the
+correct UI element.
 
-   Indicates that the UI element is released.
+.. image:: images/uievents.png
 
-.. data:: HOVERED
+Depending on the event type (e.g. moving the mouse cursor), the UIProcessor
+will execute its matching method (e.g. ``mousemotion()``) with only those UI
+elements, which support the event type.
 
-   Indicates that the mouse pointer is currently hovering the UI element.
+TODO
 
-.. data:: PRESSED
+.. _ui-elem-types:
 
-   Indicates that a mouse button is pressed on the UI element.
+UI element types
+----------------
 
-.. class:: Button(*args, **kwargs)
+As said earlier, every :class:`pygame2.video.gui` UI element is a simple
+:class:`pygame2.video.sprite.Sprite` object, to which additional attributes and
+methods are bound.
 
-   A :class:`pygame2.video.sprite.Sprite` object that can react on mouse
-   events.
+Every UI element features the following attributes
 
-   *args* and *kwargs* are passed to the
-   :class:`pygame2.video.sprite.Sprite` constructor.
+``element.uitype``
 
-   .. attribute:: state
+   The ``uitype`` attribute can have one of the following values, identifying the
+   UI element:
+   
+   * ``BUTTON`` - a UI element, which can react on mouse input
+   * ``CHECKBUTTON`` - as ``BUTTON``, but it retains its state on clicks
+   * ``TEXTENTRY`` - a UI element that reacts on keyboard input
 
-      The current state of the button. This can be a value of
-      ``RELEASED``, ``HOVERED`` or ``PRESSED``
+``element.events``
 
-   .. attribute:: motion
+   A dictionary containing the SDL2 event mappings. Each supported SDL2 event
+   (e.g. ``SDL_MOUSEMOTION``) is associated with a bound
+   :class:`pygame2.events.EventHandler` acting as callback for user code
+   (e.g. ``mousemotion()``).
 
-      A :class:`pygame2.events.EventHandler` that is invoked, if the mouse
-      moves around while being over the :class:`Button`.
+Depending on the exact type of the element, it will feature additional methods
+and attributes explained below.
+   
+Button elements
+^^^^^^^^^^^^^^^
 
-   .. attribute:: pressed
+``BUTTON`` UI elements feature a ``state`` attribute, which can be one of the
+following values.
 
-      A :class:`pygame2.events.EventHandler` that is invoked, if a mouse button
-      is pressed on the :class:`Button`.
+  ======== =====================================================================
+  state    Description
+  ======== =====================================================================
+  RELEASED Indicates that the UI element is not pressed.
+  HOVERED  Indicates that the mouse cursor is currently hovering the UI element.
+  PRESSED  Indicates that a mouse button is pressed on the UI element.
+  ======== =====================================================================
 
-   .. attribute:: released
+``BUTTON`` UI elements react with the following event handlers on events:
 
-      A :class:`pygame2.events.EventHandler` that is invoked, if a mouse button
-      is released on the :class:`Button`.
+``button.motion(event : pygame2.sdl.events.SDL_Event)``
 
-   .. attribute:: click
+  A :class:`pygame2.events.EventHandler` that is invoked, if the mouse
+  moves around while being over the ``BUTTON``.
 
-      A :class:`pygame2.events.EventHandler` that is invoked, if a mouse
-      button is pressed and released on the :class:`Button`.
+``button.pressed(event : pygame2.sdl.events.SDL_Event)``
 
-   .. attribute:: events
+  A :class:`pygame2.events.EventHandler` that is invoked, if a mouse button
+  is pressed on the ``BUTTON``.
 
-      A dict containing the mapping of SDL2 events to the available
-      :class:`pygame2.events.EventHandler` bindings of the :class:`Button`.
+``button.released(event : pygame2.sdl.events.SDL_Event)``
 
-.. class:: CheckButton(*args, **kwargs)
+  A :class:`pygame2.events.EventHandler` that is invoked, if a mouse button
+  is released on the ``BUTTON``.
 
-   A specialised :class:`Button` that retains its state.
+``button.click(event : pygame2.sdl.events.SDL_Event)``
 
-   .. attribute:: checked
+  A :class:`pygame2.events.EventHandler` that is invoked, if a mouse
+  button is pressed and released on the ``BUTTON``.
 
-      Indicates, if the :class:`CheckButton` is checked or not.
+Besides the ``BUTTON`` a special ``CHECKBUTTON`` UI element type exists,
+which enhances the ``BUTTON`` bindings by an additional ``checked`` attribute.
+The ``checked`` attribute switches its status (``False`` to ``True`` and
+``True``  to ``False``) every time the UI element is clicked.
 
-.. class:: TextEntry(*args, **kwargs)
+Text input elements
+^^^^^^^^^^^^^^^^^^^
 
-   A :class:`pygame2.video.sprite.Sprite` object that can react on text
-   input.
+``TEXTENTRY`` elements react on text input, once they are activated. Text being
+input, once a ``TEXTENTRY`` has been activated, is stored in its ``text``
+attribute.
 
-   *args* and *kwargs* are passed to the
-   :class:`pygame2.video.sprite.Sprite` constructor.
+The ``TEXTENTRY`` reacts with the following event handlers on events:
 
-   .. attribute:: motion
+``textentry.motion(event : pygame2.sdl.events.SDL_Event)``
 
-      A :class:`pygame2.events.EventHandler` that is invoked, if the mouse
-      moves around while being over the :class:`TextEntry`.
+  A :class:`pygame2.events.EventHandler` that is invoked, if the mouse
+  moves around while being over the ``TEXTENTRY``.
 
-   .. attribute:: pressed
+``textentry.pressed(event : pygame2.sdl.events.SDL_Event)``
 
-      A :class:`pygame2.events.EventHandler` that is invoked, if a mouse button
-      is pressed on the :class:`TextEntry`.
+  A :class:`pygame2.events.EventHandler` that is invoked, if a mouse button
+  is pressed on the ``TEXTENTRY``.
 
-   .. attribute:: released
+``textentry.released(event : pygame2.sdl.events.SDL_Event)``
 
-      A :class:`pygame2.events.EventHandler` that is invoked, if a mouse button
-      is released on the :class:`TextEntry`.
+  A :class:`pygame2.events.EventHandler` that is invoked, if a mouse button
+  is released on the ``TEXTENTRY``.
 
-   .. attribute:: keydown
+``textentry.keydown(event : pygame2.sdl.events.SDL_Event)``
 
-      A :class:`pygame2.events.EventHandler` that is invoked on pressing a key.
+  A :class:`pygame2.events.EventHandler` that is invoked on pressing a key.
 
-   .. attribute:: keyup
+``textentry.keyup(event : pygame2.sdl.events.SDL_Event)``
 
-      A :class:`pygame2.events.EventHandler` that is invoked on releasing a key.
+  A :class:`pygame2.events.EventHandler` that is invoked on releasing a key.
 
-   .. attribute:: input
+``textentry.input(event : pygame2.sdl.events.SDL_Event)``
 
-      A :class:`pygame2.events.EventHandler` that is invoked on text input
-      events.
+  A :class:`pygame2.events.EventHandler` that is invoked on text input events.
+  Text input events are automatically created, once the :class:`UIProcessor`
+  activates a ``TEXTENTRY`` UI element.
 
-   .. attribute:: editing
+``textentry.editing(event : pygame2.sdl.events.SDL_Event)``
 
-      A :class:`pygame2.events.EventHandler` that is invoked on text editing
-      events.
+  A :class:`pygame2.events.EventHandler` that is invoked on text editing
+  events. Text editing events are automatically created, once the
+  :class:`UIProcessor` activates a ``TEXTENTRY`` UI element.
+  
+  Text editing events are however only raised, if an IME system is involved,
+  which combines glyphs and symbols to characters or word fragments.
 
-   .. attribute:: events
-
-      A dict containing the mapping of SDL2 events to the available
-      :class:`pygame2.events.EventHandler` bindings of the :class:`TextEntry`.
-
-   .. attribute:: text
-
-      The text of the :class:`TextEntry`.
-
-.. class:: SoftButton(*args, **kwargs)
-
-   A :class:`pygame2.video.sprite.SoftSprite` object that can react on
-   mouse events.
-
-   *args* and *kwargs* are passed to the
-   :class:`pygame2.video.sprite.SoftSprite` constructor.
-
-   .. attribute:: state
-
-      The current state of the button. This can be a value of
-      ``RELEASED``, ``HOVERED`` or ``PRESSED``
-
-   .. attribute:: motion
-
-      A :class:`pygame2.events.EventHandler` that is invoked, if the mouse
-      moves around while being over the :class:`SoftButton`.
-
-   .. attribute:: pressed
-
-      A :class:`pygame2.events.EventHandler` that is invoked, if a mouse button
-      is pressed on the :class:`SoftButton`.
-
-   .. attribute:: released
-
-      A :class:`pygame2.events.EventHandler` that is invoked, if a mouse button
-      is released on the :class:`SoftButton`.
-
-   .. attribute:: click
-
-      A :class:`pygame2.events.EventHandler` that is invoked, if a mouse
-      button is pressed and released on the :class:`SoftButton`.
-
-   .. attribute:: events
-
-      A dict containing the mapping of SDL2 events to the available
-      :class:`pygame2.events.EventHandler` bindings of the :class:`SoftButton`.
-
-.. class:: SoftCheckButton(*args, **kwargs)
-
-   A specialised :class:`SoftButton` that retains its state.
-
-   .. attribute:: checked
-
-      Indicates, if the :class:`SoftCheckButton` is checked or not.
-
-.. class:: TextEntry(*args, **kwargs)
-
-   A :class:`pygame2.video.sprite.SoftSprite` object that can react on
-   text input.
-
-   *args* and *kwargs* are passed to the
-   :class:`pygame2.video.sprite.SoftSprite` constructor.
-
-   .. attribute:: motion
-
-      A :class:`pygame2.events.EventHandler` that is invoked, if the mouse
-      moves around while being over the :class:`SoftTextEntry`.
-
-   .. attribute:: pressed
-
-      A :class:`pygame2.events.EventHandler` that is invoked, if a mouse button
-      is pressed on the :class:`SoftTextEntry`.
-
-   .. attribute:: released
-
-      A :class:`pygame2.events.EventHandler` that is invoked, if a mouse button
-      is released on the :class:`SoftTextEntry`.
-
-   .. attribute:: keydown
-
-      A :class:`pygame2.events.EventHandler` that is invoked on pressing a key.
-
-   .. attribute:: keyup
-
-      A :class:`pygame2.events.EventHandler` that is invoked on releasing a key.
-
-   .. attribute:: input
-
-      A :class:`pygame2.events.EventHandler` that is invoked on text input
-      events.
-
-   .. attribute:: editing
-
-      A :class:`pygame2.events.EventHandler` that is invoked on text editing
-      events.
-
-   .. attribute:: events
-
-      A dict containing the mapping of SDL2 events to the available
-      :class:`pygame2.events.EventHandler` bindings of the
-      :class:`SoftTextEntry`.
-
-   .. attribute:: text
-
-      The text of the :class:`SoftTextEntry`.
-
-.. class:: UIFactory(uitype=UIFactory.RENDERER[, **kwargs])
+API
+---
+  
+.. class:: UIFactory(spritefactory : SpriteFactory[, **kwargs])
 
    A factory class for creating UI elements. The :class:`UIFactory`
-   allows you to create any UI element for either software-based
-   :class:`pygame2.video.sprite.SoftSprite` or hardware-accelerated
-   :class:`pygame2.video.sprite.Sprite` objects.
+   allows you to create UI elements based on the
+   :class:`pygame2.video.sprite.Sprite` class. To do this, it requires
+   a :class:`pygame2.video.sprite.SpriteFactory`, which will create the
+   sprites, to which the :class:`UIFactory` then binds the additional methods
+   and attributes-
 
-   Depending on the *uitype*, the factory will create either the one or
-   the other. Since the constructors of both sprite types differ, a set
-   of *kwargs* can be provided, which will be used as default arguments
-   to pass to the factory methods.
-
-   .. data:: RENDERER
-
-      Indicates that :class:`pygame2.video.sprite.Sprite` based UI
-      elements should be created.
-
-   .. data:: SOFTWARE
-
-      Indicates that :class:`pygame2.video.sprite.SoftSprite` based UI
-      elements should be created.
+   The additional *kwargs* are used as default arguments for creating
+   **sprites** within the factory methods.
 
    .. attribute:: default_args
 
       A dictionary containing the default arguments to be passed to the
-      factory methods.
+      sprite creation methods of the bound
+      :class:`pygame2.video.sprite.SpriteFactory`.
 
-   .. attribute:: uitype
+   .. attribute:: spritefactory
 
-      The creation type of the :class:`UIFactory`. This will be either
-      :data:`RENDERER` or :data:`SOFTWARE`.
+      The :class:`pygame2.video.sprite.SpriteFactory` being used for creating
+      new :class:`Sprite` objects.
 
-   .. method:: create_button(**kwargs) -> Button or SoftButton
+   .. method:: create_button(**kwargs) -> Sprite
 
-      Creates a new button UI element, either of type :class:`Button` or
-      :class:`SoftButton`. *kwargs* can be used to provide additional
-      arguments to the constructor and to overridethe
-      :attr:`default_args`.
+      Creates a new button UI element.
+      
+      *kwargs* are the arguments to be passed for the sprite
+      construction and can vary depending on the sprite type.
+      See :class:`pygame2.video.sprite.SpriteFactory.create_sprite()` for
+      further details.
+      
+   .. method:: create_check_button(**kwargs) -> Sprite
 
-   .. method:: create_check_button(**kwargs) -> CheckButton or SoftCheckButton
+      Creates a new checkbutton UI element.
+      
+      *kwargs* are the arguments to be passed for the sprite
+      construction and can vary depending on the sprite type.
+      See :class:`pygame2.video.sprite.SpriteFactory.create_sprite()` for
+      further details.
+      
+   .. method:: create_text_entry(**kwargs) -> Sprite
 
-      Creates a new checkbutton UI element, either of type
-      :class:`CheckButton` or :class:`SoftCheckButton`. *kwargs* can be
-      used to provide additional arguments to the constructor and to
-      overridethe :attr:`default_args`.
+      Creates a new textentry UI element.
 
-   .. method:: create_text_entry(**kwargs) -> TextEntry or SoftTextEntry
+      *kwargs* are the arguments to be passed for the sprite
+      construction and can vary depending on the sprite type.
+      See :class:`pygame2.video.sprite.SpriteFactory.create_sprite()` for
+      further details.
 
-      Creates a new textentry UI element, either of type
-      :class:`TextEntry` or :class:`SoftTextEntry`. *kwargs* can be used
-      to provide additional arguments to the constructor and to
-      overridethe :attr:`default_args`.
+   .. method:: from_image(uitype : int, fname : str) -> Sprite
+
+      Creates a UI element from an image file. The image must be
+      loadable via :func:`pygame2.video.image.load_image()`.
+      
+      *uitype* must be one of the supported :ref:`ui-elem-types` classifying
+      the type of UI element to be created.
+
+   .. method:: from_object(uitype : int, obj: object) -> Sprite
+
+      Creates a UI element from an object. The object will be passed through
+      :func:`pygame2.sdl.rwops.rwops_from_object()` in
+      order to try to load image data from it.
+
+      *uitype* must be one of the supported :ref:`ui-elem-types` classifying
+      the type of UI element to be created.
+
+   .. method:: from_surface(uitype : int,  surface : SDL_Surface[, \
+      free=False]) -> Sprite
+
+      Creates a UI element from the passed
+      :class:`pygame2.sdl.surface.SDL_Surface`. If *free* is set to
+      ``True``, the passed *surface* will be freed automatically.
+
+      *uitype* must be one of the supported :ref:`ui-elem-types` classifying
+      the type of UI element to be created.
 
 .. class:: UIProcessor()
 

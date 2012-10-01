@@ -516,6 +516,9 @@ def render_set_viewport(renderer, rect=None):
     if rect is None:
         retval = dll.SDL_RenderSetViewport(ctypes.byref(renderer), None)
     else:
+         # preserve the rect, since it's const* and stored within the
+         # SDL_Renderer struct
+        renderer._vprect = rect
         retval = dll.SDL_RenderSetViewport(ctypes.byref(renderer),
                                            ctypes.byref(rect))
     if retval == -1:

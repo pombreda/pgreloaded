@@ -181,7 +181,7 @@
    A factory class for creating :class:`Sprite` objects. The
    :class:`SpriteFactory` can create :class:`TextureSprite` or
    :class:`SoftwareSprite` instances, depending on the *sprite_type*
-   being passed to it, which can be ``SOFTWARE`` or ``TEXTURE``.  The
+   being passed to it, which can be ``SOFTWARE`` or ``TEXTURE``. The
    additional *kwargs* are used as default arguments for creating
    sprites within the factory methods.
 
@@ -194,7 +194,6 @@
    .. attribute:: default_args
 
       The default arguments to use for creating new sprites.
-
 
    .. method:: create_software_sprite(size=(0, 0), bpp=32, \
       masks=None) -> SoftwareSprite

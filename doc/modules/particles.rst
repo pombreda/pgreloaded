@@ -45,6 +45,36 @@
         def deletion_func(world, deadparticles):
             ...
 
+   .. method:: process(world : World, components : iterable) -> None
+   
+      Processes all particle components, decreasing their life by 1.
+
+      Once the life of all particle components has been decreased
+      properly and the particles considered dead (life <= 0) are
+      identified, the creation, update and deletion callbacks are
+      invoked.
+
+      The creation callback takes the passed world as first and the
+      list of dead particles as second argument. ::
+
+        def particle_createfunc(world, list_of_dead_ones):
+            ...
+
+      Afterwards the still living particles are passed to the update
+      callback, which also take the passed world as first and the
+      living particles as set as second argument. ::
+
+        def particle_updatefunc(world, set_of_living_ones):
+            ...
+
+      Finally, the dead particles need to be deleted in some way or
+      another, which is done by the deletion callback, taking the
+      passed world as first and the list of dead particles as second
+      argument. ::
+
+        def particle_deletefunc(world, list_of_dead_ones):
+            ...   
+
 .. class:: Particle(x, y, life : int)
 
    A simple particle component type. It only contains information about

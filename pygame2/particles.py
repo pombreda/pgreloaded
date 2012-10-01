@@ -70,7 +70,7 @@ class ParticleEngine(System):
             def particle_updatefunc(world, set_of_living_ones):
                 ...
 
-        Fineally, the dead particles need to be deleted in some way or
+        Finally, the dead particles need to be deleted in some way or
         another, which is done by the deletion callback, taking the
         passed world as first and the list of dead particles as second
         argument.

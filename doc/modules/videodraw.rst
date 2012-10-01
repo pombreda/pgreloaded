@@ -11,7 +11,7 @@
    :func:`pygame2.color.convert_to_color()`. *target* can be any
    :class:`pygame2.sdl.pixels.SDL_PixelFormat`,
    :class:`pygame2.sdl.surface.SDL_Surface` or
-   :class:`pygame2.video.sprite.SoftSprite` instance.
+   :class:`pygame2.video.sprite.SoftwareSprite` instance.
 
    The returned integer will be a color value matching the target's pixel
    format.
@@ -26,7 +26,7 @@
    to fill with the color.
 
    *target* can be any :class:`pygame2.sdl.surface.SDL_Surface` or
-   :class:`pygame2.video.sprite.SoftSprite` instance.
+   :class:`pygame2.video.sprite.SoftwareSprite` instance.
 
 .. function:: line(target : object, color : object[, width=1]) -> None
 
@@ -36,4 +36,4 @@
    at once, e.g. ``(x1, y1, x2, y2, x3, y3, x4, y4, ...)``.
 
    *target* can be any :class:`pygame2.sdl.surface.SDL_Surface` or
-   :class:`pygame2.video.sprite.SoftSprite` instance.
+   :class:`pygame2.video.sprite.SoftwareSprite` instance.

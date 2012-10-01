@@ -150,6 +150,7 @@ class SDLRenderTest(unittest.TestCase):
         formats = (pixels.SDL_PIXELFORMAT_ARGB8888,
                    pixels.SDL_PIXELFORMAT_RGB555,
                    pixels.SDL_PIXELFORMAT_RGBA4444,
+                   pixels.SDL_PIXELFORMAT_RGBA8888,
                    pixels.SDL_PIXELFORMAT_ARGB2101010,
                    pixels.SDL_PIXELFORMAT_YUY2
                    )

@@ -71,9 +71,28 @@
       Returns the normalized RGBA values of the Color as floating point
       values in the range [0, 1].
 
-.. todo::
-
-   Document arithmetic operations.
+   .. method:: __add__(self, color) -> Color
+               __sub__(self, color) -> Color
+               __mul__(self, color) -> Color
+               __div__(self, color) -> Color
+               __truediv__(self, color) -> Color
+               __mod__(self, color) -> Color
+   
+      Basic arithmetic functions for :class:`Color` values. The arithmetic
+      operations ``+, -, *, /, %`` are supported by the :class:`Color` class
+      and work on a per-channel basis. This means, that the operation ::
+      
+         color = color1 + color2
+      
+      is the same as ::
+      
+         color = Color()
+         color.r = min(color1.r + color2.r, 255)
+         color.g = min(color1.g + color2.g, 255)
+         ...
+      
+      The operations guarantee that the channel values stay in the allowed
+      range of [0, 255].
 
 .. function:: argb_to_color(v : int) -> Color
               ARGB(v : int) -> Color
