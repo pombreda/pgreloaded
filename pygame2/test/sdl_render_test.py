@@ -579,6 +579,10 @@ seems to fail on creating the second renderer of the window, if any""")
     def test_render_get_set_scale(self):
         pass
 
+    @unittest.skip("not implemented")
+    def test_render_get_set_logical_size(self):
+        pass
+
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

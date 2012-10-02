@@ -132,6 +132,8 @@ SDL_Renderer._fields_ = [
     ("window", ctypes.POINTER(SDL_Window)),
     ("_hidden", ctypes.c_int),
     ("_resized", ctypes.c_int),
+    ("_logical_w", ctypes.c_int),
+    ("_logical_h", ctypes.c_int),
     ("_viewport", SDL_Rect),
     ("_viewport_backup", SDL_Rect),
     ("_scale", SDL_FPoint),
@@ -814,7 +816,8 @@ def render_set_scale(renderer, scalex, scaley):
     """Sets the drawing scale for rendering on the current target."""
     if not isinstance(renderer, SDL_Renderer):
         raise TypeError("renderer is not a SDL_Renderer")
-    dll.SDL_RenderSetScale(ctypes.byref(renderer), scalex, scaley)
+    if dll.SDL_RenderSetScale(ctypes.byref(renderer), scalex, scaley) == -1:
+        raise SDLError()
 
 
 @sdltype("SDL_RenderGetScale", [ctypes.POINTER(SDL_Renderer),
@@ -829,6 +832,31 @@ def render_get_scale(renderer):
     dll.SDL_RenderGetScale(ctypes.byref(renderer), ctypes.byref(scx),
                            ctypes.byref(scy))
     return scx.value, scy.value
+
+
+@sdltype("SDL_RenderSetLogicalSize", [ctypes.POINTER(SDL_Renderer),
+                                      ctypes.c_int, ctypes.c_int],
+         ctypes.c_int)
+def render_set_logical_size(renderer, w, h):
+    """Sets the device independent resolution for rendering."""
+    if not isinstance(renderer, SDL_Renderer):
+        raise TypeError("renderer is not a SDL_Renderer")
+    if dll.SDL_RenderSetLogicalSize(ctypes.byref(renderer), w, h) == -1:
+        raise SDLError()
+
+
+@sdltype("SDL_RenderGetLogicalSize", [ctypes.POINTER(SDL_Renderer),
+                                      ctypes.POINTER(ctypes.c_int),
+                                      ctypes.POINTER(ctypes.c_int)], None)
+def render_get_logical_size(renderer):
+    """Gets the device independent resolution for rendering."""
+    if not isinstance(renderer, SDL_Renderer):
+        raise TypeError("renderer is not a SDL_Renderer")
+    w = ctypes.c_int(0)
+    h = ctypes.c_int(0)
+    dll.SDL_RenderGetLogicalSize(ctypes.byref(renderer), ctypes.byref(w),
+                                 ctypes.byref(h))
+    return w.value, h.value
 
 
 @sdltype("SDL_DestroyTexture", [ctypes.POINTER(SDL_Texture)], None)
