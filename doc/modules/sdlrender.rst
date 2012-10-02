@@ -323,18 +323,32 @@
 
 .. function:: render_present(renderer : SDL_Renderer) -> None
 
-   TODO
+   Swaps the renderer's target buffers, causing changed contents to be
+   displayed.
 
    This wraps `SDL_RenderPresent`.
 
+.. function:: render_set_scale(renderer : SDL_Renderer, scalex : float, \
+   scaley : float) -> None
+
+   Sets the scale for drawing on the current target.
+
+   This wraps `SDL_RenderSetScale`.
+
+.. function:: render_get_scale(renderer : SDL_Renderer) -> float, float
+
+   Gets the scale for drawing on the current target.
+
+   This wraps `SDL_RenderGetScale`.
+
 .. function:: destroy_texture(texture : SDL_Texture) -> None
 
-   TODO
+   Destroys the passed texture, releasing its resources.
 
    This wraps `SDL_DestroyTexture`.
 
 .. function:: destroy_renderer(renderer : SDL_Renderer) -> None
 
-   TODO
+   Destroys the passed renderer, releasing its resources
 
    This wraps `SDL_DestroyRenderer`.

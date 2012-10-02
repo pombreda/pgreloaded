@@ -87,6 +87,7 @@ class VideoSpriteTest(unittest.TestCase):
         for w in range(1, 100):
             for h in range(1, 100):
                 sprite = factory.create_texture_sprite(renderer, size=(w, h))
+                self.assertIsInstance(sprite, video.TextureSprite)
                 del sprite
 
     @unittest.skip("not implemented")

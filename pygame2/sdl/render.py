@@ -67,6 +67,12 @@ max_texture_width=%d, max_texture_height=%d)
        self.max_texture_width, self.max_texture_height)
 
 
+class SDL_FPoint(ctypes.Structure):
+    """Internal SDL class used for the SDL_Renderer."""
+    _fields_ = [("x", ctypes.c_float),
+                ("y", ctypes.c_float)]
+
+
 class SDL_Renderer(ctypes.Structure):
     """TODO"""
     pass
@@ -128,6 +134,8 @@ SDL_Renderer._fields_ = [
     ("_resized", ctypes.c_int),
     ("_viewport", SDL_Rect),
     ("_viewport_backup", SDL_Rect),
+    ("_scale", SDL_FPoint),
+    ("_scale_backup", SDL_FPoint),
     ("_textures", ctypes.POINTER(SDL_Texture)),
     ("_target", ctypes.POINTER(SDL_Texture)),
     ("_r", ctypes.c_ubyte),
@@ -798,6 +806,29 @@ def render_present(renderer):
     if not isinstance(renderer, SDL_Renderer):
         raise TypeError("renderer is not a SDL_Renderer")
     dll.SDL_RenderPresent(ctypes.byref(renderer))
+
+
+@sdltype("SDL_RenderSetScale", [ctypes.POINTER(SDL_Renderer),
+                                ctypes.c_float, ctypes.c_float], ctypes.c_int)
+def render_set_scale(renderer, scalex, scaley):
+    """Sets the drawing scale for rendering on the current target."""
+    if not isinstance(renderer, SDL_Renderer):
+        raise TypeError("renderer is not a SDL_Renderer")
+    dll.SDL_RenderSetScale(ctypes.byref(renderer), scalex, scaley)
+
+
+@sdltype("SDL_RenderGetScale", [ctypes.POINTER(SDL_Renderer),
+                                ctypes.POINTER(ctypes.c_float),
+                                ctypes.POINTER(ctypes.c_float)], None)
+def render_get_scale(renderer):
+    """Gets the drawing scale for rendering on the current target."""
+    if not isinstance(renderer, SDL_Renderer):
+        raise TypeError("renderer is not a SDL_Renderer")
+    scx = ctypes.c_float(0)
+    scy = ctypes.c_float(0)
+    dll.SDL_RenderGetScale(ctypes.byref(renderer), ctypes.byref(scx),
+                           ctypes.byref(scy))
+    return scx.value, scy.value
 
 
 @sdltype("SDL_DestroyTexture", [ctypes.POINTER(SDL_Texture)], None)
