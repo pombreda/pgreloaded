@@ -229,8 +229,6 @@ def open_audio(desired):
     requested format, and will be automatically converted to the
     hardware audio format if necessary.
     """
-    if not isinstance(desired, SDL_AudioSpec):
-        raise TypeError("desired must be a SDL_AudioSpec")
     obtained = SDL_AudioSpec(0, 0, 0, 0, None, None)
     retval = dll.SDL_OpenAudio(ctypes.byref(desired), ctypes.byref(obtained))
     if retval == -1:
@@ -278,9 +276,7 @@ def get_audio_device_name(index, iscapture=False):
 def open_audio_device(device, iscapture, desired, allowed_changes):
     """TODO
     """
-    if not isinstance(desired, SDL_AudioSpec):
-        raise TypeError("desired must be a SDL_AudioSpec")
-    device = byteify(device, "utf-8")
+    device = byteify(str(device), "utf-8")
     if bool(iscapture):
         iscapture = 1
     else:
@@ -335,9 +331,6 @@ def pause_audio_device(device, pause_on):
 def load_wav_rw(rwops, freesrc):
     """TODO
     """
-    if not isinstance(rwops, SDL_RWops):
-        raise TypeError("rwops must be a SDL_RWops")
-
     spec = SDL_AudioSpec()
     audiobuf = ctypes.POINTER(ctypes.c_ubyte())
     audiolen = ctypes.c_uint()
@@ -383,8 +376,6 @@ def build_audio_cvt(src_format, src_channels, src_rate, dst_format,
 def convert_audio(cvt):
     """TODO
     """
-    if not isinstance(cvt, SDL_AudioCVT):
-        raise TypeError("cvt must be a SDL_AudioCVT")
     retval = dll.SDL_ConvertAudio(ctypes.byref(cvt))
     if retval != 0:
         raise SDLError()

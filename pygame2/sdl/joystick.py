@@ -54,9 +54,7 @@ def joystick_open(index):
     If index is not an integer, a TypeError is raised. If the index is
     not in the range of joystick_num_joysticks(), a SDLError is raised.
     """
-    if type(index) is not int:
-        raise TypeError("index must be an int")
-    retval = dll.SDL_JoystickOpen(index)
+    retval = dll.SDL_JoystickOpen(int(index))
     if retval is None or not bool(retval):
         raise SDLError()
     return retval.contents
@@ -69,9 +67,7 @@ def joystick_opened(index):
     If index is not an integer, a TypeError is raised. If the index is
     not in the range of joystick_num_joysticks(), a SDLError is raised.
     """
-    if type(index) is not int:
-        raise TypeError("index must be an int")
-    retval = dll.SDL_JoystickOpened(index)
+    retval = dll.SDL_JoystickOpened(int(index))
     if retval < 0:
         raise SDLError()
     return retval == 1
@@ -80,8 +76,6 @@ def joystick_opened(index):
 @sdltype("SDL_JoystickClose", [ctypes.POINTER(SDL_Joystick)], None)
 def joystick_close(joystick):
     """Closes the passed joystick."""
-    if not isinstance(joystick, SDL_Joystick):
-        raise TypeError("joystick must be a SDL_Joystick")
     return dll.SDL_JoystickClose(ctypes.byref(joystick))
 
 
@@ -113,10 +107,6 @@ def joystick_get_axis(joystick, axis):
 
     The state value will be in the range [-32768;32768]
     """
-    if not isinstance(joystick, SDL_Joystick):
-        raise TypeError("joystick must be a SDL_Joystick")
-    if type(axis) is not int:
-        raise TypeError("axis must be an int")
     ret = dll.SDL_JoystickGetAxis(ctypes.byref(joystick), axis)
     return ret
 
@@ -126,10 +116,6 @@ def joystick_get_axis(joystick, axis):
                                  ctypes.POINTER(ctypes.c_int)], ctypes.c_int)
 def joystick_get_ball(joystick, ball):
     """Gets the ball axis change since the last poll."""
-    if not isinstance(joystick, SDL_Joystick):
-        raise TypeError("joystick must be a SDL_Joystick")
-    if type(ball) is not int:
-        raise TypeError("ball must be an int")
     dx = ctypes.c_int(0)
     dy = ctypes.c_int(0)
     ret = dll.SDL_JoystickGetBall(ctypes.byref(joystick), ball,
@@ -146,10 +132,6 @@ def joystick_get_button(joystick, button):
 
     Returns True, if the button is pressed, False otherwise.
     """
-    if not isinstance(joystick, SDL_Joystick):
-        raise TypeError("joystick must be a SDL_Joystick")
-    if type(button) is not int:
-        raise TypeError("button must be an int")
     ret = dll.SDL_JoystickGetButton(ctypes.byref(joystick), button)
     if ret < 0:
         raise SDLError()
@@ -163,10 +145,6 @@ def joystick_get_hat(joystick, hat):
 
     The return value is one of the SDL_HAT_* positions.
     """
-    if not isinstance(joystick, SDL_Joystick):
-        raise TypeError("joystick must be a SDL_Joystick")
-    if type(hat) is not int:
-        raise TypeError("hat must be an int")
     return dll.SDL_JoystickGetHat(ctypes.byref(joystick), hat)
 
 
@@ -176,8 +154,6 @@ def joystick_index(joystick):
 
     Raises a TypeError, if the passed joystick is not a SDL_Joystick.
     """
-    if not isinstance(joystick, SDL_Joystick):
-        raise TypeError("joystick must be a SDL_Joystick")
     return dll.SDL_JoystickIndex(ctypes.byref(joystick))
 
 
@@ -188,9 +164,7 @@ def joystick_name(index):
     If index is not an integer, a TypeError is raised. If the index is
     not in the range of joystick_num_joysticks(), a SDLError is raised.
     """
-    if type(index) is not int:
-        raise TypeError("index must be an int")
-    retval = dll.SDL_JoystickName(index)
+    retval = dll.SDL_JoystickName(int(index))
     if retval is None:
         raise SDLError()
     return stringify(retval, "utf-8")
@@ -202,8 +176,6 @@ def joystick_num_axes(joystick):
 
     Raises a SDLError, if an error occured.
     """
-    if not isinstance(joystick, SDL_Joystick):
-        raise TypeError("joystick must be a SDL_Joystick")
     ret = dll.SDL_JoystickNumAxes(ctypes.byref(joystick))
     if ret < 0:
         raise SDLError()
@@ -216,8 +188,6 @@ def joystick_num_balls(joystick):
 
     Raises a SDLError, if an error occured.
     """
-    if not isinstance(joystick, SDL_Joystick):
-        raise TypeError("joystick must be a SDL_Joystick")
     ret = dll.SDL_JoystickNumBalls(ctypes.byref(joystick))
     if ret < 0:
         raise SDLError()
@@ -231,8 +201,6 @@ def joystick_num_buttons(joystick):
 
     Raises a SDLError, if an error occured.
     """
-    if not isinstance(joystick, SDL_Joystick):
-        raise TypeError("joystick must be a SDL_Joystick")
     ret = dll.SDL_JoystickNumButtons(ctypes.byref(joystick))
     if ret < 0:
         raise SDLError()
@@ -245,8 +213,6 @@ def joystick_num_hats(joystick):
 
     Raises a SDLError, if an error occured.
     """
-    if not isinstance(joystick, SDL_Joystick):
-        raise TypeError("joystick must be a SDL_Joystick")
     ret = dll.SDL_JoystickNumHats(ctypes.byref(joystick))
     if ret < 0:
         raise SDLError()

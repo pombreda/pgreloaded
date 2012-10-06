@@ -25,8 +25,6 @@ def record_gesture(touchid):
          ctypes.c_int)
 def save_all_dollar_templates(src):
     """Saves all currently loaded Dollar Gesture templates."""
-    if not isinstance(src, SDL_RWops):
-        raise TypeError("src must be a SDL_RWops")
     retval = dll.SDL_SaveAllDollarTemplates(ctypes.byref(src))
     if retval == -1:
         raise SDLError()
@@ -36,8 +34,6 @@ def save_all_dollar_templates(src):
                                     ctypes.POINTER(SDL_RWops)], ctypes.c_int)
 def save_dollar_template(gestureid, src):
     """Saves a currently loaded Dollar Gesture template."""
-    if not isinstance(src, SDL_RWops):
-        raise TypeError("src must be a SDL_RWops")
     retval = dll.SDL_SaveDollarTemplate(gestureid, src)
     if retval == -1:
         raise SDLError()
@@ -47,8 +43,6 @@ def save_dollar_template(gestureid, src):
                                      ctypes.POINTER(SDL_RWops)], ctypes.c_int)
 def load_dollar_templates(touchid, src):
     """Loads Dollar Gesture templates from a source."""
-    if not isinstance(src, SDL_RWops):
-        raise TypeError("src must be a SDL_RWops")
     retval = dll.SDL_LoadDollarTemplates(touchid, src)
     if retval == -1:
         raise SDLError()

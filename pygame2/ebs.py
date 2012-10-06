@@ -197,8 +197,6 @@ class World(object):
 
     def remove_system(self, system):
         """Removes a processing system from the world."""
-        if not isinstance(system, System):
-            raise TypeError("system must be a System")
         self._systems.remove(system)
 
     def process(self):

@@ -355,8 +355,6 @@ class SpriteFactory(object):
         If free is set to True, the passed surface will be freed
         automatically.
         """
-        if not isinstance(surface, sdlsurface.SDL_Surface):
-            raise TypeError("surface must be a SDL_Surface")
         if self.sprite_type == TEXTURE:
             renderer = self.default_args["renderer"]
             texture = render.create_texture_from_surface(renderer.renderer,

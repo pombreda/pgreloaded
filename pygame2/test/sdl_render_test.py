@@ -1,5 +1,6 @@
 import sys
 import unittest
+from ctypes import ArgumentError
 import pygame2.sdl as sdl
 import pygame2.sdl.render as render
 import pygame2.sdl.video as video
@@ -49,9 +50,12 @@ class SDLRenderTest(unittest.TestCase):
                 success = True
         self.assertTrue(success, "failed on retrieving the driver information")
 
-        self.assertRaises(TypeError, render.get_render_driver_info, None)
-        self.assertRaises(TypeError, render.get_render_driver_info, "Test")
-        self.assertRaises(TypeError, render.get_render_driver_info, self)
+        self.assertRaises((AttributeError, TypeError),
+                          render.get_render_driver_info, None)
+        self.assertRaises((AttributeError, TypeError),
+                          render.get_render_driver_info, "Test")
+        self.assertRaises((AttributeError, TypeError),
+                          render.get_render_driver_info, self)
         self.assertRaises(sdl.SDLError, render.get_render_driver_info, -1)
 
     def test_create_window_and_renderer(self):
@@ -96,8 +100,10 @@ class SDLRenderTest(unittest.TestCase):
         render.destroy_renderer(renderer)
         surface.free_surface(sf)
 
-        self.assertRaises(TypeError, render.create_software_renderer, None)
-        self.assertRaises(TypeError, render.create_software_renderer, 1234)
+        self.assertRaises((AttributeError, TypeError),
+                          render.create_software_renderer, None)
+        self.assertRaises((AttributeError, TypeError),
+                          render.create_software_renderer, 1234)
 
     def test_get_renderer(self):
         window = video.create_window("Test", 10, 10, 10, 10,
@@ -116,8 +122,10 @@ class SDLRenderTest(unittest.TestCase):
 
         video.destroy_window(window)
         self.assertIsNone(render.get_renderer(window))
-        self.assertRaises(TypeError, render.get_renderer, None)
-        self.assertRaises(TypeError, render.get_renderer, "Test")
+        self.assertRaises((AttributeError, TypeError),
+                          render.get_renderer, None)
+        self.assertRaises((AttributeError, TypeError),
+                          render.get_renderer, "Test")
 
     def test_get_renderer_info(self):
         window = video.create_window("Test", 10, 10, 10, 10,
@@ -136,8 +144,10 @@ class SDLRenderTest(unittest.TestCase):
             self.assertRaises(sdl.SDLError, render.get_renderer_info, renderer)
 
         video.destroy_window(window)
-        self.assertRaises(TypeError, render.get_renderer_info, None)
-        self.assertRaises(TypeError, render.get_renderer_info, "Test")
+        self.assertRaises((AttributeError, TypeError),
+                          render.get_renderer_info, None)
+        self.assertRaises((AttributeError, TypeError),
+                          render.get_renderer_info, "Test")
 
     def test_create_destroy_texture(self):
         window = video.create_window("Test", 10, 10, 10, 10,
@@ -175,11 +185,13 @@ class SDLRenderTest(unittest.TestCase):
                           pixels.SDL_PIXELFORMAT_RGB555, -5, 10, 10)
         self.assertRaises(ValueError, render.create_texture, renderer,
                           -10, 1, 10, 10)
-        self.assertRaises(TypeError, render.create_texture, None,
+        self.assertRaises((AttributeError, TypeError),
+                          render.create_texture, None,
                           pixels.SDL_PIXELFORMAT_RGB555, 1, 10, 10)
-        self.assertRaises(TypeError, render.create_texture, "Test",
+        self.assertRaises((AttributeError, TypeError),
+                          render.create_texture, "Test",
                           pixels.SDL_PIXELFORMAT_RGB555, 1, 10, 10)
-        self.assertRaises(TypeError, render.create_texture, renderer,
+        self.assertRaises(ValueError, render.create_texture, renderer,
                           "Test", 1, 10, 10)
         self.assertRaises(ValueError, render.create_texture, renderer,
                           pixels.SDL_PIXELFORMAT_RGB555, None, 10, 10)
@@ -496,9 +508,12 @@ seems to fail on creating the second renderer of the window, if any""")
         render.render_clear(renderer)
         render.destroy_renderer(renderer)
         self.assertRaises(sdl.SDLError, render.render_clear, renderer)
-        self.assertRaises(TypeError, render.render_clear, None)
-        self.assertRaises(TypeError, render.render_clear, "Test")
-        self.assertRaises(TypeError, render.render_clear, 123456)
+        self.assertRaises((AttributeError, TypeError),
+                          render.render_clear, None)
+        self.assertRaises((AttributeError, TypeError),
+                          render.render_clear, "Test")
+        self.assertRaises((AttributeError, TypeError),
+                          render.render_clear, 123456)
 
     @unittest.skipIf(hasattr(sys, "pypy_version_info"),
                      "PyPy's ctypes can't do byref(value, offset)")

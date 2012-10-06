@@ -76,8 +76,6 @@ def get_error(device):
     """Gets the most recent error generated within the AL system for the
     specific device.
     """
-    if not isinstance(device, ALCdevice):
-        raise TypeError("device must be a ALCdevice")
     return dll.alcGetError(ctypes.byref(device))
 
 
@@ -86,8 +84,6 @@ def get_error(device):
             ctypes.POINTER(ALCcontext))
 def create_context(device, attrs=None):
     """Creates a context from the specified device."""
-    if not isinstance(device, ALCdevice):
-        raise TypeError("device must be a ALCdevice")
     ptr = None
     if attrs is not None:
         arr, size = array.to_ctypes(attrs, ctypes.c_int, len(attrs) + 1)
@@ -103,32 +99,24 @@ def create_context(device, attrs=None):
             ctypes.c_byte)
 def make_context_current(context):
     """Makes the specified context the current context."""
-    if not isinstance(context, ALCcontext):
-        raise TypeError("context must be a ALCcontext")
     return dll.alcMakeContextCurrent(ctypes.byref(context)) == ALC_TRUE
 
 
 @openaltype("alcProcessContext", [ctypes.POINTER(ALCcontext)], None)
 def process_context(context):
     """Tells the passed context to begin processing."""
-    if not isinstance(context, ALCcontext):
-        raise TypeError("context must be a ALCcontext")
     dll.alcProcessContext(ctypes.byref(context))
 
 
 @openaltype("alcSuspendContext", [ctypes.POINTER(ALCcontext)], None)
 def suspend_context(context):
     """Tells the passed context to suspend processing."""
-    if not isinstance(context, ALCcontext):
-        raise TypeError("context must be a ALCcontext")
     dll.alcSuspendContext(ctypes.byref(context))
 
 
 @openaltype("alcDestroyContext", [ctypes.POINTER(ALCcontext)], None)
 def destroy_context(context):
     """Destroys the passed context."""
-    if not isinstance(context, ALCcontext):
-        raise TypeError("context must be a ALCcontext")
     dll.alcDestroyContext(ctypes.byref(context))
 
 
@@ -145,8 +133,6 @@ def get_current_context():
             ctypes.POINTER(ALCdevice))
 def get_context_device(context):
     """Retrieves the device used by the context."""
-    if not isinstance(context, ALCcontext):
-        raise TypeError("context must be a ALCcontext")
     retval = dll.alcGetContextsDevice(ctypes.byref(context))
     if retval is None or not bool(retval):
         raise OpenALError()
@@ -160,7 +146,7 @@ def open_device(devicename=None):
     If no devicename is passed, the default output device is opened.
     """
     if devicename is not None:
-        devicename = byteify(devicename, "utf-8")
+        devicename = byteify(str(devicename), "utf-8")
     retval = dll.alcOpenDevice(devicename)
     if retval is None or not bool(retval):
         return None
@@ -170,8 +156,6 @@ def open_device(devicename=None):
 @openaltype("alcCloseDevice", [ctypes.POINTER(ALCdevice)], ctypes.c_byte)
 def close_device(device):
     """Closes the passed OpenAL device."""
-    if not isinstance(device, ALCdevice):
-        raise TypeError("device must be a ALCdevice")
     return dll.alcCloseDevice(ctypes.byref(device)) == ALC_TRUE
 
 
@@ -179,11 +163,9 @@ def close_device(device):
                                       ctypes.c_char_p], ctypes.c_byte)
 def is_extension_present(device, extname):
     """Checks, if a certain extension is available for the passed device."""
-    extname = byteify(extname, "utf-8")
+    extname = byteify(str(extname), "utf-8")
     devptr = None
     if device is not None:
-        if not isinstance(device, ALCdevice):
-            raise TypeError("device must be a ALCdevice")
         devptr = ctypes.byref(device)
     return dll.alcIsExtensionPresent(devptr, extname) == ALC_TRUE
 
@@ -192,9 +174,7 @@ def is_extension_present(device, extname):
             ctypes.c_void_p)
 def get_proc_address(device, funcname):
     """Retrieves the address of the specified device extension function."""
-    if not isinstance(device, ALCdevice):
-        raise TypeError("device must be a ALCdevice")
-    funcname = byteify(funcname, "utf-8")
+    funcname = byteify(str(funcname), "utf-8")
     return dll.alcGetProcAddress(ctypes.byref(device), funcname)
 
 
@@ -204,11 +184,7 @@ def get_enum_value(device, enumname):
     """Retrieves the value for the specified enumeration name on the
     device.
     """
-    if not isinstance(device, ALCdevice):
-        raise TypeError("device must be a ALCdevice")
-    if type(enumname) is not str:
-        raise TypeError("enumname must be a string")
-    enumname = byteify(enumname, "utf-8")
+    enumname = byteify(str(enumname), "utf-8")
     return dll.alcGetEnumValue(ctypes.byref(device), enumname)
 
 
@@ -218,8 +194,6 @@ def get_string(device, param):
     """Returns a set of strings related to the context device."""
     devptr = None
     if device is not None:
-        if not isinstance(device, ALCdevice):
-            raise TypeError("device must be a ALCdevice")
         devptr = ctypes.byref(device)
     retval = dll.alcGetString(devptr, param)
     if retval is None or not bool(retval):
@@ -232,8 +206,6 @@ def get_string(device, param):
             None)
 def get_integer_v(device, param, size):
     """Returns a set of integers related to the context device."""
-    if not isinstance(device, ALCdevice):
-        raise TypeError("device must be a ALCdevice")
     values = (size * ctypes.c_int)()
     vptr = ctypes.cast(values, ctypes.POINTER(ctypes.c_int))
     dll.alcGetIntegerv(ctypes.byref(device), param, size, vptr)
@@ -246,7 +218,7 @@ def get_integer_v(device, param, size):
 def capture_open_device(devicename, frequency, dformat, buffersize):
     """Opens an OpenAL capture device with the specified name."""
     if devicename is not None:
-        devicename = byteify(devicename, "utf-8")
+        devicename = byteify(str(devicename), "utf-8")
     retval = dll.alcCaptureOpenDevice(devicename, frequency, dformat,
                                       buffersize)
     if retval is None or not bool(retval):
@@ -258,24 +230,18 @@ def capture_open_device(devicename, frequency, dformat, buffersize):
             ctypes.c_byte)
 def capture_close_device(device):
     """Closes the passed capture device."""
-    if not isinstance(device, ALCdevice):
-        raise TypeError("device must be a ALCdevice")
     return dll.alcCaptureCloseDevice(ctypes.byref(device)) == ALC_TRUE
 
 
 @openaltype("alcCaptureStart", [ctypes.POINTER(ALCdevice)], None)
 def capture_start(device):
     """Start a capturing operation."""
-    if not isinstance(device, ALCdevice):
-        raise TypeError("device must be a ALCdevice")
     dll.alcCaptureStart(ctypes.byref(device))
 
 
 @openaltype("alcCaptureStop", [ctypes.POINTER(ALCdevice)], None)
 def capture_stop(device):
     """Stops a capturing operation."""
-    if not isinstance(device, ALCdevice):
-        raise TypeError("device must be a ALCdevice")
     dll.alcCaptureStop(ctypes.byref(device))
 
 
@@ -284,8 +250,6 @@ def capture_stop(device):
             None)
 def capture_samples(device, amount, itemsize):
     """Retrieves the audio data samples of a capture device."""
-    if not isinstance(device, ALCdevice):
-        raise TypeError("device must be a ALCdevice")
     bsize = amount * itemsize
     buf = (ctypes.c_ubyte * bsize)()
     ptr = ctypes.cast(buf, ctypes.POINTER(ctypes.c_ubyte))

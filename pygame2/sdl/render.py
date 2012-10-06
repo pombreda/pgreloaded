@@ -205,8 +205,6 @@ def create_renderer(window, index, flags):
 
     Raises a SDLError on failure
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     renderer = dll.SDL_CreateRenderer(ctypes.byref(window), index, flags)
     if renderer is None or not bool(renderer):
         raise SDLError()
@@ -220,8 +218,6 @@ def create_software_renderer(surface):
 
     Raises a SDLError on failure.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     renderer = dll.SDL_CreateSoftwareRenderer(ctypes.byref(surface))
     if renderer is None or not bool(renderer):
         raise SDLError()
@@ -233,8 +229,6 @@ def create_software_renderer(surface):
 def get_renderer(window):
     """Retrieves the rendering context for the passed window.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     renderer = dll.SDL_GetRenderer(ctypes.byref(window))
     if renderer is None or not bool(renderer):
         return None
@@ -249,8 +243,6 @@ def get_renderer_info(renderer):
 
     Raises a SDLError on failure.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer must be a SDL_Renderer")
     info = SDL_RendererInfo()
     retval = dll.SDL_GetRendererInfo(ctypes.byref(renderer),
                                      ctypes.byref(info))
@@ -268,11 +260,7 @@ def create_texture(renderer, format_, access, w, h):
     Raises an error, if the format is unsupported or the width and
     height are out of range.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer must be a SDL_Renderer")
-    if type(format_) not in (int, long):
-        raise TypeError("format must be a valid SDL_PIXELFORMAT value")
-    if format_ < 0:
+    if int(format_) < 0:
         raise ValueError("format must be a valid SDL_PIXELFORMAT value")
     if access not in _ALLOWED_ACCESS:
         raise ValueError("access must be a valid SDL_TEXTUREACCESS value")
@@ -292,10 +280,6 @@ def create_texture_from_surface(renderer, surface):
 
     The surface is not modified or freed by this function.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer must be a SDL_Renderer")
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     retval = dll.SDL_CreateTextureFromSurface(ctypes.byref(renderer),
                                               ctypes.byref(surface))
     if retval is None or not bool(retval):
@@ -313,8 +297,6 @@ def query_texture(texture):
 
     This returns the texture flags, access mode and width and height.
     """
-    if not isinstance(texture, SDL_Texture):
-        raise TypeError("texture must be a SDL_Texture")
     flags = ctypes.c_uint(0)
     access = ctypes.c_int(0)
     w = ctypes.c_int(0)
@@ -335,8 +317,6 @@ def set_texture_color_mod(texture, r, g, b):
 
     The color value will be multiplied into copy operations.
     """
-    if not isinstance(texture, SDL_Texture):
-        raise TypeError("texture must be a SDL_Texture")
     retval = dll.SDL_SetTextureColorMod(ctypes.byref(texture), r, g, b)
     if retval == -1:
         raise SDLError()
@@ -350,8 +330,6 @@ def set_texture_color_mod(texture, r, g, b):
 def get_texture_color_mod(texture):
     """Gets the additional color value used in render copy operations.
     """
-    if not isinstance(texture, SDL_Texture):
-        raise TypeError("texture must be a SDL_Texture")
     r = ctypes.c_ubyte(0)
     g = ctypes.c_ubyte(0)
     b = ctypes.c_ubyte(0)
@@ -369,8 +347,6 @@ def set_texture_alpha_mod(texture, alpha):
 
     The alpha value will be multiplied into copy operations.
     """
-    if not isinstance(texture, SDL_Texture):
-        raise TypeError("texture must be a SDL_Texture")
     retval = dll.SDL_SetTextureAlphaMod(ctypes.byref(texture), alpha)
     if retval == -1:
         raise SDLError()
@@ -382,8 +358,6 @@ def set_texture_alpha_mod(texture, alpha):
 def get_texture_alpha_mod(texture):
     """Gets the additional alpha value used in render copy operations.
     """
-    if not isinstance(texture, SDL_Texture):
-        raise TypeError("texture must be a SDL_Texture")
     alpha = ctypes.c_ubyte(0)
     retval = dll.SDL_GetTextureAlphaMod(ctypes.byref(texture),
                                         ctypes.byref(alpha))
@@ -397,8 +371,6 @@ def get_texture_alpha_mod(texture):
 def set_texture_blend_mode(texture, mode):
     """Sets the blend mode to be used for textures copy operations.
     """
-    if not isinstance(texture, SDL_Texture):
-        raise TypeError("texture must be a SDL_Texture")
     retval = dll.SDL_SetTextureBlendMode(ctypes.byref(texture), mode)
     if retval == -1:
         raise SDLError()
@@ -410,8 +382,6 @@ def set_texture_blend_mode(texture, mode):
 def get_texture_blend_mode(texture):
     """Gets the blend mode used for texture copy operations.
     """
-    if not isinstance(texture, SDL_Texture):
-        raise TypeError("texture must be a SDL_Texture")
     mode = ctypes.c_int(0)
     retval = dll.SDL_GetTextureBlendMode(ctypes.byref(texture),
                                          ctypes.byref(mode))
@@ -429,10 +399,6 @@ def update_texture(texture, rect, pixels, pitch):
     The passed rect can be None, if the entire texture's pixel data
     should be updated (see lock_texture()).
     """
-    if not isinstance(texture, SDL_Texture):
-        raise TypeError("texture must be a SDL_Texture")
-    if not isinstance(rect, SDL_Rect):
-        raise TypeError("rect must be a SDL_Rect")
     retval = dll.SDL_UpdateTexture(ctypes.byref(texture), ctypes.byref(rect),
                                    ctypes.byref(pixels), pitch)
     if retval == -1:
@@ -451,10 +417,6 @@ def lock_texture(texture, rect=None):
 
     The texture must have been created with SDL_TEXTUREACCESS_STREAMING.
     """
-    if not isinstance(texture, SDL_Texture):
-        raise TypeError("texture must be a SDL_Texture")
-    if rect is not None and not isinstance(rect, SDL_Rect):
-        raise TypeError("rect must be a SDL_Rect or None")
     pixels = ctypes.POINTER(ctypes.c_void_p)()
     pitch = ctypes.c_int(0)
     if rect:
@@ -473,8 +435,6 @@ def unlock_texture(texture):
     """Unlocks a texture and uploads the changed pixel data to the video
     memory, if necessary.
     """
-    if not isinstance(texture, SDL_Texture):
-        raise TypeError("texture must be a SDL_Texture")
     dll.SDL_UnlockTexture(ctypes.byref(texture))
 
 
@@ -484,8 +444,6 @@ def render_target_supported(renderer):
     """Determines whether the window of the renderer supports the use of
     render targets.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     return dll.SDL_RenderTargetSupported(ctypes.byref(renderer)) == SDL_TRUE
 
 
@@ -498,10 +456,6 @@ def set_render_target(renderer, texture=None):
     used. If a SDL_Texture is passed, it must have been created with the
     SDL_TEXTUREACCESS_TARGET flag.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
-    if texture is not None and not isinstance(texture, SDL_Texture):
-        raise TypeError("texture must be a SDL_Texture")
     if texture is None:
         retval = dll.SDL_SetRenderTarget(ctypes.byref(renderer), None)
     else:
@@ -519,10 +473,6 @@ def render_set_viewport(renderer, rect=None):
     If the passed SDL_Rect is None, the entire target will be used as
     drawing area.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
-    if rect is not None and not isinstance(rect, SDL_Rect):
-        raise TypeError("rect must be a SDL_Rect")
     if rect is None:
         retval = dll.SDL_RenderSetViewport(ctypes.byref(renderer), None)
     else:
@@ -540,8 +490,6 @@ def render_set_viewport(renderer, rect=None):
 def render_get_viewport(renderer):
     """Gets the drawing area for the current target.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     rect = SDL_Rect()
     dll.SDL_RenderGetViewport(ctypes.byref(renderer), ctypes.byref(rect))
     return rect
@@ -554,8 +502,6 @@ def render_get_viewport(renderer):
 def set_render_draw_color(renderer, r, g, b, a):
     """Sets the color used for drawing operations (rect, line and clear).
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     retval = dll.SDL_SetRenderDrawColor(ctypes.byref(renderer), r, g, b, a)
     if retval == -1:
         raise SDLError()
@@ -571,8 +517,6 @@ def get_render_draw_color(renderer):
     """Gets the color used for drawing operations (rect, line and clear)
     as RGBA tuple.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     r = ctypes.c_ubyte(0)
     g = ctypes.c_ubyte(0)
     b = ctypes.c_ubyte(0)
@@ -590,8 +534,6 @@ def get_render_draw_color(renderer):
 def set_render_draw_blend_mode(renderer, mode):
     """Sets the blend mode for drawing operations (fill and line).
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     retval = dll.SDL_SetRenderDrawBlendMode(ctypes.byref(renderer), mode)
     if retval == -1:
         raise SDLError()
@@ -603,8 +545,6 @@ def set_render_draw_blend_mode(renderer, mode):
 def get_render_draw_blend_mode(renderer):
     """Gets the blend mode for drawing operations (fill and line).
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     mode = ctypes.c_int(0)
     retval = dll.SDL_GetRenderDrawBlendMode(ctypes.byref(renderer),
                                             ctypes.byref(mode))
@@ -619,8 +559,6 @@ def render_clear(renderer):
 
     This clears the entire rendering target, ignoring any set viewport.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     retval = dll.SDL_RenderClear(ctypes.byref(renderer))
     if retval == -1:
         raise SDLError()
@@ -631,8 +569,6 @@ def render_clear(renderer):
 def render_draw_point(renderer, x, y):
     """Draws a point on the current rendering target.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     retval = dll.SDL_RenderDrawPoint(ctypes.byref(renderer), x, y)
     if retval == -1:
         raise SDLError()
@@ -657,8 +593,6 @@ def render_draw_points(renderer, points):
 def render_draw_line(renderer, x1, y1, x2, y2):
     """Draws a line on the current rendering target.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     retval = dll.SDL_RenderDrawLine(ctypes.byref(renderer), x1, y1, x2, y2)
     if retval == -1:
         raise SDLError()
@@ -685,10 +619,6 @@ def render_draw_rect(renderer, rect=None):
     If the passed rect is None, the entire rendering target will be
     outlined.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
-    if rect is not None and not isinstance(rect, SDL_Rect):
-        raise TypeError("rect is not a SDL_Rect")
     if rect is None:
         retval = dll.SDL_RenderDrawRect(ctypes.byref(renderer), None)
     else:
@@ -704,8 +634,6 @@ def render_draw_rect(renderer, rect=None):
 def render_draw_rects(renderer, rects):
     """Draw multiple rectangles on the current rendering target.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     rects, count = array.to_ctypes(rects, SDL_Rect)
     retval = dll.SDL_RenderDrawRects(ctypes.byref(renderer),
                                      ctypes.byref(rects), count)
@@ -721,10 +649,6 @@ def render_fill_rect(renderer, rect=None):
 
     If the passed rect is None, the entire rendering target will be filled.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
-    if rect is not None and not isinstance(rect, SDL_Rect):
-        raise TypeError("rect is not a SDL_Rect")
     if rect is None:
         retval = dll.SDL_RenderFillRect(ctypes.byref(renderer), None)
     else:
@@ -741,8 +665,6 @@ def render_fill_rects(renderer, rects):
     """Fills multiple rectangles on the current rendering target with
     the set drawing color.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     rects, count = array.to_ctypes(rects, SDL_Rect)
     retval = dll.SDL_RenderFillRects(ctypes.byref(renderer),
                                      ctypes.byref(rects), count)
@@ -761,14 +683,6 @@ def render_copy(renderer, texture, srcrect=None, dstrect=None):
     is None, the entire rendering target will be used as area to copy
     the texture to.
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
-    if not isinstance(texture, SDL_Texture):
-        raise TypeError("texture is not a SDL_Texture")
-    if srcrect is not None and not isinstance(srcrect, SDL_Rect):
-        raise TypeError("srcrect must be a SDL_Rect")
-    if dstrect is not None and not isinstance(dstrect, SDL_Rect):
-        raise TypeError("dstrect must be a SDL_Rect")
     srcval = None
     if srcrect is not None:
         srcval = ctypes.byref(srcrect)
@@ -788,10 +702,6 @@ def render_copy(renderer, texture, srcrect=None, dstrect=None):
 def render_read_pixels(renderer, rect, format_, bufsize, pitch):
     """TODO
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
-    if not isinstance(rect, SDL_Rect):
-        raise TypeError("rect is not a SDL_Rect")
     pixelbuf = (bufsize * ctypes.c_uint)()
     retval = dll.SDL_RenderReadPixels(ctypes.byref(renderer),
                                       ctypes.byref(rect), format_,
@@ -805,8 +715,6 @@ def render_read_pixels(renderer, rect, format_, bufsize, pitch):
 def render_present(renderer):
     """TODO
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     dll.SDL_RenderPresent(ctypes.byref(renderer))
 
 
@@ -814,8 +722,6 @@ def render_present(renderer):
                                 ctypes.c_float, ctypes.c_float], ctypes.c_int)
 def render_set_scale(renderer, scalex, scaley):
     """Sets the drawing scale for rendering on the current target."""
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     if dll.SDL_RenderSetScale(ctypes.byref(renderer), scalex, scaley) == -1:
         raise SDLError()
 
@@ -825,8 +731,6 @@ def render_set_scale(renderer, scalex, scaley):
                                 ctypes.POINTER(ctypes.c_float)], None)
 def render_get_scale(renderer):
     """Gets the drawing scale for rendering on the current target."""
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     scx = ctypes.c_float(0)
     scy = ctypes.c_float(0)
     dll.SDL_RenderGetScale(ctypes.byref(renderer), ctypes.byref(scx),
@@ -839,8 +743,6 @@ def render_get_scale(renderer):
          ctypes.c_int)
 def render_set_logical_size(renderer, w, h):
     """Sets the device independent resolution for rendering."""
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     if dll.SDL_RenderSetLogicalSize(ctypes.byref(renderer), w, h) == -1:
         raise SDLError()
 
@@ -850,8 +752,6 @@ def render_set_logical_size(renderer, w, h):
                                       ctypes.POINTER(ctypes.c_int)], None)
 def render_get_logical_size(renderer):
     """Gets the device independent resolution for rendering."""
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     w = ctypes.c_int(0)
     h = ctypes.c_int(0)
     dll.SDL_RenderGetLogicalSize(ctypes.byref(renderer), ctypes.byref(w),
@@ -863,8 +763,6 @@ def render_get_logical_size(renderer):
 def destroy_texture(texture):
     """TODO
     """
-    if not isinstance(texture, SDL_Texture):
-        raise TypeError("texture is not a SDL_Texture")
     dll.SDL_DestroyTexture(ctypes.byref(texture))
 
 
@@ -872,6 +770,4 @@ def destroy_texture(texture):
 def destroy_renderer(renderer):
     """TODO
     """
-    if not isinstance(renderer, SDL_Renderer):
-        raise TypeError("renderer is not a SDL_Renderer")
     dll.SDL_DestroyRenderer(ctypes.byref(renderer))

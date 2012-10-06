@@ -252,8 +252,8 @@ class SDLRectTest(unittest.TestCase):
                     self.assertFalse(rect.rect_empty(r))
                 else:
                     self.assertTrue(rect.rect_empty(r))
-        self.assertRaises(TypeError, rect.rect_empty, None)
-        self.assertRaises(TypeError, rect.rect_empty, "Test")
+        self.assertRaises(AttributeError, rect.rect_empty, None)
+        self.assertRaises(AttributeError, rect.rect_empty, "Test")
 
     def test_rect_equals(self):
         r1 = rect.SDL_Rect(0, 0, 0, 0)
@@ -266,10 +266,9 @@ class SDLRectTest(unittest.TestCase):
         r2 = rect.SDL_Rect(0, 0, 1, 2)
         self.assertFalse(rect.rect_equals(r1, r2))
         self.assertNotEqual(r1, r2)
-        self.assertRaises(TypeError, rect.rect_equals, None, None)
-        self.assertRaises(TypeError, rect.rect_equals, "Test", r2)
-        self.assertRaises(TypeError, rect.rect_equals, r1, None)
-        self.assertRaises(TypeError, rect.rect_equals, r1, "Test")
+        self.assertRaises(AttributeError, rect.rect_equals, "Test", r2)
+        self.assertRaises(AttributeError, rect.rect_equals, r1, None)
+        self.assertRaises(AttributeError, rect.rect_equals, r1, "Test")
 
     def test_union_rect(self):
         r1 = rect.SDL_Rect(0, 0, 10, 10)
@@ -292,10 +291,14 @@ class SDLRectTest(unittest.TestCase):
         r3 = rect.union_rect(r1, r2)
         self.assertEqual((r3.x, r3.y, r3.w, r3.h), (0, 0, 15, 16))
 
-        self.assertRaises(TypeError, rect.union_rect, None, None)
-        self.assertRaises(TypeError, rect.union_rect, "Test", r2)
-        self.assertRaises(TypeError, rect.union_rect, r1, None)
-        self.assertRaises(TypeError, rect.union_rect, r1, "Test")
+        self.assertRaises((AttributeError, TypeError),
+                          rect.union_rect, None, None)
+        self.assertRaises((AttributeError, TypeError),
+                          rect.union_rect, "Test", r2)
+        self.assertRaises((AttributeError, TypeError),
+                          rect.union_rect, r1, None)
+        self.assertRaises((AttributeError, TypeError),
+                          rect.union_rect, r1, "Test")
 
     def test_intersect_rect_and_line(self):
         r = rect.SDL_Rect()

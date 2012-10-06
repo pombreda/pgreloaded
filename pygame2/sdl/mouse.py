@@ -48,8 +48,6 @@ def create_color_cursor(surface, hotx, hoty):
 
     If the cursor could not be created, a SDLError is raised.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     cursor = dll.SDL_CreateColorCursor(ctypes.byref(surface), hotx, hoty)
     if cursor is None or not bool(cursor):
         raise SDLError()
@@ -73,8 +71,6 @@ def create_cursor(data, mask, w, h, hotx, hoty):
 @sdltype("SDL_FreeCursor", [ctypes.POINTER(SDL_Cursor)], None)
 def free_cursor(cursor):
     """Releases the resources hold by the passed SDL_Cursor."""
-    if not isinstance(cursor, SDL_Cursor):
-        raise TypeError("cursor must be a SDL_Cursor")
     dll.SDL_FreeCursor(ctypes.byref(cursor))
 
 
@@ -90,8 +86,6 @@ def get_cursor():
 @sdltype("SDL_SetCursor", [ctypes.POINTER(SDL_Cursor)], None)
 def set_cursor(cursor):
     """Sets the SDL_Cursor to be used by the mouse input device."""
-    if not isinstance(cursor, SDL_Cursor):
-        raise TypeError("cursor must be a SDL_Cursor")
     dll.SDL_SetCursor(ctypes.byref(cursor))
 
 
@@ -186,8 +180,6 @@ def warp_mouse_in_window(window, x, y):
     If window is None, the mouse will be moved to the position in the SDL
     window, which currently has the input focus.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     if window is None:
         dll.SDL_WarpMouseInWindow(None, x, y)
     else:

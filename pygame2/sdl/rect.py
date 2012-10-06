@@ -77,10 +77,6 @@ def enclose_points(points, clip=None):
     ignored.
     """
     result = SDL_Rect()
-
-    if clip is not None and not isinstance(clip, SDL_Rect):
-        raise TypeError("clip must be a SDL_Rect or None")
-
     arptr, count = array.to_ctypes(points, SDL_Point)
     arptr = ctypes.cast(arptr, ctypes.POINTER(SDL_Point))
     if count == 0:
@@ -97,10 +93,8 @@ def enclose_points(points, clip=None):
                                  ctypes.POINTER(SDL_Rect)], ctypes.c_int)
 def has_intersection(recta, rectb):
     """Checks, if the passed rectangles intersect."""
-    if not isinstance(recta, SDL_Rect) or not isinstance(rectb, SDL_Rect):
-        raise TypeError("recta and rectb must be SDL_Rect instances")
-    ret = dll.SDL_HasIntersection(ctypes.byref(recta), ctypes.byref(rectb))
-    return ret == SDL_TRUE
+    return dll.SDL_HasIntersection(ctypes.byref(recta),
+                                   ctypes.byref(rectb)) == SDL_TRUE
 
 
 @sdltype("SDL_IntersectRect", [ctypes.POINTER(SDL_Rect),
@@ -114,8 +108,6 @@ def intersect_rect(recta, rectb):
     denotes the  intersection area of both rectangles. If there is no
     intersection, the returned SDL_Rect value is undefined.
     """
-    if not isinstance(recta, SDL_Rect) or not isinstance(rectb, SDL_Rect):
-        raise TypeError("recta and rectb must be SDL_Rect instances")
     result = SDL_Rect()
     ret = dll.SDL_IntersectRect(ctypes.byref(recta), ctypes.byref(rectb),
                                 ctypes.byref(result))
@@ -150,9 +142,6 @@ def intersect_rect_and_line(rect, x1, y1, x2, y2):
     print(intersect_rect_and_line(rect, x1, y1, x2, y2)
     # prints(False, 0, 0, 10, 10)
     """
-    if not isinstance(rect, SDL_Rect):
-        raise TypeError("rect must be a SDL_Rect")
-
     a1, a2 = ctypes.c_int(x1), ctypes.c_int(y1)
     b1, b2 = ctypes.c_int(x2), ctypes.c_int(y2)
     ret = dll.SDL_IntersectRectAndLine(ctypes.byref(rect), ctypes.byref(a1),
@@ -165,8 +154,6 @@ def intersect_rect_and_line(rect, x1, y1, x2, y2):
                            ctypes.POINTER(SDL_Rect)], None)
 def union_rect(recta, rectb):
     """Calculates the union of the passed rects."""
-    if not isinstance(recta, SDL_Rect) or not isinstance(rectb, SDL_Rect):
-        raise TypeError("recta and rectb must be SDL_Rect instances")
     result = SDL_Rect()
     dll.SDL_UnionRect(ctypes.byref(recta), ctypes.byref(rectb),
                       ctypes.byref(result))
@@ -177,13 +164,9 @@ def rect_empty(rect):
     """Checks, if the width and height of the rect are smaller than or equal
     to 0.
     """
-    if not isinstance(rect, SDL_Rect):
-        raise TypeError("rect must be a SDL_Rect")
     return rect.w <= 0 or rect.h <= 0
 
 
 def rect_equals(recta, rectb):
     """Checks, if the passed rects are equal."""
-    if not isinstance(recta, SDL_Rect) or not isinstance(rectb, SDL_Rect):
-        raise TypeError("recta and rectb must be SDL_Rect instances")
     return recta == rectb

@@ -250,7 +250,7 @@ class SDLPixelsTest(unittest.TestCase):
 
     def test_alloc_free_palette(self):
         self.assertRaises(TypeError, pixels.alloc_palette, None)
-        self.assertRaises(TypeError, pixels.alloc_palette, "Test")
+        self.assertRaises(ValueError, pixels.alloc_palette, "Test")
         self.assertRaises(ValueError, pixels.alloc_palette, -5)
 
         palette = pixels.alloc_palette(10)
@@ -271,7 +271,7 @@ class SDLPixelsTest(unittest.TestCase):
 
     def test_calculate_gamma_ramp(self):
         self.assertRaises(TypeError, pixels.calculate_gamma_ramp, None)
-        self.assertRaises(TypeError, pixels.calculate_gamma_ramp, "Test")
+        self.assertRaises(ValueError, pixels.calculate_gamma_ramp, "Test")
         self.assertRaises(ValueError, pixels.calculate_gamma_ramp, 7)
         self.assertRaises(ValueError, pixels.calculate_gamma_ramp, -0.00002)
         vals = pixels.calculate_gamma_ramp(0)

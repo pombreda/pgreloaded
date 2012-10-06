@@ -389,11 +389,16 @@ class SDLVideoTest(unittest.TestCase):
         window = video.create_window("Test", 10, 10, 10, 10, 0)
         video.set_window_icon(window, sf)
 
-        self.assertRaises(TypeError, video.set_window_icon, None, None)
-        self.assertRaises(TypeError, video.set_window_icon, window, None)
-        self.assertRaises(TypeError, video.set_window_icon, None, sf)
-        self.assertRaises(TypeError, video.set_window_icon, window, "Test")
-        self.assertRaises(TypeError, video.set_window_icon, window, 123456)
+        self.assertRaises((AttributeError, TypeError),
+                          video.set_window_icon, None, None)
+        self.assertRaises((AttributeError, TypeError),
+                          video.set_window_icon, window, None)
+        self.assertRaises((AttributeError, TypeError),
+                          video.set_window_icon, None, sf)
+        self.assertRaises((AttributeError, TypeError),
+                          video.set_window_icon, window, "Test")
+        self.assertRaises((AttributeError, TypeError),
+                          video.set_window_icon, window, 123456)
 
     @unittest.skipIf(hasattr(sys, "pypy_version_info"),
                      "PyPy's ctypes can't encapsule str in py_object()")
@@ -699,9 +704,12 @@ class SDLVideoTest(unittest.TestCase):
         video.gl_unload_library()
 
     def test_gl_create_delete_context(self):
-        self.assertRaises(TypeError, video.gl_create_context, None)
-        self.assertRaises(TypeError, video.gl_create_context, "Test")
-        self.assertRaises(TypeError, video.gl_create_context, 1234)
+        self.assertRaises((AttributeError, TypeError),
+                          video.gl_create_context, None)
+        self.assertRaises((AttributeError, TypeError),
+                          video.gl_create_context, "Test")
+        self.assertRaises((AttributeError, TypeError),
+                          video.gl_create_context, 1234)
 
         window = video.create_window("No OpenGL", 10, 10, 10, 10,
                                      video.SDL_WINDOW_BORDERLESS)
@@ -727,14 +735,16 @@ class SDLVideoTest(unittest.TestCase):
     def test_gl_make_current(self):
         self.assertTrue(video.gl_load_library())
 
-        self.assertRaises(TypeError, video.gl_make_current, None, None)
+        self.assertRaises((AttributeError, TypeError),
+                          video.gl_make_current, None, None)
 
         window = video.create_window("No OpenGL", 10, 10, 10, 10,
                                      video.SDL_WINDOW_BORDERLESS)
         self.assertRaises(sdl.SDLError, video.gl_create_context, window)
         video.destroy_window(window)
 
-        self.assertRaises(TypeError, video.gl_make_current, None, None)
+        self.assertRaises((AttributeError, TypeError),
+                          video.gl_make_current, None, None)
 
         video.gl_unload_library()
 

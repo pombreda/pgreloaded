@@ -93,13 +93,16 @@ class SDLImageTest(unittest.TestCase):
         self.assertRaises(sdl.SDLError, sdlimage.load_texture, rd,
                           RESOURCES.get_path("rwopstest.txt"))
 
-        self.assertRaises(TypeError, sdlimage.load_texture, rd, None)
-        self.assertRaises(TypeError, sdlimage.load_texture, rd, 1234)
-        self.assertRaises(TypeError, sdlimage.load_texture, None,
+        self.assertRaises(sdl.SDLError, sdlimage.load_texture, rd, None)
+        self.assertRaises(sdl.SDLError, sdlimage.load_texture, rd, 1234)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlimage.load_texture, None,
                           RESOURCES.get_path("surfacetest.bmp"))
-        self.assertRaises(TypeError, sdlimage.load_texture, "Test",
+        self.assertRaises((AttributeError, TypeError),
+                          sdlimage.load_texture, "Test",
                           RESOURCES.get_path("surfacetest.bmp"))
-        self.assertRaises(TypeError, sdlimage.load_texture, 1234,
+        self.assertRaises((AttributeError, TypeError),
+                          sdlimage.load_texture, 1234,
                           RESOURCES.get_path("surfacetest.bmp"))
 
         render.destroy_renderer(rd)

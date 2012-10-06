@@ -430,8 +430,6 @@ def alloc_format(pformat):
 @sdltype("SDL_FreeFormat", [ctypes.POINTER(SDL_PixelFormat)], None)
 def free_format(pformat):
     """Frees a previously allocated SDL_PixelFormat."""
-    if not isinstance(pformat, SDL_PixelFormat):
-        raise TypeError("pformat must be a SDL_PixelFormat")
     dll.SDL_FreeFormat(ctypes.byref(pformat))
 
 
@@ -442,9 +440,7 @@ def alloc_palette(ncolors):
     Once not used anymore, the SDL_Palette must be freed using
     free_palette().
     """
-    if type(ncolors) is not int:
-        raise TypeError("ncolors must be an int")
-    if ncolors < 0:
+    if int(ncolors) < 0:
         raise ValueError("ncolors must not be smaller than 0")
     palette = dll.SDL_AllocPalette(ncolors)
     return palette.contents
@@ -453,8 +449,6 @@ def alloc_palette(ncolors):
 @sdltype("SDL_FreePalette", [ctypes.POINTER(SDL_Palette)], None)
 def free_palette(palette):
     """Frees a previously allocated SDL_Palette."""
-    if not isinstance(palette, SDL_Palette):
-        raise TypeError("palette must be a SDL_Palette")
     dll.SDL_FreePalette(ctypes.byref(palette))
 
 
@@ -464,8 +458,6 @@ def calculate_gamma_ramp(gamma):
     """Calculates a set of 256 gamma values for a value in the range
     [0.0; 1.0].
     """
-    if type(gamma) not in(float, int):
-        raise TypeError("gamma must be a float")
     gamma = float(gamma)
     if gamma < 0.0 or gamma > 1.0:
         raise ValueError("gamma must be in the range [0.0; 1.0]")
@@ -482,10 +474,6 @@ def calculate_gamma_ramp(gamma):
 def get_rgb(pixel, pformat):
     """Gets the mapped RGB values for a specific pixel value and format.
     """
-    if type(pixel) not in(int, long):
-        raise TypeError("pixel must be an int")
-    if not isinstance(pformat, SDL_PixelFormat):
-        raise TypeError("pformat must be a SDL_PixelFormat")
     r = ctypes.c_ubyte()
     g = ctypes.c_ubyte()
     b = ctypes.c_ubyte()
@@ -502,10 +490,6 @@ def get_rgb(pixel, pformat):
 def get_rgba(pixel, pformat):
     """Gets the mapped RGBA values for a specific pixel value and format.
     """
-    if type(pixel) not in(int, long):
-        raise TypeError("pixel must be an int")
-    if not isinstance(pformat, SDL_PixelFormat):
-        raise TypeError("pformat must be a SDL_PixelFormat")
     r = ctypes.c_ubyte()
     g = ctypes.c_ubyte()
     b = ctypes.c_ubyte()
@@ -521,10 +505,6 @@ def map_rgb(pformat, r, g, b):
     """Maps the passed RGB values to a specific pixel value using the
     passed format.
     """
-    if type(r) is not int or type(g) is not int or type(b) is not int:
-        raise TypeError("r, g and b must be int values")
-    if not isinstance(pformat, SDL_PixelFormat):
-        raise TypeError("pformat must be a SDL_PixelFormat")
     val = dll.SDL_MapRGB(ctypes.byref(pformat), r, g, b)
     return val
 
@@ -536,11 +516,6 @@ def map_rgba(pformat, r, g, b, a):
     """Maps the passed RGBA values to a specific pixel value using the
     passed format.
     """
-    if type(r) is not int or type(g) is not int or type(b) is not int or \
-            type(a) is not int:
-        raise TypeError("r, g, b and a must be int values")
-    if not isinstance(pformat, SDL_PixelFormat):
-        raise TypeError("pformat must be a SDL_PixelFormat")
     val = dll.SDL_MapRGBA(ctypes.byref(pformat), r, g, b, a)
     return val
 
@@ -552,12 +527,6 @@ def set_palette_colors(palette, colors, first=0, ncolors=0):
     """Sets the colors of a SDL_Palette to the passed values, starting at
     first in the colors array and setting ncolors.
     """
-    if not isinstance(palette, SDL_Palette):
-        raise TypeError("palette must be a SDL_Palette")
-    if type(first) is not int:
-        raise TypeError("first must be an int")
-    if type(ncolors) is not int:
-        raise TypeError("ncolors must be an int")
     colors, size = array.to_ctypes(colors, SDL_Color)
     ncolors = max(size, ncolors)
     pcolor = ctypes.cast(colors, ctypes.POINTER(SDL_Color))
@@ -570,11 +539,7 @@ def set_palette_colors(palette, colors, first=0, ncolors=0):
          ctypes.c_int)
 def set_pixelformat_palette(pformat, palette):
     """Binds a palette to the passed SDL_PixelFormat."""
-    if not isinstance(pformat, SDL_PixelFormat):
-        raise TypeError("pformat must be a SDL_PixelFormat")
     pptr = None
     if palette is not None:
-        if not isinstance(palette, SDL_Palette):
-            raise TypeError("palette must be a SDL_Palette")
         pptr = ctypes.byref(palette)
     return dll.SDL_SetPixelFormatPalette(ctypes.byref(pformat), pptr)

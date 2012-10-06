@@ -92,8 +92,6 @@ class SoundSource(Component):
 
     def queue(self, sounddata):
         """Appends a SoundData to the playback queue for the source."""
-        if not isinstance(sounddata, SoundData):
-            raise TypeError("sounddata must be a SoundData")
         self._buffers.append(sounddata)
 
 
@@ -199,8 +197,6 @@ class SoundSink(System):
 
         Note: this implicitly activates the SoundSink.
         """
-        if not isinstance(listener, SoundListener):
-            raise TypeError("listener must be a SoundListener")
         self.activate()
         al.listener_fv(al.AL_POSITION, listener.position)
         al.listener_fv(al.AL_VELOCITY, listener.velocity)

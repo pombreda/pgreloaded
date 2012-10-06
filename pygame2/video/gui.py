@@ -97,8 +97,6 @@ class UIFactory(object):
         arguments to be passed to each and every UI element to be
         created.
         """
-        if not isinstance(spritefactory, SpriteFactory):
-            raise TypeError("spritefactory must be a SpriteFactory")
         self.spritefactory = spritefactory
         self.default_args = kwargs
 

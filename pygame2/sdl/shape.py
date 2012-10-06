@@ -55,7 +55,7 @@ def create_shaped_window(title, x, y, w, h, flags):
 
     TODO
     """
-    title = byteify(title, "utf-8")
+    title = byteify(str(title), "utf-8")
     retval = dll.SDL_CreateShapedWindow(title, x, y, w, h, flags)
     if retval is None or not bool(retval):
         raise SDLError()
@@ -66,8 +66,6 @@ def create_shaped_window(title, x, y, w, h, flags):
 def is_shaped_window(window):
     """Checks if the passed window is a shaped window.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     return dll.SDL_IsShapedWindow(ctypes.byref(window)) == SDL_TRUE
 
 
@@ -78,12 +76,6 @@ def is_shaped_window(window):
 def set_window_shape(window, surface, shapemode):
     """Sets the shape parameters of a shaped window.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
-    if not isinstance(shapemode, SDL_WindowShapeMode):
-        raise TypeError("shapemode must bea SDL_WindowShapeMode")
     retval = dll.SDL_SetWindowShape(ctypes.byref(window),
                                     ctypes.byref(surface),
                                     ctypes.byref(shapemode))
@@ -105,8 +97,6 @@ def set_window_shape(window, surface, shapemode):
 def get_shaped_window_mode(window):
     """Gets the shape parameters from a shaped window
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     mode = SDL_WindowShapeMode()
     retval = dll.SDL_GetShapedWindowMode(ctypes.byref(window),
                                          ctypes.byref(mode))

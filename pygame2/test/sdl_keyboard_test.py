@@ -93,7 +93,7 @@ class SDLKeyboardTest(unittest.TestCase):
             p += 1
 
         self.assertRaises(TypeError, keyboard.get_key_from_scancode, self)
-        self.assertRaises(TypeError, keyboard.get_key_from_scancode, "Test")
+        self.assertRaises(ValueError, keyboard.get_key_from_scancode, "Test")
         self.assertRaises(TypeError, keyboard.get_key_from_scancode, None)
 
     def test_get_key_name(self):
@@ -131,7 +131,7 @@ class SDLKeyboardTest(unittest.TestCase):
         self.assertEqual(key, scancode.SDL_SCANCODE_UNKNOWN)
 
         self.assertRaises(TypeError, keyboard.get_scancode_from_key, None)
-        self.assertRaises(TypeError, keyboard.get_scancode_from_key, "Test")
+        self.assertRaises(ValueError, keyboard.get_scancode_from_key, "Test")
         self.assertRaises(TypeError, keyboard.get_scancode_from_key, self)
 
     def test_get_scancode_from_name(self):
@@ -171,7 +171,7 @@ class SDLKeyboardTest(unittest.TestCase):
                            scancode.SDL_NUM_SCANCODES)
 
         self.assertRaises(TypeError, keyboard.get_scancode_from_key, None)
-        self.assertRaises(TypeError, keyboard.get_scancode_from_key, "Test")
+        self.assertRaises(ValueError, keyboard.get_scancode_from_key, "Test")
         self.assertRaises(TypeError, keyboard.get_scancode_from_key, self)
 
     def test_set_text_input_rect(self):

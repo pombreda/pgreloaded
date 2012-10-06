@@ -93,9 +93,7 @@ def open_font(fname, ptsize):
 
     Raises a SDLError, if the font could not be loaded.
     """
-    if type(fname) is not str:
-        raise TypeError("fname must be a string")
-    fname = byteify(fname, "utf-8")
+    fname = byteify(str(fname), "utf-8")
     ptsize = int(ptsize)
     return _check_ptr(dll.TTF_OpenFont(fname, ptsize))
 
@@ -108,13 +106,9 @@ def open_font_index(fname, ptsize, idx):
 
     Raises a SDLError, if the font could not be loaded.
     """
-    if type(fname) is not str:
-        raise TypeError("fname must be a string")
-    if type(idx) is not int:
-        raise TypeError("idx must be an integer")
-    if idx < 0:
+    if int(idx) < 0:
         raise ValueError("idx must not be negative")
-    fname = byteify(fname, "utf-8")
+    fname = byteify(str(fname), "utf-8")
     ptsize = int(ptsize)
     return _check_ptr(dll.TTF_OpenFontIndex(fname, ptsize, idx))
 
@@ -127,8 +121,6 @@ def open_font_rw(src, freesrc, ptsize):
 
     Raises a SDLError, if the font could not be loaded.
     """
-    if not isinstance(src, SDL_RWops):
-        raise TypeError("src must be a SDL_RWops")
     ptsize = int(ptsize)
     if bool(freesrc):
         return _check_ptr(dll.TTF_OpenFontRW(ctypes.byref(src), 1, ptsize))
@@ -144,11 +136,7 @@ def open_font_index_rw(src, freesrc, ptsize, idx):
 
     Raises a SDLError, if the font could not be loaded.
     """
-    if not isinstance(src, SDL_RWops):
-        raise TypeError("src must be a SDL_RWops")
-    if type(idx) is not int:
-        raise TypeError("idx must be an integer")
-    if idx < 0:
+    if int(idx) < 0:
         raise ValueError("idx must not be negative")
     ptsize = int(ptsize)
     if bool(freesrc):
@@ -162,8 +150,6 @@ def open_font_index_rw(src, freesrc, ptsize, idx):
 @sdlttftype("TTF_GetFontStyle", [TTF_Font_p], ctypes.c_int)
 def get_font_style(font):
     """Gets the style of the font as TTF_STYLE_* combination."""
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     retval = dll.TTF_GetFontStyle(ctypes.byref(font))
     if retval < 0:
         raise SDLError()
@@ -173,26 +159,18 @@ def get_font_style(font):
 @sdlttftype("TTF_SetFontStyle", [TTF_Font_p, ctypes.c_int], None)
 def set_font_style(font, style):
     """Sets the style to be used for the passed font."""
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
-    if type(style) is not int:
-        raise TypeError("style must be an integer")
     dll.TTF_SetFontStyle(ctypes.byref(font), style)
 
 
 @sdlttftype("TTF_GetFontOutline", [TTF_Font_p], ctypes.c_int)
 def get_font_outline(font):
     """Get the outline width of the passed font."""
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     return dll.TTF_GetFontOutline(ctypes.byref(font))
 
 
 @sdlttftype("TTF_SetFontOutline", [TTF_Font_p, ctypes.c_int], None)
 def set_font_outline(font, outline):
     """Set the outline width for the passed font in pixels."""
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     outline = int(outline)
     return dll.TTF_SetFontOutline(ctypes.byref(font), outline)
 
@@ -200,8 +178,6 @@ def set_font_outline(font, outline):
 @sdlttftype("TTF_GetFontHinting", [TTF_Font_p], ctypes.c_int)
 def get_font_hinting(font):
     """Get the current hinting setting for the passed font."""
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     return dll.TTF_GetFontHinting(ctypes.byref(font))
 
 
@@ -211,10 +187,6 @@ def set_font_hinting(font, hinting):
 
     hinting must be a value of the TTF_HINTING_* constants.
     """
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
-    if type(hinting) is not int:
-        raise TypeError("hinting must be an integer")
     return dll.TTF_SetFontHinting(ctypes.byref(font), hinting)
 
 
@@ -225,8 +197,6 @@ def font_height(font):
     Gets the height of the font in pixels. This will return the maximum
     height of the font, based on the maximum pixel height of all glyphs.
     """
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     return dll.TTF_FontHeight(ctypes.byref(font))
 
 
@@ -238,8 +208,6 @@ def font_ascent(font):
     all glyphs. The ascent is the difference between the top-most point
     of the font glyphs and the baseline.
     """
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     return dll.TTF_FontAscent(ctypes.byref(font))
 
 
@@ -251,32 +219,24 @@ def font_descent(font):
     all glyphs. The descent is the different between the bottom-most
     point of the font glyphs and the baseline.
     """
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     return dll.TTF_FontDescent(ctypes.byref(font))
 
 
 @sdlttftype("TTF_FontLineSkip", [TTF_Font_p], ctypes.c_int)
 def font_line_skip(font):
     """Get the recommended pixel height for line spacing."""
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     return dll.TTF_FontLineSkip(ctypes.byref(font))
 
 
 @sdlttftype("TTF_GetFontKerning", [TTF_Font_p], ctypes.c_int)
 def get_font_kerning(font):
     """Get, whether kerning is allowed for the font."""
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     return dll.TTF_GetFontKerning(ctypes.byref(font)) != 0
 
 
 @sdlttftype("TTF_SetFontKerning", [TTF_Font_p, ctypes.c_int], None)
 def set_font_kerning(font, allowed=True):
     """Enable or disable the kerning of the font."""
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     if bool(allowed):
         dll.TTF_SetFontKerning(ctypes.byref(font), 1)
     else:
@@ -286,24 +246,18 @@ def set_font_kerning(font, allowed=True):
 @sdlttftype("TTF_FontFaces", [TTF_Font_p], ctypes.c_int)
 def font_faces(font):
     """Get the number of faces of the font."""
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     return dll.TTF_FontFaces(ctypes.byref(font))
 
 
 @sdlttftype("TTF_FontFaceIsFixedWidth", [TTF_Font_p], ctypes.c_int)
 def font_face_is_fixed_width(font):
     """Get, whether the current font face is a fixed width font (monospace)."""
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     return dll.TTF_FontFaceIsFixedWidth(ctypes.byref(font)) == 1
 
 
 @sdlttftype("TTF_FontFaceFamilyName", [TTF_Font_p], ctypes.c_char_p)
 def font_face_family_name(font):
     """Get the current font face family name."""
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     retval = dll.TTF_FontFaceFamilyName(ctypes.byref(font))
     return stringify(retval, "utf-8")
 
@@ -311,8 +265,6 @@ def font_face_family_name(font):
 @sdlttftype("TTF_FontFaceStyleName", [TTF_Font_p], ctypes.c_char_p)
 def font_face_style_name(font):
     """Gets the current font face syle name."""
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     retval = dll.TTF_FontFaceStyleName(ctypes.byref(font))
     return stringify(retval, "utf-8")
 
@@ -323,8 +275,6 @@ def glyph_is_provided(font, ch):
 
     Returns the index of the glyph in the font or 0, if not found.
     """
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     return dll.TTF_GlyphIsProvided(ctypes.byref(font), ch)
 
 
@@ -338,8 +288,6 @@ def glyph_metrics(font, ch):
            */ extern DECLSPEC int SDLCALL TTF_GlyphMetrics(TTF_Font
            *font, Uint16 ch, int *minx, int *maxx, int *miny, int *maxy,
            int *advance);"""
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     minx, maxx, miny, maxy, advance = ctypes.c_int(0), ctypes.c_int(0), \
         ctypes.c_int(0), ctypes.c_int(0), ctypes.c_int(0)
     _check_int(dll.TTF_GlyphMetrics(ctypes.byref(font), ch,
@@ -360,8 +308,6 @@ def size(font, s):
 
         this wrapper expects a string object; returns tuple(w, h)
     """
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     w = ctypes.c_int(0)
     h = ctypes.c_int(0)
     s = s.encode('utf-8')
@@ -380,10 +326,6 @@ def render_solid(font, s, color):
            new surface, or NULL if there was an error.  */ extern
            DECLSPEC SDL_Surface * SDLCALL TTF_RenderUTF8_Solid(TTF_Font
            *font, const char *text, SDL_Color fg);"""
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
-    if not isinstance(color, SDL_Color):
-        raise TypeError("color must be a SDL_Color")
     s = s.encode("utf-8")
     return _check_ptr(dll.TTF_RenderUTF8_Solid(ctypes.byref(font), s, color))
 
@@ -398,13 +340,7 @@ def render_shaded(font, s, fg, bg):
            NULL if there was an error.  */ extern DECLSPEC SDL_Surface *
            SDLCALL TTF_RenderUTF8_Shaded(TTF_Font *font, const char
            *text, SDL_Color fg, SDL_Color bg);
-         """
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
-    if not isinstance(fg, SDL_Color):
-        raise TypeError("fg must be a SDL_Color")
-    if not isinstance(bg, SDL_Color):
-        raise TypeError("bg must be a SDL_Color")
+    """
     s = s.encode("utf-8")
     return _check_ptr(dll.TTF_RenderUTF8_Shaded(ctypes.byref(font), s, fg, bg))
 
@@ -418,11 +354,7 @@ def render_blended(font, s, color):
            NULL if there was an error.  */ extern DECLSPEC SDL_Surface *
            SDLCALL TTF_RenderUTF8_Blended(TTF_Font *font, const char
            *text, SDL_Color fg);
-         """
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
-    if not isinstance(color, SDL_Color):
-        raise TypeError("color must be a SDL_Color")
+    """
     s = s.encode("utf-8")
     return _check_ptr(dll.TTF_RenderUTF8_Blended(ctypes.byref(font), s, color))
 
@@ -433,14 +365,10 @@ def get_kerning_size(font, prev_index, index):
     """ /* Get the kerning size of two glyphs */ extern DECLSPEC int
         TTF_GetFontKerningSize(TTF_Font *font, int prev_index, int
         index); """
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     return dll.TTF_GetFontKerningSize(ctypes.byref(font), prev_index, index)
 
 
 @sdlttftype("TTF_CloseFont", [TTF_Font_p], None)
 def close_font(font):
     """Close an opened font file."""
-    if not isinstance(font, TTF_Font):
-        raise TypeError("font must be a TTF_Font")
     dll.TTF_CloseFont(ctypes.byref(font))

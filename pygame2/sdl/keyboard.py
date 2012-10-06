@@ -89,8 +89,7 @@ def get_key_from_scancode(code):
 
     If no matching key code could be found, SDLK_UNKNOWN will be returned.
     """
-    if type(code) is not int:
-        raise TypeError("scancode must be an int")
+    code = int(code)
     if code < 0 or code >= sdlscancode.SDL_NUM_SCANCODES:
         raise ValueError("invalid scancode value")
     return dll.SDL_GetKeyFromScancode(code)
@@ -102,8 +101,6 @@ def get_key_name(key):
 
     If the passed value does not have a name, an empty string is returned.
     """
-    if type(key) is not int:
-        raise TypeError("key must be an int")
     retval = dll.SDL_GetKeyName(key)
     return stringify(retval, "utf-8")
 
@@ -121,9 +118,7 @@ def get_scancode_from_key(key):
     If no matching scancode could be found, SDL_SCANCODE_UNKNOWN will be
     returned.
     """
-    if type(key) is not int:
-        raise TypeError("key must be an int")
-    return dll.SDL_GetScancodeFromKey(key)
+    return dll.SDL_GetScancodeFromKey(int(key))
 
 
 @sdltype("SDL_GetScancodeFromName", [ctypes.c_char_p], ctypes.c_ushort)
@@ -138,8 +133,7 @@ def get_scancode_name(code):
 
     If the passed value does not have a name, an empty string is returned.
     """
-    if type(code) is not int:
-        raise TypeError("scancode must be an int")
+    code = int(code)
     if code < 0 or code >= sdlscancode.SDL_NUM_SCANCODES:
         raise ValueError("invalid scancode value")
     retval = dll.SDL_GetScancodeName(code)
@@ -159,8 +153,6 @@ def set_mod_state(mod):
 @sdltype("SDL_SetTextInputRect", [ctypes.POINTER(SDL_Rect)], None)
 def set_text_input_rect(rect):
     """Sets the text input area to the specified value."""
-    if not isinstance(rect, SDL_Rect):
-        raise TypeError("rect must be a SDL_Rect")
     dll.SDL_SetTextInputRect(ctypes.byref(rect))
 
 

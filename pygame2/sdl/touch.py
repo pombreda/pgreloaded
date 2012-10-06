@@ -67,8 +67,6 @@ def get_touch(tid):
          ctypes.POINTER(SDL_Finger))
 def get_finger(touch, fid):
     """Gets the finger object of the given touch at the given id."""
-    if not isinstance(touch, SDL_Touch):
-        raise TypeError("touch must be a SDL_Touch")
     retval = dll.SDL_GetFinger(ctypes.byref(touch), fid)
     if retval is None or not bool(retval):
         raise SDLError()

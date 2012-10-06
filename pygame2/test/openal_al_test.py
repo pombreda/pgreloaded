@@ -74,15 +74,15 @@ class ALTest(unittest.TestCase):
         self.assertRaises(al.OpenALError, al.get_double, 0)
 
     def test_is_extension_present(self):
-        self.assertRaises(TypeError, al.is_extension_present, 1234)
+        self.assertRaises(al.OpenALError, al.is_extension_present, 1234)
         self.assertRaises(al.OpenALError, al.is_extension_present, "Test")
 
     def test_get_proc_address(self):
-        self.assertRaises(TypeError, al.get_proc_address, 1234)
+        self.assertEqual(al.get_proc_address(1234), None)
         self.assertEqual(al.get_proc_address("Test"), None)
 
     def test_get_enum_value(self):
-        self.assertRaises(TypeError, al.get_enum_value, 1234)
+        self.assertEqual(al.get_enum_value(1234), 0)
         self.assertEqual(al.get_enum_value("Test"), 0)
         self.assertEqual(al.get_enum_value("AL_FORMAT_MONO8"),
                          al.AL_FORMAT_MONO8)

@@ -272,9 +272,7 @@ def get_double(param):
 @openaltype("alIsExtensionPresent", [ctypes.c_char_p], ctypes.c_byte)
 def is_extension_present(extname):
     """Tests if the specified extension is available for the OpenAL driver."""
-    if not isinstance(extname, str):
-        raise TypeError("extname must be a string")
-    extname = byteify(extname, "utf-8")
+    extname = byteify(str(extname), "utf-8")
     val = dll.alIsExtensionPresent(extname)
     _raise_error_or_continue()
     return val == AL_TRUE
@@ -283,18 +281,14 @@ def is_extension_present(extname):
 @openaltype("alGetProcAddress", [ctypes.c_char_p], ctypes.c_void_p)
 def get_proc_address(fname):
     """Returns the address of an OpenAL extension function."""
-    if not isinstance(fname, str):
-        raise TypeError("fname must be a string")
-    fname = byteify(fname, "utf-8")
+    fname = byteify(str(fname), "utf-8")
     return dll.alGetProcAddress(fname)
 
 
 @openaltype("alGetEnumValue", [ctypes.c_char_p], ctypes.c_int)
 def get_enum_value(ename):
     """Returns the enumeration value of an OpenAL enum."""
-    if not isinstance(ename, str):
-        raise TypeError("ename must be a string")
-    ename = byteify(ename, "utf-8")
+    ename = byteify(str(ename), "utf-8")
     return dll.alGetEnumValue(ename)
 
 

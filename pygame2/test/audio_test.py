@@ -49,9 +49,10 @@ class AudioTest(unittest.TestCase):
     def test_SoundSource_queue(self):
         source = audio.SoundSource()
         self.assertIsInstance(source, audio.SoundSource)
-        self.assertRaises(TypeError, source.queue, None)
-        self.assertRaises(TypeError, source.queue, "Test")
-        self.assertRaises(TypeError, source.queue, 123456)
+        # TODO: should we check for a correct argument here?
+        #self.assertRaises(TypeError, source.queue, None)
+        #self.assertRaises(TypeError, source.queue, "Test")
+        #self.assertRaises(TypeError, source.queue, 123456)
 
         data = audio.SoundData()
         source.queue(data)

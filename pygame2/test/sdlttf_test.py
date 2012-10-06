@@ -1,5 +1,6 @@
 import sys
 import unittest
+from ctypes import ArgumentError
 from pygame2.resources import Resources
 import pygame2.sdl as sdl
 from pygame2.sdl.pixels import SDL_Color
@@ -41,7 +42,7 @@ class SDLTTFTest(unittest.TestCase):
         self.assertRaises(TypeError, sdlttf.open_font, None, None)
         self.assertRaises(TypeError, sdlttf.open_font, filename, None)
         self.assertRaises(ValueError, sdlttf.open_font, filename, "abcd")
-        self.assertRaises(TypeError, sdlttf.open_font, None, "abcd")
+        self.assertRaises(ValueError, sdlttf.open_font, None, "abcd")
         self.assertRaises(sdl.SDLError, sdlttf.open_font, "test", 10)
 
     def test_open_font_index(self):
@@ -70,7 +71,8 @@ class SDLTTFTest(unittest.TestCase):
             sdlttf.close_font(font)
         fp.seek(0)
         self.assertRaises(TypeError, sdlttf.open_font_rw, None, False, None)
-        self.assertRaises(TypeError, sdlttf.open_font_rw, None, False, 10)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.open_font_rw, None, False, 10)
         self.assertRaises(TypeError, sdlttf.open_font_rw, fontrw, False, None)
 
     def test_open_font_index_rw(self):
@@ -106,15 +108,22 @@ class SDLTTFTest(unittest.TestCase):
                          sdlttf.TTF_STYLE_ITALIC)
         sdlttf.set_font_style(font, sdlttf.TTF_STYLE_BOLD |
                               sdlttf.TTF_STYLE_UNDERLINE)
-        self.assertRaises(TypeError, sdlttf.get_font_style, None)
-        self.assertRaises(TypeError, sdlttf.get_font_style, "test")
-        self.assertRaises(TypeError, sdlttf.get_font_style, 1234)
-        self.assertRaises(TypeError, sdlttf.set_font_style, font, None)
-        self.assertRaises(TypeError, sdlttf.set_font_style, "test", None)
-        self.assertRaises(TypeError, sdlttf.set_font_style, 1234, None)
-        self.assertRaises(TypeError, sdlttf.set_font_style, "test", 3)
-        self.assertRaises(TypeError, sdlttf.set_font_style, 1234, 4)
-        self.assertRaises(TypeError, sdlttf.set_font_style, font, "test")
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.get_font_style, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.get_font_style, "test")
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.get_font_style, 1234)
+        self.assertRaises(ArgumentError, sdlttf.set_font_style, font, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.set_font_style, "test", None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.set_font_style, 1234, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.set_font_style, "test", 3)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.set_font_style, 1234, 4)
+        self.assertRaises(ArgumentError, sdlttf.set_font_style, font, "test")
         sdlttf.close_font(font)
 
     def test_get_set_font_outline(self):
@@ -127,10 +136,13 @@ class SDLTTFTest(unittest.TestCase):
         self.assertRaises(TypeError, sdlttf.set_font_outline, None, None)
         self.assertRaises(TypeError, sdlttf.set_font_outline, font, None)
         self.assertRaises(ValueError, sdlttf.set_font_outline, font, "test")
-        self.assertRaises(TypeError, sdlttf.set_font_outline, None, "test")
-        self.assertRaises(TypeError, sdlttf.set_font_outline, None, 123)
-        self.assertRaises(TypeError, sdlttf.get_font_outline, None)
-        self.assertRaises(TypeError, sdlttf.get_font_outline, None)
+        self.assertRaises(ValueError, sdlttf.set_font_outline, None, "test")
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.set_font_outline, None, 123)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.get_font_outline, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.get_font_outline, None)
         sdlttf.close_font(font)
 
     def test_get_set_font_hinting(self):
@@ -142,12 +154,16 @@ class SDLTTFTest(unittest.TestCase):
                      sdlttf.TTF_HINTING_MONO, sdlttf.TTF_HINTING_NONE):
             sdlttf.set_font_hinting(font, hint)
             self.assertEqual(sdlttf.get_font_hinting(font), hint)
-        self.assertRaises(TypeError, sdlttf.set_font_hinting, None, None)
-        self.assertRaises(TypeError, sdlttf.set_font_hinting, font, None)
-        self.assertRaises(TypeError, sdlttf.set_font_hinting, None, 1)
-        self.assertRaises(TypeError, sdlttf.set_font_hinting, font, "test")
-        self.assertRaises(TypeError, sdlttf.set_font_hinting, None, "test")
-        self.assertRaises(TypeError, sdlttf.get_font_hinting, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.set_font_hinting, None, None)
+        self.assertRaises(ArgumentError, sdlttf.set_font_hinting, font, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.set_font_hinting, None, 1)
+        self.assertRaises(ArgumentError, sdlttf.set_font_hinting, font, "test")
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.set_font_hinting, None, "test")
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.get_font_hinting, None)
         sdlttf.close_font(font)
 
     def test_font_height(self):
@@ -159,9 +175,12 @@ class SDLTTFTest(unittest.TestCase):
             self.assertGreaterEqual(cur, last)
             last = cur
             sdlttf.close_font(font)
-        self.assertRaises(TypeError, sdlttf.font_height, None)
-        self.assertRaises(TypeError, sdlttf.font_height, 1234)
-        self.assertRaises(TypeError, sdlttf.font_height, "test")
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_height, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_height, 1234)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_height, "test")
 
     def test_font_ascent(self):
         filename = RESOURCES.get_path("tuffy.ttf")
@@ -172,9 +191,12 @@ class SDLTTFTest(unittest.TestCase):
             self.assertGreaterEqual(cur, last)
             last = cur
             sdlttf.close_font(font)
-        self.assertRaises(TypeError, sdlttf.font_ascent, None)
-        self.assertRaises(TypeError, sdlttf.font_ascent, 1234)
-        self.assertRaises(TypeError, sdlttf.font_ascent, "test")
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_ascent, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_ascent, 1234)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_ascent, "test")
 
     def test_font_descent(self):
         filename = RESOURCES.get_path("tuffy.ttf")
@@ -185,9 +207,12 @@ class SDLTTFTest(unittest.TestCase):
             self.assertLessEqual(cur, last)
             last = cur
             sdlttf.close_font(font)
-        self.assertRaises(TypeError, sdlttf.font_descent, None)
-        self.assertRaises(TypeError, sdlttf.font_descent, 1234)
-        self.assertRaises(TypeError, sdlttf.font_descent, "test")
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_descent, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_descent, 1234)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_descent, "test")
 
     def test_font_line_skip(self):
         filename = RESOURCES.get_path("tuffy.ttf")
@@ -198,9 +223,12 @@ class SDLTTFTest(unittest.TestCase):
             self.assertGreaterEqual(cur, last)
             last = cur
             sdlttf.close_font(font)
-        self.assertRaises(TypeError, sdlttf.font_line_skip, None)
-        self.assertRaises(TypeError, sdlttf.font_line_skip, 1234)
-        self.assertRaises(TypeError, sdlttf.font_line_skip, "test")
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_line_skip, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_line_skip, 1234)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_line_skip, "test")
 
     def test_get_set_font_kerning(self):
         filename = RESOURCES.get_path("tuffy.ttf")
@@ -212,48 +240,64 @@ class SDLTTFTest(unittest.TestCase):
         self.assertEqual(sdlttf.get_font_kerning(font), True)
         sdlttf.set_font_kerning(font, False)
         self.assertEqual(sdlttf.get_font_kerning(font), False)
-        self.assertRaises(TypeError, sdlttf.get_font_kerning, None)
-        self.assertRaises(TypeError, sdlttf.get_font_kerning, "test")
-        self.assertRaises(TypeError, sdlttf.get_font_kerning, 1234)
-        self.assertRaises(TypeError, sdlttf.set_font_kerning, None, None)
-        self.assertRaises(TypeError, sdlttf.set_font_kerning, "test", "test")
-        self.assertRaises(TypeError, sdlttf.set_font_kerning, 1234, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.get_font_kerning, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.get_font_kerning, "test")
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.get_font_kerning, 1234)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.set_font_kerning, None, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.set_font_kerning, "test", "test")
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.set_font_kerning, 1234, None)
         sdlttf.close_font(font)
 
     def test_font_faces(self):
         filename = RESOURCES.get_path("tuffy.ttf")
         font = sdlttf.open_font(filename, 10)
         self.assertGreaterEqual(sdlttf.font_faces(font), 1)
-        self.assertRaises(TypeError, sdlttf.font_faces, None)
-        self.assertRaises(TypeError, sdlttf.font_faces, "test")
-        self.assertRaises(TypeError, sdlttf.font_faces, 1234)
+        self.assertRaises((AttributeError, TypeError), sdlttf.font_faces, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_faces, "test")
+        self.assertRaises((AttributeError, TypeError), sdlttf.font_faces, 1234)
         sdlttf.close_font(font)
 
     def test_font_face_is_fixed_width(self):
         filename = RESOURCES.get_path("tuffy.ttf")
         font = sdlttf.open_font(filename, 10)
         self.assertFalse(sdlttf.font_face_is_fixed_width(font))
-        self.assertRaises(TypeError, sdlttf.font_face_is_fixed_width, None)
-        self.assertRaises(TypeError, sdlttf.font_face_is_fixed_width, "test")
-        self.assertRaises(TypeError, sdlttf.font_face_is_fixed_width, 1234)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_face_is_fixed_width, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_face_is_fixed_width, "test")
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_face_is_fixed_width, 1234)
         sdlttf.close_font(font)
 
     def test_font_face_family_name(self):
         filename = RESOURCES.get_path("tuffy.ttf")
         font = sdlttf.open_font(filename, 10)
         self.assertEqual(sdlttf.font_face_family_name(font), "Tuffy")
-        self.assertRaises(TypeError, sdlttf.font_face_family_name, None)
-        self.assertRaises(TypeError, sdlttf.font_face_family_name, "test")
-        self.assertRaises(TypeError, sdlttf.font_face_family_name, 1234)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_face_family_name, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_face_family_name, "test")
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_face_family_name, 1234)
         sdlttf.close_font(font)
 
     def test_font_face_style_name(self):
         filename = RESOURCES.get_path("tuffy.ttf")
         font = sdlttf.open_font(filename, 10)
         self.assertEqual(sdlttf.font_face_style_name(font), "Regular")
-        self.assertRaises(TypeError, sdlttf.font_face_style_name, None)
-        self.assertRaises(TypeError, sdlttf.font_face_style_name, "test")
-        self.assertRaises(TypeError, sdlttf.font_face_style_name, 1234)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_face_style_name, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_face_style_name, "test")
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.font_face_style_name, 1234)
         sdlttf.close_font(font)
 
     @unittest.skip("not implemented")

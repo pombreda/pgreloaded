@@ -106,8 +106,8 @@ def rw_from_file(filename, mode):
     mode specifies the access mode for the file and as such is similar to what
     you can pass to open().
     """
-    filename = byteify(filename, "utf-8")
-    mode = byteify(mode, "utf-8")
+    filename = byteify(str(filename), "utf-8")
+    mode = byteify(str(mode), "utf-8")
     retval = dll.SDL_RWFromFile(filename, mode)
     if retval is None or not bool(retval):
         raise SDLError()
@@ -272,8 +272,6 @@ def rw_seek(ctx, offset, whence):
 
 def rw_tell(ctx):
     """Returns the current position of the offset marker for the SDL_RWops."""
-    if not isinstance(ctx, SDL_RWops):
-        raise TypeError("ctx must be a SDL_RWops")
     retval = ctx.seek(ctypes.byref(ctx), 0, RW_SEEK_CUR)
     if retval is None:
         return ctx.tell()
@@ -330,8 +328,6 @@ def alloc_rw():
 def free_rw(rwops):
     """Frees a SDL_RWops, which was allocated by pygame2.sdl.rwops.alloc_rw().
     """
-    if not isinstance(rwops, SDL_RWops):
-        raise TypeError("rwops must be a SDL_RWops")
     dll.SDL_FreeRW(ctypes.byref(rwops))
 
 
@@ -340,8 +336,6 @@ def read_le_16(rwops):
     """Reads a single 16-bit value from the underlying SDL_RWops in
     little-endian byte order.
     """
-    if not isinstance(rwops, SDL_RWops):
-        raise TypeError("rwops must be a SDL_RWops")
     return dll.SDL_ReadLE16(ctypes.byref(rwops))
 
 
@@ -350,8 +344,6 @@ def read_be_16(rwops):
     """Reads a single 16-bit value from the underlying SDL_RWops in big-endian
     byte order.
     """
-    if not isinstance(rwops, SDL_RWops):
-        raise TypeError("rwops must be a SDL_RWops")
     return dll.SDL_ReadBE16(ctypes.byref(rwops))
 
 
@@ -360,8 +352,6 @@ def read_le_32(rwops):
     """Reads a single 32-bit value from the underlying SDL_RWops in
     little-endian byte order.
     """
-    if not isinstance(rwops, SDL_RWops):
-        raise TypeError("rwops must be a SDL_RWops")
     return dll.SDL_ReadLE32(ctypes.byref(rwops))
 
 
@@ -370,8 +360,6 @@ def read_be_32(rwops):
     """Reads a single 32-bit value from the underlying SDL_RWops in big-endian
     byte order.
     """
-    if not isinstance(rwops, SDL_RWops):
-        raise TypeError("rwops must be a SDL_RWops")
     return dll.SDL_ReadBE32(ctypes.byref(rwops))
 
 
@@ -380,8 +368,6 @@ def read_le_64(rwops):
     """Reads a single 64-bit value from the underlying SDL_RWops in
     little-endian byte order.
     """
-    if not isinstance(rwops, SDL_RWops):
-        raise TypeError("rwops must be a SDL_RWops")
     return dll.SDL_ReadLE64(ctypes.byref(rwops))
 
 
@@ -390,8 +376,6 @@ def read_be_64(rwops):
     """Reads a single 64-bit value from the underlying SDL_RWops in big-endian
     byte order.
     """
-    if not isinstance(rwops, SDL_RWops):
-        raise TypeError("rwops must be a SDL_RWops")
     return dll.SDL_ReadBE64(ctypes.byref(rwops))
 
 
@@ -401,8 +385,6 @@ def write_le_16(rwops, value):
     """Writes a single 16-bit to the underlying SDL_RWops in little-endian byte
     order.
     """
-    if not isinstance(rwops, SDL_RWops):
-        raise TypeError("rwops must be a SDL_RWops")
     return dll.SDL_WriteLE16(ctypes.byref(rwops), value)
 
 
@@ -412,8 +394,6 @@ def write_be_16(rwops, value):
     """Writes a single 16-bit to the underlying SDL_RWops in big-endian byte
     order.
     """
-    if not isinstance(rwops, SDL_RWops):
-        raise TypeError("rwops must be a SDL_RWops")
     return dll.SDL_WriteBE16(ctypes.byref(rwops), value)
 
 
@@ -423,8 +403,6 @@ def write_le_32(rwops, value):
     """Writes a single 32-bit to the underlying SDL_RWops in little-endian byte
     order.
     """
-    if not isinstance(rwops, SDL_RWops):
-        raise TypeError("rwops must be a SDL_RWops")
     return dll.SDL_WriteLE32(ctypes.byref(rwops), value)
 
 
@@ -434,8 +412,6 @@ def write_be_32(rwops, value):
     """Writes a single 32-bit to the underlying SDL_RWops in big-endian byte
     order.
     """
-    if not isinstance(rwops, SDL_RWops):
-        raise TypeError("rwops must be a SDL_RWops")
     return dll.SDL_WriteBE32(ctypes.byref(rwops), value)
 
 
@@ -445,8 +421,6 @@ def write_le_64(rwops, value):
     """Writes a single 64-bit to the underlying SDL_RWops in little-endian byte
     order.
     """
-    if not isinstance(rwops, SDL_RWops):
-        raise TypeError("rwops must be a SDL_RWops")
     val = ctypes.c_ulonglong(value)
     return dll.SDL_WriteLE64(ctypes.byref(rwops), val)
 
@@ -457,7 +431,5 @@ def write_be_64(rwops, value):
     """Writes a single 64-bit to the underlying SDL_RWops in big-endian byte
     order.
     """
-    if not isinstance(rwops, SDL_RWops):
-        raise TypeError("rwops must be a SDL_RWops")
     val = ctypes.c_ulonglong(value)
     return dll.SDL_WriteBE64(ctypes.byref(rwops), val)

@@ -140,7 +140,7 @@ class EBSTest(unittest.TestCase):
 
         for method in (world.add_system, world.remove_system):
             for val in (None, "Test", Position, Entity(world)):
-                self.assertRaises(TypeError, method, val)
+                self.assertRaises((TypeError, ValueError), method, val)
 
         psystem = PositionSystem()
         world.add_system(psystem)

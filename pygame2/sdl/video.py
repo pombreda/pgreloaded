@@ -224,8 +224,6 @@ def create_window_from(data):
 @sdltype("SDL_DestroyWindow", [ctypes.POINTER(SDL_Window)], None)
 def destroy_window(window):
     """Destroys the passed SDL_Window."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     dll.SDL_DestroyWindow(ctypes.byref(window))
 
 
@@ -260,11 +258,6 @@ def get_closest_display_mode(displayindex, mode):
     with size being first priority, format being second priority, and finally
     checking the refresh_rate. If no mode could be found, a SDLError is raised.
     """
-    if type(displayindex) is not int:
-        raise TypeError("displayindex must be an int")
-    if not isinstance(mode, SDL_DisplayMode):
-        raise TypeError("mode must be a SDL_DisplayMode")
-
     closest = SDL_DisplayMode()
     retval = dll.SDL_GetClosestDisplayMode(displayindex, ctypes.byref(mode),
                                            ctypes.byref(closest))
@@ -281,8 +274,6 @@ def get_current_display_mode(displayindex):
 
     Raises a SDLError, if an error occured.
     """
-    if type(displayindex) is not int:
-        raise TypeError("displayindex must be an int")
     current = SDL_DisplayMode()
     retval = dll.SDL_GetCurrentDisplayMode(displayindex,
                                            ctypes.byref(current))
@@ -299,8 +290,6 @@ def get_desktop_display_mode(displayindex):
 
     Raises a SDLError, if an error occured.
     """
-    if type(displayindex) is not int:
-        raise TypeError("displayindex must be an int")
     desktop = SDL_DisplayMode()
     retval = dll.SDL_GetDesktopDisplayMode(displayindex,
                                            ctypes.byref(desktop))
@@ -316,8 +305,6 @@ def get_display_bounds(displayindex):
 
     Raises a SDLError, if an error occured.
     """
-    if type(displayindex) is not int:
-        raise TypeError("displayindex must be an int")
     rect = SDL_Rect()
     retval = dll.SDL_GetDisplayBounds(displayindex, ctypes.byref(rect))
     if retval < 0:
@@ -333,8 +320,6 @@ def get_display_mode(displayindex, modeindex):
 
     Raises a SDLError, if an error occured.
     """
-    if type(displayindex) is not int or type(modeindex) is not int:
-        raise TypeError("displayindex and modeindex must be int values")
     displaymode = SDL_DisplayMode()
     retval = dll.SDL_GetDisplayMode(displayindex, modeindex,
                                     ctypes.byref(displaymode))
@@ -349,8 +334,6 @@ def get_num_display_modes(displayindex):
 
     Raises a SDLError, if an error occured.
     """
-    if type(displayindex) is not int:
-        raise TypeError("displayindex must be an int")
     retval = dll.SDL_GetNumDisplayModes(displayindex)
     if retval < 0:
         raise SDLError()
@@ -385,8 +368,6 @@ def get_video_driver(displayindex):
     If the video driver for the display could not be determined, or if an
     invalid display index is used, a SDLError is raised.
     """
-    if type(displayindex) is not int:
-        raise TypeError("displayindex must be an int")
     retval = dll.SDL_GetVideoDriver(displayindex)
     if retval is None:
         raise SDLError()
@@ -434,8 +415,6 @@ def get_window_display(window):
 
     If the display could not determined, a SDLError is raised.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     retval = dll.SDL_GetWindowDisplay(ctypes.byref(window))
     if retval == -1:
         raise SDLError()
@@ -455,10 +434,6 @@ def set_window_display_mode(window, mode=None):
     default mode for the window might be the lowest or highest(or something in
     between) mode of the display itself.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
-    if mode and not isinstance(mode, SDL_DisplayMode):
-        raise TypeError("mode must be a SDL_DisplayMode")
     val = None
     if mode:
         val = ctypes.byref(mode)
@@ -476,8 +451,6 @@ def get_window_display_mode(window):
     If the display mode for the window could not be determined, a SDLError is
     raised.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     mode = SDL_DisplayMode()
     retval = dll.SDL_GetWindowDisplayMode(ctypes.byref(window),
                                           ctypes.byref(mode))
@@ -490,8 +463,6 @@ def get_window_display_mode(window):
          ctypes.c_uint)
 def get_window_pixelformat(window):
     """Retrieves the pixel format associated with the window."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     wformat = dll.SDL_GetWindowPixelFormat(ctypes.byref(window))
     if wformat == 0:
         raise SDLError()
@@ -501,8 +472,6 @@ def get_window_pixelformat(window):
 @sdltype("SDL_GetWindowID", [ctypes.POINTER(SDL_Window)], ctypes.c_int)
 def get_window_id(window):
     """Gets the id of the SDL_Window."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     wid = dll.SDL_GetWindowID(ctypes.byref(window))
     if wid == 0:
         raise SDLError()
@@ -515,8 +484,6 @@ def get_window_from_id(wid):
 
     If no SDL_Window could be found for the passed id, a SDLError is raised.
     """
-    if type(wid) is not int:
-        raise TypeError("id must be an int")
     window = dll.SDL_GetWindowFromID(wid)
     if window is None:
         raise SDLError()
@@ -526,8 +493,6 @@ def get_window_from_id(wid):
 @sdltype("SDL_GetWindowFlags", [ctypes.POINTER(SDL_Window)], ctypes.c_uint)
 def get_window_flags(window):
     """Retrieves the currently applied flags for a specific window."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     return dll.SDL_GetWindowFlags(ctypes.byref(window))
 
 
@@ -537,8 +502,6 @@ def get_window_title(window):
 
     Raises a SDLError, if the title could not be retrieved.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     retval = dll.SDL_GetWindowTitle(ctypes.byref(window))
     if retval is None or not bool(retval):
         raise SDLError()
@@ -549,8 +512,6 @@ def get_window_title(window):
          None)
 def set_window_title(window, title):
     """Sets the title to be used by a SDL_Window."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     title = byteify(str(title), "utf-8")
     dll.SDL_SetWindowTitle(ctypes.byref(window), title)
 
@@ -560,10 +521,6 @@ def set_window_title(window, title):
 def set_window_icon(window, icon):
     """Sets the icon for the window.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
-    if not isinstance(icon, SDL_Surface):
-        raise TypeError("icon must be a SDL_Surface")
     dll.SDL_SetWindowIcon(ctypes.byref(window), ctypes.byref(icon))
 
 
@@ -579,8 +536,6 @@ def set_window_data(window, name, data):
 
     This will return the previous value.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     name = byteify(str(name), "utf-8")
     ptr = ctypes.py_object(data)
     retval = dll.SDL_SetWindowData(ctypes.byref(window), name, ptr)
@@ -598,8 +553,6 @@ def get_window_data(window, name):
     The data to be retrieved is identified by the specified name. If there is
     no data found for name, None will be returned.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     name = byteify(str(name), "utf-8")
     retval = dll.SDL_GetWindowData(ctypes.byref(window), name)
     retval = ctypes.cast(retval, ctypes.py_object)
@@ -612,10 +565,6 @@ def get_window_data(window, name):
                                    ctypes.c_int], None)
 def set_window_position(window, x, y):
     """Sets the position of the top-left corner of the passed SDL_Window."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
-    if type(x) is not int or type(y) is not int:
-        raise TypeError("x and y must be integer values")
     dll.SDL_SetWindowPosition(ctypes.byref(window), x, y)
 
 
@@ -626,8 +575,6 @@ def get_window_position(window):
     """Gets the current top-left position of the passed SDL_Window as two-value
     tuple.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     x = ctypes.c_int(0)
     y = ctypes.c_int(0)
     dll.SDL_GetWindowPosition(ctypes.byref(window), ctypes.byref(x),
@@ -639,10 +586,6 @@ def get_window_position(window):
                                ctypes.c_int], None)
 def set_window_size(window, w, h):
     """Sets the size of the passed SDL_Window."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
-    if type(w) is not int or type(h) is not int:
-        raise TypeError("w and h must be integer values")
     dll.SDL_SetWindowSize(ctypes.byref(window), w, h)
 
 
@@ -651,8 +594,6 @@ def set_window_size(window, w, h):
                                ctypes.POINTER(ctypes.c_int)], None)
 def get_window_size(window):
     """Gets the size of the passed SDL_window as two-value tuple."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     w = ctypes.c_int(0)
     h = ctypes.c_int(0)
     dll.SDL_GetWindowSize(ctypes.byref(window), ctypes.byref(w),
@@ -663,24 +604,18 @@ def get_window_size(window):
 @sdltype("SDL_ShowWindow", [ctypes.POINTER(SDL_Window)], None)
 def show_window(window):
     """Shows the passed SDL_Window."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     dll.SDL_ShowWindow(ctypes.byref(window))
 
 
 @sdltype("SDL_HideWindow", [ctypes.POINTER(SDL_Window)], None)
 def hide_window(window):
     """Hides the passed SDL_Window."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     dll.SDL_HideWindow(ctypes.byref(window))
 
 
 @sdltype("SDL_RaiseWindow", [ctypes.POINTER(SDL_Window)], None)
 def raise_window(window):
     """Raises the passed window above other windows."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     dll.SDL_RaiseWindow(ctypes.byref(window))
 
 
@@ -689,24 +624,18 @@ def maximize_window(window):
     """Tries to maximize the window size to the display extents, but at least
     as large as possible.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     dll.SDL_MaximizeWindow(ctypes.byref(window))
 
 
 @sdltype("SDL_MinimizeWindow", [ctypes.POINTER(SDL_Window)], None)
 def minimize_window(window):
     """Minimizes a window to an iconic representation."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     dll.SDL_MinimizeWindow(ctypes.byref(window))
 
 
 @sdltype("SDL_RestoreWindow", [ctypes.POINTER(SDL_Window)], None)
 def restore_window(window):
     """Restores the size and position of a minimized or maximized window."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     dll.SDL_RestoreWindow(ctypes.byref(window))
 
 
@@ -717,8 +646,6 @@ def set_window_fullscreen(window, fullscreen):
 
     Raises a SDLError, if an error occured.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     fscreen = None
     if not fullscreen:
         fscreen = ctypes.c_int(0)
@@ -741,8 +668,6 @@ def get_window_surface(window):
     NOTE: You may not combine this with 3D or the rendering API on this
     window.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     surface = dll.SDL_GetWindowSurface(ctypes.byref(window))
     if surface is None or not bool(surface):
         raise SDLError()
@@ -755,8 +680,6 @@ def update_window_surface(window):
 
     Raises a SDLError, if an error occured.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     retval = dll.SDL_UpdateWindowSurface(ctypes.byref(window))
     if retval == -1:
         raise SDLError()
@@ -772,8 +695,6 @@ def update_window_surface_rects(window, rects):
 
     Raises a SDLError, if an error occured.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     rptr, count = array.to_ctypes(rects, SDL_Rect)
     rptr = ctypes.cast(rptr, ctypes.POINTER(SDL_Rect))
     retval = dll.SDL_UpdateWindowSurfaceRects(ctypes.byref(window), rptr,
@@ -789,8 +710,6 @@ def set_window_grab(window, grabbed):
     If grabbed is True, the window will grab the input, otherwise, it will
     release the grab.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     if not grabbed:
         grab = ctypes.c_int(0)
     else:
@@ -801,8 +720,6 @@ def set_window_grab(window, grabbed):
 @sdltype("SDL_GetWindowGrab", [ctypes.POINTER(SDL_Window)], ctypes.c_int)
 def get_window_grab(window):
     """Checks, if input is currently grabbed by the window."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     return dll.SDL_GetWindowGrab(ctypes.byref(window)) == SDL_TRUE
 
 
@@ -813,8 +730,6 @@ def set_window_brightness(window, brightness):
 
     Raises a SDLError, if an error occured.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     bright = ctypes.c_float(float(brightness))
     retval = dll.SDL_SetWindowBrightness(ctypes.byref(window), bright)
     if retval == -1:
@@ -825,8 +740,6 @@ def set_window_brightness(window, brightness):
          ctypes.c_float)
 def get_window_brightness(window):
     """Gets the brightness(gamma correction) of the window."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     return dll.SDL_GetWindowBrightness(ctypes.byref(window))
 
 
@@ -842,8 +755,6 @@ def set_window_gamma_ramp(window, red, green, blue):
     Each value table has to have 256 entries for calculating the gamma
     of the specific color channel.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     rptr, gptr, bptr, size = None, None, None, None
 
     if isinstance(red, array.CTypesView):
@@ -883,8 +794,6 @@ def set_window_gamma_ramp(window, red, green, blue):
 def get_window_gamma_ramp(window):
     """Gets the gamma ramp for the passed window, returning the gamma
     values for the red, green and blue color channes as tuple."""
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     rtable = (256 * ctypes.c_ushort)()
     gtable = (256 * ctypes.c_ushort)()
     btable = (256 * ctypes.c_ushort)()
@@ -943,8 +852,6 @@ def gl_set_attribute(attr, value):
 
     Raises a SDLError, if the attribute could not be set.
     """
-    if type(attr) is not int or type(value) is not int:
-        raise TypeError("attr and value must be integer values")
     retval = dll.SDL_GL_SetAttribute(attr, value)
     if retval == -1:
         raise SDLError()
@@ -957,8 +864,6 @@ def gl_get_attribute(attr):
 
     Raises a SDLError, if an invalid attribute is passed or an error occured.
     """
-    if type(attr) is not int:
-        raise TypeError("attr must be an int")
     value = ctypes.c_int(0)
     retval = dll.SDL_GL_GetAttribute(attr, ctypes.byref(value))
     if retval < 0:
@@ -974,8 +879,6 @@ def gl_create_context(window):
 
     On failure, a SDLError is raised.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     retval = dll.SDL_GL_CreateContext(ctypes.byref(window))
     if retval is None or not bool(retval):
         raise SDLError()
@@ -1004,8 +907,6 @@ def gl_make_current(window, context):
 
     On failure, a SDLError is raised
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     context = ctypes.c_void_p(context)
     retval = dll.SDL_GL_MakeCurrent(ctypes.byref(window), context)
     if retval < 0:
@@ -1047,6 +948,4 @@ def gl_swap_window(window):
     """Swaps the OpenGL buffers for a window, if double-buffering is
     supported.
     """
-    if not isinstance(window, SDL_Window):
-        raise TypeError("window must be a SDL_Window")
     dll.SDL_GL_SwapWindow(ctypes.byref(window))

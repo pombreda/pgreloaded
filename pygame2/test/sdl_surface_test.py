@@ -102,13 +102,20 @@ class SDLSurfaceTest(unittest.TestCase):
             surface.free_surface(csf)
 
         sf = surface.create_rgb_surface(10, 10, 32, 0, 0, 0)
-        self.assertRaises(TypeError, surface.convert_surface, None, None, None)
-        self.assertRaises(TypeError, surface.convert_surface, sf, None, None)
-        self.assertRaises(TypeError, surface.convert_surface, sf, "Test", 0)
-        self.assertRaises(TypeError, surface.convert_surface, sf, 12345, 0)
-        self.assertRaises(TypeError, surface.convert_surface, None, pfmt, 0)
-        self.assertRaises(TypeError, surface.convert_surface, "Test", pfmt, 0)
-        self.assertRaises(TypeError, surface.convert_surface, 12345, pfmt, 0)
+        self.assertRaises((AttributeError, TypeError),
+                          surface.convert_surface, None, None, None)
+        self.assertRaises((AttributeError, TypeError),
+                          surface.convert_surface, sf, None, None)
+        self.assertRaises((AttributeError, TypeError),
+                          surface.convert_surface, sf, "Test", 0)
+        self.assertRaises((AttributeError, TypeError),
+                          surface.convert_surface, sf, 12345, 0)
+        self.assertRaises((AttributeError, TypeError),
+                          surface.convert_surface, None, pfmt, 0)
+        self.assertRaises((AttributeError, TypeError),
+                          surface.convert_surface, "Test", pfmt, 0)
+        self.assertRaises((AttributeError, TypeError),
+                          surface.convert_surface, 12345, pfmt, 0)
         pixels.free_format(pfmt)
         surface.free_surface(sf)
 
@@ -231,9 +238,12 @@ class SDLSurfaceTest(unittest.TestCase):
                     surface.free_surface(sf)
 
     def test_free_surface(self):
-        self.assertRaises(TypeError, surface.free_surface, None)
-        self.assertRaises(TypeError, surface.free_surface, "Test")
-        self.assertRaises(TypeError, surface.free_surface, 5)
+        self.assertRaises((AttributeError, TypeError),
+                          surface.free_surface, None)
+        self.assertRaises((AttributeError, TypeError),
+                          surface.free_surface, "Test")
+        self.assertRaises((AttributeError, TypeError),
+                          surface.free_surface, 5)
 
         formats = (pixels.SDL_PIXELFORMAT_INDEX1LSB,
                    pixels.SDL_PIXELFORMAT_RGB332,
@@ -544,9 +554,10 @@ at %d,%d for %s: %d != %d""" % (y, x, pos, col, 0x0))
         palette = pixels.alloc_palette(1 << 16)
         sf = surface.create_rgb_surface(10, 10, 16)
 
-        self.assertRaises(TypeError, surface.set_surface_palette, None, None)
-        self.assertRaises(TypeError, surface.set_surface_palette, None,
-                          palette)
+        self.assertRaises((AttributeError, TypeError),
+                          surface.set_surface_palette, None, None)
+        self.assertRaises((AttributeError, TypeError),
+                          surface.set_surface_palette, None, palette)
         self.assertIsNone(sf.format.palette)
         surface.set_surface_palette(sf, palette)
         self.assertIsNotNone(sf.format.palette)
@@ -572,8 +583,8 @@ at %d,%d for %s: %d != %d""" % (y, x, pos, col, 0x0))
         surface.free_surface(imgsurface)
 
         self.assertRaises(TypeError, surface.load_bmp_rw, "Test")
-        self.assertRaises(TypeError, surface.load_bmp, None)
-        self.assertRaises(TypeError, surface.load_bmp, 1234)
+        self.assertRaises(TypeError, surface.load_bmp_rw, None)
+        self.assertRaises(TypeError, surface.load_bmp_rw, 1234)
 
     def test_load_bmp(self):
         fpath = os.path.join(os.path.dirname(__file__), "resources")
@@ -583,8 +594,8 @@ at %d,%d for %s: %d != %d""" % (y, x, pos, col, 0x0))
         surface.free_surface(imgsurface)
 
         self.assertRaises(sdl.SDLError, surface.load_bmp, "invalid path")
-        self.assertRaises(TypeError, surface.load_bmp, None)
-        self.assertRaises(TypeError, surface.load_bmp, 1234)
+        self.assertRaises(sdl.SDLError, surface.load_bmp, None)
+        self.assertRaises(sdl.SDLError, surface.load_bmp, 1234)
 
     @unittest.skip("not implemented")
     def test_save_bmp_rw(self):

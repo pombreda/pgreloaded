@@ -198,8 +198,6 @@ def haptic_opened(index):
 @sdltype("SDL_HapticIndex", [ctypes.POINTER(SDL_Haptic)], ctypes.c_int)
 def haptic_index(haptic):
     """Gets the index of the haptic device."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     retval = dll.SDL_HapticIndex(ctypes.byref(haptic))
     if retval == -1:
         raise SDLError()
@@ -224,8 +222,6 @@ def haptic_open_from_mouse():
 @sdltype("SDL_JoystickIsHaptic", [ctypes.POINTER(SDL_Joystick)], ctypes.c_int)
 def joystick_is_haptic(joystick):
     """Checks, if the passed SDL_Joystick has haptic capabilities."""
-    if not isinstance(joystick, SDL_Joystick):
-        raise TypeError("joystick must be a SDL_Joystick")
     retval = dll.SDL_JoystickIsHaptic(ctypes.byref(joystick))
     if retval == -1:
         raise SDLError()
@@ -236,8 +232,6 @@ def joystick_is_haptic(joystick):
          ctypes.POINTER(SDL_Haptic))
 def haptic_open_from_joystick(joystick):
     """Tries to open the passed SDL_Joystick as haptic device."""
-    if not isinstance(joystick, SDL_Joystick):
-        raise TypeError("joystick must be a SDL_Joystick")
     retval = dll.SDL_HapticOpenFromJoystick(ctypes.byref(joystick))
     if retval is None or not bool(retval):
         raise SDLError()
@@ -247,16 +241,12 @@ def haptic_open_from_joystick(joystick):
 @sdltype("SDL_HapticClose", [ctypes.POINTER(SDL_Haptic)], None)
 def haptic_close(haptic):
     """Closes an open SDL_Haptic device."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     dll.SDL_HapticClose(ctypes.byref(haptic))
 
 
 @sdltype("SDL_HapticNumEffects", [ctypes.POINTER(SDL_Haptic)], ctypes.c_int)
 def haptic_num_effects(haptic):
     """Returns the number of effects the device can store."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     retval = dll.SDL_HapticNumEffects(ctypes.byref(haptic))
     if retval == -1:
         raise SDLError()
@@ -267,8 +257,6 @@ def haptic_num_effects(haptic):
          ctypes.c_int)
 def haptic_num_effects_playing(haptic):
     """Returns the number of effects the device can play at the same time."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     retval = dll.SDL_HapticNumEffectsPlaying(ctypes.byref(haptic))
     if retval == -1:
         raise SDLError()
@@ -278,16 +266,12 @@ def haptic_num_effects_playing(haptic):
 @sdltype("SDL_HapticQuery", [ctypes.POINTER(SDL_Haptic)], ctypes.c_uint)
 def haptic_query(haptic):
     """Gets the features supported by the haptic device."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     return dll.SDL_HapticQuery(ctypes.byref(haptic))
 
 
 @sdltype("SDL_HapticNumAxes", [ctypes.POINTER(SDL_Haptic)], ctypes.c_int)
 def haptic_num_axes(haptic):
     """Gets the number of axes of the haptic device."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     return dll.SDL_HapticNumAxes(ctypes.byref(haptic))
 
 
@@ -296,10 +280,6 @@ def haptic_num_axes(haptic):
          ctypes.c_int)
 def haptic_effect_supported(haptic, effect):
     """Checks, if the specified effect is supported by the haptic device."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
-    if not isinstance(effect, SDL_HapticEffect):
-        raise TypeError("effect must be a SDL_HapticEffect")
     retval = dll.SDL_HapticEffectSupported(ctypes.byref(haptic),
                                            ctypes.byref(effect))
     if retval == -1:
@@ -312,10 +292,6 @@ def haptic_effect_supported(haptic, effect):
          ctypes.c_int)
 def hapic_new_effect(haptic, effect):
     """Creates a new effect on the device."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
-    if not isinstance(effect, SDL_HapticEffect):
-        raise TypeError("effect must be a SDL_HapticEffect")
     retval = dll.SDL_HapticNewEffect(ctypes.byref(haptic),
                                      ctypes.byref(effect))
     if retval == -1:
@@ -328,10 +304,6 @@ def hapic_new_effect(haptic, effect):
          ctypes.c_int)
 def hapic_update_effect(haptic, effectid, effect):
     """Updates an effect on the device."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
-    if not isinstance(effect, SDL_HapticEffect):
-        raise TypeError("effect must be a SDL_HapticEffect")
     retval = dll.SDL_HapticNewEffect(ctypes.byref(haptic), effectid,
                                      ctypes.byref(effect))
     if retval == -1:
@@ -346,8 +318,6 @@ def haptic_run_effect(haptic, effectid, iterations):
 
     If iterations is SDL_HAPTIC_INFINITY, the effect will be run forever.
     """
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     retval = dll.SDL_HapticRunEffect(ctypes.byref(haptic), effectid,
                                      iterations)
     if retval == -1:
@@ -358,8 +328,6 @@ def haptic_run_effect(haptic, effectid, iterations):
          ctypes.c_int)
 def haptic_stop_effect(haptic, effectid):
     """Stops a haptic effect."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     retval = dll.SDL_HapticStopEffect(ctypes.byref(haptic), effectid)
     if retval == -1:
         raise SDLError()
@@ -369,8 +337,6 @@ def haptic_stop_effect(haptic, effectid):
          None)
 def haptic_destroy_effect(haptic, effectid):
     """Destroys a haptic effect."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     dll.SDL_HapticDestroyEffect(ctypes.byref(haptic), effectid)
 
 
@@ -378,8 +344,6 @@ def haptic_destroy_effect(haptic, effectid):
                                        ctypes.c_int], ctypes.c_int)
 def haptic_get_effect_status(haptic, effectid):
     """Gets the status of a haptic effect."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     retval = dll.SDL_HapticGetEffectStatus(ctypes.byref(haptic), effectid)
     if retval == -1:
         raise SDLError()
@@ -390,8 +354,6 @@ def haptic_get_effect_status(haptic, effectid):
          ctypes.c_int)
 def haptic_set_gain(haptic, gain):
     """Sets the global gain of the haptic device."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     retval = dll.SDL_HapticSetGain(ctypes.byref(haptic), gain)
     if retval == -1:
         raise SDLError()
@@ -401,8 +363,6 @@ def haptic_set_gain(haptic, gain):
          ctypes.c_int)
 def haptic_set_autocenter(haptic, autocenter):
     """Sets the global autocenter of the haptic device."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     retval = dll.SDL_HapticSetAutocenter(ctypes.byref(haptic), autocenter)
     if retval == -1:
         raise SDLError()
@@ -411,8 +371,6 @@ def haptic_set_autocenter(haptic, autocenter):
 @sdltype("SDL_HapticPause", [ctypes.POINTER(SDL_Haptic)], ctypes.c_int)
 def haptic_pause(haptic):
     """Pauses a haptic device."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     retval = dll.SDL_HapticPause(ctypes.byref(haptic))
     if retval == -1:
         raise SDLError()
@@ -421,8 +379,6 @@ def haptic_pause(haptic):
 @sdltype("SDL_HapticUnpause", [ctypes.POINTER(SDL_Haptic)], ctypes.c_int)
 def haptic_unpause(haptic):
     """Unpauses a haptic device."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     retval = dll.SDL_HapticUnpause(ctypes.byref(haptic))
     if retval == -1:
         raise SDLError()
@@ -431,8 +387,6 @@ def haptic_unpause(haptic):
 @sdltype("SDL_HapticStopAll", [ctypes.POINTER(SDL_Haptic)], ctypes.c_int)
 def haptic_stop_all(haptic):
     """Stops all currently playing effects on a haptic device."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     retval = dll.SDL_HapticStopAll(ctypes.byref(haptic))
     if retval == -1:
         raise SDLError()
@@ -442,8 +396,6 @@ def haptic_stop_all(haptic):
          ctypes.c_int)
 def haptic_rumble_supported(haptic):
     """Checks, if rumble is supported on the haptic device."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     retval = dll.SDL_HapticRumbleSupported(ctypes.byref(haptic))
     if retval == -1:
         raise SDLError()
@@ -453,8 +405,6 @@ def haptic_rumble_supported(haptic):
 @sdltype("SDL_HapticRumbleInit", [ctypes.POINTER(SDL_Haptic)], ctypes.c_int)
 def haptic_rumble_init(haptic):
     """Initialises a haptic device for rumble playback."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     retval = dll.SDL_HapticRumbleInit(ctypes.byref(haptic))
     if retval == -1:
         raise SDLError()
@@ -464,8 +414,6 @@ def haptic_rumble_init(haptic):
                                   ctypes.c_uint], ctypes.c_int)
 def haptic_rumble_play(haptic, strength, length):
     """Plays a rumble on the haptic device."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     if float(strength) < 0 or float(strength) > 1:
         raise ValueError("strength must be in the range [0, 1]")
     retval = dll.SDL_HapticRumblePlay(ctypes.byref(haptic), strength, length)
@@ -476,8 +424,6 @@ def haptic_rumble_play(haptic, strength, length):
 @sdltype("SDL_HapticRumbleStop", [ctypes.POINTER(SDL_Haptic)], ctypes.c_int)
 def haptic_rumble_stop(haptic):
     """Stops the rumble playback on a haptic device."""
-    if not isinstance(haptic, SDL_Haptic):
-        raise TypeError("haptic must be a SDL_Haptic")
     retval = dll.SDL_HapticRumbleStop(ctypes.byref(haptic))
     if retval == -1:
         raise SDLError()

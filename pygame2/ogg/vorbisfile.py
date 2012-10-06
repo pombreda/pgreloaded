@@ -97,8 +97,6 @@ def clear(ovfilep):
     Note: do not use the passed OggVorbis_File after calling this
     function.
     """
-    if not isinstance(ovfilep, OggVorbis_File):
-        raise TypeError("ovfilep must be an OggVorbis_File")
     retval = dll.ov_clear(ctypes.byref(ovfilep))
     if retval != 0:
         raise OggError(_FASTERROR(retval))
@@ -108,10 +106,8 @@ def clear(ovfilep):
            ctypes.c_int)
 def fopen(fname):
     """Opens a file and loads it into a OggVorbis_File."""
-    if type(fname) is not str:
-        raise TypeError("fname must be a string")
     ovf = OggVorbis_File()
-    retval = dll.ov_fopen(fname, ctypes.byref(ovf))
+    retval = dll.ov_fopen(str(fname), ctypes.byref(ovf))
     if retval != 0:
         raise OggError(_FASTERROR(retval))
     return ovf
@@ -125,8 +121,6 @@ def info(ovfilep, bstream=-1):
     # it is a struct value of OggVorbis_File, we can create random
     # segfaults and bus errors, if the OggVorbis_File is freed in the
     # meantime.
-    if not isinstance(ovfilep, OggVorbis_File):
-        raise TypeError("ovfilep must be an OggVorbis_File")
     ovinfo = dll.ov_info(ctypes.byref(ovfilep), bstream)
     if ovinfo is None or not bool(ovinfo):
         raise OggError("invalid bitstream or file")
@@ -139,8 +133,6 @@ def pcm_total(ovfilep, bstream=-1):
     """Retrieves the total size in bytes of the PCM buffer of a
     OggVorbis_File.
     """
-    if not isinstance(ovfilep, OggVorbis_File):
-        raise TypeError("ovfilep must be an OggVorbis_File")
     retval = dll.ov_pcm_total(ovfilep, bstream)
     if retval < 0:
         raise OggError(_FASTERROR(retval))
@@ -153,8 +145,6 @@ def pcm_total(ovfilep, bstream=-1):
                        ctypes.POINTER(ctypes.c_int)], ctypes.c_int)
 def read(ovfilep, length, outbuf=None, bigendian=False, word=2, signed=True):
     """Loads the PCM buffer of a OggVorbis_File."""
-    if not isinstance(ovfilep, OggVorbis_File):
-        raise TypeError("ovfilep must be an OggVorbis_File")
     if word not in (1, 2):
         raise ValueError("word must be 1 (8-bit) or 2 (16-bit samples)")
     cursection = ctypes.c_int(0)

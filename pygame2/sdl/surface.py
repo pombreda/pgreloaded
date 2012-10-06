@@ -122,13 +122,8 @@ def convert_surface(src, pformat, flags):
     """Creates a new surface with the specified format and copies and maps the
     passed surface to it.
     """
-    if not isinstance(src, SDL_Surface):
-        raise TypeError("src must be a SDL_Surface")
-    if not isinstance(pformat, SDL_PixelFormat):
-        raise TypeError("pformat must be a SDL_PixelFormat")
-    if type(flags) is not int:
-        raise TypeError("flags must be an int")
-    ret = dll.SDL_ConvertSurface(src, pformat, flags)
+    ret = dll.SDL_ConvertSurface(ctypes.byref(src), ctypes.byref(pformat),
+                                 flags)
     if ret is None or not bool(ret):
         raise SDLError()
     return ret.contents
@@ -141,13 +136,7 @@ def convert_surface_format(src, pformat, flags):
     """Creates a new surface with the specified format and copies and maps the
     passed surface to it.
     """
-    if not isinstance(src, SDL_Surface):
-        raise TypeError("src must be a SDL_Surface")
-    if type(pformat) not in (int, long):
-        raise TypeError("pformat must be an int")
-    if type(flags) is not int:
-        raise TypeError("flags must be an int")
-    ret = dll.SDL_ConvertSurfaceFormat(src, pformat, flags)
+    ret = dll.SDL_ConvertSurfaceFormat(ctypes.byref(src), pformat, flags)
     if ret is None or not bool(ret):
         raise SDLError()
     return ret.contents
@@ -214,12 +203,8 @@ def fill_rect(dst, rect, color):
 
     if rect is None, the entire surface will be filled.
     """
-    if not isinstance(dst, SDL_Surface):
-        raise TypeError("dst must be a SDL_Surface")
     rptr = None
     if rect is not None:
-        if not isinstance(rect, SDL_Rect):
-            raise TypeError("rect must be None or a SDL_Rect")
         rptr = ctypes.byref(rect)
     retval = dll.SDL_FillRect(ctypes.byref(dst), rptr, color)
     if retval == -1:
@@ -231,8 +216,6 @@ def fill_rect(dst, rect, color):
                            ctypes.c_uint], ctypes.c_int)
 def fill_rects(dst, rects, color):
     """Fills multiple areas with a certain color on the surface."""
-    if not isinstance(dst, SDL_Surface):
-        raise TypeError("dst must be a SDL_Surface")
     rects, count = array.to_ctypes(rects, SDL_Rect)
     rects = ctypes.cast(rects, ctypes.POINTER(SDL_Rect))
     retval = dll.SDL_FillRects(ctypes.byref(dst), rects, count, color)
@@ -246,8 +229,6 @@ def free_surface(surface):
 
     Once freed, the surface should not be accessed anymore.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     dll.SDL_FreeSurface(ctypes.byref(surface))
 
 
@@ -256,8 +237,6 @@ def free_surface(surface):
 def get_clip_rect(surface):
     """Gets the clipping area for blitting operations.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     rect = SDL_Rect()
     dll.SDL_GetClipRect(ctypes.byref(surface), ctypes.byref(rect))
     return rect
@@ -268,10 +247,6 @@ def get_clip_rect(surface):
 def set_clip_rect(surface, rect):
     """Sets the clipping area for blitting operations.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
-    if not isinstance(rect, SDL_Rect):
-        raise TypeError("rect must be a SDL_Rect")
     ret = dll.SDL_SetClipRect(ctypes.byref(surface), ctypes.byref(rect))
     return ret == SDL_TRUE
 
@@ -283,8 +258,6 @@ def get_color_key(surface):
 
     If no colorkey is set, None will be returned.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     key = ctypes.c_uint()
     ret = dll.SDL_GetColorKey(ctypes.byref(surface), ctypes.byref(key))
     if ret == -1:
@@ -299,8 +272,6 @@ def set_color_key(surface, flag, key):
 
     You can pass SDL_RLEACCEL to enable RLE accelerated blits.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     ret = dll.SDL_SetColorKey(ctypes.byref(surface), flag, key)
     if ret != 0:
         raise SDLError()
@@ -312,8 +283,6 @@ def set_color_key(surface, flag, key):
 def get_surface_alpha_mod(surface):
     """Gets the additional alpha value to be used in blit operations.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     alpha = ctypes.c_ubyte()
     ret = dll.SDL_GetSurfaceAlphaMod(ctypes.byref(surface),
                                      ctypes.byref(alpha))
@@ -327,8 +296,6 @@ def get_surface_alpha_mod(surface):
 def set_surface_alpha_mod(surface, alpha):
     """Sets the additional alpha value used in blit operations.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     ret = dll.SDL_SetSurfaceAlphaMod(ctypes.byref(surface), alpha)
     if ret != 0:
         raise SDLError()
@@ -339,8 +306,6 @@ def set_surface_alpha_mod(surface, alpha):
 def set_surface_blend_mode(surface, blend):
     """Sets the blend mode to be used in blit operations.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     ret = dll.SDL_SetSurfaceBlendMode(ctypes.byref(surface), blend)
     if ret != 0:
         raise SDLError()
@@ -352,8 +317,6 @@ def set_surface_blend_mode(surface, blend):
 def get_surface_blend_mode(surface):
     """Gets the blend mode used in blit operations.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     mode = ctypes.c_int()
     ret = dll.SDL_GetSurfaceBlendMode(ctypes.byref(surface),
                                       ctypes.byref(mode))
@@ -370,8 +333,6 @@ def get_surface_blend_mode(surface):
 def get_surface_color_mod(surface):
     """Gets the additional color value used for blit operations.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     r, g, b = ctypes.c_ubyte(), ctypes.c_ubyte(), ctypes.c_ubyte()
     ret = dll.SDL_GetSurfaceColorMod(ctypes.byref(surface), ctypes.byref(r),
                                      ctypes.byref(g), ctypes.byref(b))
@@ -386,8 +347,6 @@ def get_surface_color_mod(surface):
 def set_surface_color_mod(surface, r, g, b):
     """Sets the additional color value to be used for blit operations.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     ret = dll.SDL_SetSurfaceColorMod(ctypes.byref(surface), r, g, b)
     if ret != 0:
         raise SDLError()
@@ -401,8 +360,6 @@ def load_bmp_rw(src, freesrc):
     If freesrc evaluates to True, the passed stream will be closed after
     being read.
     """
-    if not isinstance(src, rwops.SDL_RWops):
-        raise TypeError("src must be a SDL_RWops")
     if bool(freesrc):
         retval = dll.SDL_LoadBMP_RW(ctypes.byref(src), 1)
     else:
@@ -415,9 +372,7 @@ def load_bmp_rw(src, freesrc):
 def load_bmp(filename):
     """Loads a surface from a BMP file.
     """
-    if type(filename) is not str:
-        raise TypeError("filename must be a string")
-    rw = rwops.rw_from_file(filename, "rb")
+    rw = rwops.rw_from_file(str(filename), "rb")
     return load_bmp_rw(rw, True)
 
 
@@ -430,10 +385,6 @@ def save_bmp_rw(surface, dst, freedst):
     If freedst evaluates to True, the passed stream will be closed after
     being written.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
-    if not isinstance(dst, rwops.SDL_RWops):
-        raise TypeError("dst must be a SDL_RWops")
     if bool(freedst):
         retval = dll.SDL_SaveBMP_RW(ctypes.byref(surface), ctypes.byref(dst), 1)
     else:
@@ -445,10 +396,6 @@ def save_bmp_rw(surface, dst, freedst):
 def save_bmp(surface, filename):
     """Saves a surface to a file.
     """
-    if type(filename) is not str:
-        raise TypeError("filename must be a string")
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     rw = rwops.rw_from_file(filename, "wb")
     save_bmp_rw(surface, rw, True)
 
@@ -457,8 +404,6 @@ def save_bmp(surface, filename):
 def lock_surface(surface):
     """Locks the surface to allow a direct acces to its pixels.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     ret = dll.SDL_LockSurface(ctypes.byref(surface))
     if ret != 0:
         raise SDLError()
@@ -474,8 +419,6 @@ def SDL_MUSTLOCK(surface):
 @sdltype("SDL_UnlockSurface", [ctypes.POINTER(SDL_Surface)], None)
 def unlock_surface(surface):
     """Unlocks the surface."""
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     dll.SDL_UnlockSurface(ctypes.byref(surface))
 
 
@@ -487,14 +430,6 @@ def lower_blit(src, srcrect, dst, dstrect):
     """Copy pixels from the source surface to the destination surface
     with now argument or rectangle validation or clipping.
     """
-    if not isinstance(src, SDL_Surface):
-        raise TypeError("src must be a SDL_Surface")
-    if not isinstance(dst, SDL_Surface):
-        raise TypeError("dst must be a SDL_Surface")
-    if not isinstance(dstrect, SDL_Rect):
-        raise TypeError("dstrect must be a SDL_Rect")
-    if not isinstance(srcrect, SDL_Rect):
-        raise TypeError("srcrect must be a SDL_Rect")
     ret = dll.SDL_LowerBlit(ctypes.byref(src), ctypes.byref(srcrect),
                             ctypes.byref(dst), ctypes.byref(dstrect))
     if ret != 0:
@@ -509,14 +444,6 @@ def lower_blit_scaled(src, srcrect, dst, dstrect):
     """Performs a scaled pixel copy operation from the source surface to
     the destination surface, without argument checks or clipping.
     """
-    if not isinstance(src, SDL_Surface):
-        raise TypeError("src must be a SDL_Surface")
-    if not isinstance(dst, SDL_Surface):
-        raise TypeError("dst must be a SDL_Surface")
-    if not isinstance(srcrect, SDL_Rect):
-        raise TypeError("srcrect must be a SDL_Rect")
-    if not isinstance(dstrect, SDL_Rect):
-        raise TypeError("dstrect must be a SDL_Rect")
     ret = dll.SDL_LowerBlitScaled(ctypes.byref(src), ctypes.byref(srcrect),
                                   ctypes.byref(dst), ctypes.byref(dstrect))
     if ret != 0:
@@ -531,16 +458,8 @@ def upper_blit(src, srcrect, dst, dstrect):
     """Copy pixels from the source surface to the destination surface,
     performing argument and rectangle validation as well as clipping.
     """
-    if not isinstance(src, SDL_Surface):
-        raise TypeError("src must be a SDL_Surface")
-    if not isinstance(dst, SDL_Surface):
-        raise TypeError("dst must be a SDL_Surface")
-    if not isinstance(dstrect, SDL_Rect):
-        raise TypeError("dstrect must be a SDL_Rect")
     srptr = None
     if srcrect is not None:
-        if not isinstance(srcrect, SDL_Rect):
-            raise TypeError("srcrect must be a SDL_Rect")
         srptr = ctypes.byref(srcrect)
     ret = dll.SDL_UpperBlit(ctypes.byref(src), srptr,
                             ctypes.byref(dst), ctypes.byref(dstrect))
@@ -559,16 +478,8 @@ def upper_blit_scaled(src, srcrect, dst, dstrect):
     """Performs a scaled pixel copy operation from the source surface to
     the destination surface, including argument checks and clipping.
     """
-    if not isinstance(src, SDL_Surface):
-        raise TypeError("src must be a SDL_Surface")
-    if not isinstance(dst, SDL_Surface):
-        raise TypeError("dst must be a SDL_Surface")
-    if not isinstance(dstrect, SDL_Rect):
-        raise TypeError("dstrect must be a SDL_Rect")
     srptr = None
     if srcrect is not None:
-        if not isinstance(srcrect, SDL_Rect):
-            raise TypeError("srcrect must be a SDL_Rect")
         srptr = ctypes.byref(srcrect)
     ret = dll.SDL_UpperBlitScaled(ctypes.byref(src), srptr,
                                   ctypes.byref(dst), ctypes.byref(dstrect))
@@ -584,14 +495,6 @@ def soft_stretch(src, srcrect, dst, dstrect):
     """perform a fast, low quality, stretched copy operation between two
     surfaces of the same pixel format.
     """
-    if not isinstance(src, SDL_Surface):
-        raise TypeError("src must be a SDL_Surface")
-    if not isinstance(dst, SDL_Surface):
-        raise TypeError("dst must be a SDL_Surface")
-    if not isinstance(dstrect, SDL_Rect):
-        raise TypeError("dstrect must be a SDL_Rect")
-    if not isinstance(srcrect, SDL_Rect):
-        raise TypeError("srcrect must be a SDL_Rect")
     ret = dll.SDL_SoftStretch(ctypes.byref(src), ctypes.byref(srcrect),
                               ctypes.byref(dst), ctypes.byref(dstrect))
     if ret != 0:
@@ -602,12 +505,8 @@ def soft_stretch(src, srcrect, dst, dstrect):
                                    ctypes.POINTER(SDL_Palette)], ctypes.c_int)
 def set_surface_palette(surface, palette):
     """Sets the palette used by the surface."""
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     pptr = None
     if palette is not None:
-        if not isinstance(palette, SDL_Palette):
-            raise TypeError("palette must be a SDL_Palette")
         pptr = ctypes.byref(palette)
     ret = dll.SDL_SetSurfacePalette(ctypes.byref(surface), pptr)
     if ret != 0:
@@ -623,8 +522,6 @@ def set_surface_rle(surface, flag):
     faster, but the surface must be locked before directly accessing the
     pixels.
     """
-    if not isinstance(surface, SDL_Surface):
-        raise TypeError("surface must be a SDL_Surface")
     if bool(flag):
         ret = dll.SDL_SetSurfaceRLE(ctypes.byref(surface), 1)
     else:
