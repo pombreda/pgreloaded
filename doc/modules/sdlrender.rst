@@ -315,9 +315,10 @@
    This wraps `SDL_RenderCopy`.
 
 .. function:: render_read_pixels(renderer : SDL_Renderer, rect :SDL_Rect, \
-                                 format_ : int, bufsize : int, pitch : int)
+                                 format_ : int, bufsize : int, pitch : int) \
+   -> buffer
 
-   TODO
+   Reads pixels from the current rendering target.
 
    This wraps `SDL_RenderReadPixels`.
 
@@ -349,6 +350,6 @@
 
 .. function:: destroy_renderer(renderer : SDL_Renderer) -> None
 
-   Destroys the passed renderer, releasing its resources
+   Destroys the passed renderer, releasing its resources.
 
    This wraps `SDL_DestroyRenderer`.

@@ -1,11 +1,26 @@
 import sys
 import unittest
 from ctypes import ArgumentError
+from pygame2.resources import Resources
 import pygame2.video as video
 from pygame2.sdl import SDLError
+from pygame2.sdl.surface import create_rgb_surface
+
+RESOURCES = Resources(__file__, "resources")
+
+
+class MSprite(video.Sprite):
+    def __init__(self, w=0, h=0):
+        super(MSprite, self).__init__()
+        self._size = w, h
+
+    @property
+    def size(self):
+        return self._size
 
 
 class VideoSpriteTest(unittest.TestCase):
+    __tags__ = ["sdl"]
 
     def setUp(self):
         if sys.version.startswith("3.1"):
@@ -90,20 +105,50 @@ class VideoSpriteTest(unittest.TestCase):
                 self.assertIsInstance(sprite, video.TextureSprite)
                 #del sprite
 
-    @unittest.skip("not implemented")
     def test_SpriteFactory_from_image(self):
         window = video.Window("Test", size=(1,1))
         renderer = video.RenderContext(window)
         tfactory = video.SpriteFactory(video.TEXTURE, renderer=renderer)
         sfactory = video.SpriteFactory(video.SOFTWARE)
 
+        for suffix in ("bmp", "png", "jpg"):
+            imgname = RESOURCES.get_path("surfacetest.%s" % suffix)
+            tsprite = tfactory.from_image(imgname)
+            self.assertIsInstance(tsprite, video.TextureSprite)
+            ssprite = sfactory.from_image(imgname)
+            self.assertIsInstance(ssprite, video.SoftwareSprite)
+
+        for factory in (tfactory, sfactory):
+            self.assertRaises((AttributeError, SDLError),
+                              factory.from_image, None)
+            self.assertRaises((IOError, SDLError),
+                              factory.from_image, "banana")
+            self.assertRaises((AttributeError, IOError, SDLError),
+                              factory.from_image, 12345)
+
     @unittest.skip("not implemented")
     def test_SpriteFactory_from_object(self):
         pass
 
-    @unittest.skip("not implemented")
     def test_SpriteFactory_from_surface(self):
-        pass
+        window = video.Window("Test", size=(1,1))
+        renderer = video.RenderContext(window)
+        tfactory = video.SpriteFactory(video.TEXTURE, renderer=renderer)
+        sfactory = video.SpriteFactory(video.SOFTWARE)
+
+        sf = create_rgb_surface(10, 10, 32)
+        tsprite = tfactory.from_surface(sf)
+        self.assertIsInstance(tsprite, video.TextureSprite)
+        ssprite = sfactory.from_surface(sf)
+        self.assertIsInstance(ssprite, video.SoftwareSprite)
+
+        for factory in (tfactory, sfactory):
+            self.assertRaises((AttributeError, ArgumentError, TypeError),
+                              factory.from_surface, None)
+            self.assertRaises((AttributeError, ArgumentError, TypeError),
+                              factory.from_surface, "test")
+            self.assertRaises((AttributeError, ArgumentError, TypeError),
+                              factory.from_surface, 1234)
 
     @unittest.skip("not implemented")
     def test_SpriteRenderer(self):
@@ -142,26 +187,32 @@ class VideoSpriteTest(unittest.TestCase):
         pass
 
     def test_Sprite(self):
-        class MSprite(video.Sprite):
-            @property
-            def size(self):
-                return None
-
         sprite = MSprite()
         self.assertIsInstance(sprite, MSprite)
         self.assertIsInstance(sprite, video.Sprite)
 
-    @unittest.skip("not implemented")
     def test_Sprite_position_xy(self):
-        pass
+        sprite = MSprite()
+        positions = [(x, y) for x in range(-50, 50) for y in range(-50, 50)]
+        for x, y in positions:
+            sprite.position = x, y
+            self.assertEqual(sprite.position, (x, y))
+            sprite.x = x + 1
+            sprite.y = y + 1
+            self.assertEqual(sprite.position, (x + 1, y + 1))
 
-    @unittest.skip("not implemented")
     def test_Sprite_area(self):
-        pass
+        sizes = [(w, h) for w in range(0, 200) for h in range(0, 200)]
+        for w, h in sizes:
+            sprite = MSprite(w, h)
+            self.assertEqual(sprite.size, (w, h))
+            self.assertEqual(sprite.area, (0, 0, w, h))
+            sprite.position = w, h
+            self.assertEqual(sprite.area, (w, h, 2*w, 2*h))
 
     @unittest.skip("not implemented")
     def test_SoftwareSprite(self):
-        sprite = video.SoftwareSprite()
+        sprite = video.SoftwareSprite(None, None)
         self.assertIsInstance(sprite, video.SoftwareSprite)
 
     @unittest.skip("not implemented")

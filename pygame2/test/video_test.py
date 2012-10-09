@@ -6,6 +6,7 @@ import pygame2.video as video
 
 
 class VideoTest(unittest.TestCase):
+    __tags__ = ["sdl"]
 
     def setUp(self):
         if sys.version.startswith("3.1"):
@@ -39,6 +40,7 @@ class VideoTest(unittest.TestCase):
     def test_TestEventProcessor(self):
         proc = video.TestEventProcessor()
         self.assertIsInstance(proc, video.TestEventProcessor)
+
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

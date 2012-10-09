@@ -65,8 +65,8 @@ class SDLImageTest(unittest.TestCase):
             surface.free_surface(sf)
         self.assertRaises(sdl.SDLError, sdlimage.load,
                           RESOURCES.get_path("rwopstest.txt"))
-        self.assertRaises(TypeError, sdlimage.load, None)
-        self.assertRaises(TypeError, sdlimage.load, 1234)
+        self.assertRaises(sdl.SDLError, sdlimage.load, None)
+        self.assertRaises(sdl.SDLError, sdlimage.load, 1234)
 
     def test_load_rw(self):
         fname = "surfacetest.%s"

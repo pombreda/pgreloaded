@@ -17,6 +17,7 @@ FONTMAP = ["0123456789",
 
 
 class VideoFontTest(unittest.TestCase):
+    __tags__ = ["sdl"]
 
     def setUp(self):
         if sys.version.startswith("3.1"):

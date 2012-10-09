@@ -26,7 +26,9 @@ __all__ = ["SDL_RendererInfo", "SDL_Renderer", "SDL_Texture",
            "render_draw_line", "render_draw_lines", "render_draw_rect",
            "render_draw_rects", "render_fill_rect", "render_fill_rects",
            "render_copy", "render_read_pixels", "render_present",
-           "destroy_texture", "destroy_renderer"
+           "destroy_texture", "destroy_renderer", "render_get_scale",
+           "render_set_scale", "render_get_logical_size",
+           "render_set_logical_size"
            ]
 
 SDL_RENDERER_SOFTWARE      = 0x00000001
@@ -700,8 +702,7 @@ def render_copy(renderer, texture, srcrect=None, dstrect=None):
                                   ctypes.POINTER(ctypes.c_uint), ctypes.c_int],
          ctypes.c_int)
 def render_read_pixels(renderer, rect, format_, bufsize, pitch):
-    """TODO
-    """
+    """Reads pixels from the current rendering target."""
     pixelbuf = (bufsize * ctypes.c_uint)()
     retval = dll.SDL_RenderReadPixels(ctypes.byref(renderer),
                                       ctypes.byref(rect), format_,
@@ -713,22 +714,23 @@ def render_read_pixels(renderer, rect, format_, bufsize, pitch):
 
 @sdltype("SDL_RenderPresent", [ctypes.POINTER(SDL_Renderer)], None)
 def render_present(renderer):
-    """TODO
+    """Swaps the renderer's target buffers, causing changed contents to be
+    displayed.
     """
     dll.SDL_RenderPresent(ctypes.byref(renderer))
 
 
-@sdltype("SDL_RenderSetScale", [ctypes.POINTER(SDL_Renderer),
-                                ctypes.c_float, ctypes.c_float], ctypes.c_int)
+#@sdltype("SDL_RenderSetScale", [ctypes.POINTER(SDL_Renderer),
+#                                ctypes.c_float, ctypes.c_float], ctypes.c_int)
 def render_set_scale(renderer, scalex, scaley):
     """Sets the drawing scale for rendering on the current target."""
     if dll.SDL_RenderSetScale(ctypes.byref(renderer), scalex, scaley) == -1:
         raise SDLError()
 
 
-@sdltype("SDL_RenderGetScale", [ctypes.POINTER(SDL_Renderer),
-                                ctypes.POINTER(ctypes.c_float),
-                                ctypes.POINTER(ctypes.c_float)], None)
+#@sdltype("SDL_RenderGetScale", [ctypes.POINTER(SDL_Renderer),
+#                                ctypes.POINTER(ctypes.c_float),
+#                                ctypes.POINTER(ctypes.c_float)], None)
 def render_get_scale(renderer):
     """Gets the drawing scale for rendering on the current target."""
     scx = ctypes.c_float(0)
@@ -738,18 +740,18 @@ def render_get_scale(renderer):
     return scx.value, scy.value
 
 
-@sdltype("SDL_RenderSetLogicalSize", [ctypes.POINTER(SDL_Renderer),
-                                      ctypes.c_int, ctypes.c_int],
-         ctypes.c_int)
+#@sdltype("SDL_RenderSetLogicalSize", [ctypes.POINTER(SDL_Renderer),
+#                                      ctypes.c_int, ctypes.c_int],
+#         ctypes.c_int)
 def render_set_logical_size(renderer, w, h):
     """Sets the device independent resolution for rendering."""
     if dll.SDL_RenderSetLogicalSize(ctypes.byref(renderer), w, h) == -1:
         raise SDLError()
 
 
-@sdltype("SDL_RenderGetLogicalSize", [ctypes.POINTER(SDL_Renderer),
-                                      ctypes.POINTER(ctypes.c_int),
-                                      ctypes.POINTER(ctypes.c_int)], None)
+#@sdltype("SDL_RenderGetLogicalSize", [ctypes.POINTER(SDL_Renderer),
+#                                      ctypes.POINTER(ctypes.c_int),
+#                                      ctypes.POINTER(ctypes.c_int)], None)
 def render_get_logical_size(renderer):
     """Gets the device independent resolution for rendering."""
     w = ctypes.c_int(0)
@@ -761,13 +763,11 @@ def render_get_logical_size(renderer):
 
 @sdltype("SDL_DestroyTexture", [ctypes.POINTER(SDL_Texture)], None)
 def destroy_texture(texture):
-    """TODO
-    """
+    """Destroys the passed texture, releasing its resources."""
     dll.SDL_DestroyTexture(ctypes.byref(texture))
 
 
 @sdltype("SDL_DestroyRenderer", [ctypes.POINTER(SDL_Renderer)], None)
 def destroy_renderer(renderer):
-    """TODO
-    """
+    """Destroys the passed renderer, releasing its resources."""
     dll.SDL_DestroyRenderer(ctypes.byref(renderer))

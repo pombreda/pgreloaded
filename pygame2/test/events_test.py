@@ -24,7 +24,7 @@ class EventsTest(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def ttest_EventHandler(self):
+    def test_EventHandler(self):
         self.assertRaises(TypeError, events.EventHandler)
         self.assertIsInstance(events.EventHandler(None), events.EventHandler)
         self.assertIsInstance(events.EventHandler(132), events.EventHandler)
@@ -37,7 +37,7 @@ class EventsTest(unittest.TestCase):
         self.assertEqual(len(ev), 0)
         self.assertEqual(len(ev.callbacks), 0)
 
-    def ttest_EventHandler_add__iadd__(self):
+    def test_EventHandler_add__iadd__(self):
         ev = events.EventHandler(None)
 
         def doadd(ev, cb):
@@ -68,7 +68,7 @@ class EventsTest(unittest.TestCase):
             ev.add(callback)
         self.assertEqual(len(ev), 10)
 
-    def ttest_EventHandler_remove__isub__(self):
+    def test_EventHandler_remove__isub__(self):
         ev = events.EventHandler(None)
 
         def doremove(ev, cb):
@@ -95,7 +95,7 @@ class EventsTest(unittest.TestCase):
             ev -= callback
         self.assertEqual(len(ev), 2)
 
-    def ttest_EventHandler__call__(self):
+    def test_EventHandler__call__(self):
         ev = events.EventHandler("Test")
         testsum = []
 
@@ -115,7 +115,7 @@ class EventsTest(unittest.TestCase):
             self.assertIsNone(v)
 
     @unittest.skipIf(not _HASMP, "multiprocessing is not supported")
-    def ttest_MPEventHandler(self):
+    def test_MPEventHandler(self):
         self.assertRaises(TypeError, events.MPEventHandler)
         self.assertIsInstance(events.MPEventHandler(None), events.MPEventHandler)
         self.assertIsInstance(events.MPEventHandler(132), events.MPEventHandler)
@@ -129,7 +129,7 @@ class EventsTest(unittest.TestCase):
         self.assertEqual(len(ev.callbacks), 0)
 
     @unittest.skipIf(not _HASMP, "multiprocessing is not supported")
-    def ttest_MPEventHandler_add__iadd__(self):
+    def test_MPEventHandler_add__iadd__(self):
         ev = events.MPEventHandler(None)
 
         def doadd(ev, cb):
@@ -161,7 +161,7 @@ class EventsTest(unittest.TestCase):
         self.assertEqual(len(ev), 10)
 
     @unittest.skipIf(not _HASMP, "multiprocessing is not supported")
-    def ttest_MPEventHandler_remove__isub__(self):
+    def test_MPEventHandler_remove__isub__(self):
         ev = events.MPEventHandler(None)
 
         def doremove(ev, cb):

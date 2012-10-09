@@ -29,9 +29,13 @@ class SDLTTFTest(unittest.TestCase):
         font = sdlttf.TTF_Font()
         self.assertIsInstance(font, sdlttf.TTF_Font)
 
-    @unittest.skip("not implemented")
     def test_init_quit(self):
-        pass
+        sdlttf.init()
+        sdlttf.init()
+        sdlttf.init()
+        sdlttf.quit()
+        sdlttf.quit()
+        sdlttf.init()
 
     def test_open_close_font(self):
         filename = RESOURCES.get_path("tuffy.ttf")
@@ -300,9 +304,25 @@ class SDLTTFTest(unittest.TestCase):
                           sdlttf.font_face_style_name, 1234)
         sdlttf.close_font(font)
 
-    @unittest.skip("not implemented")
     def test_glyph_is_provided(self):
-        pass
+        filename = RESOURCES.get_path("tuffy.ttf")
+        font = sdlttf.open_font(filename, 10)
+        self.assertIsInstance(font, sdlttf.TTF_Font)
+        for ch in range(32, 127):
+            self.assertTrue(sdlttf.glyph_is_provided(font, ch))
+            self.assertTrue(sdlttf.glyph_is_provided(font, chr(ch)))
+        self.assertFalse(sdlttf.glyph_is_provided(font, 0))
+        self.assertFalse(sdlttf.glyph_is_provided(font, 0x0ff9))
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.glyph_is_provided, None, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.glyph_is_provided, "test", None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.glyph_is_provided, "test", 1234)
+        self.assertRaises((ArgumentError, TypeError),
+                          sdlttf.glyph_is_provided, font, None)
+        self.assertRaises((AttributeError, TypeError),
+                          sdlttf.glyph_is_provided, font, "test")
 
     @unittest.skip("not implemented")
     def test_glyph_metrics(self):

@@ -369,9 +369,19 @@ class ArrayTest(unittest.TestCase):
         for index, value in enumerate(vlist):
             self.assertEqual(value, ar[index])
 
-    @unittest.skip("not implemented")
     def test_create_array(self):
-        pass
+        barr = bytes(bytearray(singlebyteseq))
+        for i in (1, 2, 4, 8):
+            parr = pgarray.create_array(barr, i)
+            self.assertIsInstance(parr, array.array)
+            if i == 1:
+                self.assertEqual(parr[0], 0x0)
+            elif i == 2:
+                self.assertEqual(parr[0], 0x0100)
+            elif i == 4:
+                self.assertEqual(parr[0], 0x03020100)
+        for i in (0, 3, 5, 6, 7, 9, 10, 12, "test", self):
+            self.assertRaises(TypeError, pgarray.create_array, barr, i)
 
 
 if __name__ == '__main__':

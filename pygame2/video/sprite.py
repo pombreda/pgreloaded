@@ -254,15 +254,18 @@ class SoftwareSprite(Sprite):
     def __init__(self, surface, free):
         """Creates a new SoftwareSprite."""
         super(SoftwareSprite, self).__init__()
-        self.surface = surface
         self.free = free
+        if not isinstance(surface, sdlsurface.SDL_Surface):
+            raise TypeError ("surface must be a SDL_Surface")
+        self.surface = surface
 
     def __del__(self):
         """Releases the bound SDL_Surface, if it was created by the
         SoftwareSprite.
         """
-        if self.free and self.surface is not None:
-            sdlsurface.free_surface(self.surface)
+        surface = getattr(self, "surface", None)
+        if self.free and surface is not None:
+            sdlsurface.free_surface(surface)
         self.surface = None
 
     @property

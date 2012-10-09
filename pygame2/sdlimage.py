@@ -87,9 +87,7 @@ def load(fname):
 
     Raises a SDLError, if the file could not be loaded.
     """
-    if type(fname) is not str:
-        raise TypeError("fname must be a string")
-    fname = byteify(fname, "utf-8")
+    fname = byteify(str(fname), "utf-8")
     return _check(dll.IMG_Load(fname))
 
 

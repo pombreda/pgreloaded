@@ -4,6 +4,7 @@ import pygame2.video as video
 
 
 class VideoGUITest(unittest.TestCase):
+    __tags__ = ["sdl"]
 
     def setUp(self):
         if sys.version.startswith("3.1"):

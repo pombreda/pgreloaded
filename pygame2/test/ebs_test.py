@@ -101,14 +101,24 @@ class EBSTest(unittest.TestCase):
         self.assertNotEqual(ent2.world, world)
         self.assertNotEqual(ent1.world, ent2.world)
 
-    @unittest.skip("not implemented")
     def test_Entity_delete(self):
-        pass
+        w = World()
+        e1 = Entity(w)
+        e2 = Entity(w)
+
+        self.assertEqual(len(w.entities), 2)
+        e1.delete()
+        self.assertEqual(len(w.entities), 1)
+        e2.delete()
+        self.assertEqual(len(w.entities), 0)
+
+        # The next two should have no effect
+        e1.delete()
+        e2.delete()
 
     def test_Entity__inheritance(self):
         world = World()
 
-        world.add_system(PositionSystem())
         pos1 = PositionEntity(world)
         pos2 = PositionEntity(world, 10, 10)
         for p in (pos1, pos2):
@@ -119,7 +129,6 @@ class EBSTest(unittest.TestCase):
 
     def test_Entity__access(self):
         world = World()
-        world.add_system(PositionSystem())
         pos1 = PositionEntity(world)
         pos2 = PosEntity(world)
 
@@ -181,9 +190,16 @@ class EBSTest(unittest.TestCase):
         w.delete(e1)
         w.delete(e2)
 
-    @unittest.skip("not implemented")
     def test_World_delete_entities(self):
-        pass
+        w = World()
+        e1 = Entity(w)
+        e2 = Entity(w)
+
+        self.assertEqual(len(w.entities), 2)
+        w.delete_entities((e1, e2))
+        self.assertEqual(len(w.entities), 0)    
+        # The next should have no effect
+        w.delete_entities((e1, e2))
 
     def test_System(self):
         world = World()
@@ -277,6 +293,7 @@ class EBSTest(unittest.TestCase):
         for c in world2.components[Position].values():
             self.assertEqual(c.x, 2)
             self.assertEqual(c.y, 2)
+
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

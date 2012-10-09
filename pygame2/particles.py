@@ -1,6 +1,7 @@
 ﻿"""
 A simple particle engine implementation.
 """
+from pygame2.compat import *
 from pygame2.ebs import Component, System
 
 __all__ = ["Particle", "ParticleEngine"]
@@ -47,7 +48,7 @@ class ParticleEngine(System):
         self.componenttypes = (Particle, )
         self._createfunc = None
         self._deletefunc = None
-        self._updatefnuc = None
+        self._updatefunc = None
 
     def process(self, world, components):
         """Processes all particle components, decreasing their life by 1.

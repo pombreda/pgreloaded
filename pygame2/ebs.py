@@ -158,7 +158,7 @@ class World(object):
             for compkey, compset in self.components.items():
                 keys = set(compset.keys()) - eids
                 self.components[compkey] = dict((k, compset[k]) for k in keys)
-        self.entities -= eids
+        self.entities -= set(entities)
 
     def get_components(self, componenttype):
         """Gets all existing components for a sepcific component type.

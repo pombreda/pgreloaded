@@ -112,7 +112,7 @@ except ImportError:
 def pixels2d(source):
     """Creates a 2D pixel array from the passed source."""
     if not _HASNUMPY:
-        raise UnsupportedError("numpy module could not be loaded")
+        raise UnsupportedError(pixels2d, "numpy module could not be loaded")
     if isinstance(source, SoftwareSprite):
         surface = source.surface
     elif isinstance(source, sdlsurface.SDL_Surface):
@@ -146,7 +146,7 @@ def pixels3d(source):
     """Creates a 3D pixel array from the passed source.
     """
     if not _HASNUMPY:
-        raise UnsupportedError("numpy module could not be loaded")
+        raise UnsupportedError(pixels3d, "numpy module could not be loaded")
     if isinstance(source, SoftwareSprite):
         surface = source.surface
     elif isinstance(source, sdlsurface.SDL_Surface):
@@ -166,4 +166,4 @@ def pixels3d(source):
     pxbuf = ctypes.cast(surface.pixels,
                         ctypes.POINTER(ctypes.c_ubyte * srcsize)).contents
     return SurfaceArray(shape, numpy.uint8, pxbuf, 0, strides, "C", source,
-                        surface).transpose(1, 0, -2)
+                        surface).transpose(1, 0, 2)

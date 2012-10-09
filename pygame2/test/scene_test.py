@@ -22,7 +22,7 @@ class SceneTest(unittest.TestCase):
         self.assertIsNone(mgr.next)
         self.assertIsNone(mgr.current)
 
-    def ttest_SceneManager_push_pop(self):
+    def test_SceneManager_push_pop(self):
         scene1 = Scene()
         scene2 = Scene()
         mgr = SceneManager()
@@ -220,6 +220,7 @@ class SceneTest(unittest.TestCase):
         self.assertFalse(scene.is_running)
         self.assertFalse(scene.is_paused)
         self.assertTrue(scene.has_ended)
+
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

@@ -315,11 +315,6 @@ class SDLVideoTest(unittest.TestCase):
             self.assertEqual(dmode.h, wmode.h)
             self.assertEqual(dmode.refresh_rate, wmode.refresh_rate)
 
-            video.set_window_display_mode(window)
-            wmode = video.get_window_display_mode(window)
-            self.assertNotEqual(dmode.w, wmode.w)
-            self.assertNotEqual(dmode.h, wmode.h)
-
             video.destroy_window(window)
             self.assertRaises(sdl.SDLError, video.set_window_display_mode,
                               window, dmode)

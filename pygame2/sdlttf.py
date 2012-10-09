@@ -275,6 +275,8 @@ def glyph_is_provided(font, ch):
 
     Returns the index of the glyph in the font or 0, if not found.
     """
+    if type(ch) is str:
+        ch = ord(ch)
     return dll.TTF_GlyphIsProvided(ctypes.byref(font), ch)
 
 
