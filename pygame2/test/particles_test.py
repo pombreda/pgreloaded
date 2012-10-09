@@ -52,6 +52,7 @@ class ParticlesTest(unittest.TestCase):
     def test_ParticleEngine(self):
         engine = particles.ParticleEngine()
         self.assertIsInstance(engine, particles.ParticleEngine)
+        self.assertTrue(particles.Particle in engine.componenttypes)
         self.assertIsNone(engine.createfunc)
         self.assertIsNone(engine.deletefunc)
         self.assertIsNone(engine.updatefunc)
@@ -63,6 +64,13 @@ class ParticlesTest(unittest.TestCase):
         self.assertIsNone(engine.createfunc)
         engine.createfunc = func
         self.assertEqual(engine.createfunc, func)
+        
+        def setf(x, f):
+            x.createfunc = f
+        self.assertRaises(TypeError, setf, engine, None)
+        self.assertRaises(TypeError, setf, engine, "Test")
+        self.assertRaises(TypeError, setf, engine, 1234)
+
 
     def test_ParticleEngine_deletefunc(self):
         def func(w, c):
@@ -71,6 +79,12 @@ class ParticlesTest(unittest.TestCase):
         self.assertIsNone(engine.deletefunc)
         engine.deletefunc = func
         self.assertEqual(engine.deletefunc, func)
+        
+        def setf(x, f):
+            x.deletefunc = f
+        self.assertRaises(TypeError, setf, engine, None)
+        self.assertRaises(TypeError, setf, engine, "Test")
+        self.assertRaises(TypeError, setf, engine, 1234)
 
     def test_ParticleEngine_updatefunc(self):
         def func(w, c):
@@ -79,6 +93,12 @@ class ParticlesTest(unittest.TestCase):
         self.assertIsNone(engine.updatefunc)
         engine.updatefunc = func
         self.assertEqual(engine.updatefunc, func)
+        
+        def setf(x, f):
+            x.updatefunc = f
+        self.assertRaises(TypeError, setf, engine, None)
+        self.assertRaises(TypeError, setf, engine, "Test")
+        self.assertRaises(TypeError, setf, engine, 1234)
 
     def test_ParticleEngine_process(self):
         def cfunc(w, c):

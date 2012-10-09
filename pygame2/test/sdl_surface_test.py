@@ -159,6 +159,20 @@ class SDLSurfaceTest(unittest.TestCase):
                     self.assertIsInstance(sf, surface.SDL_Surface)
                     surface.free_surface(sf)
 
+        # Broken ones
+        # sizes = [(0, 0), (65536, 65536)]
+        # for (w, h) in sizes:
+        #    for bpp in alldepths:
+        #        print w, h, bpp
+        #        sf = surface.create_rgb_surface(w, h, bpp)
+        #        self.assertIsInstance(sf, surface.SDL_Surface)
+        #        surface.free_surface(sf)
+        
+        # TODO: raises a SDL Out of memory error, but 65536 works?!
+        #
+        # sf = surface.create_rgb_surface(65535, 65535, 32)
+        # self.assertIsInstance(sf, surface.SDL_Surface)
+        
         self.assertRaises(sdl.SDLError, surface.create_rgb_surface, 1, 1, 66)
         self.assertRaises(sdl.SDLError, surface.create_rgb_surface, 1, 1, 0)
         self.assertRaises(sdl.SDLError, surface.create_rgb_surface, 1, 1, 8,

@@ -549,9 +549,8 @@ class SoftwareSpriteRenderer(SpriteRenderer):
                 r.y = y + sp.y
                 blit_surface(sp.surface, None, surface, r)
         else:
-            if x is None or y is None:
-                x = sprites.x
-                y = sprites.y
+            r.x = x or sprites.x
+            r.y = y or sprites.y
             sdlsurface.blit_surface(sprites.surface, None, self.surface, r)
         video.update_window_surface(self.window)
 
