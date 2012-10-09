@@ -720,17 +720,17 @@ def render_present(renderer):
     dll.SDL_RenderPresent(ctypes.byref(renderer))
 
 
-#@sdltype("SDL_RenderSetScale", [ctypes.POINTER(SDL_Renderer),
-#                                ctypes.c_float, ctypes.c_float], ctypes.c_int)
+@sdltype("SDL_RenderSetScale", [ctypes.POINTER(SDL_Renderer),
+                                ctypes.c_float, ctypes.c_float], ctypes.c_int)
 def render_set_scale(renderer, scalex, scaley):
     """Sets the drawing scale for rendering on the current target."""
     if dll.SDL_RenderSetScale(ctypes.byref(renderer), scalex, scaley) == -1:
         raise SDLError()
 
 
-#@sdltype("SDL_RenderGetScale", [ctypes.POINTER(SDL_Renderer),
-#                                ctypes.POINTER(ctypes.c_float),
-#                                ctypes.POINTER(ctypes.c_float)], None)
+@sdltype("SDL_RenderGetScale", [ctypes.POINTER(SDL_Renderer),
+                                ctypes.POINTER(ctypes.c_float),
+                                ctypes.POINTER(ctypes.c_float)], None)
 def render_get_scale(renderer):
     """Gets the drawing scale for rendering on the current target."""
     scx = ctypes.c_float(0)
@@ -740,18 +740,18 @@ def render_get_scale(renderer):
     return scx.value, scy.value
 
 
-#@sdltype("SDL_RenderSetLogicalSize", [ctypes.POINTER(SDL_Renderer),
-#                                      ctypes.c_int, ctypes.c_int],
-#         ctypes.c_int)
+@sdltype("SDL_RenderSetLogicalSize", [ctypes.POINTER(SDL_Renderer),
+                                      ctypes.c_int, ctypes.c_int],
+         ctypes.c_int)
 def render_set_logical_size(renderer, w, h):
     """Sets the device independent resolution for rendering."""
     if dll.SDL_RenderSetLogicalSize(ctypes.byref(renderer), w, h) == -1:
         raise SDLError()
 
 
-#@sdltype("SDL_RenderGetLogicalSize", [ctypes.POINTER(SDL_Renderer),
-#                                      ctypes.POINTER(ctypes.c_int),
-#                                      ctypes.POINTER(ctypes.c_int)], None)
+@sdltype("SDL_RenderGetLogicalSize", [ctypes.POINTER(SDL_Renderer),
+                                      ctypes.POINTER(ctypes.c_int),
+                                      ctypes.POINTER(ctypes.c_int)], None)
 def render_get_logical_size(renderer):
     """Gets the device independent resolution for rendering."""
     w = ctypes.c_int(0)
