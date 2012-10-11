@@ -26,8 +26,8 @@ we are able to close the window and game. ::
         window.show()
         running = True
         while running:
-            event = sdlevents.poll_event(True)
-            while event is not None:
+            evnets = video.get_events()
+            for event in events:
                 if event.type == sdlevents.SDL_QUIT:
                     running = False
                     break
@@ -43,8 +43,8 @@ integrated event processor, a new code fragment is introduced, though. ::
 
     running = True
     while running:
-        event = sdlevents.poll_event(True)
-        while event is not None:
+        events = video.get_events()
+        for event in events:
             if event.type == sdlevents.SDL_QUIT:
                 running = False
                 break
@@ -114,8 +114,8 @@ that will display them. ::
 
         running = True
         while running:
-            event = sdlevents.poll_event(True)
-            while event is not None:
+            events = video.get_events()
+            for event in events:
                 if event.type == sdlevents.SDL_QUIT:
                     running = False
                     break
@@ -335,8 +335,8 @@ on colliding with the walls or the player paddles. ::
 
         running = True
         while running:
-            event = sdlevents.poll_event(True)
-            while event is not None:
+            events = video.get_events()
+            for event in events:
                 if event.type == sdlevents.SDL_QUIT:
                     running = False
                     break
@@ -385,8 +385,8 @@ to move one of the player paddles up or down. ::
         [...]
         running = True
         while running:
-            event = sdlevents.poll_event(True)
-            while event is not None:
+            events = video.get_events()
+            for event in events:
                 if event.type == sdlevents.SDL_QUIT:
                     running = False
                     break

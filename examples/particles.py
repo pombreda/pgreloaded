@@ -205,7 +205,7 @@ def run():
     # Center the mouse on the window. We use the SDL2 functions directly
     # here. Since the SDL2 functions do not know anything about the
     # video.Window class, we have to pass the window's SDL_Window to it.
-    sdlmouse.warp_mouse_in_window(window.window, 400, 300)
+    sdlmouse.warp_mouse_in_window(window.window, world.mousex, world.mousey)
 
     # Hide the mouse cursor, os it does not show up - just show the
     # particles.
@@ -221,10 +221,11 @@ def run():
     # The almighty event loop. You already know several parts of it.
     running = True
     while running:
-        event = sdlevents.poll_event(True)
-        while event is not None:
+        for event in video.get_events():
             if event.type == sdlevents.SDL_QUIT:
                 running = False
+                break
+            
             if event.type == sdlevents.SDL_MOUSEMOTION:
                 # Take care of the mouse motions here. Every time the
                 # mouse is moved, we will make that information globally
@@ -240,7 +241,6 @@ def run():
                 # one per update cycle.
                 sdlevents.flush_event(sdlevents.SDL_MOUSEMOTION)
                 break
-            event = sdlevents.poll_event(True)
         world.process()
         window.refresh()
 

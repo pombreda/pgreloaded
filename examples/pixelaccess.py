@@ -90,25 +90,25 @@ def run():
     # The event loop is nearly the same as we used in colorpalettes.py. If you
     # do not know, what happens here, take a look at colorpalettes.py for a
     # detailled description.
-    while True:
-        event = sdlevents.poll_event(True)
-        if event is None:
-            continue
-        if event.type == sdlevents.SDL_QUIT:
-            break
-        if event.type == sdlevents.SDL_MOUSEBUTTONDOWN:
-            curindex += 1
-            if curindex >= len(functions):
-                curindex = 0
-            # In contrast to colorpalettes.py, our mapping table consists of
-            # functions and their arguments. Thus, we get the currently
-            # requested function and argument tuple and execute the function
-            # with the arguments.
-            func, args = functions[curindex]
-            func(*args)
-
+    running = True
+    while running:
+        events = video.get_events()
+        for event in events:
+            if event.type == sdlevents.SDL_QUIT:
+                running = False
+                break
+            if event.type == sdlevents.SDL_MOUSEBUTTONDOWN:
+                curindex += 1
+                if curindex >= len(functions):
+                    curindex = 0
+                # In contrast to colorpalettes.py, our mapping table consists
+                # of functions and their arguments. Thus, we get the currently
+                # requested function and argument tuple and execute the
+                # function with the arguments.
+                func, args = functions[curindex]
+                func(*args)
+                break
         window.refresh()
-
     video.quit()
     return 0
 

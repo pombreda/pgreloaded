@@ -11,7 +11,17 @@ __all__ = ["PixelView", "pixels2d", "pixels3d"]
 
 
 class PixelView(MemoryView):
-    """2D memory view for Sprite and surface pixel access."""
+    """2D memory view for Sprite and SDL_Surface pixel access.
+    
+    The PixelView uses a y/x-layout. Accessing view[N] will operate on the
+    Nth row of the underlying surface. To access a specific column within
+    that row, view[N][C] has to be used.
+    
+    NOTE: The PixelView is implemented on top of the MemoryView class. As such
+    it makes heavy use of recursion to access rows and columns and can be
+    considered as slow in contrast to optimised ndim-array solutions such as
+    numpy.
+    """
     def __init__(self, source):
         """Creates a new PixelView from a Sprite or SDL_Surface.
 

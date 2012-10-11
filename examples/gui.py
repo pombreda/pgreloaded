@@ -122,10 +122,11 @@ def run():
 
     running = True
     while running:
-        event = sdlevents.poll_event(True)
-        while event is not None:
+        events = video.get_events()
+        for event in events:
             if event.type == sdlevents.SDL_QUIT:
                 running = False
+                break
             # Pass the SDL2 events to the UIProcessor, which takes care of
             # the user interface logic.
             uiprocessor.dispatch([button, checkbutton, entry], event)

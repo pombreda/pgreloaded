@@ -46,6 +46,12 @@ Video API
    Quits the underlying SDL2 video subysystem. If no other SDL2 subsystems are
    active, this will also call :func:`pygame2.sdl.quit()`.
 
+.. function:: get_events([types=None]) -> [SDL_Event, SDL_Event, ...]
+   
+   Gets all SDL events that are currently on the event queue. *types* can be
+   a list of SDL event types to receive or a already combined mask created
+   with ``SDL_EVENTMASK``. If types is ``None``, all events will be returned.
+
 .. class:: TestEventProcessor()
 
    A simple event processor for testing purposes.

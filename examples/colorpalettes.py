@@ -98,61 +98,62 @@ def run():
     # input. Every time the user clicks around in our window, we want to
     # show the next palette. Once we reached the last palette within the
     # mapping table, we will start again with the first one.
-    while True:
+    running = True
+    while running:
         # This will check for any events that piled up since the last check.
-        # If an event was found (such as a click, a mouse movement, keyboard
-        # input, etc.), we will retrieve it. By passing True to poll_event(),
-        # also will let the system know that it does not need to keep the
-        # event anymore. If we'd just want to inspect the events, without
-        # actually doing anything with them, we would pass False to it, so
-        # that a next call to poll_event() can receive tha specific event, too.
-        event = sdlevents.poll_event(True)
+        # If one or multiple events were  found (such as a click, a mouse
+        # movement, keyboard input, etc.), we will retrieve them.
+        events = video.get_events()
 
         # In case there was no event, we do not need to do anything. This
         # might happen, if  e.g. the user works with another application. Since
         # poll_event() does not wait for an event to occur (that'd mean your
         # application blocks until there is an event), we have to handle
         # this.
-        if event is None:
-            # delay
-            continue
+        for event in events:
+            # The received events can contain different information. There
+            # might be mouse movements, clicks, keyboard hits and many more.
+            # All of those carry different information. A mouse movement will
+            # contain the mouse cursor position, while a keyoard hit will
+            # contain the key that was pressed. Depending on that, we need to
+            # handle the occured event in a different way, which is done here.
+            #
+            # In case of a special QUIT event, the user wants to quit the
+            # application, just as you are used to closing an editor.
+            # If the user wants to quit the application, we should let him do
+            # so.  This is done by breaking out of the while loop.
+            if event.type == sdlevents.SDL_QUIT:
+                running = False
+                break
 
-        # The received event can contain different information. There might
-        # be mouse movements, clicks, keyboard hits and many more. All of
-        # those carry different information. A mouse movement will contain
-        # the mouse cursor position, while a keyoard hit will contain the key
-        # that was pressed. Depending on that, we need to handle the occured
-        # event in a different way, which is done here.
-        #
-        # In case of a special QUIT event, the user wants to quit the
-        # application, just as you are used to closing an editor.
-        # If the user wants to quit the application, we should let him do so.
-        # This is done by breaking out of the while True: loop.
-        if event.type == sdlevents.SDL_QUIT:
-            break
+            # We received a mouse button press event. As you can see from the
+            # type, the user pressed the mouse button, but did not necesarily
+            # release  it. As such, it is not a typical click, but only 50% of
+            # it, which is sufficient for our case here.
+            if event.type == sdlevents.SDL_MOUSEBUTTONDOWN:
+                # If the user pressed the button, we want to draw the next
+                # palette and update the window title accordingly. We do this
+                # by increasing the storage variable and - in case it reached
+                # the last entry, set it back to the first entry.
+                curindex += 1
+                if curindex >= len(palettes):
+                    curindex = 0
+                window.title = palettes[curindex][0]
+                draw_palette(windowsurface, palettes[curindex][1])
+                # If we found a single click (there might be many more)
+                # we will break out of checking the rest of events.
+                # Improved implementations could use the type= argument
+                # for video.get_events() to filter specific events and
+                # ignore anything else.
+                break
 
-        # We received a mouse button press event. As you can see from the type,
-        # the user pressed the mouse button, but did not necesarily release
-        # it. As such, it is not a typical click, but only 50% of it, which
-        # is sufficient for our case here.
-        if event.type == sdlevents.SDL_MOUSEBUTTONDOWN:
-            # If the user pressed the button, we want to draw the next palette
-            # and update the window title accordingly. We do this by increasing
-            # the storage variable and - in case it reached the last entry, set
-            # it back to the first entry.
-            curindex += 1
-            if curindex >= len(palettes):
-                curindex = 0
-            window.title = palettes[curindex][0]
-            draw_palette(windowsurface, palettes[curindex][1])
-
-        # On each occured event, we will refresh the window, since it might
-        # have happened that the user moved the window around, pressed a button
-        # or did something else. In all those cases, we want the palettes
-        # to be shown, so we need to refresh the window. This will cause the
-        # window internally to copy its surface information (those we used to
-        # draw the palette on) to the screen, where the window currently is
-        # placed on.
+        # Once the events were properly handled, we will refresh the window,
+        # since it might have happened that the user moved the window around,
+        # pressed a button or did something else. In all those cases, we want
+        # the palettes to be shown, so we need to refresh the window. This will
+        # cause the  window internally to copy its surface information (those
+        # we used to draw the palette on) to the screen, where the window
+        # currently is  placed on.
         # Comment this line out to see what happens!
         window.refresh()
 

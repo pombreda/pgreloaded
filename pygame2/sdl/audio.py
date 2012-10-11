@@ -222,7 +222,7 @@ def get_current_audio_driver():
 @sdltype("SDL_OpenAudio", [ctypes.POINTER(SDL_AudioSpec),
                            ctypes.POINTER(SDL_AudioSpec)], ctypes.c_int)
 def open_audio(desired):
-    """Opens the audio device with the desired parameters.
+    """Opens the default audio device with the desired parameters.
 
     If the return value is None, the audio data passed to the set
     callback function in desired will be guaranteed to be in the
@@ -233,6 +233,8 @@ def open_audio(desired):
     retval = dll.SDL_OpenAudio(ctypes.byref(desired), ctypes.byref(obtained))
     if retval == -1:
         raise SDLError()
+    if not bool(obtained):
+        return None
     return obtained
 
 
@@ -274,7 +276,12 @@ def get_audio_device_name(index, iscapture=False):
                                  ctypes.POINTER(SDL_AudioSpec), ctypes.c_int],
          ctypes.c_uint)
 def open_audio_device(device, iscapture, desired, allowed_changes):
-    """TODO
+    """Opens a specific audio device with the desired parameters.
+    
+    If the return value is None, the audio data passed to the set
+    callback function in desired will be guaranteed to be in the
+    requested format, and will be automatically converted to the
+    hardware audio format if necessary.
     """
     device = byteify(str(device), "utf-8")
     if bool(iscapture):
@@ -286,7 +293,7 @@ def open_audio_device(device, iscapture, desired, allowed_changes):
                                      ctypes.byref(obtained), allowed_changes)
     if retval == 0:
         raise SDLError()
-    return retval
+    return retval, obtained
 
 
 @sdltype("SDL_GetAudioStatus", None, ctypes.c_int)

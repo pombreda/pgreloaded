@@ -226,8 +226,7 @@ def run():
 
     running = True
     while running:
-        event = sdlevents.poll_event(True)
-        while event is not None:
+        for event in video.get_events():
             if event.type == sdlevents.SDL_QUIT:
                 running = False
                 break
@@ -239,8 +238,6 @@ def run():
             elif event.type == sdlevents.SDL_KEYUP:
                 if event.key.keysym.sym in (sdlkc.SDLK_UP, sdlkc.SDLK_DOWN):
                     player1.velocity.vy = 0
-            event = sdlevents.poll_event(True)
-
         sdltimer.delay(10)
         world.process()
 

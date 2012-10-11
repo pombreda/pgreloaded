@@ -154,17 +154,15 @@ def run():
         # Process the SceneManager. This takes care of updating the scene
         # states by checking, if a new scene has to be displayed or not.
         scenemanager.update()
-
         # The main event loop; we already learned about that in other examples.
         # Check for the events and pass them around.
-        event = sdlevents.poll_event(True)
-        while event is not None:
+        for event in video.get_events():
             if event.type == sdlevents.SDL_QUIT:
                 running = False
+                break
             # Pass the SDL2 events to the UIProcessor, which takes care of
             # the user interface logic.
             uiprocessor.dispatch(scenemanager.current.components, event)
-            event = sdlevents.poll_event(True)
         # Render all components on all scenes.
         renderer.render(scenemanager.current.components)
         window.refresh()

@@ -37,6 +37,10 @@ class VideoTest(unittest.TestCase):
         self.assertNotEqual(sdl.was_init(sdl.SDL_INIT_VIDEO),
                             sdl.SDL_INIT_VIDEO)
 
+    @unittest.skip("not implemented")
+    def test_get_events(self):
+        pass
+                            
     def test_TestEventProcessor(self):
         proc = video.TestEventProcessor()
         self.assertIsInstance(proc, video.TestEventProcessor)
