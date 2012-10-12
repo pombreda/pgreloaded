@@ -1,6 +1,6 @@
 """Sprite, texture and pixel surface routines."""
 import abc
-from pygame2.compat import isiterable
+from pygame2.compat import *
 from pygame2.color import convert_to_color
 from pygame2.ebs import Component, System
 from pygame2.video.window import Window
