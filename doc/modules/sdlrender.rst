@@ -205,6 +205,12 @@
 
    This wraps `SDL_SetRenderTarget`.
 
+.. function:: get_render_target(renderer : SDL_Renderer) -> SDL_Texture
+
+   Gets the current rendering target. If no :class:`SDL_Texture` was
+   set, ``None`` will be returned, indicating the default target being
+   used.
+
 .. function:: render_set_viewport(renderer : SDL_Renderer[, rect=None]) -> None
 
    Sets the drawing area for rendering on the current target. If the passed

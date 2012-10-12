@@ -467,6 +467,20 @@ def set_render_target(renderer, texture=None):
         raise SDLError()
 
 
+@sdltype("SDL_GetRenderTarget", [ctypes.POINTER(SDL_Renderer)],
+         ctypes.POINTER(SDL_Texture))
+def get_render_target(renderer):
+    """Gets the current rendering target.
+
+    If no SDL_Texture was set, None will be returned, indicating the
+    default target being used.
+    """
+    ret = dll.SDL_GetRenderTarget(ctypes.byref(renderer))
+    if ret is None or not bool(ret):
+        return None
+    return ret.contents
+
+
 @sdltype("SDL_RenderSetViewport", [ctypes.POINTER(SDL_Renderer),
                                    ctypes.POINTER(SDL_Rect)], ctypes.c_int)
 def render_set_viewport(renderer, rect=None):

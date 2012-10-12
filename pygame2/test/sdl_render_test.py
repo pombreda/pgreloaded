@@ -363,7 +363,7 @@ class SDLRenderTest(unittest.TestCase):
             render.destroy_renderer(renderer)
         video.destroy_window(window)
 
-    def test_set_render_target(self):
+    def test_get_set_render_target(self):
         window = video.create_window("Test", 10, 10, 10, 10,
                                      video.SDL_WINDOW_HIDDEN)
         self.assertIsInstance(window, video.SDL_Window)
@@ -381,12 +381,15 @@ class SDLRenderTest(unittest.TestCase):
                 continue
 
             render.set_render_target(renderer)
+            self.assertIsNone(render.get_render_target(renderer))
 
             tex = render.create_texture(renderer,
                                         pixels.SDL_PIXELFORMAT_ARGB8888,
                                         render.SDL_TEXTUREACCESS_TARGET,
                                         10, 10)
             render.set_render_target(renderer, tex)
+            self.assertIsInstance(SDL_Texture,
+                                  render.get_render_target(renderer))
             render.destroy_texture(tex)
 
             # TODO: Check in the SDL codebase, why the code below does
