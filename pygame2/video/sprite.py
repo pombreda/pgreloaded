@@ -573,7 +573,7 @@ class TextureSpriteRenderer(SpriteRenderer):
             # Create a Renderer for the window and use that one.
             target = RenderContext(target)
 
-        if isinstance(target, Renderer):
+        if isinstance(target, RenderContext):
             self._renderer = target  # Used to prevent GC
             sdlrenderer = target.renderer
         elif isinstance(target, render.SDL_Renderer):

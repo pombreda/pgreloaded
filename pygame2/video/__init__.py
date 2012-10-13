@@ -5,6 +5,7 @@ graphics functionality of the underlying SDL bindings. It enables you to
 easily create windows, display on them and to manipulate the shown
 graphics.
 """
+from pygame2.compat import isiterable
 import pygame2.sdl as sdl
 import pygame2.sdl.events as events
 import pygame2.sdl.timer as timer
@@ -51,7 +52,7 @@ def quit():
 
 def get_events(types=None):
     """Gets all SDL events that are currently on the event queue.
-    
+
     types can be a list of SDL event types to receive or a already combined
     mask created with SDL_EVENTMASK. If types is None, all events will be
     returned.
@@ -62,9 +63,9 @@ def get_events(types=None):
         eventmask = reduce(lambda m, e: m | events.SDL_EVENTMASK(e), types, 0)
     else:
         eventmask = int(types)
-    
+
     events.pump_events()
-    
+
     events = []
     eappend = events.append
     peep_events = events.peep_events

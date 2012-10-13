@@ -168,7 +168,7 @@ def show_cursor(show):
     hidden.
     """
     if show != -1:
-       show = bool(show)
+        show = bool(show)
     return dll.SDL_ShowCursor(show) == 1
 
 

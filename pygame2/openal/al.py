@@ -25,7 +25,7 @@ __all__ = ["get_error", "OpenALError", "enable", "disable", "is_enabled",
            "buffer_i", "buffer_3i", "buffer_iv", "get_buffer_f",
            "get_buffer_3f", "get_buffer_fv", "get_buffer_i", "get_buffer_3i",
            "get_buffer_iv", "doppler_factor", "doppler_velocity",
-           "speed_of_source", "distance_model"
+           "speed_of_sound", "distance_model"
            ]
 
 AL_INVALID = -1

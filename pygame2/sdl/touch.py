@@ -3,7 +3,7 @@ Wrapper methods around the SDL2 touch routines.
 """
 import ctypes
 from pygame2.sdl import sdltype, dll, SDLError
-from pymgae2.sdl.window import SDL_Window
+from pygame2.sdl.window import SDL_Window
 
 __all__ = ["SDL_Finger", "SDL_Touch", "get_touch", "get_finger"]
 

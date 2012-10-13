@@ -161,7 +161,7 @@ class UIFactory(object):
         args = self.default_args.copy()
         args.update(kwargs)
         sprite = self.spritefactory.create_sprite(**args)
-        _compose_text_entry(sprite)
+        _compose_textentry(sprite)
         return sprite
 
     def __repr__(self):

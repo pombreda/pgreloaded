@@ -24,11 +24,11 @@ class SDL_Keysym(ctypes.Structure):
                 ("_unicode", ctypes.c_uint)
                 ]
 
-    def __init__(self, scancode=0, sym=0, mod=0, unicode='\0'):
+    def __init__(self, scancode=0, sym=0, mod=0, unicode_='\0'):
         self.scancode = scancode
         self.sym = sym
         self.mod = mod
-        self._unicode = ord(unicode)
+        self._unicode = ord(unicode_)
 
     def __repr__(self):
         return "SDL_Keysym(scancode=%d, sym=%d, mod=%d, unicode=%s)" % \

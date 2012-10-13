@@ -3,7 +3,7 @@ Conversion routines for sequences.
 """
 import ctypes
 
-__all__ = ["CTypesView", "to_ctypes", "to_list", "to_tuple", "create_array"
+__all__ = ["CTypesView", "to_ctypes", "to_list", "to_tuple", "create_array",
            "MemoryView"]
 
 

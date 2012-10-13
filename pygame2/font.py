@@ -39,7 +39,7 @@ def _add_font(family, name, styles, fonttype, filename):
 
 def _cache_fonts_win32():
     """Caches fonts on a Win32 platform."""
-    key = "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
+    key = "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts"
     regfonts = []
     try:
         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key) as fontkey:

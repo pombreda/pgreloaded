@@ -192,7 +192,11 @@ class World(object):
         """
         if not isinstance(system, System):
             raise TypeError("system must be a System")
-        self._add_system_information(system)
+        for classtype in system.componenttypes:
+            if Component not in classtype.mro():
+                raise TypeError("'%s' must be a  Component")
+            if classtype not in self.components:
+                self.add_componenttype(classtype)
         self._systems.insert(index, system)
 
     def remove_system(self, system):

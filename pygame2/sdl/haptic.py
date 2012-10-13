@@ -290,7 +290,7 @@ def haptic_effect_supported(haptic, effect):
 @sdltype("SDL_HapticNewEffect", [ctypes.POINTER(SDL_Haptic),
                                  ctypes.POINTER(SDL_HapticEffect)],
          ctypes.c_int)
-def hapic_new_effect(haptic, effect):
+def haptic_new_effect(haptic, effect):
     """Creates a new effect on the device."""
     retval = dll.SDL_HapticNewEffect(ctypes.byref(haptic),
                                      ctypes.byref(effect))
@@ -302,7 +302,7 @@ def hapic_new_effect(haptic, effect):
 @sdltype("SDL_HapticUpdateEffect", [ctypes.POINTER(SDL_Haptic), ctypes.c_int,
                                     ctypes.POINTER(SDL_HapticEffect)],
          ctypes.c_int)
-def hapic_update_effect(haptic, effectid, effect):
+def haptic_update_effect(haptic, effectid, effect):
     """Updates an effect on the device."""
     retval = dll.SDL_HapticNewEffect(ctypes.byref(haptic), effectid,
                                      ctypes.byref(effect))

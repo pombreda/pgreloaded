@@ -388,8 +388,8 @@ class SDLRenderTest(unittest.TestCase):
                                         render.SDL_TEXTUREACCESS_TARGET,
                                         10, 10)
             render.set_render_target(renderer, tex)
-            self.assertIsInstance(SDL_Texture,
-                                  render.get_render_target(renderer))
+            self.assertIsInstance(render.get_render_target(renderer),
+                                  render.SDL_Texture)
             render.destroy_texture(tex)
 
             # TODO: Check in the SDL codebase, why the code below does
@@ -433,6 +433,10 @@ class SDLRenderTest(unittest.TestCase):
             port = render.render_get_viewport(renderer)
             self.assertEqual(port, rect.SDL_Rect(0, 0, 10, 10))
             for r in rects:
+                if r.w == r.h == 0:
+                    # http://bugzilla.libsdl.org/show_bug.cgi?id=1622
+                    # OpenGL renderers cause a exception here.
+                    continue
                 render.render_set_viewport(renderer, r)
                 port = render.render_get_viewport(renderer)
                 if port != r:

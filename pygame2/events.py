@@ -41,6 +41,15 @@ class EventHandler(object):
         """Gets the amount of callbacks connected to the EventHandler."""
         return len(self.callbacks)
 
+    def __getitem__(self, index):
+        return self.callbacks[index]
+
+    def __setitem__(self, index, value):
+        self.callbacks[index] = value
+
+    def __delitem__(self, index):
+        del self.callbacks[index]
+
     def add(self, callback):
         """Adds a callback to the EventHandler."""
         if not callable(callback):

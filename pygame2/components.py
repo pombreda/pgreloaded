@@ -21,3 +21,6 @@ class Position(Component):
         self.x = tmp[0]
         self.y = tmp[1]
         self.z = tmp[2]
+
+    def __len__(self):
+        return 3
