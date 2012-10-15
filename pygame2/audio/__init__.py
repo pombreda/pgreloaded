@@ -7,7 +7,7 @@ as more complex features, e.g. channel selections, sound effects and more.
 import os
 import wave
 from pygame2.compat import experimental
-from pygame2.ebs import System, Component
+from pygame2.ebs import System
 import pygame2.openal.alc as alc
 import pygame2.openal.al as al
 import pygame2.ogg.vorbisfile as vorbis
@@ -34,19 +34,18 @@ SOURCE_STOP =   0x04
 SOURCE_REWIND = 0x09
 
 
-class SoundListener(Component):
+class SoundListener(object):
     """A simple sound listener."""
     def __init__(self, position=(0, 0, 0), velocity=(0, 0, 0),
                  orientation=(0, 0, -1, 0, 1, 0)):
         """Creates a new SoundListener with a specific position,
         movement velocity and hearing orientation."""
-        super(SoundListener, self).__init__()
         self.position = position
         self.velocity = velocity
         self.orientation = orientation
 
 
-class SoundData(Component):
+class SoundData(object):
     """A buffered audio object.
 
     The SoundData consists of a PCM audio data buffer, the audio
@@ -54,7 +53,6 @@ class SoundData(Component):
     """
     def __init__(self, aformat=None, data=None, size=None, frequency=None):
         """Creates a new sound data object."""
-        super(SoundData, self).__init__()
         self._bufid = None
         self.format = aformat
         self.data = data
@@ -67,7 +65,7 @@ class SoundData(Component):
         return self._bufid
 
 
-class SoundSource(Component):
+class SoundSource(object):
     """A sound source.
 
     The SoundSource is an object within the application world, that can emit
@@ -76,7 +74,6 @@ class SoundSource(Component):
     def __init__(self, gain=1.0, pitch=1.0, position=(0, 0, 0),
                  velocity=(0, 0, 0)):
         """Creates a new SoundSource."""
-        super(SoundSource, self).__init__()
         self._ssid = None
         self._buffers = []
         self.gain = gain
@@ -212,13 +209,13 @@ class SoundSink(System):
         ssid = source._ssid
         if ssid is None:
             ssid = self._create_source(source)
-        
+
         # TODO: this should be only set on changes.
         # al.source_f(ssid, al.AL_GAIN, source.gain)
         # al.source_f(ssid, al.AL_PITCH, source.pitch)
         # al.source_fv(ssid, al.AL_POSITION, source.position)
         # al.source_fv(ssid, al.AL_VELOCITY, source.velocity)
-        
+
         self._create_buffers(source)
         querystate = al.get_source_i(ssid, al.AL_SOURCE_STATE)
         if source.request == SOURCE_NONE:

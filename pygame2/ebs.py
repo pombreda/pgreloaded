@@ -10,20 +10,10 @@ system will take care of all necessary updates for the World
 environment.
 """
 import uuid
+import inspect
 from pygame2.compat import ISPYTHON2
 
-__all__ = ["Entity", "World", "System", "Applicator", "Component"]
-
-
-class Component(object):
-    """Data object for entities.
-
-    A Component should ideally only consist of the minimum set of data
-    that specifies a certain behaviour of an entity in the application
-    world. It does not carry any application logic, but only data that
-    can be read or written.
-    """
-    pass
+__all__ = ["Entity", "World", "System", "Applicator"]
 
 
 class Entity(object):
@@ -66,13 +56,14 @@ class Entity(object):
         if name in ("_id", "_world"):
             object.__setattr__(self, name, value)
         else:
-            if not isinstance(value, Component):
-                raise TypeError("only Component items can be bound")
             # If the value is a compound component (e.g. a Button
             # inheriting from a Sprite), it needs to be added to all
             # supported component type instances.
-            mro = value.__class__.mro()
-            stop = mro.index(Component)
+            mro = inspect.getmro(value.__class__)
+            if type in mro:
+                stop = mro.index(type)
+            else:
+                stop = mro.index(object)
             mro = mro[0:stop]
             wctypes = self._world.componenttypes
             for clstype in mro:
@@ -126,7 +117,7 @@ class World(object):
         self._componenttypes = {}
 
     def combined_components(self, comptypes):
-        """A generator view on combined sets of Component items."""
+        """A generator view on combined sets of component items."""
         comps = self.components
         keysets = [set(comps[ctype]) for ctype in comptypes]
         valsets = [comps[ctype] for ctype in comptypes]
@@ -178,8 +169,6 @@ class World(object):
         if not isinstance(system, System):
             raise TypeError("system must be a System")
         for classtype in system.componenttypes:
-            if Component not in classtype.mro():
-                raise TypeError("'%s' must be a  Component")
             if classtype not in self.components:
                 self.add_componenttype(classtype)
         self._systems.append(system)
@@ -193,8 +182,6 @@ class World(object):
         if not isinstance(system, System):
             raise TypeError("system must be a System")
         for classtype in system.componenttypes:
-            if Component not in classtype.mro():
-                raise TypeError("'%s' must be a  Component")
             if classtype not in self.components:
                 self.add_componenttype(classtype)
         self._systems.insert(index, system)
@@ -247,7 +234,7 @@ class System(object):
         return system
 
     def process(self, world, components):
-        """Processes Component items.
+        """Processes component items.
 
         This must be implemented by inheriting classes.
         """

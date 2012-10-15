@@ -132,15 +132,15 @@ instantiate those, we are talking about entities.
    provides information (data bag)
 
 *Entity*
-   In-application instance that consists of *Component* items
+   In-application instance that consists of *component* items
 
 *System*
    Application logic for working with *Entity* items and their
-   *Component* data
+   *component* data
 
 *World*
    The environment that contains the different *System* instances and
-   all *Entity* items with their *Component* data
+   all *Entity* items with their *component* data
 
 Within a strict COP design, the application logic (ideally) only knows about
 data to process. It does not know anything about entities or complex classes
@@ -175,21 +175,23 @@ Component-based design with :mod:`pygame2.ebs`
 
 :mod:`pygame2.ebs` provides a :class:`World` class in which all other objects
 will reside. The :class:`World` will maintain both, :class:`Entity` and
-:class:`Component` items, and allows you to set up the processing logic via
+component items, and allows you to set up the processing logic via
 the :class:`System` and :class:`Applicator` classes. ::
 
    >>> appworld = World()
 
-The :class:`Component` represents a data bag of information and ideally should
-avoid any application logic (except from getter and setter properties). ::
+Components can be created from any class that inherits from the
+:class:`object` type and represent the data bag of information for the
+entity. and application world. Ideally, they should avoid any
+application logic (except from getter and setter properties). ::
 
-   class Position2D(Component):
+   class Position2D(object):
        def __init__(self, x=0, y=0):
            self.x = x
            self.y = y
 
 :class:`Entity` objects define the in-application objects and only consist of
-:class:`Component`-based attributes. They also require a :class:`World` at
+component-based attributes. They also require a :class:`World` at
 object instantiation time. ::
 
    class CarEntity(Entity):
@@ -198,15 +200,16 @@ object instantiation time. ::
 
 .. note::
 
-   The *world* argument in ``__init__()`` is necessary. It will be passed to the
-   internal ``__new__()`` constructor of the :class:`Entity` and stores a
-   reference to the :class:`World` and also allows the :class:`Entity` to store
-   its information in the :class:`World`.
+   The *world* argument in ``__init__()`` is necessary. It will be
+   passed to the internal ``__new__()`` constructor of the
+   :class:`Entity` and stores a reference to the :class:`World` and also
+   allows the :class:`Entity` to store its information in the
+   :class:`World`.
 
-The :class:`Entity` also requries its attributes to be named exactly as their
-:class:`Component` class name, but in lowercase letters. If you name a
-component ``MyAbsolutelyAwesomeDataContainer``, an :class:`Entity` will force
-you to write the following: ::
+The :class:`Entity` also requries its attributes to be named exactly as
+their component class name, but in lowercase letters. If you name a
+component ``MyAbsolutelyAwesomeDataContainer``, an :class:`Entity` will
+force you to write the following: ::
 
    class SomeEntity(Entity):
        def __init__(self, world):
@@ -222,10 +225,10 @@ you to write the following: ::
          def __init__(self, world):
              self.shortname = MyAbsolutelyAwesomeDataContainer()
 
-:class:`Component` implementors should be as atomic as possible and avoid
-complex inheritance. Since each value of an Entity is stored per class in
-its mro list, components inheriting from the same class(es) will overwrite
-each other on conflicting classes: ::
+Components should be as atomic as possible and avoid complex
+inheritance. Since each value of an :class:`Entity` is stored per class
+in its mro list, components inheriting from the same class(es) will
+overwrite each other on conflicting classes: ::
 
   class Vector(Position2D):
       def __init__(self, x=0, y=0, z=0):
@@ -246,15 +249,6 @@ each other on conflicting classes: ::
 
 EBS API
 -------
-
-.. class:: Component()
-
-   Data object for entities.
-
-   A Component should ideally only consist of the minimum set of data
-   that specifies a certain behaviour of an entity in the application
-   world. It does not carry any application logic, but only data that
-   can be read or written.
 
 .. class:: Entity(world : World)
 
@@ -290,13 +284,13 @@ EBS API
 
    .. attribute:: componenttypes
 
-      A tuple of :class:`Component` based class identifiers that shall
-      be processed by the :class:`Applicator`.
+      A tuple of class identifiers that shall be processed by the
+      :class:`Applicator`.
 
   .. function:: process(world : World, componentsets : iterable)
 
-      Processes tuples of :class:`Component` items. ``componentsets`` will
-      contain :class:`Component` tuples, that match the :attr:`componenttypes`
+      Processes tuples of component items. ``componentsets`` will
+      contain object tuples, that match the :attr:`componenttypes`
       of the :class:`Applicator`. If, for example, the :class:`Applicator`
       is defined as ::
 
@@ -313,7 +307,7 @@ EBS API
       Additionally, the :class:`Applicator` will not process all possible
       combinations of valid components, but only those, which are associated
       with the same :class:`Entity`. That said, an :class:`Entity` *must*
-      contain a ``Foo`` as well as a ``Bar`` :class:`Component` in order to
+      contain a ``Foo`` as well as a ``Bar`` component in order to
       have them both processed by the :class:`Applicator` (while a
       :class:`System` with the same ``componenttypes`` would pick either of
       them, depending on their availability).
@@ -330,12 +324,12 @@ EBS API
 
    .. attribute:: componenttypes
 
-      A tuple of :class:`Component` based class identifiers that shall
-      be processed by the :class:`System`
+      A tuple of class identifiers that shall be processed by the
+      :class:`System`
 
    .. method:: process(world : World, components : iterable)
 
-      Processes :class:`Component` items.
+      Processes component items.
 
       This method has to be implemented by inheriting classes.
 
@@ -367,12 +361,12 @@ EBS API
    .. method:: delete(entity : Entity)
 
       Removes an :class:`Entity` from the World, including all its
-      :class:`Component` data.
+      component data.
 
    .. method:: delete_entities(entities : iterable)
 
       Removes a set of :class:`Entity` instances from the World,
-      including all their :class:`Component` data.
+      including all their component data.
 
    .. method:: insert_system(index : int, system : System)
 
@@ -381,7 +375,7 @@ EBS API
 
    .. method:: process()
 
-      Processes all :class:`Component` items within their corresponding
+      Processes all component items within their corresponding
       :class:`System` instances.
 
    .. method:: remove_system(system : System)

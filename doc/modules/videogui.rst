@@ -37,7 +37,7 @@ Every UI element features the following attributes
 
    The ``uitype`` attribute can have one of the following values, identifying the
    UI element:
-   
+
    * ``BUTTON`` - a UI element, which can react on mouse input
    * ``CHECKBUTTON`` - as ``BUTTON``, but it retains its state on clicks
    * ``TEXTENTRY`` - a UI element that reacts on keyboard input
@@ -51,7 +51,7 @@ Every UI element features the following attributes
 
 Depending on the exact type of the element, it will feature additional methods
 and attributes explained below.
-   
+
 Button elements
 ^^^^^^^^^^^^^^^
 
@@ -136,13 +136,13 @@ The ``TEXTENTRY`` reacts with the following event handlers on events:
   A :class:`pygame2.events.EventHandler` that is invoked on text editing
   events. Text editing events are automatically created, once the
   :class:`UIProcessor` activates a ``TEXTENTRY`` UI element.
-  
+
   Text editing events are however only raised, if an IME system is involved,
   which combines glyphs and symbols to characters or word fragments.
 
 API
 ---
-  
+
 .. class:: UIFactory(spritefactory : SpriteFactory[, **kwargs])
 
    A factory class for creating UI elements. The :class:`UIFactory`
@@ -169,21 +169,21 @@ API
    .. method:: create_button(**kwargs) -> Sprite
 
       Creates a new button UI element.
-      
+
       *kwargs* are the arguments to be passed for the sprite
       construction and can vary depending on the sprite type.
       See :class:`pygame2.video.sprite.SpriteFactory.create_sprite()` for
       further details.
-      
+
    .. method:: create_check_button(**kwargs) -> Sprite
 
       Creates a new checkbutton UI element.
-      
+
       *kwargs* are the arguments to be passed for the sprite
       construction and can vary depending on the sprite type.
       See :class:`pygame2.video.sprite.SpriteFactory.create_sprite()` for
       further details.
-      
+
    .. method:: create_text_entry(**kwargs) -> Sprite
 
       Creates a new textentry UI element.
@@ -197,7 +197,7 @@ API
 
       Creates a UI element from an image file. The image must be
       loadable via :func:`pygame2.video.image.load_image()`.
-      
+
       *uitype* must be one of the supported :ref:`ui-elem-types` classifying
       the type of UI element to be created.
 
@@ -230,20 +230,20 @@ API
       :class:`pygame2.events.EventHandler` bindings of the
       :class:`UIProcessor`.
 
-   .. method:: activate(component : Component) -> None
+   .. method:: activate(component : object) -> None
 
       Activates a UI control to receive text input.
 
-   .. method:: deactivate(component : Component) -> None
+   .. method:: deactivate(component : object) -> None
 
       Deactivate the currently active UI control.
 
-   .. method:: passevent(component : Component, event : SDL_Event) -> None
+   .. method:: passevent(component : object, event : SDL_Event) -> None
 
       Passes the *event* to a *component* without any additional checks or
       restrictions.
 
-   .. method:: mousemotion(component : Component, event : SDL_Event) -> None
+   .. method:: mousemotion(component : object, event : SDL_Event) -> None
 
       Checks, if the event's motion position is on the *component* and
       executes the component's event handlers on demand. If the motion event
@@ -252,7 +252,7 @@ API
       :attr:`Button.state` will be adjusted to reflect, if it is
       currently hovered or not.
 
-   .. method:: mousedown(component : Component, event : SDL_Event) -> None
+   .. method:: mousedown(component : object, event : SDL_Event) -> None
 
       Checks, if the event's button press position is on the *component* and
       executes the component's event handlers on demand. If the button press

@@ -108,7 +108,7 @@ class ParticleRenderer(System):
         # the targets surface to do the rendering on. images is a set of
         # images to be used for rendering the particles.
         super(ParticleRenderer, self).__init__()
-        # Define, what Component instances are processed by the
+        # Define, what component instances are processed by the
         # ParticleRenderer.
         self.componenttypes = (CParticle, )
         self.renderer = renderer
@@ -127,7 +127,7 @@ class ParticleRenderer(System):
         # The SDL_Rect is used for the blit operation below and is used
         # as destination position for rendering the particle.
         r = sdlrect.SDL_Rect()
-        
+
         # The SDL2 blit function to use. This will take an image
         # (SDL_Texture) as source and copies it on the target.
         dorender = sdlrender.render_copy
@@ -138,13 +138,13 @@ class ParticleRenderer(System):
         # Before rendering all particles, make sure the old ones are
         # removed from the window by filling it with a black color.
         self.renderer.clear(0x0)
-        
+
         # Render all particles.
         for particle in components:
             # Set the correct destination position for the particle
             r.x = int(particle.x)
             r.y = int(particle.y)
-            
+
             # Select the correct image for the particle.
             img = images[particle.type]
             r.w, r.h = img.size
@@ -194,7 +194,7 @@ def run():
 
     renderer = video.RenderContext(window)
     factory = video.SpriteFactory(video.TEXTURE, renderer=renderer)
-    
+
     # Create a set of images to be used as particles on rendering. The
     # images are used by the ParticleRenderer created below.
     images = (factory.from_image(RESOURCES.get_path("circle.png")),
@@ -225,7 +225,7 @@ def run():
             if event.type == sdlevents.SDL_QUIT:
                 running = False
                 break
-            
+
             if event.type == sdlevents.SDL_MOUSEMOTION:
                 # Take care of the mouse motions here. Every time the
                 # mouse is moved, we will make that information globally

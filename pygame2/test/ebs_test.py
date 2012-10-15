@@ -3,13 +3,13 @@ import unittest
 from pygame2.ebs import *
 
 
-class Position(Component):
+class Position(object):
     def __init__(self, x=0, y=0):
         self.x = x
         self.y = y
 
 
-class Movement(Component):
+class Movement(object):
     def __init__(self, vx=0, vy=0):
         self.vx = vx
         self.vy = vy
@@ -61,14 +61,6 @@ class EBSTest(unittest.TestCase):
 
     def tearDown(self):
         pass
-
-    def test_Component(self):
-        comp = Component()
-        self.assertIsInstance(comp, Component)
-
-        p = Position()
-        self.assertIsInstance(p, Position)
-        self.assertIsInstance(p, Component)
 
     def test_Entity(self):
         world = World()
@@ -125,7 +117,6 @@ class EBSTest(unittest.TestCase):
             self.assertIsInstance(p, PositionEntity)
             self.assertIsInstance(p, Entity)
             self.assertIsInstance(p.position, Position)
-            self.assertIsInstance(p.position, Component)
 
     def test_Entity__access(self):
         world = World()
@@ -134,7 +125,7 @@ class EBSTest(unittest.TestCase):
 
         pos1.position.x = 10
 
-        # Components are _always_ identified by a lower-case class name.
+        # components are _always_ identified by a lower-case class name.
         def sx(p, v):
             p.pos.x = v
         self.assertRaises(KeyError, sx, pos2, 10)
@@ -197,7 +188,7 @@ class EBSTest(unittest.TestCase):
 
         self.assertEqual(len(w.entities), 2)
         w.delete_entities((e1, e2))
-        self.assertEqual(len(w.entities), 0)    
+        self.assertEqual(len(w.entities), 0)
         # The next should have no effect
         w.delete_entities((e1, e2))
 

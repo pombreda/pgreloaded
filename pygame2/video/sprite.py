@@ -2,7 +2,7 @@
 import abc
 from pygame2.compat import *
 from pygame2.color import convert_to_color
-from pygame2.ebs import Component, System
+from pygame2.ebs import System
 from pygame2.video.window import Window
 from pygame2.video.image import load_image
 import pygame2.sdl.surface as sdlsurface
@@ -214,7 +214,7 @@ class RenderContext(object):
                     self.color = tmp
 
 
-class Sprite(Component):
+class Sprite(object):
     """A simple 2D object."""
     __metaclass__ = abc.ABCMeta
 

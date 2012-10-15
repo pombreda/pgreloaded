@@ -2,12 +2,12 @@
 A simple particle engine implementation.
 """
 from pygame2.compat import *
-from pygame2.ebs import Component, System
+from pygame2.ebs import System
 
 __all__ = ["Particle", "ParticleEngine"]
 
 
-class Particle(Component):
+class Particle(object):
     """A simple particle component type.
 
     The Particle component only contains information about a x- and

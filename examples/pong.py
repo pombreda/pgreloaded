@@ -152,14 +152,14 @@ class TextureRenderer(video.TextureSpriteRenderer):
         super(TextureRenderer, self).render(components)
 
 
-class Velocity(Component):
+class Velocity(object):
     def __init__(self):
         super(Velocity, self).__init__()
         self.vx = 0
         self.vy = 0
 
 
-class PlayerData(Component):
+class PlayerData(object):
     def __init__(self):
         super(PlayerData, self).__init__()
         self.ai = False

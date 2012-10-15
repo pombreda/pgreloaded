@@ -176,7 +176,7 @@ within the window boundaries. ::
                     sprite.y = self.maxy - sheight
 
 
-    class Velocity(Component):
+    class Velocity(object):
         def __init__(self):
             super(Velocity, self).__init__()
             self.vx = 0
@@ -213,12 +213,11 @@ within the window boundaries. ::
 
         [...]
 
-Two new classes are introduced here, ``Velocity`` and ``MovementSystem``.
-The ``Velocity`` class is a simple data bag, which inherits from
-:class:`pygame2.ebs.Component`. It does not contain any application
-logic, but consists of the relvant information to represent the movement
-in a certain direction. This allows us to mark in-game items as being able to
-move around.
+Two new classes are introduced here, ``Velocity`` and
+``MovementSystem``. The ``Velocity`` class is a simple data bag. It
+does not contain any application logic, but consists of the relvant
+information to represent the movement in a certain direction. This
+allows us to mark in-game items as being able to move around.
 
 The ``MovementSystem`` in turn takes care of moving the in-game items around
 by applying the velocity to their current position. Thus, we can simply enable
@@ -230,7 +229,7 @@ velocity attribute to them, which is a ``Velocity`` component instance.
    The naming is important here. The :mod:`pygame2.ebs` implementation
    requires every in-application or in-game item attribute bound to a
    :class:`pygame2.ebs.Entity` to be the lowercase class name of its
-   related :class:`pygame2.ebs.Component`. ::
+   related component. ::
 
      Player.vel = Velocity(10, 10)
 
@@ -241,10 +240,10 @@ The ``MovementSystem`` is a specialised :class:`pygame2.ebs.System`, a
 :class:`pygame2.ebs.Applicator`, which can operate on combined sets of
 data. When the :meth:`pygame2.ebs.Applicator.process()` method is
 called, the passed ``componentsets`` iterable will contain tuples of
-:class:`pygame2.ebs.Component` instances that belong to an instance.
-The ``MovementSystem``'s ``process()`` implementation hence will loop
-over sets of ``Velocity`` and ``Sprite`` instances that belong to the
-same :class:`pygame2.ebs.Entity`. Since we have a ball and two players
+objects that belong to an instance and feature a certain type. The
+``MovementSystem``'s ``process()`` implementation hence will loop over
+sets of ``Velocity`` and ``Sprite`` instances that belong to the same
+:class:`pygame2.ebs.Entity`. Since we have a ball and two players
 currently available, it typically would loop over three tuples, two for
 the individual players and one for the ball.
 
@@ -518,7 +517,7 @@ back to us, which sounds more interesting. ::
                         vel.vy = 0
 
 
-    class PlayerData(Component):
+    class PlayerData(object):
         def __init__(self):
             super(PlayerData, self).__init__()
             self.ai = False
