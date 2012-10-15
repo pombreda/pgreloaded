@@ -14,19 +14,30 @@ class Window(object):
     input.
     """
     DEFAULTFLAGS = sdlvideo.SDL_WINDOW_HIDDEN
+    DEFAULTPOS = (sdlvideo.SDL_WINDOWPOS_UNDEFINED,
+                  sdlvideo.SDL_WINDOWPOS_UNDEFINED)
 
-    def __init__(self, title, size, position=(0, 0), flags=None):
+    def __init__(self, title, size, position=None, flags=None):
         """Creates a Window with a specific size and title.
+
+        The position to show the Window at is undefined by default,
+        letting the operating system or window manager pick the best
+        location. The behaviour can be adjusted through the DEFAULTPOS
+        class variable:
+
+            Window.DEFAULTPOS = (10, 10)
 
         The created Window is hidden by default, which can be overriden
         at the time of creation by providing other SDL window flags
         through the flags parameter.
 
         The default flags for creating Window instances can be adjusted
-        through the DEFAULTFLAGS class variable. Example:
+        through the DEFAULTFLAGS class variable:
 
             Window.DEFAULTFLAGS = pygame2.sdl.video.SDL_WINDOW_SHOWN
         """
+        if position is None:
+            position = self.DEFAULTPOS
         if flags is None:
             flags = self.DEFAULTFLAGS
         self.window = sdlvideo.create_window(title, position[0], position[1],

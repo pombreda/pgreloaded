@@ -5,17 +5,23 @@
 =========================================================================
 
 .. class:: Window(title : string, size : iterable[, \
-                  position=(0, 0)[, flags=None]])
+                  position=None[, flags=None]])
 
    The Window class represents a visible on-screen object with an optional
    border and *title* text. It represents an area on the screen that can be
    accessed by the application for displaying graphics and receive and
    process user input.
 
-   The created Window is hidden by default, which can be overriden at the
-   time of creation by providing other SDL window flags through the *flags*
-   parameter. The default flags for creating Window instances can be
-   adjusted through the ``DEFAULTFLAGS`` class variable. ::
+   The position to show the Window at is undefined by default, letting
+   the operating system or window manager pick the best location. The
+   behaviour can be adjusted through the ``DEFAULTPOS`` class variable. ::
+
+     Window.DEFAULTPOS = (10, 10)
+
+   The created Window is hidden by default, which can be overriden at
+   the time of creation by providing other SDL window flags through the
+   *flags* parameter. The default flags for creating Window instances
+   can be adjusted through the ``DEFAULTFLAGS`` class variable. ::
 
      Window.DEFAULTFLAGS = pygame2.sdl.video.SDL_WINDOW_SHOWN
 
