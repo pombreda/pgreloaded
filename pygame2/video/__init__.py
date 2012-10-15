@@ -50,31 +50,21 @@ def quit():
         sdl.quit()
 
 
-def get_events(types=None):
-    """Gets all SDL events that are currently on the event queue.
-
-    types can be a list of SDL event types to receive or a already combined
-    mask created with SDL_EVENTMASK. If types is None, all events will be
-    returned.
-    """
-    if types is None:
-        eventmask = events.SDL_ALLEVENTS
-    elif isiterable(types):
-        eventmask = reduce(lambda m, e: m | events.SDL_EVENTMASK(e), types, 0)
-    else:
-        eventmask = int(types)
-
+def get_events():
+    """Gets all SDL events that are currently on the event queue."""
     events.pump_events()
 
-    events = []
-    eappend = events.append
+    evlist = []
+    eappend = evlist.append
     peep_events = events.peep_events
     op = events.SDL_GETEVENT
-    ev = peep_events(10, op, eventmask)
-    while ev is not None:
-        events += list(ev)
-        ev = peep_events(10, op, eventmask)
-    return eappend
+    first = events.SDL_FIRSTEVENT
+    last = events.SDL_LASTEVENT
+    ret, ev = peep_events(None, 10, op, first, last)
+    while ret > 0:
+        evlist += list(ev)
+        ret, ev = peep_events(None, 10, op, first, last)
+    return evlist
 
 
 class TestEventProcessor(object):

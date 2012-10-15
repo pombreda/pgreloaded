@@ -9,7 +9,7 @@ from pygame2.test.util.testutils import interactive, doprint
 
 class VideoWindowTest(unittest.TestCase):
     __tags__ = ["sdl"]
-    
+
     def setUp(self):
         if sys.version.startswith("3.1"):
             self.assertIsInstance = \

@@ -555,14 +555,15 @@ def peep_events(events, numevents, action, mintype, maxtype):
         # sequence.
         if len(events) < numevents:
             raise ValueError("events must contain at least numevents values")
+        ptr = ctypes.byref(events)
     else:
         # ignore whatever was passed
         events = (numevents * SDL_Event)()
-    ret = dll.SDL_PeepEvents(ctypes.byref(events), numevents, action,
-                             mintype, maxtype)
+        ptr = ctypes.cast(events, ctypes.POINTER(SDL_Event))
+    ret = dll.SDL_PeepEvents(ptr, numevents, action, mintype, maxtype)
     if ret < 0:
         raise SDLError()
-    return ret, events
+    return ret, events[:ret]
 
 
 @sdltype("SDL_PollEvent", [ctypes.POINTER(SDL_Event)], ctypes.c_int)

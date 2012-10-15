@@ -344,7 +344,7 @@ class SpriteFactory(object):
         RenderContext or SDL_Renderer passed to the SpriteFactory is used.
         """
         if self.sprite_type == TEXTURE:
-            return TextureSpriteRenderer(self.default_args)
+            return TextureSpriteRenderer(self.default_args["renderer"])
         else:
             return SoftwareSpriteRenderer(*args, **kwargs)
 
