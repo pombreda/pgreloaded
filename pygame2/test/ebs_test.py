@@ -35,6 +35,7 @@ class PosEntity(Entity):
 
 class PositionSystem(System):
     def __init__(self):
+        super(PositionSystem, self).__init__()
         self.componenttypes = (Position,)
 
     def process(self, world, components):
@@ -45,6 +46,7 @@ class PositionSystem(System):
 
 class MovementApplicator(Applicator):
     def __init__(self):
+        super(MovementApplicator, self).__init__()
         self.componenttypes = (Position, Movement)
 
     def process(self, world, componentsets):
@@ -130,7 +132,7 @@ class EBSTest(unittest.TestCase):
         # components are _always_ identified by a lower-case class name.
         def sx(p, v):
             p.pos.x = v
-        self.assertRaises(KeyError, sx, pos2, 10)
+        self.assertRaises(AttributeError, sx, pos2, 10)
 
     def test_World(self):
         w = World()
@@ -140,9 +142,23 @@ class EBSTest(unittest.TestCase):
         world = World()
         self.assertIsInstance(world, World)
 
+        class SimpleSystem(object):
+            def __init__(self):
+                self.componenttypes = (Position, )
+            def process(self, world, components):
+                pass
+        
         for method in (world.add_system, world.remove_system):
             for val in (None, "Test", Position, Entity(world)):
-                self.assertRaises((TypeError, ValueError), method, val)
+                self.assertRaises(ValueError, method, val)
+        
+        psystem = SimpleSystem()
+        world.add_system(psystem)
+        self.assertTrue(len(world.systems) != 0)
+        self.assertTrue(psystem in world.systems)
+        world.remove_system(psystem)
+        self.assertTrue(len(world.systems) == 0)
+        self.assertTrue(psystem not in world.systems)
 
         psystem = PositionSystem()
         world.add_system(psystem)
@@ -204,17 +220,17 @@ class EBSTest(unittest.TestCase):
 
     def test_System(self):
         world = World()
-        self.assertRaises(TypeError, world.add_system, None)
-        self.assertRaises(TypeError, world.add_system, 1234)
-        self.assertRaises(TypeError, world.add_system, "Test")
+        self.assertRaises(ValueError, world.add_system, None)
+        self.assertRaises(ValueError, world.add_system, 1234)
+        self.assertRaises(ValueError, world.add_system, "Test")
 
         class ErrornousSystem(System):
             def __init__(self):
-                pass
+                super(ErrornousSystem, self).__init__()
 
         esystem = ErrornousSystem()
         # No component types defined.
-        self.assertRaises(TypeError, world.add_system, esystem)
+        self.assertRaises(ValueError, world.add_system, esystem)
         self.assertEqual(len(world.systems), 0)
 
         psystem = PositionSystem()
@@ -226,6 +242,7 @@ class EBSTest(unittest.TestCase):
 
         class ErrornousSystem(System):
             def __init__(self):
+                super(ErrornousSystem, self).__init__()
                 self.componenttypes = (Position,)
 
         esystem = ErrornousSystem()
@@ -255,11 +272,11 @@ class EBSTest(unittest.TestCase):
 
         class ErrornousApplicator(Applicator):
             def __init__(self):
-                pass
+                super(ErrornousApplicator, self).__init__()
 
         eapplicator = ErrornousApplicator()
         # No component types defined.
-        self.assertRaises(TypeError, world.add_system, eapplicator)
+        self.assertRaises(ValueError, world.add_system, eapplicator)
         self.assertEqual(len(world.systems), 0)
 
         mapplicator = MovementApplicator()
@@ -271,6 +288,7 @@ class EBSTest(unittest.TestCase):
 
         class ErrornousApplicator(Applicator):
             def __init__(self):
+                super(ErrornousApplicator, self).__init__()
                 self.componenttypes = (Position, Movement)
 
         eapplicator = ErrornousApplicator()

@@ -11,7 +11,7 @@ environment.
 """
 import uuid
 import inspect
-from pygame2.compat import ISPYTHON2
+from pygame2.compat import *
 
 __all__ = ["Entity", "World", "System", "Applicator"]
 
@@ -48,7 +48,11 @@ class Entity(object):
         """Gets the component data related to the Entity."""
         if name in ("_id", "_world"):
             return object.__getattr__(self, name)
-        ctype = self._world._componenttypes[name]
+        try:
+            ctype = self._world._componenttypes[name]
+        except KeyError:
+            raise AttributeError("object '%s' has no attribute '%s'" % \
+                (self.__class__.__name__, name))
         return self._world.components[ctype][self]
 
     def __setattr__(self, name, value):
@@ -75,7 +79,11 @@ class Entity(object):
         """Deletes the component data related to the Entity."""
         if name in ("_id", "_world"):
             raise AttributeError("'%s' cannot be deleted.", name)
-        ctype = self._world._componenttypes[name]
+        try:
+            ctype = self._world._componenttypes[name]
+        except KeyError:
+            raise AttributeError("object '%s' has no attribute '%s'" % \
+                (self.__class__.__name__, name))
         del self._world.components[ctype][self]
 
     def delete(self):
@@ -115,6 +123,15 @@ class World(object):
         self._systems = []
         self.components = {}
         self._componenttypes = {}
+
+    def _system_is_valid(self, system):
+        """Checks, if the passed object fulfills the requirements for being
+        a processing system.
+        """
+        return hasattr(system, "componenttypes") and \
+                isiterable(system.componenttypes) and \
+                hasattr(system, "process") and \
+                callable(system.process)
 
     def combined_components(self, comptypes):
         """A generator view on combined sets of component items."""
@@ -175,14 +192,24 @@ class World(object):
     def add_system(self, system):
         """Adds a processing system to the world.
 
-        The system will be added as last item in the processing order.
+        The system will be added as last item in the processing order. Every
+        object can be added as long as it contains
+
+           * a 'componenttypes' attribute that is iterable and contains the
+            class types to be processed 
+           * a 'process()' method, receiving two arguments, the world and
+             components
+             
+        If the object contains a 'is_applicator' attribute that evaluates to
+        True, the system will operate on combined sets of components.
         """
-        if not isinstance(system, System):
-            raise TypeError("system must be a System")
+        if not self._system_is_valid(system):
+            raise ValueError("system must have componenttypes and a process method")
         for classtype in system.componenttypes:
             if classtype not in self.components:
                 self.add_componenttype(classtype)
         self._systems.append(system)
+            
 
     def insert_system(self, index, system):
         """Adds a processing system to the world.
@@ -190,8 +217,8 @@ class World(object):
         The system will be added at the specific position of the
         processing order.
         """
-        if not isinstance(system, System):
-            raise TypeError("system must be a System")
+        if not self._system_is_valid(system):
+            raise ValueError("system must have componenttypes and a process method")
         for classtype in system.componenttypes:
             if classtype not in self.components:
                 self.add_componenttype(classtype)
@@ -206,7 +233,7 @@ class World(object):
         components = self.components
         for system in self._systems:
             s_process = system.process
-            if isinstance(system, Applicator):
+            if getattr(system, "is_applicator", False):
                 comps = self.combined_components(system.componenttypes)
                 s_process(self, comps)
             else:
@@ -239,10 +266,8 @@ class System(object):
     Also, the processing system does not know about any specific entity,
     but only is aware of the data carried by all entities.
     """
-    def __new__(cls, *args, **kwargs):
-        system = object.__new__(cls)
-        system.componenttypes = None
-        return system
+    def __init__(self):
+        self.componenttypes = None
 
     def process(self, world, components):
         """Processes component items.
@@ -254,4 +279,6 @@ class System(object):
 
 class Applicator(System):
     """A processing system for combined data sets."""
-    pass
+    def __init__(self):
+        super(Applicator, self).__init__()
+        self.is_applicator = True

@@ -282,6 +282,10 @@ EBS API
    is an enhanced :class:`System` that receives combined data sets based
    on its set :attr:`System.componenttypes`
 
+   .. attribute:: is_applicator
+   
+      A boolean flag indicating that this class operates on combined data sets.
+   
    .. attribute:: componenttypes
 
       A tuple of class identifiers that shall be processed by the
@@ -351,13 +355,41 @@ EBS API
 
    .. attribute:: systems
 
-      The :class:`System` objects bound to the world.
+      The processing system objects bound to the world.
 
-   .. method:: add_system(system : System)
+   .. method:: add_system(system : object)
 
-      Adds a processing :class:`System` to the world. The system will be
+      Adds a processing system to the world. The system will be
       added as last item in the processing order.
+      
+      The passed system does not have to inherit from :class:`System`, but
+      must feature a ``componenttypes`` attribute and a ``process()`` method,
+      which match the signatures of the :class:`System` class ::
+      
+        class MySystem(object):
+            def __init__(self):
+                # componenttypes can be any iterable as long as it
+                # contains the classes the system should take care of
+                self.componenttypes = [AClass, AnotherClass, ...]
+            
+            def process(self, world, components):
+                ...
 
+      If the system shall operate on combined component sets as specified
+      by the :class:`Applicator`, the class instance must contain a
+      ``is_applicator`` property, that evaluates to ``True`` ::
+      
+        class MyApplicator(object):
+            def __init__(self):
+                self.is_applicator = True
+                self.componenttypes = [...]
+            
+            def process(self, world, components):
+                pass
+      
+      The behaviour can be changed at run-time. The ``is_applicator`` attribute
+      is evaluated for every call to :meth:`World.process()`.
+      
    .. method:: delete(entity : Entity)
 
       Removes an :class:`Entity` from the World, including all its
