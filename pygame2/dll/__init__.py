@@ -4,6 +4,7 @@ DLL loading helpers.
 import os
 import sys
 import ctypes
+import warnings
 from ctypes.util import find_library
 from pygame2 import get_dll_path
 
@@ -31,17 +32,15 @@ def _findlib(path, libnames):
         searchfor = libnames[platform]
 
     results = []
-    if not path:
-        # No explicit path provided, use find_library().
-        for libname in searchfor:
-            dll = find_library(libname)
-            if dll:
-                results.append(dll)
-    else:
+    if path:
         for libname in searchfor:
             dll = os.path.join(path, "%s%s" % (libname, suffix))
             if os.path.exists(dll):
                 results.append(dll)
+    for libname in searchfor:
+        dll = find_library(libname)
+        if dll:
+            results.append(dll)
     return results
 
 
@@ -62,7 +61,7 @@ class DLL(object):
             except Exception as exc:
                 # Could not load it, silently ignore that issue and move
                 # to the next one.
-                print(exc)
+                warnings.warn(exc, ImportWarning)
         if self._dll is None:
             raise RuntimeError("could not load any library for %s" % libinfo)
 
