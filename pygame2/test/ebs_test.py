@@ -8,6 +8,8 @@ class Position(object):
         self.x = x
         self.y = y
 
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
 
 class Movement(object):
     def __init__(self, vx=0, vy=0):
@@ -191,6 +193,14 @@ class EBSTest(unittest.TestCase):
         self.assertEqual(len(w.entities), 0)
         # The next should have no effect
         w.delete_entities((e1, e2))
+
+    def test_World_get_entities(self):
+        w = World()
+        e1 = PositionEntity(w, 1, 1)
+        e2 = PositionEntity(w, 1, 2)
+        self.assertEqual(len(w.get_entities(e1.position)), 1)
+        e2.position.y = 1
+        self.assertEqual(len(w.get_entities(e1.position)), 2)
 
     def test_System(self):
         world = World()

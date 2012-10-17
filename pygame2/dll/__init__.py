@@ -53,7 +53,7 @@ class DLL(object):
         self._dll = None
         foundlibs = _findlib(get_dll_path(), libnames)
         if len(foundlibs) == 0:
-            raise RuntimeError("could not find any libary for %s" % libinfo)
+            raise RuntimeError("could not find any library for %s" % libinfo)
         for libfile in foundlibs:
             try:
                 self._dll = ctypes.CDLL(libfile)
@@ -64,7 +64,7 @@ class DLL(object):
                 # to the next one.
                 print(exc)
         if self._dll is None:
-            raise RuntimeError("could not load any libary for %s" % libinfo)
+            raise RuntimeError("could not load any library for %s" % libinfo)
 
     def has_dll_function(self, name):
         """Checks, if a function identified by name exists in the bound

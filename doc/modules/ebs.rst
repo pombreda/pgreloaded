@@ -373,6 +373,15 @@ EBS API
       Adds a processing :class:`System` to the world. The system will be
       added at the specified position in the processing order.
 
+   .. method:: get_entities(component : object) -> [Entity, ...]
+
+      Gets the entities using the passed component.
+
+      .. note::
+
+         This will not perform an identity check on the component
+         but rely on its ``__eq__`` implementation instead.
+
    .. method:: process()
 
       Processes all component items within their corresponding

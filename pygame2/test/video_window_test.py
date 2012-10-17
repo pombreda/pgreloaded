@@ -32,8 +32,6 @@ class VideoWindowTest(unittest.TestCase):
         self.assertRaises(TypeError, video.Window, "Test", None, None, None)
         self.assertRaises(TypeError, video.Window, "Test", None, None)
         self.assertRaises(TypeError, video.Window, "Test", None)
-        self.assertRaises(TypeError, video.Window, "Test", (1, 1), None, None)
-        self.assertRaises(TypeError, video.Window, "Test", (1, 1), None)
 
     def test_Window_title(self):
         window = video.Window("Window", size=(10, 10))

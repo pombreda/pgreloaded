@@ -242,7 +242,6 @@ def run():
                 sdlevents.flush_event(sdlevents.SDL_MOUSEMOTION)
                 break
         world.process()
-        window.refresh()
 
     video.quit()
     return 0

@@ -49,7 +49,7 @@ class Entity(object):
         if name in ("_id", "_world"):
             return object.__getattr__(self, name)
         ctype = self._world._componenttypes[name]
-        return self._world.components[ctype][self._id]
+        return self._world.components[ctype][self]
 
     def __setattr__(self, name, value):
         """Sets the component data related to the Entity."""
@@ -69,14 +69,14 @@ class Entity(object):
             for clstype in mro:
                 if clstype not in wctypes:
                     self._world.add_componenttype(clstype)
-                self._world.components[clstype][self._id] = value
+                self._world.components[clstype][self] = value
 
     def __delattr__(self, name):
         """Deletes the component data related to the Entity."""
         if name in ("_id", "_world"):
             raise AttributeError("'%s' cannot be deleted.", name)
         ctype = self._world._componenttypes[name]
-        del self._world.components[ctype][self._id]
+        del self._world.components[ctype][self]
 
     def delete(self):
         """Removes the Entity from the world it belongs to."""
@@ -140,7 +140,7 @@ class World(object):
 
     def delete_entities(self, entities):
         """Removes multiple entities from the World at once."""
-        eids = set(e.id for e in entities)
+        eids = set(entities)
         if ISPYTHON2:
             for compkey, compset in self.components.viewitems():
                 keys = set(compset.viewkeys()) - eids
@@ -160,6 +160,17 @@ class World(object):
         if componenttype in self.components:
             return self.components[componenttype].values()
         return []
+
+    def get_entities(self, component):
+        """Gets the entities using the passed component.
+
+        Note: this will not perform an identity check on the component
+        but rely on its __eq__ implementation instead.
+        """
+        compset = self.components.get(component.__class__, None)
+        if compset is None:
+            return []
+        return [e for e in compset if compset[e] == component]
 
     def add_system(self, system):
         """Adds a processing system to the world.
