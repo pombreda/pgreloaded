@@ -23,9 +23,9 @@ class SDLHintsTest(unittest.TestCase):
     def test_get_hint(self):
         self.assertEqual(hints.set_hint("TEST", "32"), 1)
         self.assertEqual(hints.get_hint("TEST"), "32")
-        self.assertRaises(TypeError, hints.get_hint, None)
-        self.assertRaises(TypeError, hints.get_hint, 1234)
-        self.assertRaises(TypeError, hints.get_hint, self)
+        self.assertEqual(hints.set_hint(hints.SDL_HINT_RENDER_DRIVER,
+                                        "dummy"), 1)
+        self.assertEqual(hints.get_hint(hints.SDL_HINT_RENDER_DRIVER), "dummy")
 
     def test_set_hint(self):
         self.assertEqual(hints.set_hint("TEST", "32"), 1)
@@ -34,10 +34,6 @@ class SDLHintsTest(unittest.TestCase):
         self.assertEqual(hints.get_hint("TEST"), "abcdef")
         self.assertEqual(hints.set_hint("", ""), 1)
         self.assertEqual(hints.get_hint(""), "")
-
-        self.assertRaises(TypeError, hints.set_hint, "TEST", 123456789)
-        self.assertRaises(TypeError, hints.set_hint, 123456789, "test")
-        self.assertRaises(TypeError, hints.set_hint, None, 123456789)
 
     def test_set_hint_with_priority(self):
         self.assertEqual(hints.set_hint_with_priority
@@ -50,12 +46,7 @@ class SDLHintsTest(unittest.TestCase):
                          ("", "", hints.SDL_HINT_OVERRIDE), 1)
         self.assertEqual(hints.get_hint(""), "")
 
-        self.assertRaises(TypeError, hints.set_hint_with_priority,
-                          "TEST", 123456789, hints.SDL_HINT_DEFAULT)
-        self.assertRaises(TypeError, hints.set_hint_with_priority,
-                          123456789, "test", hints.SDL_HINT_NORMAL)
-        self.assertRaises(TypeError, hints.set_hint_with_priority,
-                          None, 123456789, hints.SDL_HINT_OVERRIDE)
+
         self.assertRaises(ValueError, hints.set_hint_with_priority,
                           "TEST", "123456789", 12)
         self.assertRaises(ValueError, hints.set_hint_with_priority,
