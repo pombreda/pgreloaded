@@ -153,7 +153,7 @@ def rw_from_const_mem(mem, size):
     size denotes the size of the memory region in bytes.
     """
     ptr = ctypes.c_void_p(mem)
-    retval = dll.SDL_RWFromMem(ptr, size)
+    retval = dll.SDL_RWFromConstMem(ptr, size)
     if retval is None or not bool(retval):
         raise SDLError()
     return retval.contents
